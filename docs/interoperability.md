@@ -37,9 +37,16 @@ and `rotationRadians` fields named like the existing JavaScript function.
 It intentionally **does not include embedded base64 image data**. The native
 function is a validated translation utility, not a texture renderer,
 manufacturing print, SVG sanitizer, or replacement for the EXO React UI.
-The current EXO app still calls JavaScript for preview rendering and file import;
-switching that runtime call to a future Rust service is a separate integration
-step. Tests: `cargo test --locked --no-default-features -j 2 --test garment_graphic_layout`.
+The EXO app now compiles the same dependency-free functions in
+`garment/graphic_uv_kernel.rs` to a browser WebAssembly module, and invokes
+the Rust code in its live 3D graphic overlay for normalized and physical
+millimetre-to-UV coordinates and rotation. When the WASM fails to load, EXO
+keeps a numerically parity-tested JavaScript fallback. React, Three.js,
+image import, texture painting and the saved artwork sidecar remain in JS;
+these have **not** been converted into a native Rust renderer or garment
+solver. Tests: `cargo test --locked --no-default-features -j 2 --test garment_graphic_layout`
+and EXO's `node scripts/qa-rust-graphic-uv-wasm.mjs` plus
+`node scripts/qa-rust-graphic-uv-browser.mjs`.
 No third-party logos or imagery are bundled with this Rust contribution.
 
 ## Required inputs and outputs
