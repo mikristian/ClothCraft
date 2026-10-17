@@ -5,6 +5,7 @@ pub mod diagnostics;
 pub mod domain;
 pub mod embedding;
 pub mod export;
+pub mod graphics;
 pub mod meshing;
 pub mod polygon;
 pub mod presets;
