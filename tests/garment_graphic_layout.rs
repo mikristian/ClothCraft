@@ -128,3 +128,57 @@ fn rejects_invalid_record_count_and_non_finite_numbers() {
             .contains("non-finite")
     );
 }
+
+#[test]
+fn cpu_cli_resolves_graphic_layout_against_real_template() {
+    let folder = tempfile::tempdir().unwrap();
+    let template_path = folder.path().join("template.json");
+    GarmentTemplate::two_panel_demo()
+        .save(&template_path)
+        .unwrap();
+    let layout_path = folder.path().join("graphic-layout.json");
+    std::fs::write(
+        &layout_path,
+        serde_json::to_vec(&json!({
+            "version":1,"graphics":[example_record()]
+        }))
+        .unwrap(),
+    )
+    .unwrap();
+    let output = std::process::Command::new(env!("CARGO_BIN_EXE_cloth-template"))
+        .arg("graphics-layout")
+        .arg(&template_path)
+        .arg(&layout_path)
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let result: Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(result["version"], 1);
+    assert_eq!(result["placements"][0]["id"], "swoosh-example");
+    assert_eq!(result["placements"][0]["widthUV"], 0.44);
+    assert!(result["placements"][0].get("dataUrl").is_none());
+
+    // Unknown panels fail rather than silently changing the printed side.
+    let mut bad = example_record();
+    bad["panel"] = json!("not-a-real-panel");
+    std::fs::write(
+        &layout_path,
+        serde_json::to_vec(&json!({
+            "version":1,"graphics":[bad]
+        }))
+        .unwrap(),
+    )
+    .unwrap();
+    let failed = std::process::Command::new(env!("CARGO_BIN_EXE_cloth-template"))
+        .arg("graphics-layout")
+        .arg(&template_path)
+        .arg(&layout_path)
+        .output()
+        .unwrap();
+    assert!(!failed.status.success());
+    assert!(String::from_utf8_lossy(&failed.stderr).contains("unknown panel"));
+}

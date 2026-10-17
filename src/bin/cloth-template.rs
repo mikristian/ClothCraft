@@ -1,7 +1,7 @@
 //! A CPU-only frontend; never imports eframe/wgpu or opens a window.
 use clap::{Parser, Subcommand};
 use marvelous_cloth::{
-    garment::{GarmentTemplate, export},
+    garment::{GarmentTemplate, export, graphics},
     solver::{ReferenceSolver, SolverSettings},
 };
 use std::{
@@ -27,6 +27,12 @@ enum Command {
     },
     Validate {
         template: PathBuf,
+    },
+    /// Validate an EXO Graphic panel v1 layout and emit UV positions in JSON.
+    /// This is metadata translation, not an image renderer or garment edit.
+    GraphicsLayout {
+        template: PathBuf,
+        graphics: PathBuf,
     },
     /// Produce rest OBJ, annotated 2D SVG and continuum fiber frames.
     Bake {
@@ -62,6 +68,25 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 serde_json::to_string_pretty(&serde_json::json!({
                 "name":t.name,"panels":g.panels.len(),"vertices":g.mesh.uv.len(),"triangles":g.mesh.triangles.len(),
                 "seams":g.seams.len(),"initial_gap_m":g.max_seam_gap(&g.initial_state.x),"warnings":g.warnings}))?
+            );
+        }
+        Command::GraphicsLayout {
+            template,
+            graphics: artwork_path,
+        } => {
+            let t = GarmentTemplate::load(&template)?;
+            let bytes = fs::metadata(&artwork_path)?.len();
+            if bytes > 64 * 1024 * 1024 {
+                return Err("Graphics layout is larger than the 64 MiB CLI safety limit".into());
+            }
+            let doc: graphics::GraphicsDocument =
+                serde_json::from_slice(&fs::read(&artwork_path)?)?;
+            let placements = graphics::placements(&doc, &t)?;
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&serde_json::json!({
+                    "version":graphics::GRAPHICS_VERSION,"placements":placements
+                }))?
             );
         }
         Command::Bake { template, output } => {
