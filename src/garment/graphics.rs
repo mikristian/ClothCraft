@@ -3,7 +3,7 @@
 //! Ported from the document, clamping and UV-placement rules in
 //! `exo-sample-3d/src/core/nativeGarmentGraphics.js`. This module does not
 //! decode PNGs, project textures, change simulation materials or render UI.
-use super::GarmentTemplate;
+use super::{GarmentTemplate, graphic_uv_kernel};
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
@@ -152,10 +152,10 @@ pub fn placements(
             panel: graphic.panel.clone(),
             side,
             visible: graphic.visible,
-            u: graphic.center[0].clamp(0.0, 1.0),
-            v: 1.0 - graphic.center[1].clamp(0.0, 1.0),
-            width_uv: graphic.scale.clamp(0.03, 1.5),
-            rotation_radians: -graphic.rotation.clamp(-180.0, 180.0).to_radians(),
+            u: graphic_uv_kernel::exo_graphic_uv_u(graphic.center[0]),
+            v: graphic_uv_kernel::exo_graphic_uv_v(graphic.center[1]),
+            width_uv: graphic_uv_kernel::exo_graphic_width_uv(graphic.scale),
+            rotation_radians: graphic_uv_kernel::exo_graphic_rotation_radians(graphic.rotation),
         });
     }
     Ok(result)

@@ -5,6 +5,7 @@ pub mod diagnostics;
 pub mod domain;
 pub mod embedding;
 pub mod export;
+pub mod graphic_uv_kernel;
 pub mod graphics;
 pub mod meshing;
 pub mod polygon;

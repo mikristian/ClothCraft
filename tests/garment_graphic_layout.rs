@@ -1,5 +1,5 @@
 use marvelous_cloth::garment::{
-    GarmentTemplate,
+    GarmentTemplate, graphic_uv_kernel,
     graphics::{self, GraphicsDocument},
 };
 use serde_json::{Value, json};
@@ -44,6 +44,19 @@ fn matches_exo_graphic_uv_coordinates_scale_and_rotation() {
     assert!(
         value.get("dataUrl").is_none(),
         "embedded image must not be echoed"
+    );
+}
+
+#[test]
+fn shared_rust_kernel_handles_physical_print_millimetres() {
+    // 176 mm graphic on a 400 mm panel corresponds to the 44% EXO example.
+    assert!((graphic_uv_kernel::exo_graphic_mm_ratio(176.0, 400.0) - 0.44).abs() < 1e-12);
+    assert!((graphic_uv_kernel::exo_graphic_mm_to_uv_v(232.0, 400.0) - 0.42).abs() < 1e-12);
+    // Overprints may deliberately extend beyond panel bounds. Do not clamp.
+    assert_eq!(graphic_uv_kernel::exo_graphic_mm_ratio(600.0, 400.0), 1.5);
+    assert_eq!(
+        graphic_uv_kernel::exo_graphic_mm_to_uv_v(-20.0, 400.0),
+        1.05
     );
 }
 
