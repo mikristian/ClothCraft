@@ -11,8 +11,36 @@ Reviewed 2026-10-14. This is a requirements document, not a list of implemented 
 | OBJ | Avatar surface geometry through CLI | Static garment and grain guides | Geometry only; no MTL, skinning, animation, normals/material round trip or reconstruction of sewing patterns. Export UVs are local metres, not a packed texture atlas. Triangulate complex avatar polygons before import |
 | SVG | None | Pattern preview | Not print-to-scale; ignores board arrangement; no allowances, nesting, grading or print tiling |
 | Diagnostic JSON | No general interchange reader | Metrics/fiber frames | Research outputs; fibers are surface directions, not simulated yarns |
+| EXO garment graphics JSON v1 (CPU metadata) | `cloth-template graphics-layout TEMPLATE GRAPHICS` | Validated JSON UV placements on stdout | Rust port of EXO's `graphicPlacementInUV`: panel ID validation, saved graphic metadata, UV center/scale/rotation and visible face. Embedded PNG bytes are not decoded, projected or emitted; the renderer remains downstream JavaScript. No ClothCraft document schema changes |
 
 The workspace's **Export** action writes these supported outputs together to its launch directory. It replaces fixed filenames. Native project Save/Open dialogs, portable OBJ assets and local recovery are available; export still uses the session folder. See [document contracts](documents-and-sewing.md).
+
+## First JS-to-Rust graphic-layout slice (EXO)
+
+The EXO Studio V2 Graphic panel currently runs as a React/Three.js client. A
+small independent part of its computational path is now ported from
+[`src/core/nativeGarmentGraphics.js`](https://github.com/mikristian/exo-sample-3d/blob/feature/studio-v2-clo-visuals/src/core/nativeGarmentGraphics.js)
+to Rust in `src/garment/graphics.rs`. Given the existing EXO version-1 layout
+JSON and a ClothCraft template with matching panel IDs, Rust converts editor
+center coordinates (top-down) to UV coordinates (bottom-up), clamps scale and
+rotation to the editor's ranges, and reports the visible side. It refuses
+duplicate graphic IDs, missing panels, non-PNG references, and oversized or
+incorrectly versioned collections; the command limits JSON input to 64 MiB.
+
+```sh
+cargo run --locked --no-default-features --bin cloth-template -- \
+  graphics-layout path/to/template.json path/to/exo-graphics.json
+```
+
+The output is JSON containing `version` and `placements`, including `widthUV`
+and `rotationRadians` fields named like the existing JavaScript function.
+It intentionally **does not include embedded base64 image data**. The native
+function is a validated translation utility, not a texture renderer,
+manufacturing print, SVG sanitizer, or replacement for the EXO React UI.
+The current EXO app still calls JavaScript for preview rendering and file import;
+switching that runtime call to a future Rust service is a separate integration
+step. Tests: `cargo test --locked --no-default-features -j 2 --test garment_graphic_layout`.
+No third-party logos or imagery are bundled with this Rust contribution.
 
 ## Required inputs and outputs
 

@@ -1,5 +1,15 @@
 # Reprise du dépôt
 
+**17 October — EXO garment graphic placement metadata (proposed Rust migration).**
+`garment/graphics.rs` validates the existing EXO v1 embedded-PNG layout schema
+and converts top-down editor centers and degrees to garment UV locations and
+radians without copying the image payload. `cloth-template graphics-layout`
+exposes the CPU-only path. See [interoperability](interoperability.md#first-js-to-rust-graphic-layout-slice-exo)
+for CLI usage, provenance and limitations. It does **not** alter the upstream
+garment template or render textures; EXO still uses React/Three.js for the
+interactive view. Check `tests/garment_graphic_layout.rs` before modifying the
+schema or UV sign conventions.
+
 **16 October — documents and sewing.** Read [documents-and-sewing.md](documents-and-sewing.md). Native document dialogs, dirty state, portable avatar assets and recovery; partial ranges in 2D/3D; ordered 1:N/M:N seam transactions, numeric editing, directional handles, deletion and undo. New optional fields preserve legacy loading; old readers reject files using extensions. Do not flatten chains to unrelated seams or reconstruct rest coordinates from draped geometry. README is now a concise English product/development overview. The 55-action native authoring scenario passes, including partial/M:N sewing and real motion; a three-step GPU gradient check also passes. Read [validation](document-sewing-validation.json) and [native workspace notes](workspace-ui.md#native-verification--16-october). Final CPU/Clippy results are recorded in the document guide. GPU use is authorized for this pass only.
 
 **15 October — essential authoring toolkit research.** Read [essential-authoring-tools.md](essential-authoring-tools.md) for the official-manual comparison, audited gaps and concrete acceptance cases. Prioritize usable document lifecycle and editable partial/multi-edge sewing, then pins/freeze, arrangement, measurement/organization, offsets/cuts and linked symmetry. Model seam ranges/notches, grain and pins are not complete UI features. This pass changes documentation only; existing uncommitted implementation work is preserved, with no GPU use, commit or push.
