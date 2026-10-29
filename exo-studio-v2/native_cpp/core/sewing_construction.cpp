@@ -35,6 +35,9 @@ double edgeLength(const Json& p,int edge){
  return std::hypot(b.at("x").get<double>()-a.at("x").get<double>(),b.at("y").get<double>()-a.at("y").get<double>());
 }
 double rangeLength(const Json& p,const Json& e){Json interval=seamEndpointInterval(e);if(interval.is_null())return 0;return edgeLength(p,static_cast<int>(number(get(e,"edgeIndex"))))*(interval["end"].get<double>()-interval["start"].get<double>());}
+bool finiteSewingRangeLength(const Json& p,const Json& e,double& length){
+ try{length=rangeLength(p,e);return std::isfinite(length)&&length>=0;}catch(...){return false;}
+}
 Json lengthReport(const Json& project,const Json& seam){
  Json a=get(seam,"a"),b=get(seam,"b");double la=rangeLength(pieceFor(project,get(a,"pieceId")),a),lb=rangeLength(pieceFor(project,get(b,"pieceId")),b);
  double diff=std::abs(la-lb),mean=(la+lb)/2,pct=mean>0?diff/mean*100:0;
@@ -59,7 +62,9 @@ Json validateNewSeam(const Json& project,const Json& proposed,const Json& option
   if(piece.is_null()){messages.push_back("Side "+side+" references a missing pattern");continue;}
   Json index=get(e,"edgeIndex");if(!validIndex(index,arr(piece,"points").size())){messages.push_back("Side "+side+" references an invalid cutline edge");continue;}
   Json range=seamEndpointInterval(e);if(range.is_null()){messages.push_back("Side "+side+" has an invalid sewing range");continue;}
-  if(rangeLength(piece,e)<.01)messages.push_back("Side "+side+" is shorter than 0.1 mm; expand the selection");
+  double length=0;
+  if(!finiteSewingRangeLength(piece,e,length))messages.push_back("Side "+side+" has invalid cutline geometry");
+  else if(length<.01)messages.push_back("Side "+side+" is shorter than 0.1 mm; expand the selection");
  }
  if(!endpoints[0].is_null()&&!endpoints[1].is_null()&&identity(endpoints[0])==identity(endpoints[1]))messages.push_back("A seam must connect two distinct cutline edges");
  if(messages.empty()&&get(options,"allowOverlappingLayers")!=true){
@@ -83,7 +88,8 @@ Json auditSewingConstruction(const Json& project,const Json& options){
   bool invalid=false;Json id=get(seam,"id");
   for(const auto& ep:{get(seam,"a"),get(seam,"b")}){
    Json p=pieceFor(project,get(ep,"pieceId")),index=get(ep,"edgeIndex"),range=seamEndpointInterval(ep);
-   if(p.is_null()||!validIndex(index,arr(p,"points").size())||range.is_null()){
+   double length=0;
+   if(p.is_null()||!validIndex(index,arr(p,"points").size())||range.is_null()||!finiteSewingRangeLength(p,ep,length)){
     Json pieceId=get(ep,"pieceId");add("invalidEndpoints",id,truthyStr(pieceId,"?")+":"+ (index.is_null()?"?":str(index)));invalid=true;continue;
    }
    intervals[identity(ep)].push_back({range["start"].get<double>(),range["end"].get<double>(),id});

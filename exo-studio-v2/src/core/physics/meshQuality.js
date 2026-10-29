@@ -1,3 +1,5 @@
+import {rustTriangleQuality} from '../rustMeshQualityKernel.js'
+
 // An explicit conditioning report for generated 2D cloth triangles. ShapeUtils
 // ear-clipping plus uniform subdivision can produce long, thin elements which
 // destabilize anisotropic strain constraints even when sewing lengths match.
@@ -20,11 +22,12 @@ export function inspectClothMesh(vertices = [], faces = [], { aspectLimit = 25, 
     }
     const [[ax,ay],[bx,by],[cx,cy]] = triangle.map(i => point(vertices[i]))
     if (![ax,ay,bx,by,cx,cy].every(Number.isFinite)) throw new RangeError(`Non-finite rest coordinates in face ${index}`)
-    const twiceArea = Math.abs((bx-ax)*(cy-ay)-(by-ay)*(cx-ax))
+    const native = rustTriangleQuality(ax,ay,bx,by,cx,cy)
+    const twiceArea = native ? native[0] : Math.abs((bx-ax)*(cy-ay)-(by-ay)*(cx-ax))
     const areaCm2 = twiceArea*.5
-    const longestEdgeCm = Math.max(Math.hypot(bx-ax,by-ay),Math.hypot(cx-bx,cy-by),Math.hypot(ax-cx,ay-cy))
-    const shortestAltitudeCm = longestEdgeCm ? twiceArea / longestEdgeCm : 0
-    const aspect = shortestAltitudeCm ? longestEdgeCm/shortestAltitudeCm : Infinity
+    const longestEdgeCm = native ? native[1] : Math.max(Math.hypot(bx-ax,by-ay),Math.hypot(cx-bx,cy-by),Math.hypot(ax-cx,ay-cy))
+    const shortestAltitudeCm = native ? native[2] : longestEdgeCm ? twiceArea / longestEdgeCm : 0
+    const aspect = native ? native[3] : shortestAltitudeCm ? longestEdgeCm/shortestAltitudeCm : Infinity
     maximumAspect = Math.max(maximumAspect,aspect)
     minimumAltitude = Math.min(minimumAltitude,shortestAltitudeCm)
     minimumArea = Math.min(minimumArea,areaCm2)

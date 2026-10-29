@@ -15,6 +15,10 @@ const base={points:[{x:0,y:0,id:'A'},{x:4,y:0,id:'B'},{x:4,y:4,id:'C',grading:{l
 const P=(x,y)=>({x,y})
 const cases=[{op:'modes'}]
 for(const index of [1,2,4,0,5,1.2,'2',null]) cases.push({op:'reference',piece:base,index})
+// Reject alternate-base strings and implicit object/boolean coercion in both
+// runtimes; keep authored decimal/scientific notation accepted.
+for(const index of ['0x2','0b10','0o2',true,false,[2],['2'],' 2 ','02','2.0','2e0'])
+  cases.push({op:'reference',piece:base,index})
 for(const [a,b,c,d] of [[P(0,0),P(2,2),P(0,2),P(2,0)],[P(0,0),P(2,0),P(1,0),P(4,0)],[P(3,-5),P(8,5),P(0,-2),P(7,3)]]) cases.push({op:'intersection',a,b,c,d})
 for(const p of [P(2,3),P(-10,0),P(1e-4,-5)]) {
   cases.push({op:'projection',p,a:P(0,0),b:P(4,1)},{op:'mirror',p,a:P(0,0),b:P(4,1)})

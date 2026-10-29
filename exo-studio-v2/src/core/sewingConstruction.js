@@ -1,4 +1,5 @@
 import { edgeRangeLength, seamLengthReport } from './project.js'
+import {rustSeamIntervalValid,rustSeamIntervalsOverlap} from './rustSeamIntervalKernel.js'
 
 // Both Segment Sewing (complete edge) and Free Sewing (fractional cutline)
 // use the same source-topology rules. This runs before changing a garment and
@@ -6,7 +7,7 @@ import { edgeRangeLength, seamLengthReport } from './project.js'
 export function seamEndpointInterval(endpoint) {
   const start = Number(endpoint?.startT ?? 0)
   const end = Number(endpoint?.endT ?? 1)
-  if (!Number.isFinite(start) || !Number.isFinite(end) || start < 0 || end > 1 || start >= end) return null
+  if (!rustSeamIntervalValid(start, end)) return null
   return { start, end }
 }
 
@@ -18,7 +19,18 @@ export function seamEndpointOverlap(a, b, epsilon = 1e-5) {
   if (endpointIdentity(a) !== endpointIdentity(b)) return false
   const ar = seamEndpointInterval(a)
   const br = seamEndpointInterval(b)
-  return Boolean(ar && br && Math.min(ar.end, br.end) - Math.max(ar.start, br.start) > epsilon)
+  return Boolean(ar && br && rustSeamIntervalsOverlap(ar.start, ar.end, br.start, br.end, epsilon))
+}
+
+// Invalid imported cutline coordinates and Bézier handles must never turn a
+// sewing range into a seemingly valid seam or a passing assembly audit.
+function finiteSewingRangeLength(piece, edgeIndex, range) {
+  try {
+    const length = edgeRangeLength(piece, edgeIndex, range.start, range.end)
+    return Number.isFinite(length) && length >= 0 ? length : null
+  } catch {
+    return null
+  }
 }
 
 export function validateNewSeam(project, proposed, { allowOverlappingLayers = false, excludeSeamId = null } = {}) {
@@ -35,7 +47,10 @@ export function validateNewSeam(project, proposed, { allowOverlappingLayers = fa
     }
     const range = seamEndpointInterval(endpoint)
     if (!range) { messages.push(`Side ${label} has an invalid sewing range`); continue }
-    if (edgeRangeLength(piece, endpoint.edgeIndex, range.start, range.end) < 0.01) {
+    const length = finiteSewingRangeLength(piece, endpoint.edgeIndex, range)
+    if (length === null) {
+      messages.push(`Side ${label} has invalid cutline geometry`)
+    } else if (length < 0.01) {
       messages.push(`Side ${label} is shorter than 0.1 mm; expand the selection`)
     }
   }
@@ -76,14 +91,15 @@ export function auditSewingConstruction(project, { maxExamples = 12 } = {}) {
     let invalid = false
     for (const endpoint of [seam.a, seam.b]) {
       const piece = pieces.get(endpoint?.pieceId)
-      if (!piece || !Number.isInteger(endpoint?.edgeIndex) || endpoint.edgeIndex < 0 || endpoint.edgeIndex >= piece.points.length || !seamEndpointInterval(endpoint)) {
+      const range = seamEndpointInterval(endpoint)
+      if (!piece || !Number.isInteger(endpoint?.edgeIndex) || endpoint.edgeIndex < 0 || endpoint.edgeIndex >= piece.points.length || !range || finiteSewingRangeLength(piece, endpoint.edgeIndex, range) === null) {
         add('invalidEndpoints', seam.id, `${endpoint?.pieceId || '?'}:${endpoint?.edgeIndex ?? '?'}`)
         invalid = true
         continue
       }
       const key = endpointIdentity(endpoint)
       if (!intervals.has(key)) intervals.set(key, [])
-      intervals.get(key).push({ ...seamEndpointInterval(endpoint), seamId: seam.id })
+      intervals.get(key).push({ ...range, seamId: seam.id })
       if (piece.active3d === false) add('inactive3d', seam.id, `The source pattern ${piece.name || piece.id} is excluded from simulation`)
     }
     if (invalid) continue
@@ -95,7 +111,7 @@ export function auditSewingConstruction(project, { maxExamples = 12 } = {}) {
     ranges.sort((a, b) => a.start - b.start)
     for (let i = 0; i < ranges.length; i++) {
       for (let j = i + 1; j < ranges.length && ranges[j].start < ranges[i].end; j++) {
-        if (ranges[i].seamId !== ranges[j].seamId && Math.min(ranges[i].end, ranges[j].end) - ranges[j].start > 1e-5) {
+        if (ranges[i].seamId !== ranges[j].seamId && rustSeamIntervalsOverlap(ranges[i].start, ranges[i].end, ranges[j].start, ranges[j].end, 1e-5)) {
           add('overlappingRanges', ranges[j].seamId, `Conflict on ${key} with ${ranges[i].seamId}`)
         }
       }

@@ -10,7 +10,11 @@ export function inspectNativeAssemblyPose(payload, {
   maximumInitialSeamGapMm = 30,
   maximumInitialEdgeStrainPercent = 20,
 } = {}) {
-  if (!payload?.particles || !payload?.pieces || !payload?.constraints) throw new TypeError('Native assembly payload is incomplete')
+  if (!Array.isArray(payload?.particles) || !Array.isArray(payload?.pieces) || !Array.isArray(payload?.constraints) ||
+      (payload.virtualSeams !== undefined && !Array.isArray(payload.virtualSeams)))
+    throw new TypeError('Native assembly payload is incomplete')
+  if (![maximumInitialSeamGapMm,maximumInitialEdgeStrainPercent].every(value=>Number.isFinite(value)&&value>=0))
+    throw new RangeError('Native assembly thresholds must be finite and nonnegative')
   for (const particle of payload.particles) {
     if (!finiteVec3(particle.position)) throw new RangeError(`Invalid initial particle ${particle.id}`)
   }
@@ -21,7 +25,8 @@ export function inspectNativeAssemblyPose(payload, {
   for (const constraint of payload.constraints) {
     if (constraint.type !== 'seam') continue
     const a = payload.particles[constraint.a], b = payload.particles[constraint.b]
-    if (!a || !b) throw new RangeError('Native sewing constraint references unknown particle')
+    if (!Number.isInteger(constraint.a) || !Number.isInteger(constraint.b) || !a || !b)
+      throw new RangeError('Native sewing constraint references unknown particle')
     const gapMm = distance(a.position,b.position) * 1000
     const key = constraint.seamId || 'unnamed-seam'
     if (!groups.has(key)) groups.set(key, {seamId:key,items:0,total:0,maximumGapMm:0,pieceIds:new Set()})
@@ -40,6 +45,11 @@ export function inspectNativeAssemblyPose(payload, {
   // physical anchors or it will falsely report that no seams exist.
   for (const virtual of payload.virtualSeams || []) {
     const weighted = (indices, weights) => {
+      if (!Array.isArray(indices) || !Array.isArray(weights) || indices.length===0 || indices.length!==weights.length ||
+        indices.length>4 || indices.some(index=>!Number.isInteger(index)||index<0||index>=payload.particles.length) ||
+        weights.some(weight=>!Number.isFinite(weight)||weight<0||weight>1) ||
+        Math.abs(weights.reduce((sum,weight)=>sum+weight,0)-1)>1e-6)
+        throw new RangeError('Invalid virtual sewing anchor weights or indices')
       const point = [0, 0, 0]
       for (let i = 0; i < indices.length; i++) {
         const vertex = payload.particles[indices[i]]?.position
@@ -78,7 +88,9 @@ export function inspectNativeAssemblyPose(payload, {
       for(let n=0;n<3;n++) {
         const ia=face[n],ib=face[(n+1)%3]
         const pa=particles[ia],pb=particles[ib],va=vertices[ia],vb=vertices[ib]
-        if (!Number.isInteger(pa) || !Number.isInteger(pb) || !finiteVec3(va) || !finiteVec3(vb)) throw new RangeError('Invalid native mesh edge')
+        if (!Number.isInteger(ia) || !Number.isInteger(ib) || !Number.isInteger(pa) || !Number.isInteger(pb) ||
+            pa<0 || pb<0 || pa>=payload.particles.length || pb>=payload.particles.length ||
+            !finiteVec3(va) || !finiteVec3(vb)) throw new RangeError('Invalid native mesh edge')
         const k=edgeKey(pa,pb)
         if(seen.has(k))continue
         seen.add(k)

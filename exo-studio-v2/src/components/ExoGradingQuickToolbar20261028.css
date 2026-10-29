@@ -1,0 +1,507 @@
+.exo-quick-grade{display:flex;flex-direction:column;gap:6px;box-sizing:border-box;
+ width:100%;height:100%;padding:6px;color:#e5f2f8;background:#242e36;font:10px Inter,system-ui,sans-serif;min-width:0;overflow:hidden}
+.exo-quick-grade__settings{display:flex;align-items:center;gap:6px;flex:none;flex-wrap:wrap}
+.exo-quick-grade__settings label{display:flex;align-items:center;gap:4px;color:#c8d8e2}
+.exo-quick-grade__settings strong{color:#f5f9fc}
+.exo-quick-grade select,.exo-quick-grade input{width:45px;height:22px;background:#14232e;color:#eaf8ff;
+ padding:2px 3px;border:1px solid #627a8a;border-radius:3px;font:inherit}
+.exo-quick-grade__settings .exo-quick-grade__full{margin-left:auto;padding:4px 7px;white-space:nowrap}
+.exo-quick-grade button{border:1px solid #506a7d;color:#ebf5fa;background:#304658;border-radius:4px;cursor:pointer;font:inherit}
+.exo-quick-grade button:hover:not(:disabled),.exo-quick-grade button:focus-visible{
+ background:#356d91;border-color:#7bc7f0;outline:1px solid #8ac9ff}
+.exo-quick-grade button:disabled{opacity:.5;cursor:not-allowed}
+.exo-quick-grade__grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(2,38px);
+ gap:3px;flex:none;min-width:0}
+.exo-quick-grade__grid button{display:flex;align-items:center;gap:4px;min-width:0;padding:4px;
+ overflow:hidden;text-align:left;line-height:1.1}
+.exo-quick-grade__grid button svg{flex:none;color:#a5d9ff}
+.exo-quick-grade__grid button span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.exo-quick-grade__grid button[aria-pressed="true"]{border-color:#7bc8fb;background:#265e89}
+.exo-quick-grade>small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#b8cbd7;min-height:14px}
+@container (max-width:500px){.exo-quick-grade__grid button span{display:none}
+ .exo-quick-grade__grid button{justify-content:center}.exo-quick-grade__settings{gap:4px}}
+.clo-floating-tool[data-clo-floating-widget="grading-quick-toolbar"]{width:min(760px,calc(100vw - 35px));min-height:195px;max-height:270px}
+.clo-floating-tool[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-body{padding:0;overflow:hidden}
+.cc-rust-embedded [data-exo-grade-dock-host="true"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"]{
+ min-width:0!important;container-type:inline-size;overflow:hidden!important}
+.cc-rust-embedded [data-exo-grade-dock-host="true"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-body{overflow:hidden}
+
+/* The quick bar has a small standalone footprint and an even smaller inset
+   footprint when explicitly embedded inside either grading worksheet. */
+.clo-floating-tool[data-clo-floating-widget="grading-quick-toolbar"]{
+ width:min(520px,calc(100vw - 24px));min-height:0;max-height:none;
+ border-radius:6px;border-color:#526473;background:#24313b;
+ z-index:100090;
+}
+.clo-floating-tool[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade{
+ height:auto;padding:6px 8px;gap:5px;font-size:11px;line-height:1.35;
+}
+.clo-floating-tool[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid{
+ grid-template-rows:repeat(2,28px);gap:4px;
+}
+.clo-floating-tool[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button{
+ justify-content:center;padding:3px 4px;font-size:10px;
+}
+.clo-floating-tool[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade :is(select,input){
+ height:25px;width:50px;font-size:11px;
+}
+.clo-floating-tool[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade>small{
+ font-size:10px;color:#cbdce8;
+}
+.clo-floating-tool[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade-placement{
+ position:absolute;right:64px;top:5px;width:min(185px,43%)!important;height:24px!important;
+ padding:2px 5px;border:1px solid #607e91;border-radius:4px;
+ background:#263d4e;color:#edf7fd;font:11px Inter,system-ui,sans-serif;
+ cursor:pointer;
+}
+.clo-floating-tool[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-header{
+ justify-content:flex-start;padding-left:35px;
+}
+.clo-floating-tool[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-header>strong{
+ max-width:calc(100% - 280px);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+}
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"]{
+ position:relative!important;top:auto!important;left:auto!important;
+ z-index:auto!important;box-shadow:none!important;border:0;border-bottom:1px solid #546b79;
+ width:100%!important;max-width:none!important;min-height:0!important;
+ max-height:none!important;margin:0;overflow:hidden;border-radius:0;
+ container-type:inline-size;
+}
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-header{
+ height:23px;min-height:23px;background:#334651;cursor:default;touch-action:auto;
+}
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-header>strong{
+ display:none;
+}
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade-placement{
+ top:1px;left:33px;right:50px;width:calc(100% - 87px)!important;height:21px!important;
+ font-size:10px;
+}
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-dock-button{display:none;}
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-header>button:last-child{
+ top:0;right:2px;width:22px;height:22px;
+}
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade{
+ padding:3px 4px;gap:3px;font-size:9px;
+}
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings{
+ flex-wrap:nowrap;gap:3px;min-height:20px;max-height:20px;overflow:hidden;
+}
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings label{
+ gap:2px;font-size:9px;flex:none;
+}
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings label:nth-child(-n+2){
+ display:none;
+}
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings .exo-quick-grade__full{
+ display:grid;place-items:center;flex:none;margin-left:auto;
+ width:23px;height:19px;min-width:23px;padding:0;font-size:0;
+}
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings .exo-quick-grade__full::after{
+ content:'24';font-size:10px;font-weight:700;
+}
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade :is(select,input){
+ height:19px;width:36px;padding:0 2px;font-size:9px;
+}
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid{
+ grid-template-rows:repeat(2,21px);gap:2px;
+}
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button{
+ display:grid;place-items:center;padding:1px;min-width:0;
+}
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button span,
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade>small{display:none;}
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid svg{
+ width:14px;height:14px;
+}
+/* Preserve editable axis and movement controls when several worksheets share
+   a narrow dock column; point and size remain available in the main table. */
+@container (max-width:310px){
+ .clo-floating-tool--nested .exo-quick-grade__settings label:nth-child(-n+2){display:none}
+ .clo-floating-tool--nested .exo-quick-grade__settings label{flex:1 1 auto;min-width:0}
+ .clo-floating-tool--nested .exo-quick-grade__settings :is(select,input){max-width:48px}
+}
+/* Embedded grading toolbar: single clean command row, no nested scroller.
+   Floating toolbar above remains unchanged. */
+[data-exo-grade-dock-host="true"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"]{
+ display:flex;flex-direction:column;container-type:inline-size;
+ min-height:0!important;max-height:none!important;overflow:hidden!important;
+ border:1px solid #587386;border-radius:4px;box-shadow:none;
+}
+[data-exo-grade-dock-host="true"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-header{
+ flex:0 0 21px;min-height:21px;height:21px;padding:0 4px;gap:4px;
+ background:#2a4151;
+}
+[data-exo-grade-dock-host="true"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-header>strong{font-size:10px;white-space:nowrap}
+[data-exo-grade-dock-host="true"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade-placement{
+ position:static;width:90px!important;height:18px!important;margin-left:auto;padding:0 2px;font-size:9px;
+}
+[data-exo-grade-dock-host="true"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade{
+ display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:26px;
+ align-items:center;gap:5px;padding:3px 5px;width:100%;height:auto;max-height:32px;
+ box-sizing:border-box;background:#223644;overflow:hidden!important;
+}
+[data-exo-grade-dock-host="true"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings{
+ display:flex;flex-wrap:nowrap;align-items:center;gap:3px;min-width:0;overflow:hidden!important;
+}
+[data-exo-grade-dock-host="true"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings label:nth-child(-n+2),
+[data-exo-grade-dock-host="true"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings .exo-quick-grade__full,
+[data-exo-grade-dock-host="true"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade>small{display:none!important}
+[data-exo-grade-dock-host="true"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings :is(label,select,input){font-size:9px}
+[data-exo-grade-dock-host="true"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings :is(input,select){height:21px;width:42px;min-height:21px;padding:1px 2px}
+[data-exo-grade-dock-host="true"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid{
+ display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-template-rows:25px;
+ gap:2px;min-width:0;max-width:100%;overflow:hidden!important;
+}
+[data-exo-grade-dock-host="true"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button{
+ display:grid;place-items:center;min-height:25px;height:25px;min-width:0;padding:1px;
+ border-radius:3px;
+}
+[data-exo-grade-dock-host="true"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button span{display:none!important}
+[data-exo-grade-dock-host="true"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button svg{width:16px;height:16px}
+@container (max-width:540px){
+ .clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade{grid-template-columns:minmax(0,1fr)}
+ .clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings{display:none}
+}
+
+/* V7 TOP RIBBON: one surface / one command row, no floating-window chrome.
+   Intentionally scoped to a real top dock: floating and nested worksheets
+   keep their readable standalone layouts. All inputs have dark color-scheme
+   even under macOS light appearance / a customized white studio theme. */
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"]{
+ display:flex!important;flex-direction:row!important;align-items:center!important;
+ gap:3px!important;padding:1px 3px!important;width:100%!important;height:100%!important;
+ min-height:0!important;max-height:100%!important;box-sizing:border-box!important;
+ background:#182b39!important;color:#edf7ff!important;color-scheme:dark!important;
+ border:1px solid #4d7289!important;border-radius:4px!important;
+ box-shadow:none!important;overflow:hidden!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-header{
+ position:relative!important;top:auto!important;flex:0 0 auto!important;
+ display:flex!important;align-items:center!important;justify-content:flex-start!important;
+ gap:3px!important;height:26px!important;min-height:26px!important;max-height:26px!important;
+ width:auto!important;max-width:180px!important;min-width:0!important;
+ margin:0!important;padding:0 2px!important;
+ border:0!important;border-right:1px solid #41647d!important;
+ background:#1e3648!important;color:#dceefb!important;touch-action:none;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-header>strong{display:none!important}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-grip[data-exo-widget-grip="true"]{
+ position:relative!important;top:auto!important;left:auto!important;
+ display:grid!important;place-items:center!important;flex:0 0 20px!important;
+ width:20px!important;min-width:20px!important;height:23px!important;min-height:23px!important;
+ margin:0!important;border:1px solid #638da9!important;
+ background:#2e5067!important;color:#e4f5ff!important;font-size:17px!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade-placement{
+ position:static!important;inset:auto!important;flex:0 0 75px!important;
+ max-width:75px!important;width:75px!important;height:23px!important;min-height:23px!important;
+ padding:1px 4px!important;margin:0!important;
+ background:#243f52!important;color:#eff8ff!important;color-scheme:dark!important;
+ border:1px solid #6789a0!important;border-radius:3px!important;font:10px system-ui!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-header>button{
+ position:static!important;inset:auto!important;flex:0 0 22px!important;
+ width:22px!important;height:23px!important;min-width:22px!important;
+ display:grid!important;place-items:center!important;margin:0!important;padding:2px!important;
+ background:#284359!important;color:#dceeff!important;border:1px solid #41637b!important;
+ border-radius:3px!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade{
+ display:flex!important;flex-direction:row!important;align-items:center!important;
+ flex:1 1 auto!important;min-width:0!important;width:auto!important;
+ height:26px!important;max-height:26px!important;min-height:26px!important;
+ gap:5px!important;padding:0 2px!important;margin:0!important;
+ overflow:hidden!important;background:#182b39!important;color:#eaf4fb!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings{
+ display:flex!important;align-items:center!important;flex-wrap:nowrap!important;
+ flex:0 0 auto!important;gap:3px!important;height:25px!important;
+ margin:0!important;min-height:0!important;max-height:25px!important;overflow:hidden!important;
+ background:transparent!important;color:#c8e0ef!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings :is(label,select,input){
+ font:10px system-ui!important;color:#edf7ff!important;color-scheme:dark!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings :is(select,input){
+ height:23px!important;min-height:23px!important;width:40px!important;min-width:0!important;
+ padding:1px 3px!important;background:#142735!important;border:1px solid #587e98!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid{
+ display:grid!important;flex:1 1 0!important;min-width:0!important;max-width:none!important;
+ grid-template-columns:repeat(12,minmax(0,1fr))!important;
+ grid-template-rows:25px!important;grid-auto-flow:column!important;
+ align-items:center!important;gap:3px!important;
+ height:25px!important;max-height:25px!important;min-height:25px!important;
+ margin:0!important;overflow:hidden!important;
+ background:transparent!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button{
+ display:grid!important;place-items:center!important;
+ width:100%!important;min-width:0!important;max-width:none!important;
+ height:24px!important;min-height:24px!important;max-height:24px!important;
+ margin:0!important;padding:1px!important;
+ border:1px solid #50718a!important;border-radius:3px!important;
+ background:#274355!important;color:#eaf5ff!important;color-scheme:dark!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button:hover:not(:disabled),
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button[aria-pressed="true"]{
+ background:#245d88!important;color:#fff!important;border-color:#92d4ff!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button svg{
+ width:15px!important;height:15px!important;color:#bfe7ff!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button span,
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade>small{display:none!important}
+@container (max-width:780px){
+ [data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings{display:none!important}
+}
+/* Do not inherit the fixed floating dialog's viewport-relative height: the
+   portal is an actual grid-track child when embedded, not a popover. */
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"]{
+ position:relative!important;inset:auto!important;left:auto!important;top:auto!important;
+ right:auto!important;bottom:auto!important;
+ height:100%!important;min-height:0!important;max-height:100%!important;
+ grid-row:2!important;align-self:stretch!important;z-index:1!important;
+}
+/* Keep size choice editable in the top ribbon. Only the redundant point
+   label is hidden; the selected point still controls every native command. */
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings label:nth-child(2){
+ display:flex!important;align-items:center!important;flex:none!important;
+ gap:3px!important;color:#dceefe!important;background:transparent!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings label:nth-child(1){display:none!important}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button[data-grade-action-result="rejected"]{
+ background:#643238!important;border-color:#e49ca3!important;color:#ffe7e9!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button[data-grade-action-result="rejected"] svg{
+ color:#ffced3!important;
+}
+/* Native rejection announcements must remain accessible even when the ribbon
+   suppresses the visible second row of status text. */
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade>small[role="status"]{
+ display:block!important;position:absolute!important;width:1px!important;height:1px!important;
+ overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;
+}
+/* Prevent light-theme globals from painting white selects/inputs or a white
+   nested Grading Toolbar when docked inside one of the two worksheets. */
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"],
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] :is(.clo-floating-tool-header,.exo-quick-grade,.exo-quick-grade__settings){
+ background:#243847!important;color:#edf6fe!important;color-scheme:dark!important;
+}
+.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] :is(button,select,input){
+ background:#2a465a!important;border-color:#5b839c!important;color:#eff8ff!important;color-scheme:dark!important;
+}
+/* Keep point and active graded size visible beside the single-row tools.
+   Changing Size here changes the shared Grading Table and Compare Length
+   selection: this is a real control, not a static mockup. */
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings label:nth-child(-n+2){
+ display:flex!important;align-items:center!important;gap:2px!important;
+ margin:0!important;white-space:nowrap!important;color:#cde2ef!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings label:nth-child(2) select{
+ width:47px!important;min-width:47px!important;
+}
+[data-exo-grade-dock-host="true"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button[data-grade-action-result="rejected"]{
+ border-color:#ea8e88!important;background:#543c45!important;color:#ffe9e7!important;
+ box-shadow:inset 0 0 0 1px #de7977!important;
+}
+[data-exo-grade-dock-host="true"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button[data-grade-action-result="rejected"] svg{
+ color:#ffd7d5!important;
+}
+/* V9: portal-safe theme colors. The widget inherits live studio palette
+   even when its React portal is outside .app-shell. No forced dark scheme. */
+.clo-floating-tool[data-clo-floating-widget="grading-quick-toolbar"]{
+ --grade-surface:var(--studio-panel,#242e36);
+ --grade-control:var(--studio-control,var(--studio-panel,#304658));
+ --grade-hover:var(--studio-control-hover,var(--grade-control));
+ --grade-active:var(--studio-control-active,var(--grade-hover));
+ --grade-field:var(--studio-field,var(--grade-control));
+ --grade-ink:var(--studio-text,#e5f2f8);
+ --grade-muted:var(--studio-muted,#b8cbd7);
+ --grade-edge:var(--studio-border,#506a7d);
+ --grade-accent:var(--studio-accent,#7bc8fb);
+ background:var(--grade-surface)!important;color:var(--grade-ink)!important;
+ border-color:var(--grade-edge)!important;color-scheme:normal!important;
+}
+.clo-floating-tool[data-clo-floating-widget="grading-quick-toolbar"] :is(.clo-floating-tool-header,.exo-quick-grade,.exo-quick-grade__settings){
+ background:var(--grade-surface)!important;color:var(--grade-ink)!important;color-scheme:normal!important;
+ border-color:var(--grade-edge)!important;
+}
+.clo-floating-tool[data-clo-floating-widget="grading-quick-toolbar"] :is(.exo-quick-grade__settings label,.exo-quick-grade>small,.clo-floating-tool-header strong){color:var(--grade-ink)!important}
+.clo-floating-tool[data-clo-floating-widget="grading-quick-toolbar"] :is(.exo-quick-grade select,.exo-quick-grade input,.exo-quick-grade-placement){
+ background:var(--grade-field)!important;color:var(--grade-ink)!important;border-color:var(--grade-edge)!important;color-scheme:normal!important;
+}
+.clo-floating-tool[data-clo-floating-widget="grading-quick-toolbar"] :is(.exo-quick-grade__grid button,.exo-quick-grade__full,.clo-floating-tool-header button,.clo-floating-tool-grip){
+ background:var(--grade-control)!important;color:var(--grade-ink)!important;border-color:var(--grade-edge)!important;
+}
+.clo-floating-tool[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button svg{color:var(--grade-accent)!important}
+.clo-floating-tool[data-clo-floating-widget="grading-quick-toolbar"] :is(.exo-quick-grade__grid button,.exo-quick-grade__full):hover:not(:disabled){background:var(--grade-hover)!important;border-color:var(--grade-accent)!important}
+.clo-floating-tool[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button[aria-pressed="true"]{background:var(--grade-active)!important;border-color:var(--grade-accent)!important}
+.clo-floating-tool[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button[data-grade-action-result="rejected"]{border-color:#c95454!important;box-shadow:inset 0 0 0 1px #c95454!important}
+/* Side docking: a genuinely vertical, compact rail. It is not a rotated
+   ribbon and does not introduce a nested scrolling surface. */
+.cc-embedded-root.cc-embedded-2d .cc-embedded-main{position:relative}
+.cc-embedded-root.cc-embedded-2d .cc-embedded-main>.exo-grade-side-dock-host[data-exo-grade-dock-host="true"]{
+ position:absolute!important;top:42px!important;bottom:32px!important;
+ width:38px!important;min-width:38px!important;max-width:38px!important;
+ height:auto!important;min-height:0!important;display:flex!important;
+ flex-direction:column!important;align-items:center!important;
+ gap:0!important;padding:0!important;z-index:100075!important;
+ border:1px solid transparent!important;background:transparent!important;
+ pointer-events:none!important;overflow:visible!important;
+}
+.cc-embedded-root.cc-embedded-2d .cc-embedded-main>.exo-grade-side-dock-host[data-exo-dock-edge="left"]{left:0!important;right:auto!important}
+.cc-embedded-root.cc-embedded-2d .cc-embedded-main>.exo-grade-side-dock-host[data-exo-dock-edge="right"]{right:0!important;left:auto!important}
+.cc-embedded-root.cc-embedded-2d .cc-embedded-main>.exo-grade-side-dock-host[data-exo-grade-dock-occupied="true"]{
+ width:49px!important;min-width:49px!important;max-width:49px!important;
+ background:var(--studio-panel,#252f37)!important;border-color:var(--studio-border,#506a7d)!important;
+ pointer-events:auto!important;
+}
+.cc-embedded-root.cc-embedded-2d .cc-embedded-main>.exo-grade-side-dock-host[data-exo-dock-edge="left"][data-exo-grade-dock-occupied="true"]{border-radius:0 5px 5px 0}
+.cc-embedded-root.cc-embedded-2d .cc-embedded-main>.exo-grade-side-dock-host[data-exo-dock-edge="right"][data-exo-grade-dock-occupied="true"]{border-radius:5px 0 0 5px}
+.cc-embedded-root.cc-embedded-2d .cc-embedded-main>.exo-grade-side-dock-host[data-exo-grade-dock-occupied="true"]:not(:has(>.clo-floating-tool--docked)){pointer-events:none!important}
+.exo-grade-side-dock-host[data-exo-grade-dock-host="true"]>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"]{
+ position:relative!important;inset:auto!important;flex:1 1 auto!important;
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+ width:100%!important;max-width:100%!important;min-width:0!important;
+ height:100%!important;max-height:100%!important;min-height:0!important;
+ margin:0!important;padding:2px!important;box-shadow:none!important;border:0!important;
+ overflow:hidden!important;container-type:inline-size!important;
+}
+.exo-grade-side-dock-host>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-header{
+ flex:0 0 49px!important;width:100%!important;height:49px!important;min-height:49px!important;
+ display:flex!important;flex-direction:column!important;align-items:center!important;
+ justify-content:center!important;gap:1px!important;padding:1px!important;
+ border-bottom:1px solid var(--grade-edge)!important;
+}
+.exo-grade-side-dock-host>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-header strong{display:none!important}
+.exo-grade-side-dock-host>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-grip{
+ position:relative!important;inset:auto!important;display:grid!important;place-items:center!important;
+ min-height:18px!important;height:18px!important;width:30px!important;font-size:14px!important;
+}
+.exo-grade-side-dock-host>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade-placement{
+ position:relative!important;inset:auto!important;width:39px!important;height:22px!important;
+ max-width:39px!important;min-width:0!important;padding:0!important;font-size:9px!important;
+}
+.exo-grade-side-dock-host>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-header>button{display:none!important}
+.exo-grade-side-dock-host>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade{
+ flex:1 1 auto!important;display:flex!important;flex-direction:column!important;
+ gap:2px!important;padding:3px 1px!important;width:100%!important;height:auto!important;
+ min-height:0!important;max-height:none!important;overflow:hidden!important;
+}
+.exo-grade-side-dock-host>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings,
+.exo-grade-side-dock-host>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade>small{display:none!important}
+.exo-grade-side-dock-host>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid{
+ flex:0 0 auto!important;display:grid!important;grid-template-columns:repeat(1,minmax(0,1fr))!important;
+ grid-template-rows:repeat(12,29px)!important;grid-auto-flow:row!important;
+ gap:2px!important;width:100%!important;min-width:0!important;
+ height:auto!important;max-height:none!important;overflow:hidden!important;
+}
+.exo-grade-side-dock-host>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button{
+ display:grid!important;place-items:center!important;min-width:0!important;width:100%!important;
+ min-height:29px!important;height:29px!important;max-height:29px!important;
+ margin:0!important;padding:2px!important;flex:none!important;border-radius:3px!important;
+}
+.exo-grade-side-dock-host>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button span{display:none!important}
+.exo-grade-side-dock-host>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button svg{height:17px!important;width:17px!important}
+@media(max-height:720px){
+ .exo-grade-side-dock-host>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid{grid-template-rows:repeat(12,24px)!important}
+ .exo-grade-side-dock-host>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button{height:24px!important;min-height:24px!important;max-height:24px!important}
+}
+.exo-grade-side-dock-host[data-exo-grade-dock-drag-hover="true"]{background:color-mix(in srgb,var(--studio-accent,#75b9ee) 25%,transparent)!important;border:2px dashed var(--studio-accent,#75b9ee)!important;pointer-events:none!important}
+/* Side rails should remain invisible and not obstruct canvas before a widget is docked. */
+.exo-grade-side-dock-host[data-exo-grade-dock-occupied="false"]{pointer-events:none!important}
+
+/* Universal miniaturized nested mode for Grading Table and Compare Length.
+   Keep all twelve native commands, but eliminate the floating window footprint
+   and adapt the grid to the actual worksheet width. */
+.exo-grade-bottom-widget__toolbar-slot:has(>.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"]){
+ min-width:0!important;width:100%!important;max-width:100%!important;
+ padding:0!important;margin:0!important;overflow:visible!important;
+ background:#edf0f2!important;border-bottom:1px solid #cbd0d6!important;
+}
+.exo-grade-bottom-widget__toolbar-slot>.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"]{
+ position:relative!important;inset:auto!important;width:100%!important;
+ min-width:0!important;max-width:100%!important;min-height:0!important;
+ border:0!important;border-radius:0!important;margin:0!important;
+ box-shadow:none!important;container-type:inline-size!important;
+ background:#f4f5f6!important;color:#242a30!important;
+ --grade-surface:#f4f5f6;--grade-control:#ffffff;--grade-field:#ffffff;
+ --grade-hover:#e4e8ec;--grade-active:#d9e0e6;--grade-ink:#242a30;
+ --grade-muted:#505963;--grade-edge:#c4cbd2;--grade-accent:#465360;
+}
+.exo-grade-bottom-widget__toolbar-slot>.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-header{
+ height:20px!important;min-height:20px!important;padding:0 3px!important;
+ background:#e7eaed!important;color:#242a30!important;border-bottom:1px solid #cbd0d6!important;
+}
+.exo-grade-bottom-widget__toolbar-slot>.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade-placement{
+ top:1px!important;left:29px!important;right:29px!important;
+ width:calc(100% - 58px)!important;height:18px!important;font-size:10px!important;
+ color:#242a30!important;background:#fff!important;border-color:#adb6bf!important;
+}
+.exo-grade-bottom-widget__toolbar-slot>.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade{
+ display:flex!important;flex-direction:column!important;min-height:0!important;height:auto!important;
+ max-height:none!important;gap:2px!important;padding:3px!important;
+ background:#f4f5f6!important;color:#242a30!important;
+}
+.exo-grade-bottom-widget__toolbar-slot>.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings{
+ display:flex!important;flex-wrap:wrap!important;gap:3px!important;
+ height:auto!important;max-height:none!important;min-height:0!important;
+ padding:0 1px!important;overflow:visible!important;
+}
+.exo-grade-bottom-widget__toolbar-slot>.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings label{
+ font-size:10px!important;color:#303841!important;white-space:nowrap!important;
+}
+.exo-grade-bottom-widget__toolbar-slot>.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid{
+ display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;
+ grid-template-rows:repeat(2,23px)!important;gap:2px!important;
+ width:100%!important;min-width:0!important;height:auto!important;
+}
+.exo-grade-bottom-widget__toolbar-slot>.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button{
+ display:grid!important;place-items:center!important;height:23px!important;
+ min-height:23px!important;min-width:0!important;padding:2px!important;
+ background:#fff!important;color:#242a30!important;border:1px solid #c4cbd2!important;
+ border-radius:3px!important;box-shadow:none!important;
+}
+.exo-grade-bottom-widget__toolbar-slot>.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button svg{
+ width:14px!important;height:14px!important;color:#394650!important;
+}
+.exo-grade-bottom-widget__toolbar-slot>.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button span{
+ display:none!important;
+}
+@container (max-width:340px){
+ .exo-grade-bottom-widget__toolbar-slot>.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;grid-template-rows:repeat(3,23px)!important;
+ }
+}
+@container (max-width:210px){
+ .exo-grade-bottom-widget__toolbar-slot>.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:repeat(4,23px)!important;
+ }
+}
+
+/* Rams-inspired worksheet integration: only a shallow command strip consumes
+   table height. The 12 commands remain present and keyboard accessible. */
+.exo-grade-bottom-widget__toolbar-slot>.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings{
+ display:none!important;
+}
+.exo-grade-bottom-widget__toolbar-slot>.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade{
+ padding:2px 4px!important;gap:0!important;
+}
+.exo-grade-bottom-widget__toolbar-slot>.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid{
+ grid-template-columns:repeat(12,minmax(0,1fr))!important;
+ grid-template-rows:repeat(1,23px)!important;
+}
+@container (max-width:460px){
+ .exo-grade-bottom-widget__toolbar-slot>.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid{
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  grid-template-rows:repeat(2,22px)!important;
+ }
+}
+@container (max-width:245px){
+ .exo-grade-bottom-widget__toolbar-slot>.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  grid-template-rows:repeat(3,22px)!important;
+ }
+}

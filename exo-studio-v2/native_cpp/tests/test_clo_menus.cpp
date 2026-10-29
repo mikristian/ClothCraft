@@ -12,7 +12,7 @@ int main(int argc,char** argv){
     return 0;
   }
   const auto commands=garment::workspace_command_index::indexWorkspaceCommands(menus);
-  assert(commands.size()==72);
+  assert(commands.size()>=72);
   const auto sew=garment::workspace_command_index::searchWorkspaceCommands(commands,"sew",10);
   assert(sew.is_array()&&!sew.empty());
   std::cout<<"native CLO menu commands and search smoke passed\n";

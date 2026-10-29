@@ -1,0 +1,25 @@
+/* Keep the garment viewport dominant on both portrait and landscape artboards. */
+.tpws-interactive-3d.tpws-interactive-fullpage{box-sizing:border-box;width:calc(100% - 16px);max-width:none;height:calc(100% - 16px);min-height:0;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto minmax(100px,24%);gap:6px;margin:8px;overflow:hidden}
+.tpws-interactive-fullpage .tpws-interactive-square{width:100%;max-width:none;height:100%;min-height:0;aspect-ratio:auto;margin:0;border-width:1px}
+.tpws-interactive-fullpage .tpws-interactive-popover{left:10px;bottom:10px;right:auto;max-width:min(340px,70%);pointer-events:none;backdrop-filter:blur(7px)}
+.tpws-interactive-fullpage .tpws-interactive-register{min-height:0;max-height:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;align-content:start;display:block;scrollbar-gutter:stable}
+.tpws-interactive-fullpage .tpws-interactive-register>strong{display:block;margin-bottom:6px}
+.tpws-interactive-fullpage .tpws-interactive-detail{margin:5px 0}
+.tpws-interactive-fullpage .tpws-interactive-selected{padding:8px 10px;background:#eef3f6;border:1px solid #cedde5;display:grid;gap:5px}
+.tpws-interactive-fullpage .tpws-interactive-selected>span{font-size:10px;color:#405361}
+.tpws-interactive-fullpage .tpws-interactive-selected pre{white-space:pre-wrap;overflow:auto;overflow-wrap:anywhere;max-height:120px;font-size:10px;margin:0;user-select:text}
+.tpws-interactive-fullpage .tpws-interactive-detail small{color:#587081;font-size:10px}
+@media (min-width:850px){.tpws-landscape .tpws-interactive-fullpage.tpws-interactive-3d{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto minmax(0,25%)}}
+.tpws-native-editor [data-techpack-sheet="interactive3d"] .tpws-interactive-fullpage.tpws-interactive-3d{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto minmax(0,23%);min-height:0}
+.tpws-native-editor [data-techpack-sheet="interactive3d"] .tpws-interactive-fullpage .tpws-interactive-register{grid-column:1;grid-row:4}
+.tpws-native-editor [data-techpack-sheet="interactive3d"] .tpws-interactive-fullpage .tpws-interactive-square{grid-column:1;grid-row:2;max-width:none}
+/* The last sheet is a dedicated interactive garment artboard. Its own source
+   index replaces the inherited factory header/table/notes while editing. */
+@media screen{
+ .tpws-native-editor [data-techpack-sheet="interactive3d"] [data-board-object="header"],
+ .tpws-native-editor [data-techpack-sheet="interactive3d"] [data-board-object="notes"],
+ .tpws-native-editor [data-techpack-sheet="interactive3d"] [data-board-object="spec-table"],
+ .tpws-native-editor [data-techpack-sheet="interactive3d"] [data-board-object="footer-logo"]{display:none!important}
+ .tpws-native-editor [data-techpack-sheet="interactive3d"] .tpws-interactive-fullpage.tpws-interactive-3d{grid-template-rows:auto minmax(0,1fr) auto minmax(0,18%)}
+}
+@media print{.tpws-interactive-fullpage .tpws-interactive-selected pre{max-height:none}.tpws-interactive-fullpage .tpws-interactive-square{display:none}}

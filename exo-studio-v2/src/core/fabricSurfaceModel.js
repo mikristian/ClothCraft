@@ -1,8 +1,9 @@
 // Bounded garment optical controls, distinct from the XPBD/PPF mechanical
 // material. Visual plausibility does NOT imply lab-measured textile physics.
+import {rustOpticsClamp} from './rustTextileOpticsKernel.js'
 const clamp = (value, minimum, maximum, fallback) => {
   const n = Number(value)
-  return Number.isFinite(n) ? Math.max(minimum, Math.min(maximum, n)) : fallback
+  return Number.isFinite(n) ? rustOpticsClamp(n,minimum,maximum) : fallback
 }
 
 export function normalizeFabricOptics(fabric = {}) {

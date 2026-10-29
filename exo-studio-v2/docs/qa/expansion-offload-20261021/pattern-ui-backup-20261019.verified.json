@@ -1,0 +1,10 @@
+{
+  "source": "/Users/mikylecouto/Chat On Steroids Workspace/exo-clothcraft-v2/integrations/clothcraft/output/pattern-ui-backup-20261019",
+  "destination": "jarvismikristian@100.82.90.101:/Volumes/Expansion/EXO-Engineering/verified-backups/EXO-ClothCraft-Offload-20261021/pattern-ui-backup-20261019.tar.gz",
+  "archiveSha256": "9546696aa57ae3c8f20caf5a4f99b7c0dbac7aad295b1c2f42dc560b4bc08dd1",
+  "archiveBytes": 318272496,
+  "membersVerified": 732,
+  "logicalFileBytes": 369719933,
+  "verify": "remote SSH archive full stream and per-member SHA-256",
+  "utc": "2026-10-21T03:39:31.594909+00:00"
+}

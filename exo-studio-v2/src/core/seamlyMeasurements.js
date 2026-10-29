@@ -3,6 +3,7 @@
 // Seamly construction tools and formula graphs in .sm2d are NOT flattened
 // or claimed to be interchangeable with the Garment Studio 2D editor.
 import { XMLParser, XMLValidator } from 'fast-xml-parser'
+import {rustSeamlyCentimeters} from './rustInterchangeMathKernel.js'
 
 const MAX_XML_LENGTH = 2 * 1024 * 1024
 const VALID_NAME = /^[A-Za-z_][\w-]{0,127}$/
@@ -48,14 +49,14 @@ export function parseSeamlyMeasurements(source, { filename = '' } = {}) {
     const name = String(entry['@_name'] || '').trim()
     if (!VALID_NAME.test(name) || Object.hasOwn(measurements, name)) throw new Error(`Invalid or duplicate Seamly measurement identifier: ${name}`)
     const raw = kind === 'smms' ? entry['@_base'] : entry['@_value']
-    const baseCm = finiteMeasurement(raw, `${name} base value`) * scaleToCm
+    const baseCm = rustSeamlyCentimeters(finiteMeasurement(raw, `${name} base value`),scaleToCm)
     measurements[name] = {
       name,
       baseCm: Number(baseCm.toFixed(6)),
       description: String(entry['@_description'] || entry['@_full_name'] || ''),
       ...(kind === 'smms' ? {
-        sizeIncrementCm: Number((finiteMeasurement(entry['@_size_increase'] ?? '0', `${name} size increment`, { allowNegative: true }) * scaleToCm).toFixed(6)),
-        heightIncrementCm: Number((finiteMeasurement(entry['@_height_increase'] ?? '0', `${name} height increment`, { allowNegative: true }) * scaleToCm).toFixed(6)),
+        sizeIncrementCm: Number(rustSeamlyCentimeters(finiteMeasurement(entry['@_size_increase'] ?? '0', `${name} size increment`, { allowNegative: true }),scaleToCm).toFixed(6)),
+        heightIncrementCm: Number(rustSeamlyCentimeters(finiteMeasurement(entry['@_height_increase'] ?? '0', `${name} height increment`, { allowNegative: true }),scaleToCm).toFixed(6)),
       } : {}),
     }
   }

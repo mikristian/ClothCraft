@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { MeshBVH } from 'three-mesh-bvh'
+import { meshContactIntrusion, meshContactDirectionScale, meshContactCorrection } from './rustMeshAvatarContactKernel.js'
 
 // Static, explicit triangle collision proxy built from the avatar's rendered
 // geometry. This is an experimental surface-distance guard, not swept CCD.
@@ -77,9 +78,9 @@ export function sampleMeshContact(collider, point, options = {}) {
     }
     inside = crossings > 0 && crossings < 32 && crossings % 2 === 1
   }
-  const intrusion = inside ? distance + clearance : clearance - distance
+  const intrusion = meshContactIntrusion(distance, clearance, inside)
   return { inside, distance, intrusion, nearest: near.point,
-    direction: distance > 1e-8 ? delta.multiplyScalar((inside ? -1 : 1) / distance) : new THREE.Vector3(0, 0, 0) }
+    direction: distance > 1e-8 ? delta.multiplyScalar(meshContactDirectionScale(distance, inside)) : new THREE.Vector3(0, 0, 0) }
 }
 
 export function correctMeshAvatarContacts(simulation, collider, options = {}) {
@@ -96,7 +97,7 @@ export function correctMeshAvatarContacts(simulation, collider, options = {}) {
       if (contact.distance < 0.025) nearby++
       if (contact.intrusion <= 0 || contact.distance > 0.035 || !limit) continue
       maximumIntrusionMm = Math.max(maximumIntrusionMm, contact.intrusion * 1000)
-      const correction = Math.min(limit, contact.intrusion)
+      const correction = meshContactCorrection(limit, contact.intrusion)
       particle.position.addScaledVector(contact.direction, correction)
       particle.previous.copy(particle.position)
       moved++

@@ -1,0 +1,17 @@
+.accumark-digitizing{display:grid;gap:14px;width:100%;max-width:750px;padding:18px;border:1px solid var(--border,#5555);border-radius:12px;color:inherit;background:var(--panel-bg,transparent);font:inherit}
+.accumark-digitizing h3,.accumark-digitizing p{margin:0}
+.accumark-digitizing fieldset{min-width:0;display:grid;gap:12px;margin:0;padding:12px;border:1px solid var(--border,#8885);border-radius:8px}
+.accumark-digitizing legend{padding:0 6px;font-weight:650}
+.accumark-digitizing__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.accumark-digitizing label{display:grid;gap:5px;font-size:.9em;font-weight:550}
+.accumark-digitizing input:not([type=checkbox]),.accumark-digitizing textarea,.accumark-digitizing select{box-sizing:border-box;width:100%;min-width:0;padding:9px;border:1px solid #8888;border-radius:6px;background:var(--input-bg,transparent);color:inherit;font:inherit}
+.accumark-digitizing textarea{resize:vertical;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.accumark-digitizing__hint{font-size:.82em;line-height:1.45;opacity:.78}
+.accumark-digitizing .accumark-digitizing__check{display:flex;align-items:center;gap:9px}
+.accumark-digitizing__error{color:#e36b71}
+.accumark-digitizing__warnings{color:#d4a350}
+.accumark-digitizing__warnings ul{margin:6px 0 0;padding-left:20px}
+.accumark-digitizing__success{color:#5fb995}
+.accumark-digitizing button{justify-self:start;padding:10px 18px;border:0;border-radius:7px;background:#526bd8;color:white;font-weight:650;cursor:pointer}
+.accumark-digitizing button:disabled{opacity:.45;cursor:not-allowed}
+.accumark-digitizing :focus-visible{outline:2px solid #648bff;outline-offset:2px}

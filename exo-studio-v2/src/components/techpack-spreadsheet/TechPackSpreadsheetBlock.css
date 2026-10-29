@@ -1,0 +1,72 @@
+.tps{display:flex;flex-direction:column;min-width:0;min-height:320px;height:100%;background:#f7f8fa;color:#232731;font:12px/1.35 Inter,system-ui,sans-serif;border:1px solid #ced3dc;border-radius:8px;overflow:hidden}
+.tps button,.tps input,.tps select{font:inherit;color:inherit}
+.tps button{border:1px solid #d5d9e0;background:#fff;border-radius:4px;cursor:pointer;padding:5px 9px}
+.tps button:hover:not(:disabled){background:#e8edf7}
+.tps button:disabled{opacity:.45;cursor:default}
+.tps-top{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;color:#f7f7f8;background:#252c39}
+.tps-top>div{display:flex;align-items:center;gap:13px}
+.tps-top strong{font-size:10px;letter-spacing:.12em}
+.tps-top span{opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tps-top button{background:#374151;border-color:#586273;color:white}
+.tps-tools{display:flex;align-items:center;flex-wrap:wrap;gap:6px;padding:8px 12px;background:#fff;border-bottom:1px solid #d9dce1}
+.tps-tools label{display:flex;align-items:center;gap:5px;margin:0 5px}
+.tps-tools select{border:1px solid #d5d9e0;border-radius:4px;padding:4px}
+.tps-tools input[type=color]{width:29px;height:27px;border:1px solid #d5d9e0;padding:2px;background:white;cursor:pointer}
+.tps-formula{display:flex;align-items:center;gap:12px;height:38px;padding:4px 10px;background:#f4f6f9;border-bottom:1px solid #d5d9e0}
+.tps-formula output{min-width:50px;font-weight:700;color:#39465b;text-align:center}
+.tps-formula span{font-family:Georgia,serif;font-style:italic;color:#818998;font-size:17px}
+.tps-formula input{flex:1;min-width:0;height:27px;padding:0 9px;background:white;border:1px solid #d5d9e0;border-radius:3px}
+.tps-formula .tps-result{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#345d92;font:600 11px Inter,system-ui,sans-serif}
+.tps-formula .tps-error,.tps .tps-cell-error{color:#b53b42}
+.tps-formula .tps-origin{white-space:nowrap;font:600 10px Inter,system-ui,sans-serif;color:#667589;background:#e5eaf2;border-radius:3px;padding:3px 6px}
+.tps td.tps-cell-source{box-shadow:inset 3px 0 #bcc9dd}
+.tps-scroll{overflow:auto;flex:1;min-height:140px;outline:none;background:#fff}
+.tps-scroll:focus-visible{box-shadow:inset 0 0 0 2px #748fc9}
+.tps table{border-collapse:separate;border-spacing:0;table-layout:fixed;width:max-content;min-width:100%}
+.tps .tps-index{width:48px}
+.tps th,.tps td{box-sizing:border-box;border-right:1px solid #e0e3e9;border-bottom:1px solid #e0e3e9;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;height:34px;padding:5px 8px}
+.tps thead th{position:sticky;top:0;z-index:2;background:var(--tps-header,#e8ebf1);color:var(--tps-header-text,#384154)}
+.tps .tps-corner{position:sticky;left:0;z-index:4}
+.tps .tps-colhead{padding:0;position:sticky}
+.tps-colhead>div{display:flex;gap:4px;align-items:center;padding:2px 7px}
+.tps-colhead span:first-child{font-size:10px;color:inherit;opacity:.7;font-weight:700}
+.tps-colhead input{min-width:0;flex:1;width:20px;border:0;background:transparent;font-size:11px;font-weight:600;outline-offset:1px}
+.tps-colhead button,.tps-rowhead button{border:0;background:none;padding:1px 4px;color:#89909d;font-size:15px}
+.tps-colhead button:hover,.tps-rowhead button:hover{color:#b13742}
+.tps-resizer{position:absolute;right:-3px;top:0;bottom:0;width:7px;cursor:col-resize;z-index:3}
+.tps-rowhead{position:sticky;left:0;z-index:1;background:#f2f3f7;font-weight:500;color:#5e6777}
+.tps-rowhead{display:table-cell}
+.tps-rowhead button{float:right}
+.tps td{cursor:cell;background:#fff;user-select:none}
+.tps tbody tr:nth-child(even) td{background:var(--tps-stripe,#f5f8fc)}
+.tps-properties{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:7px 12px;background:#eef1f6;border-bottom:1px solid #d1d8e2;font-size:11px}
+.tps-properties span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:270px}
+.tps-colhead button,.tps-rowhead button{font-size:12px}
+.tps tbody tr td.tps-selected{box-shadow:inset 0 0 0 999px rgba(70,123,213,.15)}
+.tps table.tps-dark td{color:#f3f6fc;background:#28384c}
+.tps table.tps-dark tbody tr:nth-child(even) td{background:var(--tps-stripe,#334258)}
+.tps table.tps-dark .tps-rowhead{background:#243449;color:#f3f6fc}
+.tps table.tps-dark td.tps-selected{box-shadow:inset 0 0 0 999px rgba(123,169,255,.18)}
+.tps .tps-colhead input:focus-visible{outline:2px solid #427bd2;outline-offset:1px;background:rgba(255,255,255,.18)}
+.tps .tps-tools button:focus-visible,.tps .tps-colhead button:focus-visible{outline:2px solid #427bd2;outline-offset:2px}
+.tps td.tps-active{outline:2px solid #416ab4;outline-offset:-2px;position:relative;z-index:1}
+.tps-editor{box-sizing:border-box;width:100%;height:28px;padding:3px 5px;border:1px solid #416ab4;outline:none;background:white}
+.tps-footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid #d6dae2;padding:7px 12px;color:#616c7f;background:#fafbfc;font-size:11px}
+/* Optional native GridCraft Rust oracle. EXO remains authoritative for raw cell
+   editing; this confirms standalone expressions only. */
+.tps-formula .tps-rust-verify{flex:none;padding:4px 7px;max-width:92px;font:700 10px/1.2 Inter,Arial,sans-serif;border:1px solid #7899a3;background:#f1f6f7;color:#24606a;white-space:nowrap}
+.tps-formula .tps-rust-status{flex:0 1 auto;max-width:166px;font:700 10px/1.2 Inter,Arial,sans-serif;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tps-formula .tps-rust-match{color:#267347}
+.tps-formula .tps-rust-mismatch{color:#a62d34}
+.tps-formula .tps-rust-checking,.tps-formula .tps-rust-unavailable{color:#666b75}
+/* The spreadsheet embedded in a draggable page box has a much shorter
+   viewport than the dedicated sheet. Reserve actual pointer-visible room for
+   the grid: a sticky header otherwise completely covers its first cell. */
+.tpbc.tpbc-table>.tps{min-height:0;overflow:hidden}
+.tpbc.tpbc-table .tps-top{display:none}
+.tpbc.tpbc-table .tps-tools{flex:none;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;max-height:38px;min-height:38px}
+.tpbc.tpbc-table .tps-tools>*{flex:none}
+.tpbc.tpbc-table .tps-formula{flex:none;min-height:29px}
+.tpbc.tpbc-table .tps-footer{display:none}
+.tpbc.tpbc-table .tps-scroll{flex:1;min-height:0;overflow:auto}
+.tpbc.tpbc-table .tps th,.tpbc.tpbc-table .tps td{height:30px}

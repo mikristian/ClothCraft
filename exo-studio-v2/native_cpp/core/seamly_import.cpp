@@ -99,7 +99,9 @@ Json parseSeamlyConstructionReference(const std::string& xml,const std::string& 
  auto blocks=children(root,"draftBlock"),draws=children(root,"draw");blocks.insert(blocks.end(),draws.begin(),draws.end());
  if(blocks.empty()||blocks.size()>100)throw std::invalid_argument("Expected 1–100 Seamly2D draft blocks");
  Json increments=Json::array();std::set<std::string> defined,used;
- for(Node item:children(child(root,"increments"),"increment")){
+ const auto incrementNodes=children(child(root,"increments"),"increment");
+ if(incrementNodes.size()>6000)throw std::invalid_argument("Seamly construction contains too many increments");
+ for(Node item:incrementNodes){
   auto id=clipped(attr(item,"name"),128);
   if(id.empty()||!defined.insert(id).second)throw std::invalid_argument("Duplicate or invalid Seamly increment: "+id);
   increments.push_back({{"name",id},{"formula",clipped(attr(item,"formula"),4096)},{"description",clipped(attr(item,"description"),2048)}});

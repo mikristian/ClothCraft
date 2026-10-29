@@ -1,0 +1,12 @@
+.clo-inspector .exo-hardware-properties{display:grid;gap:2px;padding:2px 0 7px}
+.clo-inspector .exo-hardware-property-readout{font-size:10px;line-height:1.55;color:#a9b9c2;padding:4px 0 9px}
+.clo-inspector .exo-hardware-property-field{display:grid;grid-template-columns:minmax(80px,1fr) minmax(0,1fr);gap:7px 12px;align-items:center;min-height:37px;padding:6px 0;border-bottom:1px solid #354047}
+.clo-inspector .exo-hardware-property-field>label{font-size:10px;color:#b9c8cf}
+.clo-inspector .exo-hardware-property-number{display:flex;gap:5px;align-items:center;min-width:0}
+.clo-inspector .exo-hardware-property-number span{font-size:9px;color:#8ea3ad}
+.clo-inspector .exo-hardware-property-field input[type=number],.clo-inspector .exo-hardware-property-field input[type=text]{min-width:0;width:100%;box-sizing:border-box;border:1px solid #566872;border-radius:3px;min-height:29px;background:#20292f;color:#fff;padding:4px 7px;font-size:11px;font-variant-numeric:tabular-nums}
+.clo-inspector .exo-hardware-property-field input[type=range]{grid-column:2;width:100%;min-height:16px;accent-color:#7cc5e3;cursor:pointer}
+.clo-inspector .exo-hardware-property-field input[type=color]{height:30px;width:48px;border:1px solid #566872;border-radius:3px;padding:2px;background:#20292f;cursor:pointer}
+.clo-inspector .exo-hardware-color-edit{display:flex;gap:8px;align-items:center;font-size:10px;color:#b8c8d0}
+.clo-inspector .exo-hardware-property-error{grid-column:1/-1;color:#ffb2a8}
+.clo-inspector .exo-hardware-property-field input:focus-visible{outline:2px solid #86cce9;outline-offset:1px}

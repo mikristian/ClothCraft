@@ -1,0 +1,207 @@
+{
+  "researchedAt": "2026-10-16",
+  "source": "CLO CONNECT",
+  "notice": "Public listing references only; no thumbnails downloaded due HTTP 403 and photo reuse rights not established.",
+  "items": [
+    {
+      "id": "R01",
+      "type": "runway",
+      "title": "Kev-in-Design scene 31",
+      "url": "https://connect.clo-set.com/detail/9cd729d4e27746daa268b793ba52ffe0",
+      "creator": "Kev-in-DESIGN",
+      "cue": "Circular modern runway, light rigs",
+      "blenderCue": "Circular stage, radial luminaire arrays",
+      "imageStatus": "Unavailable: public thumbnail URL not extracted"
+    },
+    {
+      "id": "R02",
+      "type": "runway",
+      "title": "Mountain runway",
+      "url": "https://connect.clo-set.com/detail/28aad02e57414a63a27d0aa8545c901c",
+      "creator": "SO",
+      "cue": "Mountain setting, indoor/outdoor tags",
+      "blenderCue": "Mountain mesh, atmospheric fog, raised catwalk",
+      "imageStatus": "Unavailable: public thumbnail URL not extracted"
+    },
+    {
+      "id": "R03",
+      "type": "runway",
+      "title": "Side Molding Mirror Stage",
+      "url": "https://connect.clo-set.com/detail/c4b283e416ed462ca376fc135b17c736",
+      "creator": "fadyboo",
+      "cue": "Mirror and molding stage",
+      "blenderCue": "Reflective panels, decorative molding, symmetric light",
+      "imageStatus": "Unavailable: public thumbnail URL not extracted"
+    },
+    {
+      "id": "R04",
+      "type": "runway",
+      "title": "Silver line Detail Stage",
+      "url": "https://connect.clo-set.com/detail/485e3b1c60ed45b292abdaeb27d21e9e",
+      "creator": "fadyboo",
+      "cue": "Runway stage, walking and animation tags",
+      "blenderCue": "Linear illuminated strips, long walk path",
+      "imageStatus": "Unavailable: public thumbnail URL not extracted"
+    },
+    {
+      "id": "R05",
+      "type": "runway",
+      "title": "Free runway stage",
+      "url": "https://connect.clo-set.com/zh/detail/fb6d66aa35f54fd69069f987a7499813",
+      "creator": "Kev-in-DESIGN · web-index verified · published 2024-04-05 · free",
+      "cue": "Free runway stage listing; geometry and actual image remain uninspected",
+      "blenderCue": "Modular catwalk; verify visual details before matching scene",
+      "imageStatus": "Unavailable: public thumbnail URL not extracted"
+    },
+    {
+      "id": "S01",
+      "type": "studio",
+      "title": "Studio scene design",
+      "url": "https://connect.clo-set.com/detail/500cae37e1e5483c82625c81c1524204",
+      "creator": "SO",
+      "cue": "Modern/natural configurable studio",
+      "blenderCue": "Replaceable backdrops, plants and adjustable light",
+      "imageStatus": "Unavailable: public thumbnail URL not extracted"
+    },
+    {
+      "id": "S02",
+      "type": "studio",
+      "title": "Pink studio scene",
+      "url": "https://connect.clo-set.com/detail/afbb89eb727f4d7c993c026a9a50b7ac",
+      "creator": "SO",
+      "cue": "Pink studio scene",
+      "blenderCue": "Pink cyclorama and pale diffuse softboxes",
+      "imageStatus": "Unavailable: public thumbnail URL not extracted"
+    },
+    {
+      "id": "S03",
+      "type": "studio",
+      "title": "Fashion Studio Scene for CLO 3D Rendering",
+      "url": "https://connect.clo-set.com/detail/48ae4f2b32c14094af83003622238567",
+      "creator": "Vida Soheili",
+      "cue": "Fashion renderer studio",
+      "blenderCue": "Seamless corners and large area light banks",
+      "imageStatus": "Unavailable: public thumbnail URL not extracted"
+    },
+    {
+      "id": "S04",
+      "type": "studio",
+      "title": "Luxury Black Marble Scene",
+      "url": "https://connect.clo-set.com/detail/f18e360bd59344e0adf1323d1a00ba11",
+      "creator": "bradesigner",
+      "cue": "Black marble wall and product display/showroom tags",
+      "blenderCue": "Black marble PBR, decorative wall panels, display plinth",
+      "imageStatus": "Unavailable: public thumbnail URL not extracted"
+    },
+    {
+      "id": "S05",
+      "type": "studio",
+      "title": "Stage-HHT-12",
+      "url": "https://connect.clo-set.com/detail/c4b62fa6a98b47109950b1686c23ddf3",
+      "creator": "Huang Xiong Jun",
+      "cue": "Indoor studio stage, lighting props",
+      "blenderCue": "Platform and adjustable spotlights",
+      "imageStatus": "Unavailable: public thumbnail URL not extracted"
+    },
+    {
+      "id": "S06",
+      "type": "studio",
+      "title": "Stage-HHT-11",
+      "url": "https://connect.clo-set.com/detail/ae79d5c7b1f84664bf60118f656e3b5e",
+      "creator": "Huang Xiong Jun",
+      "cue": "Black/white backdrop studio platform",
+      "blenderCue": "Two-tone staging and interchangeable fabric drops",
+      "imageStatus": "Unavailable: public thumbnail URL not extracted"
+    },
+    {
+      "id": "S07",
+      "type": "studio",
+      "title": "Backdrop stage scene",
+      "url": "https://connect.clo-set.com/detail/1e420605d8a74cd3831e2f364966fb4c",
+      "creator": "unverified",
+      "cue": "Modern/fantasy studio backdrop tags",
+      "blenderCue": "Decorative relief and dramatic backlight",
+      "imageStatus": "Unavailable: public thumbnail URL not extracted"
+    },
+    {
+      "id": "S08",
+      "type": "studio",
+      "title": "KW 05 STUDIO",
+      "url": "https://connect.clo-set.com/detail/ab482daffe4841239ca3832e25230b6f",
+      "creator": "KILLER WAVES SG",
+      "cue": "Indoor studio/stage tags",
+      "blenderCue": "Minimal modular display stage",
+      "imageStatus": "Unavailable: public thumbnail URL not extracted"
+    },
+    {
+      "id": "S09",
+      "type": "studio",
+      "title": "scene- romantic wedding stage",
+      "url": "https://connect.clo-set.com/detail/18cc8e5802394463bf1c7df820ac5ee7",
+      "creator": "Rimart studio",
+      "cue": "Romantic wedding staging",
+      "blenderCue": "Floral arches, soft warm practical bulbs",
+      "imageStatus": "Unavailable: public thumbnail URL not extracted"
+    },
+    {
+      "id": "S10",
+      "type": "studio",
+      "title": "Entrance gate scene",
+      "url": "https://connect.clo-set.com/detail/bd89936f4775407abb3fc6cb648eea90",
+      "creator": "SO · web-index verified · published 2024-10-16",
+      "cue": "Indexed stage, flower, trees, water and gate tags",
+      "blenderCue": "Original landscaped entrance gate, floral plantings, tree silhouettes and reflective water plane",
+      "imageStatus": "Unavailable: public thumbnail URL not extracted"
+    },
+    {
+      "id": "S11",
+      "type": "studio",
+      "title": "Stage-HHT-17",
+      "url": "https://connect.clo-set.com/detail/f7555fc1652e407c883fa1e159deb61f",
+      "creator": "Huang Xiong Jun",
+      "cue": "Studio indoor/outdoor stage",
+      "blenderCue": "Lightweight staging platform and pose marks",
+      "imageStatus": "Unavailable: public thumbnail URL not extracted"
+    },
+    {
+      "id": "S12",
+      "type": "studio",
+      "title": "SLBS DARK GREEN",
+      "url": "https://connect.clo-set.com/detail/8f305583f33e4b33a7820d5cff2c96dc",
+      "creator": "elaineil",
+      "cue": "Dark green minimalist backdrop, spotlight",
+      "blenderCue": "Deep green curved wall and sharply focused spot",
+      "imageStatus": "Unavailable: public thumbnail URL not extracted"
+    },
+    {
+      "id": "S13",
+      "type": "studio",
+      "title": "Mirror metall room Type scene",
+      "url": "https://connect.clo-set.com/detail/4065a352d5aa4e2d81b16291dd27a0d7",
+      "creator": "O 3DStudio",
+      "cue": "Reflective metal room/wall",
+      "blenderCue": "Roughness-graded metal walls and reflection cards",
+      "imageStatus": "Unavailable: public thumbnail URL not extracted"
+    },
+    {
+      "id": "S14",
+      "type": "studio",
+      "title": "Industrial Stage",
+      "url": "https://connect.clo-set.com/ko/detail/a37277da3c6c4d28be123f4ba77bbd9a",
+      "creator": "web-index verified · published 2026-06-17",
+      "cue": "Indexed tags IndustrialStage, Runway, ZSE, Factory and FashionShow; actual image uninspected",
+      "blenderCue": "Industrial beams, factory backdrop, concrete deck and dramatic runway lighting",
+      "imageStatus": "Unavailable: public thumbnail URL not extracted"
+    },
+    {
+      "id": "S15",
+      "type": "studio",
+      "title": "Infinite Mirrors room Scene for Kpop mirror",
+      "url": "https://connect.clo-set.com/detail/2ac1db9f602e497b854bb627f7f319d8",
+      "creator": "O 3DStudio",
+      "cue": "Mirrors, metallic rusty room/wall tags",
+      "blenderCue": "Repeated mirror tunnels, rough oxidized steel panels, controlled practical lights",
+      "imageStatus": "Unavailable: public thumbnail URL not extracted"
+    }
+  ]
+}

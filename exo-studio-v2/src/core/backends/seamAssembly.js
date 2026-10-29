@@ -1,4 +1,8 @@
 import { inspectNativeAssemblyPose } from './nativeAssemblyPreflight.js'
+import { auditNativePrincipalStrain } from './nativePrincipalStrainAudit.js'
+import { auditNativeSeamCandidate } from './nativeSeamCandidateGate.js'
+import { inspectNativeSampledContactPath } from './nativeSampledContactPath.js'
+import { validateNativeAssemblyMeshFaces20261027 } from './nativeAssemblyMeshValidation20261027.js'
 import * as THREE from 'three'
 import { avatarClearance } from '../physics.js'
 
@@ -38,7 +42,11 @@ function projectDistance(positions, invMasses, a, b, rest, stiffness, maxMove) {
   const distance = Math.hypot(dx, dy, dz)
   if (!(distance > 1e-10)) return
   const error = (distance - rest) / distance
-  const correction = Math.max(-maxMove/Math.max(wa/mass,wb/mass),Math.min(maxMove/Math.max(wa/mass,wb/mass),distance*error*stiffness)) / distance
+  // distance * error already equals (distance - rest). Dividing the
+  // correction by distance again would make short seam edges move far more
+  // than the requested stiffness and can collapse small mesh features.
+  const largestShare = Math.max(wa/mass,wb/mass)
+  const correction = Math.max(-maxMove/largestShare,Math.min(maxMove/largestShare,distance*error*stiffness)) / distance
   const mx = dx * correction, my = dy * correction, mz = dz * correction
   positions[ai] += mx*(wa/mass); positions[ai + 1] += my*(wa/mass); positions[ai + 2] += mz*(wa/mass)
   positions[bi] -= mx*(wb/mass); positions[bi + 1] -= my*(wb/mass); positions[bi + 2] -= mz*(wb/mass)
@@ -56,15 +64,32 @@ export function assembleNativeSeams(payload, {
   jointConstraintMode = false,
   jointContactWeight = .3,
 } = {}) {
+  // Validate the authored graph before indexing triangles or allocating a
+  // solver pose. Invalid references must fail before any staging calculation.
+  const before = inspectNativeAssemblyPose(payload)
+  validateNativeAssemblyMeshFaces20261027(payload)
+  for (const [name, value] of Object.entries({iterations,seamStiffness,restStiffness,positionStiffness,maxMoveM,seamPasses,contactMarginM,jointContactWeight})) {
+    if (!Number.isFinite(value) || value < 0) throw new RangeError(`Invalid seam assembly option ${name}`)
+  }
+  if (contactConstrained && !payload.avatar) throw new TypeError('Avatar contact requires an avatar')
+  if (jointConstraintMode && jointContactWeight > 0 && !payload.avatar) throw new TypeError('Joint avatar contact requires an avatar')
   const output = structuredClone(payload)
   const n = output.particles.length
   const initial = new Float64Array(n * 3)
   for (let i = 0; i < n; i++) for (let j = 0; j < 3; j++) initial[i * 3 + j] = output.particles[i].position[j]
   const positions = initial.slice()
-  const invMasses=output.particles.map(p=>Math.max(0,Number(p.invMass)||0))
+  const invMasses=output.particles.map((p,i)=>{
+    const mass=p.invMass ?? 1
+    if (typeof mass!=='number' || !Number.isFinite(mass) || mass<0) throw new RangeError(`Invalid inverse mass for particle ${i}`)
+    return mass
+  })
   const restEdges = uniqueRestEdges(output)
   const seams = output.constraints.filter(item => item.type === 'seam')
   const virtualSeams = output.virtualSeams || []
+  for (const seam of virtualSeams) {
+    if (seam.rest != null && (!Number.isFinite(seam.rest) || seam.rest < 0))
+      throw new RangeError('Invalid virtual seam rest length')
+  }
   const weightedAnchor = (indices, weights) => {
     const xyz = [0, 0, 0]
     indices.forEach((index, i) => {
@@ -106,6 +131,8 @@ export function assembleNativeSeams(payload, {
     if (!info) return
     const {dx,dy,dz,length,gradients,denom} = info
     const scalar = (length - (seam.rest ?? 0.008)) / length * seamStiffness / denom
+    // Normalize by the same mass-weighted anchor gradient used by the
+    // sequential path. A shared vertex can contribute to both anchors.
     for (const [index, gradient] of gradients) {
       if (invMasses[index] <= 0) continue
       const raw = scalar * invMasses[index] * gradient
@@ -115,6 +142,8 @@ export function assembleNativeSeams(payload, {
       weights[index]+=Math.abs(gradient)
     }
   }
+  // Degenerate virtual anchors are explicitly rejected by the preflight;
+  // guard direct and joint staging against unsupported rest fields alike.
   const hints=output.particles.map(p=>({wrapMode:p.wrapMode,seamIds:p.seamIds,collisionSideZ:p.collisionSideZ,patternV:0}))
   for(const piece of output.pieces){const ys=piece.flatVerticesM.map(v=>v[1]),lo=Math.min(...ys),span=Math.max(1e-7,Math.max(...ys)-lo);piece.particleIndices.forEach((idx,i)=>{hints[idx].patternV=(ys[i]-lo)/span})}
   const sample=new THREE.Vector3(),epsilon=.0006
@@ -202,15 +231,28 @@ export function assembleNativeSeams(payload, {
     output.particles[i].position = p
     output.particles[i].previous = p.slice() // no artificial acceleration at handoff
   }
-  const before = inspectNativeAssemblyPose(payload)
   const after = inspectNativeAssemblyPose(output)
-  const collision = inspectStagedAvatarContact(output)
+  const collision = output.avatar ? inspectStagedAvatarContact(output) : null
+  const sampledPathContact=output.avatar ? inspectNativeSampledContactPath(payload,output,{
+    steps:8,checkPose:inspectStagedAvatarContact,
+  }) : null
+  // An edge-length-only strain screen can miss extreme shear in slender
+  // triangles. Independently measure the FULL 3x2 deformation gradient in
+  // material space, but keep this research staging path disabled for live
+  // fitting until triangle CCD and avatar re-entry are certified.
+  const principalStrainAudit = auditNativePrincipalStrain(output,{limitPercent:5})
+  const candidateGate = auditNativeSeamCandidate(payload,output,{
+    endpointContact:collision,sampledPathContact,
+  })
   output.assemblyExperiment = {
     algorithm: 'seam-aware-rest-edge-relaxation-v1',
     iterations: safeIterations,
     input: before,
     output: after,
     collision,
+    sampledPathContact,
+    principalStrainAudit,
+    candidateGate,
     contactConstrained,
     jointConstraintMode,
     seamGapImproved:after.initialSeamGapMaximumMm<before.initialSeamGapMaximumMm,

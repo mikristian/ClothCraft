@@ -1,0 +1,145 @@
+/* View-only dark/light CAD legibility. Target visible strokes, not hit areas,
+   imported artwork, fabric texture, physical cutting-line geometry or seams. */
+/* Repeated shell attributes intentionally outrank user-theme presentation
+   selectors, even when studioCustomizationTheme.css loads later. */
+.app-shell[data-studio-customized="true"] .cc-board[data-cad-auto-contrast="true"][data-2d-canvas-theme] [data-pattern-surface="drafting-paper"],
+.app-shell .cc-board[data-cad-auto-contrast="true"] [data-pattern-surface="drafting-paper"]{
+  fill:var(--cad-adaptive-paper,#f4f4f3)!important;
+}
+.app-shell[data-studio-customized="true"] .cc-board[data-cad-auto-contrast="true"] [data-2d-pattern-piece] polyline[data-active-curve-edge="false"][data-cutline-hover-blue="false"]:not([data-2d-edge-hit]),
+.app-shell .cc-board[data-cad-auto-contrast="true"] [data-2d-pattern-piece] polyline[data-active-curve-edge="false"][data-cutline-hover-blue="false"]:not([data-2d-edge-hit]){
+  stroke:var(--cad-adaptive-edge,#2b3b47)!important;
+  stroke-width:1.6px;
+  filter:drop-shadow(0 0 1.4px var(--cad-adaptive-edge-halo,#fff));
+}
+/* Transparent hit polylines are interaction geometry and must stay invisible,
+   including when a global edge color is customized. */
+.app-shell[data-studio-customized="true"][data-2d-edge-custom="true"] .cc-board[data-cad-auto-contrast="true"] [data-2d-pattern-piece][data-2d-pattern-selected="false"] polyline[data-2d-edge-hit],
+.app-shell[data-studio-customized="true"][data-2d-selection-custom="true"] .cc-board[data-cad-auto-contrast="true"] [data-2d-pattern-piece][data-2d-pattern-selected="true"] polyline[data-2d-edge-hit],
+.app-shell[data-studio-customized="true"] .cc-board[data-cad-auto-contrast="true"] [data-2d-pattern-piece] polyline[data-2d-edge-hit],
+.app-shell .cc-board[data-cad-auto-contrast="true"] [data-2d-pattern-piece] polyline[data-2d-edge-hit]{
+  stroke:transparent!important;
+  filter:none!important;
+}
+.app-shell[data-studio-customized="true"] .cc-board[data-cad-auto-contrast="true"] [data-2d-pattern-piece][data-2d-pattern-selected="true"] polyline[data-active-curve-edge="false"][data-cutline-hover-blue="false"]:not([data-2d-edge-hit]),
+.app-shell .cc-board[data-cad-auto-contrast="true"] [data-2d-pattern-piece][data-2d-pattern-selected="true"] polyline[data-active-curve-edge="false"][data-cutline-hover-blue="false"]:not([data-2d-edge-hit]){
+  stroke:var(--cad-adaptive-selected,#925522)!important;
+  stroke-width:2px;
+}
+.app-shell[data-studio-customized="true"] .cc-board[data-cad-auto-contrast="true"] [data-2d-pattern-piece] :is([data-control-point="vertex"],[data-control-point="free-curve"]),
+.app-shell .cc-board[data-cad-auto-contrast="true"] [data-2d-pattern-piece] :is([data-control-point="vertex"],[data-control-point="free-curve"]) {
+  stroke:var(--cad-adaptive-point,#8f4e24)!important;
+  stroke-width:1.25px;
+}
+.app-shell[data-studio-customized="true"][data-2d-notch-custom="true"] .cc-board[data-cad-auto-contrast="true"] [data-native-notch],
+.app-shell[data-studio-customized="true"] .cc-board[data-cad-auto-contrast="true"] [data-native-notch],
+.app-shell .cc-board[data-cad-auto-contrast="true"] [data-native-notch]{stroke:var(--cad-adaptive-notch,#a34245)!important;stroke-width:1.6px}
+.cc-board[data-cad-auto-contrast="true"] :is([data-2d-boundary-readout],[data-curve-measured-edge],[data-curve-width-cm],[data-curve-perimeter-cm]){
+  fill:var(--cad-adaptive-measure,#263d4a)!important;
+  stroke:var(--cad-adaptive-measure-halo,#fff)!important;
+  paint-order:stroke fill;
+  stroke-linejoin:round;
+}
+.cc-board[data-cad-auto-contrast="true"] [data-native-pom] text{
+  fill:var(--cad-adaptive-measure,#263d4a)!important;
+  stroke:var(--cad-adaptive-measure-halo,#fff)!important;
+  paint-order:stroke fill;
+}
+.cc-board[data-cad-auto-contrast="true"] [data-pattern-piece-label]{
+  fill:var(--cad-adaptive-measure-outside,#e8eef2)!important;
+  stroke:var(--cad-adaptive-edge-halo,#14202a)!important;
+}
+.cc-board[data-cad-auto-contrast="true"] [data-tape-measurement] :is(line,text),
+.cc-board[data-cad-auto-contrast="true"] [data-native-pom] line{
+  stroke:var(--cad-adaptive-measure-outside,#e8eef2)!important;
+}
+.cc-board[data-cad-auto-contrast="true"] [data-tape-measurement] text{
+  fill:var(--cad-adaptive-measure-outside,#e8eef2)!important;
+  stroke:var(--cad-adaptive-edge-halo,#14202a)!important;
+  paint-order:stroke fill;
+}
+.cc-board[data-cad-auto-contrast="true"] [data-accumark-grade-overlay] [data-grade-size] path{
+  filter:drop-shadow(0 0 1.8px var(--cad-adaptive-grade-halo,#fff));
+}
+.cc-board[data-cad-auto-contrast="true"] [data-accumark-grade-overlay] [data-grade-size] text{
+  paint-order:stroke fill;
+  stroke-linejoin:round;
+}
+.cc-board[data-cad-auto-contrast="true"] [data-accumark-grade-overlay] :is([data-grade-point],[data-graded-size-points]) circle[stroke]{stroke-width:1.5px}
+.cc-board[data-cad-auto-contrast="true"] [data-accumark-grade-overlay] [data-grade-point] circle,
+.cc-board[data-cad-auto-contrast="true"] [data-accumark-grade-overlay] [data-graded-size-points] circle:not([role="button"]){
+  fill:var(--cad-adaptive-paper,#f4f4f3);
+}
+.cc-board[data-cad-auto-contrast="true"] svg text{font-variant-numeric:tabular-nums}
+
+/* The older PatternEditor shares the same contrast policy with the native
+   ClothCraft board; this applies only to SVG display entities. */
+.app-shell[data-studio-customized="true"] .pattern-editor-shell[data-cad-auto-contrast="true"] .pattern-piece .pattern-fill,
+.app-shell .pattern-editor-shell[data-cad-auto-contrast="true"] .pattern-piece .pattern-fill{
+  fill:var(--cad-adaptive-paper,#f4f4f3)!important;
+  stroke:var(--cad-adaptive-edge,#293b4a)!important;
+  stroke-width:.85px!important;
+}
+.app-shell[data-studio-customized="true"] .pattern-editor-shell[data-cad-auto-contrast="true"] .pattern-piece.selected .pattern-fill,
+.app-shell .pattern-editor-shell[data-cad-auto-contrast="true"] .pattern-piece.selected .pattern-fill{
+  stroke:var(--cad-adaptive-selected,#925522)!important;
+  stroke-width:1.25px!important;
+}
+.pattern-editor-shell[data-cad-auto-contrast="true"] :is(.pattern-notch,.pattern-notch line){stroke:var(--cad-adaptive-notch,#a34245)!important}
+.pattern-editor-shell[data-cad-auto-contrast="true"] :is(.pattern-measurement text,.edge-measure,.clo-pom-measurement-label){
+  fill:var(--cad-adaptive-measure,#263d4a)!important;
+  stroke:var(--cad-adaptive-measure-halo,#fff)!important;
+  paint-order:stroke fill;
+}
+.pattern-editor-shell[data-cad-auto-contrast="true"] .pattern-piece :is(.pattern-point,.measurement-pending){stroke:var(--cad-adaptive-point,#8f4e24)!important}
+/* The legacy shell renders outlines as separate SVG paths from its fill.
+   Exclude active editing, hover and sewn states to retain tool feedback. */
+.app-shell[data-studio-customized="true"] .pattern-editor-shell[data-cad-auto-contrast="true"] .pattern-piece .pattern-edge:not(.sewn):not(.draft-selected-edge):not(.hovered):not(.pending):not(.walk-highlight),
+.app-shell .pattern-editor-shell[data-cad-auto-contrast="true"] .pattern-piece .pattern-edge:not(.sewn):not(.draft-selected-edge):not(.hovered):not(.pending):not(.walk-highlight){
+  stroke:var(--cad-adaptive-edge,#293b4a)!important;
+}
+.app-shell[data-studio-customized="true"] .pattern-editor-shell[data-cad-auto-contrast="true"] .pattern-piece.selected .pattern-edge:not(.sewn):not(.draft-selected-edge):not(.hovered):not(.pending):not(.walk-highlight),
+.app-shell .pattern-editor-shell[data-cad-auto-contrast="true"] .pattern-piece.selected .pattern-edge:not(.sewn):not(.draft-selected-edge):not(.hovered):not(.pending):not(.walk-highlight){
+  stroke:var(--cad-adaptive-selected,#925522)!important;
+}
+.pattern-editor-shell[data-cad-auto-contrast="true"] .pattern-piece :is(.pattern-node,.pattern-point):not(.selected-point):not(.precision-active-point){
+  stroke:var(--cad-adaptive-point,#8f4e24)!important;
+}
+
+/* A failed perimeter must never become an opaque mesh-shaped overlay due to
+   adaptive paint or a user-selected paper color. */
+.app-shell .cc-board [data-pattern-surface="drafting-paper"][data-pattern-outline-valid="false"]{fill:none!important;pointer-events:none!important}
+
+/* Per-pattern 2D appearance presets. Only authored paper is translucent:
+   native cutting paths, hit targets, grading lines, notches, measurements
+   and garment geometry remain intact and independently interactive. */
+.app-shell[data-studio-customized="true"] .cc-board[data-cad-auto-contrast="true"][data-pattern-surface-style="outline"] [data-pattern-surface="drafting-paper"][data-pattern-outline-valid="true"],
+.app-shell .cc-board[data-pattern-surface-style="outline"] [data-pattern-surface="drafting-paper"][data-pattern-outline-valid="true"]{
+  fill:transparent!important;
+  fill-opacity:0!important;
+  pointer-events:visibleFill!important;
+}
+.app-shell[data-studio-customized="true"] .cc-board[data-cad-auto-contrast="true"][data-pattern-surface-style="glass"] [data-pattern-surface="drafting-paper"][data-pattern-outline-valid="true"],
+.app-shell .cc-board[data-pattern-surface-style="glass"] [data-pattern-surface="drafting-paper"][data-pattern-outline-valid="true"]{
+  fill:color-mix(in srgb,var(--exo-2d-pattern-color,#cceaff) 27%,transparent)!important;
+  fill-opacity:1!important;
+}
+.app-shell .cc-board[data-pattern-surface-style="glass"] [data-pattern-surface-glass="true"]{
+  opacity:.83;
+  filter:drop-shadow(0 2px 4px #152b4166);
+}
+.app-shell .cc-board[data-pattern-surface-style="outline"] [data-pattern-surface-glass]{
+  display:none!important;
+}
+/* The legacy pattern editor shares the exact same transparency state.
+   Keep its SVG outline and control-point elements visible and usable. */
+.app-shell .pattern-editor-shell[data-pattern-surface-style="outline"] .pattern-piece .pattern-fill{
+  fill:transparent!important;
+  fill-opacity:0!important;
+  pointer-events:visibleFill!important;
+}
+.app-shell .pattern-editor-shell[data-pattern-surface-style="glass"] .pattern-piece .pattern-fill{
+  fill:color-mix(in srgb,var(--exo-2d-pattern-color,#cceaff) 29%,transparent)!important;
+  fill-opacity:1!important;
+  filter:drop-shadow(0 2px 5px #172c4355);
+}

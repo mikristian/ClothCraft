@@ -1,6 +1,7 @@
 import { edgeLength, samplePieceBoundary } from './project.js'
 import { gradeProject } from './grading.js'
 import { buildFabricMarkers } from './marker.js'
+import { measureHorizontalSpans } from './rustMeasurementKernel.js'
 
 function bounds(piece) {
   const sampled = samplePieceBoundary(piece, 16).points
@@ -15,25 +16,10 @@ function bounds(piece) {
   }
 }
 
-function horizontalSpan(piece, y) {
-  if (!piece) return 0
+function horizontalSpansForPiece(piece, levels) {
+  if (!piece) return levels.map(() => 0)
   const points = samplePieceBoundary(piece, 18).points
-  const intersections = []
-  for (let index = 0; index < points.length; index += 1) {
-    const a = points[index]
-    const b = points[(index + 1) % points.length]
-    if (Math.abs(a.y - b.y) < 1e-6) {
-      if (Math.abs(y - a.y) < 0.2) intersections.push(a.x, b.x)
-      continue
-    }
-    const low = Math.min(a.y, b.y)
-    const high = Math.max(a.y, b.y)
-    if (y < low || y > high) continue
-    const t = (y - a.y) / (b.y - a.y)
-    intersections.push(a.x + (b.x - a.x) * t)
-  }
-  if (intersections.length < 2) return 0
-  return Math.max(...intersections) - Math.min(...intersections)
+  return measureHorizontalSpans([{ points, levels }])[0]
 }
 
 function value(id, label, cm, tolerance = 0.5) {
@@ -53,34 +39,50 @@ export function measureProject(project) {
   const hemY = frontBounds.minY + Math.max(0.3, height * 0.01)
   const shoulderY = frontBounds.minY + height * 0.955
 
+  const [chestSpan, waistSpan, hemSpan, shoulderSpan] = horizontalSpansForPiece(front,
+    [chestY, waistY, hemY, shoulderY])
+
   const measurements = [
     value('body-length', 'Body length', height, 0.7),
-    value('chest-half', '1/2 chest', horizontalSpan(front, chestY), 0.5),
-    value('waist-half', '1/2 waist', horizontalSpan(front, waistY), 0.5),
-    value('hem-half', '1/2 hem', horizontalSpan(front, hemY), 0.5),
-    value('across-shoulder', 'Across shoulder', horizontalSpan(front, shoulderY), 0.5),
+    value('chest-half', '1/2 chest', chestSpan, 0.5),
+    value('waist-half', '1/2 waist', waistSpan, 0.5),
+    value('hem-half', '1/2 hem', hemSpan, 0.5),
+    value('across-shoulder', 'Across shoulder', shoulderSpan, 0.5),
     value('front-armhole', 'Front armhole', edgeLength(front, 1) + edgeLength(front, 2), 0.4),
   ]
 
   if (leftSleeve && sleeveBounds) {
     const sleeveHeight = sleeveBounds.maxY - sleeveBounds.minY
+    const [bicepSpan, cuffSpan] = horizontalSpansForPiece(leftSleeve,
+      [sleeveBounds.maxY - sleeveHeight * 0.18, sleeveBounds.minY + 0.3])
     measurements.push(
       value('sleeve-length', 'Sleeve length', sleeveHeight, 0.7),
       // A sleeve is ONE unfolded piece with one underarm seam. Its flat cut
       // width is the finished sleeve circumference (minus sewing turnback),
       // not a half-circumference like the separate front/back body pieces.
-      value('bicep-half', 'Bicep circumference (sleeve flat)', horizontalSpan(leftSleeve, sleeveBounds.maxY - sleeveHeight * 0.18), 0.5),
-      value('cuff-half', 'Cuff circumference (sleeve flat)', horizontalSpan(leftSleeve, sleeveBounds.minY + 0.3), 0.4),
+      value('bicep-half', 'Bicep circumference (sleeve flat)', bicepSpan, 0.5),
+      value('cuff-half', 'Cuff circumference (sleeve flat)', cuffSpan, 0.4),
     )
   }
   for (const measurement of project.customMeasurements || []) {
     if (!measurement?.a || !measurement?.b) continue
+    const id = String(measurement.id ?? 'unnamed')
+    if (![measurement.a.x, measurement.a.y, measurement.b.x, measurement.b.y].every(Number.isFinite)) {
+      throw new RangeError(`Custom measurement ${id} has invalid coordinates`)
+    }
     const cm = Math.hypot(measurement.b.x - measurement.a.x, measurement.b.y - measurement.a.y)
+    if (!Number.isFinite(cm)) {
+      throw new RangeError(`Custom measurement ${id} has an invalid distance`)
+    }
+    const toleranceCm = Number(measurement.toleranceCm ?? 0.5)
+    if (!Number.isFinite(toleranceCm) || toleranceCm < 0) {
+      throw new RangeError(`Custom measurement ${id} has an invalid tolerance`)
+    }
     measurements.push(value(
       measurement.id,
       measurement.label || 'Custom measurement',
       cm,
-      Number(measurement.toleranceCm ?? 0.5),
+      toleranceCm,
     ))
   }
   return measurements
@@ -92,9 +94,16 @@ export function buildMeasurementSizeRun(project) {
 }
 
 export function measurementRunToCSV(project) {
+  const configuredSizes = project.grading?.sizes
+  if (configuredSizes != null && (!Array.isArray(configuredSizes) || !configuredSizes.length || configuredSizes.some((size) => typeof size !== 'string' || !size.trim()) || new Set(configuredSizes).size !== configuredSizes.length)) {
+    throw new RangeError('Measurement CSV requires a nonempty run of unique grading sizes')
+  }
   const run = buildMeasurementSizeRun(project)
   const sizes = Object.keys(run)
   const ids = run[sizes[0]]?.map((measurement) => measurement.id) || []
+  if (!sizes.length) throw new RangeError('Measurement CSV requires at least one grading size')
+  if (new Set(sizes).size !== sizes.length) throw new RangeError('Measurement CSV requires unique grading sizes')
+  if (new Set(ids).size !== ids.length) throw new RangeError('Measurement CSV requires unique point-of-measure identifiers')
   const lines = [['POM', 'Tolerance cm', ...sizes]]
   for (const id of ids) {
     const first = run[sizes[0]].find((measurement) => measurement.id === id)
@@ -108,8 +117,25 @@ export function measurementRunToCSV(project) {
 }
 
 export function buildTechPack(project) {
+  const avatar = project.avatar || {}
+  for (const field of ['heightCm', 'chestCm', 'waistCm', 'hipCm', 'shoulderWidthCm', 'neckCm', 'bicepCm', 'armLengthCm']) {
+    if (avatar[field] != null && (typeof avatar[field] !== 'number' || !Number.isFinite(avatar[field]) || avatar[field] <= 0)) {
+      throw new RangeError(`Avatar ${field} must be a finite positive measurement for tech pack export`)
+    }
+  }
+  const derivedArmLength = 72 * (avatar.heightCm ?? 180) / 180
+  if (!Number.isFinite(derivedArmLength) || derivedArmLength <= 0) {
+    throw new RangeError('Avatar derived arm length is invalid for tech pack export')
+  }
   const sizes = project.grading?.sizes || [project.grading?.baseSize || 'M']
+  if (!Array.isArray(sizes) || !sizes.length || sizes.some((size) => typeof size !== 'string' || !size.trim()) || new Set(sizes).size !== sizes.length) {
+    throw new RangeError('Tech pack requires a nonempty run of unique grading sizes')
+  }
   const sizeMeasurements = buildMeasurementSizeRun(project)
+  for (const [size, measurements] of Object.entries(sizeMeasurements)) {
+    const ids = measurements.map((measurement) => measurement.id)
+    if (new Set(ids).size !== ids.length) throw new RangeError(`Tech pack size ${size} contains duplicate point-of-measure identifiers`)
+  }
   const markerWidth = project.markerSettings?.fabricWidthCm ?? 150
   const markerGap = project.markerSettings?.gapCm ?? 1.5
   const markers = Object.fromEntries(sizes.map((size) => {
@@ -150,8 +176,8 @@ export function buildTechPack(project) {
     productionSpec: project.productionSpec ? structuredClone(project.productionSpec) : null,
     grading: project.grading,
     avatar: {
-      ...(project.avatar || {}),
-      armLengthCm: Number(project.avatar?.armLengthCm ?? (72 * Number(project.avatar?.heightCm ?? 180) / 180)),
+      ...avatar,
+      armLengthCm: avatar.armLengthCm ?? derivedArmLength,
     },
     sizeMeasurements,
     materials: Object.values(project.fabrics || {}).map((fabric) => ({

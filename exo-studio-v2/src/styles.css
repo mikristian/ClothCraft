@@ -536,21 +536,44 @@ button:disabled {
   cursor: default;
 }
 
-.tool-sew .edge-hit {
-  cursor: crosshair;
-}
-
-.tool-split .edge-hit {
-  cursor: copy;
-}
-
-.tool-pin .pattern-fill {
-  cursor: cell;
-}
-
-.tool-measure .pattern-fill {
-  cursor: crosshair;
-}
+/* Tool cursors cover the drafting surface, pattern fills, and clickable edges.
+   Free Sewing shares 'sew' with segment sewing (Shift marks partial edges). */
+.pattern-canvas.tool-sew,
+.pattern-canvas.tool-sew .pattern-fill,
+.pattern-canvas.tool-sew .edge-hit { cursor: url('/cursors/sewing-machine.svg') 5 3, crosshair; }
+.pattern-canvas.tool-internal,
+.pattern-canvas.tool-internal .pattern-fill,
+.pattern-canvas.tool-internal .edge-hit { cursor: url('/cursors/cad-pen.svg') 5 3, crosshair; }
+.pattern-canvas.tool-draw,
+.pattern-canvas.tool-draw .pattern-fill,
+.pattern-canvas.tool-draw .edge-hit { cursor: url('/cursors/cad-pen.svg') 5 3, crosshair; }
+.pattern-canvas.tool-curve,
+.pattern-canvas.tool-curve .pattern-fill,
+.pattern-canvas.tool-curve .edge-hit { cursor: url('/cursors/cad-curve.svg') 5 3, crosshair; }
+.pattern-canvas.tool-point,
+.pattern-canvas.tool-point .pattern-fill,
+.pattern-canvas.tool-point .edge-hit { cursor: url('/cursors/cad-points.svg') 5 3, crosshair; }
+.pattern-canvas.tool-split,
+.pattern-canvas.tool-split .pattern-fill,
+.pattern-canvas.tool-split .edge-hit { cursor: url('/cursors/cad-split.svg') 5 3, crosshair; }
+.pattern-canvas.tool-notch,
+.pattern-canvas.tool-notch .pattern-fill,
+.pattern-canvas.tool-notch .edge-hit { cursor: url('/cursors/cad-notch.svg') 5 3, crosshair; }
+.pattern-canvas.tool-measure,
+.pattern-canvas.tool-measure .pattern-fill,
+.pattern-canvas.tool-measure .edge-hit { cursor: url('/cursors/cad-measure.svg') 5 3, crosshair; }
+.pattern-canvas.tool-allowance,
+.pattern-canvas.tool-allowance .pattern-fill,
+.pattern-canvas.tool-allowance .edge-hit { cursor: url('/cursors/cad-allowance.svg') 5 3, crosshair; }
+.pattern-canvas.tool-pin,
+.pattern-canvas.tool-pin .pattern-fill,
+.pattern-canvas.tool-pin .edge-hit { cursor: url('/cursors/cad-pin.svg') 5 3, crosshair; }
+.pattern-canvas.tool-fastener,
+.pattern-canvas.tool-fastener .pattern-fill,
+.pattern-canvas.tool-fastener .edge-hit { cursor: url('/cursors/sewing-machine.svg') 5 3, crosshair; }
+.pattern-canvas.is-panning,
+.pattern-canvas.is-panning .pattern-fill,
+.pattern-canvas.is-panning .edge-hit { cursor: grabbing !important; }
 
 .pattern-measurement {
   pointer-events: none;
@@ -606,10 +629,6 @@ button:disabled {
   pointer-events: none;
 }
 
-.tool-notch .edge-hit {
-  cursor: crosshair;
-}
-
 .notch-tool-symbol {
   font-size: 11px;
   font-weight: 850;
@@ -631,6 +650,43 @@ button:disabled {
   opacity: .72;
 }
 
+/* Reference-shirt drafting courses: geometry comes from the actual pattern's
+   intersection stations. These are display-only POM/construction guides, not
+   new seam constraints or additional editable cut boundaries. */
+.clo-bodice-drafting-guides .bodice-center-guide {
+  stroke:#656ac4;
+  stroke-width:.72;
+  stroke-dasharray:3.5 1.5;
+  opacity:.9;
+  vector-effect:non-scaling-stroke;
+}
+.clo-bodice-drafting-guides .clo-pom-station>line {
+  stroke:#6b70c6;
+  stroke-width:.78;
+  vector-effect:non-scaling-stroke;
+  opacity:.9;
+}
+.clo-bodice-drafting-guides .clo-pom-station>circle {
+  fill:#f4f4ef;
+  stroke:#626abb;
+  stroke-width:.48;
+  vector-effect:non-scaling-stroke;
+}
+.clo-bodice-drafting-guides .clo-pom-station>path {
+  stroke:#656ac4;
+  stroke-width:.46;
+  fill:none;
+  vector-effect:non-scaling-stroke;
+}
+.clo-bodice-drafting-guides .clo-pom-measurement-label {
+  fill:#555eae;
+  font-size:2.6px;
+  font-weight:600;
+  paint-order:stroke;
+  stroke:#fff;
+  stroke-width:.9px;
+}
+
 .pattern-piece.selected .grainline {
   color: #a7b0ec;
   opacity: .9;
@@ -644,8 +700,8 @@ button:disabled {
 }
 
 .pattern-notch.matched line {
-  stroke: #9fb0ff;
-  stroke-width: 1;
+  stroke: #e94845;
+  stroke-width: 1.35;
 }
 
 .pattern-topstitch polyline {
@@ -655,6 +711,12 @@ button:disabled {
   vector-effect: non-scaling-stroke;
   pointer-events: none;
   opacity: .9;
+}
+
+.pattern-topstitch[data-draft-hem-stitch] polyline {
+  stroke-width:.68;
+  opacity:.98;
+  stroke-dasharray:none;
 }
 
 .pattern-graphic {
@@ -706,10 +768,6 @@ button:disabled {
   fill: #d9d9d9;
   stroke: none;
   pointer-events: none;
-}
-
-.tool-internal .pattern-fill {
-  cursor: crosshair;
 }
 
 .internal-line {
@@ -1161,9 +1219,89 @@ button:disabled {
   background: #20252a;
 }
 
+.exo-fabric-realism-collection {
+  display: grid;
+  gap: 7px;
+  margin: 9px 0;
+}
+.exo-fabric-realism-collection > button {
+  display: grid;
+  grid-template-columns: 60px minmax(0,1fr);
+  align-items: center;
+  gap: 11px;
+  text-align: left;
+  min-height: 76px;
+  padding: 6px;
+  color: #e8ebeb;
+  background: #17191c;
+  border: 1px solid #373b40;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.exo-fabric-realism-collection > button.is-selected {
+  border-color: #e1eaed;
+  background: #252b2f;
+}
+.exo-fabric-realism-collection > button:hover {border-color:#9aa8b2;}
+.exo-fabric-realism-collection img {
+  width: 60px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 3px;
+}
+.exo-fabric-realism-collection button span {min-width:0;display:flex;flex-direction:column;gap:4px;}
+.exo-fabric-realism-collection strong {font-size:11px;line-height:1.25;}
+.exo-fabric-realism-collection small {font-size:9px;color:#bec6ca;line-height:1.35;}
+.exo-fabric-realism-collection em {font-size:8px;font-style:normal;color:#a4b9c7;}
+
+.fabric-material-preview-tools {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 5px;
+  padding: 8px;
+  background: #0c0e10;
+}
+.fabric-material-preview-tools button {
+  border: 1px solid #35393c;
+  border-radius: 4px;
+  background: #1d2124;
+  color: #afb7bd;
+  font-size: 10px;
+  padding: 8px 4px;
+  cursor: pointer;
+}
+.fabric-material-preview-tools button[aria-pressed="true"] {
+  background: #dddfe1;
+  color: #14181b;
+  border-color: #dddfe1;
+}
+.fabric-material-preview-controls {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  background: #121518;
+}
+.fabric-material-preview-controls label {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto;
+  gap: 5px;
+  color: #c9d2d9;
+  font-size: 10px;
+}
+.fabric-material-preview-controls output {font-variant-numeric: tabular-nums;color:#9dabba;}
+.fabric-material-preview-controls input {grid-column:1 / -1;width:100%;accent-color:#dfebf1;}
+.fabric-material-preview-note {
+  margin: 0;
+  padding: 10px;
+  background: #0d1013;
+  color: #a8b6c0;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
 .fabric-material-preview-canvas {
   position: relative;
-  height: clamp(116px, 16vh, 172px);
+  height: clamp(210px, 30vh, 290px);
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -2737,7 +2875,7 @@ input[type="range"]::-webkit-slider-thumb {
 .grade-point-header,
 .grade-point-row {
   display: grid;
-  grid-template-columns: 34px 1fr 1fr 50px;
+  grid-template-columns: 34px minmax(0,1fr) minmax(0,1fr) 50px 72px;
   align-items: center;
   gap: 5px;
   min-height: 31px;
@@ -2751,7 +2889,7 @@ input[type="range"]::-webkit-slider-thumb {
   border-top: 0;
   background: #0f0f0f;
   color: #555;
-  font-size: 6px;
+  font-size: 9px;
   font-weight: 700;
   letter-spacing: .05em;
   text-transform: uppercase;
@@ -2759,13 +2897,13 @@ input[type="range"]::-webkit-slider-thumb {
 
 .grade-point-row > span {
   color: #666;
-  font-size: 6.5px;
+  font-size: 10px;
   font-weight: 700;
 }
 
 .grade-point-row em {
   color: #707070;
-  font-size: 7px;
+  font-size: 10px;
   font-style: normal;
   text-align: center;
 }
@@ -2781,7 +2919,7 @@ input[type="range"]::-webkit-slider-thumb {
 .grade-point-row .number-field input {
   min-width: 0;
   width: 42px;
-  font-size: 7px;
+  font-size: 11px;
 }
 
 .grade-point-row > button {
@@ -2791,7 +2929,7 @@ input[type="range"]::-webkit-slider-thumb {
   border-radius: 3px;
   background: #101010;
   color: #5f5f5f;
-  font-size: 5.7px;
+  font-size: 9px;
   font-weight: 750;
   letter-spacing: .04em;
   cursor: pointer;
@@ -2802,6 +2940,14 @@ input[type="range"]::-webkit-slider-thumb {
   background: #171a2a;
   color: #a9b4ff;
 }
+
+.grade-rule-transfer { display:flex; gap:3px; align-items:center; }
+.grade-rule-transfer button { background:#1b1d22; border:1px solid #343944; border-radius:3px; color:#cbd4e0; font-size:9px; min-height:24px; padding:2px 4px; cursor:pointer; }
+.grade-rule-transfer button:disabled { opacity:.35; cursor:not-allowed; }
+
+.grade-bulk-actions { display:flex; gap:6px; margin:8px 0; }
+.grade-bulk-actions button { flex:1; background:#20252c; border:1px solid #394451; border-radius:4px; color:#d7e1ea; font-size:10px; min-height:30px; padding:5px; cursor:pointer; }
+.grade-bulk-actions button:disabled { opacity:.4; cursor:not-allowed; }
 
 .pom-row em {
   color: #555;
@@ -3263,4 +3409,107 @@ input[type="range"]::-webkit-slider-thumb {
   .desktop-workspace .main-layout { grid-template-columns: 140px 43px minmax(0, 1fr) 255px; }
   .desktop-workspace .topbar { grid-template-columns: 178px minmax(380px,1fr) 208px; }
   .desktop-workspace .section-tabs button { font-size: 10px; }
+}
+.exo-reorderable-toolbar { will-change: transform; }
+.exo-reorderable-toolbar .exo-toolbar-move-grip {
+  position: absolute;
+  z-index: 15;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  width: 34px;
+  height: 18px;
+  border: 1px solid #555d67;
+  border-radius: 5px 5px 0 0;
+  background: #30353c;
+  color: #cbd3dc;
+  font-size: 16px;
+  line-height: 12px;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.exo-reorderable-toolbar .exo-toolbar-move-grip:active { cursor: grabbing; }
+.exo-reorderable-toolbar[data-toolbar-edit="true"] button[data-clo-slot] { cursor: grab; }
+.exo-reorderable-toolbar[data-toolbar-edit="true"] button[data-clo-slot]:active { cursor: grabbing; }
+.exo-reorderable-toolbar[data-toolbar-dock="top"] .exo-toolbar-move-grip,
+.exo-reorderable-toolbar[data-toolbar-dock="bottom"] .exo-toolbar-move-grip,
+.exo-reorderable-toolbar[data-toolbar-dock="floating"] .exo-toolbar-move-grip,
+.exo-reorderable-toolbar[data-toolbar-dock="right"].clo-left-3d-double-bars .exo-toolbar-move-grip,
+.exo-reorderable-toolbar[data-toolbar-dock="left"].clo-right-tool-palette .exo-toolbar-move-grip {
+  top:2px;left:50%;transform:translateX(-50%);
+}
+.clo-left-3d-double-bars.exo-reorderable-toolbar:not([data-toolbar-dock="left"]) > .clo-left-3d-column {
+  margin-top:22px;
+}
+.clo-right-tool-palette.exo-reorderable-toolbar:not([data-toolbar-dock="right"]) > .clo-palette-scroll {
+  overflow-y:auto;min-height:0;
+}
+.clo-right-tool-palette.exo-reorderable-toolbar:not([data-toolbar-dock="right"]) > .clo-palette-workflows {
+  margin-top:21px;
+}
+
+/* On the 2D side, the toolbar belongs to its own rail, not the Object Browser.
+   Its dotted drag grip is deliberately on the RIGHT edge of the toolbar. */
+.clo-right-tool-palette.exo-reorderable-toolbar[data-toolbar-edit="true"]{position:relative;overflow:visible!important;isolation:isolate}
+.clo-right-tool-palette.exo-reorderable-toolbar .exo-toolbar-move-grip{left:auto!important;right:-18px!important;top:9px!important;transform:none!important;width:19px!important;height:35px!important;border-radius:0 5px 5px 0!important;background:var(--studio-sidebar,#303d49)!important;color:var(--studio-text,#e9f3fd)!important;border:1px solid var(--studio-border,#61788c)!important;box-shadow:2px 3px 8px #07172732!important}
+.clo-inspector{min-width:0!important}
+.clo-inspector-content{flex:1 1 0!important;min-width:0!important;overflow:hidden}
+.clo-inspector-content .clo-object-browser{min-width:0!important}
+
+/* Responsive horizontal docking for built-in CLO 2D and 3D tool palettes.
+   Preserve original vertical measured layouts in side docks. Only reflow when
+   a toolbar is explicitly docked to the horizontal top/bottom lanes. */
+.clo-left-3d-double-bars.exo-reorderable-toolbar:is([data-toolbar-dock="top"],[data-toolbar-dock="bottom"]){
+ display:flex!important;flex-direction:row!important;align-items:flex-start!important;
+ width:min(90vw,900px)!important;max-width:calc(100vw - 30px)!important;
+ min-height:0!important;height:auto!important;max-height:145px!important;
+ overflow:auto!important;gap:6px!important;padding:24px 5px 5px!important;
+ background:var(--studio-sidebar,#24282c)!important;
+}
+.clo-left-3d-double-bars.exo-reorderable-toolbar:is([data-toolbar-dock="top"],[data-toolbar-dock="bottom"])>.clo-left-3d-column{
+ display:flex!important;flex:1 1 0!important;flex-direction:row!important;flex-wrap:wrap!important;
+ gap:3px!important;margin:0!important;min-width:0!important;
+ height:auto!important;min-height:0!important;
+ border:0!important;
+}
+.clo-left-3d-double-bars.exo-reorderable-toolbar:is([data-toolbar-dock="top"],[data-toolbar-dock="bottom"])>.clo-left-3d-column button[data-clo-slot]{
+ position:relative!important;left:auto!important;top:auto!important;transform:none!important;
+ flex:1 0 34px!important;min-width:34px!important;max-width:46px!important;
+ margin:0!important;
+}
+.clo-right-tool-palette.exo-reorderable-toolbar:is([data-toolbar-dock="top"],[data-toolbar-dock="bottom"]){
+ display:flex!important;flex-direction:row!important;align-items:flex-start!important;
+ width:min(90vw,1050px)!important;max-width:calc(100vw - 30px)!important;
+ min-width:0!important;min-height:0!important;height:auto!important;
+ max-height:150px!important;overflow:auto!important;padding:24px 4px 4px!important;
+ background:var(--studio-sidebar,#25292e)!important;
+}
+.clo-right-tool-palette.exo-reorderable-toolbar:is([data-toolbar-dock="top"],[data-toolbar-dock="bottom"])>.clo-palette-workflows{
+ display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;
+ margin:0!important;flex:0 0 auto!important;
+}
+.clo-right-tool-palette.exo-reorderable-toolbar:is([data-toolbar-dock="top"],[data-toolbar-dock="bottom"])>.clo-palette-scroll{
+ overflow:auto!important;flex:1 1 auto!important;min-width:0!important;min-height:0!important;
+}
+.clo-right-tool-palette.exo-reorderable-toolbar:is([data-toolbar-dock="top"],[data-toolbar-dock="bottom"]) .clo-reference-dual-bars.clo-observed-bars{
+ display:flex!important;flex-direction:row!important;gap:4px!important;
+}
+.clo-right-tool-palette.exo-reorderable-toolbar:is([data-toolbar-dock="top"],[data-toolbar-dock="bottom"]) .clo-reference-dual-bars.clo-observed-bars>.clo-observed-column.clo-right-tool-grid{
+ display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;
+ height:auto!important;min-height:0!important;flex:1 1 0!important;gap:3px!important;
+}
+.clo-right-tool-palette.exo-reorderable-toolbar:is([data-toolbar-dock="top"],[data-toolbar-dock="bottom"]) .clo-reference-dual-bars.clo-observed-bars>.clo-observed-column.clo-right-tool-grid button{
+ position:relative!important;left:auto!important;top:auto!important;transform:none!important;
+ flex:0 0 34px!important;margin:0!important;
+}
+/* Docked built-in toolbars keep the move handle visible on the upper/right
+   corner, allowing another reposition without stealing editor controls. */
+.clo-right-tool-palette.exo-reorderable-toolbar:is([data-toolbar-dock="top"],[data-toolbar-dock="bottom"]) .exo-toolbar-move-grip{
+ right:2px!important;top:2px!important;left:auto!important;
+ width:32px!important;height:20px!important;border-radius:4px!important;
+}
+.clo-left-3d-double-bars.exo-reorderable-toolbar:is([data-toolbar-dock="top"],[data-toolbar-dock="bottom"]) .exo-toolbar-move-grip{
+ right:2px!important;top:2px!important;left:auto!important;transform:none!important;
+ width:32px!important;height:20px!important;border-radius:4px!important;
 }

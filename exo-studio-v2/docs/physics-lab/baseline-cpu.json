@@ -1,0 +1,601 @@
+{
+  "schema": "exo.physics-lab.v2",
+  "phase": "initial_assembly_transient",
+  "equilibriumEstablished": false,
+  "fitDefectEstablished": false,
+  "releaseGate": false,
+  "interpretation": "Separated panels start with large initial seam gaps. Three steps cannot establish equilibrium, converged garment fit, a defective seam solver, or a release failure.",
+  "backendClaim": "Native exo-session snapshot backend field; GPU selection is not independently attested",
+  "execution": "CPU default (no --gpu)",
+  "binary": "/Users/mikylecouto/Chat On Steroids Workspace/exo-clothcraft-v2/research/oss/clothcraft/target/debug/exo-session",
+  "avatar": "/Users/mikylecouto/Chat On Steroids Workspace/exo-clothcraft-v2/research/oss/clothcraft/assets/makehuman/mannequin.obj",
+  "binarySha256": "e94a0fc039471ec869de64912bde063d97f91133e09237665318229112767144",
+  "avatarSha256": "f10b3f9d169c9ec6c2503e6e2f66d3800996bfa7650890b7885e0010d3184867",
+  "thresholds": {
+    "max_seam_gap_m": 0.025,
+    "extension_p95_percent": 15,
+    "extension_max_percent": 60,
+    "minimum_distance_m": 0
+  },
+  "thresholdPolicy": "Provisional engineering screening thresholds for future settled-state runs only. Transient exceedances are diagnostic observations, not release failures, fit certification, or evidence of faulty seam enforcement.",
+  "cases": [
+    {
+      "id": "tshirt",
+      "preset": "tshirt",
+      "status": "initial_assembly_transient_measured",
+      "equilibriumEstablished": false,
+      "fitDefectEstablished": false,
+      "initial": {
+        "vertices": 2454,
+        "triangles": 4570,
+        "seams": 8,
+        "backend": "ClothCraft CPU VBD + OGC",
+        "time_s": 0,
+        "max_seam_gap_m": 0.53
+      },
+      "steps": 3,
+      "final_time_s": 0.05,
+      "timeTrajectory": [
+        {
+          "step": 0,
+          "time_s": 0,
+          "max_seam_gap_m": 0.53,
+          "phase": "initial_separated_assembly"
+        },
+        {
+          "step": 1,
+          "time_s": 0.016666666666666666,
+          "max_seam_gap_m": 0.4474944147470859,
+          "solver_max_seam_gap_m": 0.4474944147470859,
+          "extension_p95_percent": 18.513921329172977,
+          "contacts": 0
+        },
+        {
+          "step": 2,
+          "time_s": 0.03333333333333333,
+          "max_seam_gap_m": 0.3734677221155022,
+          "solver_max_seam_gap_m": 0.3734677221155022,
+          "extension_p95_percent": 69.5471622878332,
+          "contacts": 5
+        },
+        {
+          "step": 3,
+          "time_s": 0.05,
+          "max_seam_gap_m": 0.33148062570616643,
+          "solver_max_seam_gap_m": 0.33148062570616643,
+          "extension_p95_percent": 111.65097857681809,
+          "contacts": 55
+        }
+      ],
+      "metrics": {
+        "max_seam_gap_m": {
+          "value": 0.4474944147470859,
+          "threshold": 0.025,
+          "status": "fail"
+        },
+        "extension_p95_percent": {
+          "value": 111.65097857681809,
+          "threshold": 15,
+          "status": "fail"
+        },
+        "extension_max_percent": {
+          "value": 407.2944103953449,
+          "threshold": 60,
+          "status": "fail"
+        },
+        "minimum_distance_m": {
+          "value": 0.0010477683554148522,
+          "threshold": 0,
+          "status": "pass"
+        },
+        "contact_penetration_m": {
+          "value": null,
+          "status": "inconclusive",
+          "reason": "VBD session reports minimum_distance_m but no independently evaluated penetration depth"
+        }
+      },
+      "lastStep": {
+        "broad_phase_rebuilds": 17,
+        "contact_profile": {
+          "candidate_pairs": 1362688,
+          "candidates_ms": 90.77841399999998,
+          "narrow_ms": 38.04616600000001,
+          "refit_ms": 3.664043
+        },
+        "contact_terms": 851,
+        "contacts": 55,
+        "detection_ms": 138.12874900000003,
+        "detection_updates": 17,
+        "dt_s": 0.016666666666666666,
+        "extension_max_percent": 407.2944103953449,
+        "extension_p95_percent": 111.65097857681809,
+        "gpu_compute_ms": null,
+        "iterations": 16,
+        "max_seam_gap_m": 0.33148062570616643,
+        "minimum_distance_m": 0.0010477683554148522,
+        "residual_rms_n": 28.509204392688467,
+        "solve_ms": 290.721751,
+        "step_ms": 428.8505,
+        "time_s": 0.05,
+        "truncated_vertices": 4484
+      },
+      "trajectory": [
+        {
+          "step": 1,
+          "broad_phase_rebuilds": 8,
+          "contact_profile": {
+            "candidate_pairs": 467090,
+            "candidates_ms": 36.771335,
+            "narrow_ms": 16.220916000000003,
+            "refit_ms": 3.5254579999999995
+          },
+          "contact_terms": 0,
+          "contacts": 0,
+          "detection_ms": 62.07591599999999,
+          "detection_updates": 16,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 70.97100403959679,
+          "extension_p95_percent": 18.513921329172977,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.4474944147470859,
+          "minimum_distance_m": 0.006,
+          "residual_rms_n": 75.48169387096462,
+          "solve_ms": 290.021667,
+          "step_ms": 352.097583,
+          "time_s": 0.016666666666666666,
+          "truncated_vertices": 3367
+        },
+        {
+          "step": 2,
+          "broad_phase_rebuilds": 17,
+          "contact_profile": {
+            "candidate_pairs": 1362230,
+            "candidates_ms": 84.518042,
+            "narrow_ms": 35.502292,
+            "refit_ms": 3.5991220000000004
+          },
+          "contact_terms": 126,
+          "contacts": 5,
+          "detection_ms": 128.82895699999997,
+          "detection_updates": 17,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 282.3777624515082,
+          "extension_p95_percent": 69.5471622878332,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.3734677221155022,
+          "minimum_distance_m": 0.0023553346900121613,
+          "residual_rms_n": 48.16376276601443,
+          "solve_ms": 277.83504300000004,
+          "step_ms": 406.66400000000004,
+          "time_s": 0.03333333333333333,
+          "truncated_vertices": 3712
+        },
+        {
+          "step": 3,
+          "broad_phase_rebuilds": 17,
+          "contact_profile": {
+            "candidate_pairs": 1362688,
+            "candidates_ms": 90.77841399999998,
+            "narrow_ms": 38.04616600000001,
+            "refit_ms": 3.664043
+          },
+          "contact_terms": 851,
+          "contacts": 55,
+          "detection_ms": 138.12874900000003,
+          "detection_updates": 17,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 407.2944103953449,
+          "extension_p95_percent": 111.65097857681809,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.33148062570616643,
+          "minimum_distance_m": 0.0010477683554148522,
+          "residual_rms_n": 28.509204392688467,
+          "solve_ms": 290.721751,
+          "step_ms": 428.8505,
+          "time_s": 0.05,
+          "truncated_vertices": 4484
+        }
+      ]
+    },
+    {
+      "id": "dress",
+      "preset": "dress",
+      "status": "initial_assembly_transient_measured",
+      "equilibriumEstablished": false,
+      "fitDefectEstablished": false,
+      "initial": {
+        "vertices": 4094,
+        "triangles": 7800,
+        "seams": 4,
+        "backend": "ClothCraft CPU VBD + OGC",
+        "time_s": 0,
+        "max_seam_gap_m": 0.53
+      },
+      "steps": 3,
+      "final_time_s": 0.05,
+      "timeTrajectory": [
+        {
+          "step": 0,
+          "time_s": 0,
+          "max_seam_gap_m": 0.53,
+          "phase": "initial_separated_assembly"
+        },
+        {
+          "step": 1,
+          "time_s": 0.016666666666666666,
+          "max_seam_gap_m": 0.44607898511638855,
+          "solver_max_seam_gap_m": 0.44607898511638855,
+          "extension_p95_percent": 18.141287599299115,
+          "contacts": 0
+        },
+        {
+          "step": 2,
+          "time_s": 0.03333333333333333,
+          "max_seam_gap_m": 0.36844297960252353,
+          "solver_max_seam_gap_m": 0.36844297960252353,
+          "extension_p95_percent": 58.74871809196733,
+          "contacts": 2
+        },
+        {
+          "step": 3,
+          "time_s": 0.05,
+          "max_seam_gap_m": 0.3300160603935061,
+          "solver_max_seam_gap_m": 0.3300160603935061,
+          "extension_p95_percent": 97.49528361868045,
+          "contacts": 53
+        }
+      ],
+      "metrics": {
+        "max_seam_gap_m": {
+          "value": 0.44607898511638855,
+          "threshold": 0.025,
+          "status": "fail"
+        },
+        "extension_p95_percent": {
+          "value": 97.49528361868045,
+          "threshold": 15,
+          "status": "fail"
+        },
+        "extension_max_percent": {
+          "value": 342.2080669137698,
+          "threshold": 60,
+          "status": "fail"
+        },
+        "minimum_distance_m": {
+          "value": 0.0016069269585793793,
+          "threshold": 0,
+          "status": "pass"
+        },
+        "contact_penetration_m": {
+          "value": null,
+          "status": "inconclusive",
+          "reason": "VBD session reports minimum_distance_m but no independently evaluated penetration depth"
+        }
+      },
+      "lastStep": {
+        "broad_phase_rebuilds": 17,
+        "contact_profile": {
+          "candidate_pairs": 2431247,
+          "candidates_ms": 148.998334,
+          "narrow_ms": 64.621585,
+          "refit_ms": 5.47842
+        },
+        "contact_terms": 511,
+        "contacts": 53,
+        "detection_ms": 228.16691800000004,
+        "detection_updates": 17,
+        "dt_s": 0.016666666666666666,
+        "extension_max_percent": 342.2080669137698,
+        "extension_p95_percent": 97.49528361868045,
+        "gpu_compute_ms": null,
+        "iterations": 16,
+        "max_seam_gap_m": 0.3300160603935061,
+        "minimum_distance_m": 0.0016069269585793793,
+        "residual_rms_n": 26.71422323996075,
+        "solve_ms": 490.050749,
+        "step_ms": 718.217667,
+        "time_s": 0.05,
+        "truncated_vertices": 5226
+      },
+      "trajectory": [
+        {
+          "step": 1,
+          "broad_phase_rebuilds": 8,
+          "contact_profile": {
+            "candidate_pairs": 875356,
+            "candidates_ms": 57.528624,
+            "narrow_ms": 21.725997999999997,
+            "refit_ms": 5.373332
+          },
+          "contact_terms": 0,
+          "contacts": 0,
+          "detection_ms": 93.562458,
+          "detection_updates": 16,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 56.57218049884551,
+          "extension_p95_percent": 18.141287599299115,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.44607898511638855,
+          "minimum_distance_m": 0.006,
+          "residual_rms_n": 56.540018986417884,
+          "solve_ms": 499.59745799999996,
+          "step_ms": 593.159916,
+          "time_s": 0.016666666666666666,
+          "truncated_vertices": 3668
+        },
+        {
+          "step": 2,
+          "broad_phase_rebuilds": 17,
+          "contact_profile": {
+            "candidate_pairs": 2511590,
+            "candidates_ms": 151.28733400000004,
+            "narrow_ms": 68.645251,
+            "refit_ms": 5.464248
+          },
+          "contact_terms": 137,
+          "contacts": 2,
+          "detection_ms": 233.93770700000002,
+          "detection_updates": 17,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 235.770784963363,
+          "extension_p95_percent": 58.74871809196733,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.36844297960252353,
+          "minimum_distance_m": 0.0023287137722809133,
+          "residual_rms_n": 38.275160308881,
+          "solve_ms": 492.55950199999995,
+          "step_ms": 726.497209,
+          "time_s": 0.03333333333333333,
+          "truncated_vertices": 4185
+        },
+        {
+          "step": 3,
+          "broad_phase_rebuilds": 17,
+          "contact_profile": {
+            "candidate_pairs": 2431247,
+            "candidates_ms": 148.998334,
+            "narrow_ms": 64.621585,
+            "refit_ms": 5.47842
+          },
+          "contact_terms": 511,
+          "contacts": 53,
+          "detection_ms": 228.16691800000004,
+          "detection_updates": 17,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 342.2080669137698,
+          "extension_p95_percent": 97.49528361868045,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.3300160603935061,
+          "minimum_distance_m": 0.0016069269585793793,
+          "residual_rms_n": 26.71422323996075,
+          "solve_ms": 490.050749,
+          "step_ms": 718.217667,
+          "time_s": 0.05,
+          "truncated_vertices": 5226
+        }
+      ]
+    },
+    {
+      "id": "tshirt-repeat",
+      "preset": "tshirt",
+      "status": "initial_assembly_transient_measured",
+      "equilibriumEstablished": false,
+      "fitDefectEstablished": false,
+      "initial": {
+        "vertices": 2454,
+        "triangles": 4570,
+        "seams": 8,
+        "backend": "ClothCraft CPU VBD + OGC",
+        "time_s": 0,
+        "max_seam_gap_m": 0.53
+      },
+      "steps": 3,
+      "final_time_s": 0.05,
+      "timeTrajectory": [
+        {
+          "step": 0,
+          "time_s": 0,
+          "max_seam_gap_m": 0.53,
+          "phase": "initial_separated_assembly"
+        },
+        {
+          "step": 1,
+          "time_s": 0.016666666666666666,
+          "max_seam_gap_m": 0.4474944147470859,
+          "solver_max_seam_gap_m": 0.4474944147470859,
+          "extension_p95_percent": 18.513921329172977,
+          "contacts": 0
+        },
+        {
+          "step": 2,
+          "time_s": 0.03333333333333333,
+          "max_seam_gap_m": 0.3734677221155022,
+          "solver_max_seam_gap_m": 0.3734677221155022,
+          "extension_p95_percent": 69.5471622878332,
+          "contacts": 5
+        },
+        {
+          "step": 3,
+          "time_s": 0.05,
+          "max_seam_gap_m": 0.33148062570616643,
+          "solver_max_seam_gap_m": 0.33148062570616643,
+          "extension_p95_percent": 111.65097857681809,
+          "contacts": 55
+        }
+      ],
+      "metrics": {
+        "max_seam_gap_m": {
+          "value": 0.4474944147470859,
+          "threshold": 0.025,
+          "status": "fail"
+        },
+        "extension_p95_percent": {
+          "value": 111.65097857681809,
+          "threshold": 15,
+          "status": "fail"
+        },
+        "extension_max_percent": {
+          "value": 407.2944103953449,
+          "threshold": 60,
+          "status": "fail"
+        },
+        "minimum_distance_m": {
+          "value": 0.0010477683554148522,
+          "threshold": 0,
+          "status": "pass"
+        },
+        "contact_penetration_m": {
+          "value": null,
+          "status": "inconclusive",
+          "reason": "VBD session reports minimum_distance_m but no independently evaluated penetration depth"
+        }
+      },
+      "lastStep": {
+        "broad_phase_rebuilds": 17,
+        "contact_profile": {
+          "candidate_pairs": 1362688,
+          "candidates_ms": 89.04492099999999,
+          "narrow_ms": 38.402708999999994,
+          "refit_ms": 3.6835829999999996
+        },
+        "contact_terms": 851,
+        "contacts": 55,
+        "detection_ms": 136.687873,
+        "detection_updates": 17,
+        "dt_s": 0.016666666666666666,
+        "extension_max_percent": 407.2944103953449,
+        "extension_p95_percent": 111.65097857681809,
+        "gpu_compute_ms": null,
+        "iterations": 16,
+        "max_seam_gap_m": 0.33148062570616643,
+        "minimum_distance_m": 0.0010477683554148522,
+        "residual_rms_n": 28.509204392688467,
+        "solve_ms": 279.111168,
+        "step_ms": 415.799041,
+        "time_s": 0.05,
+        "truncated_vertices": 4484
+      },
+      "trajectory": [
+        {
+          "step": 1,
+          "broad_phase_rebuilds": 8,
+          "contact_profile": {
+            "candidate_pairs": 467090,
+            "candidates_ms": 30.868706,
+            "narrow_ms": 12.293790999999997,
+            "refit_ms": 3.4734999999999996
+          },
+          "contact_terms": 0,
+          "contacts": 0,
+          "detection_ms": 51.35437600000001,
+          "detection_updates": 16,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 70.97100403959679,
+          "extension_p95_percent": 18.513921329172977,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.4474944147470859,
+          "minimum_distance_m": 0.006,
+          "residual_rms_n": 75.48169387096462,
+          "solve_ms": 282.043874,
+          "step_ms": 333.39825,
+          "time_s": 0.016666666666666666,
+          "truncated_vertices": 3367
+        },
+        {
+          "step": 2,
+          "broad_phase_rebuilds": 17,
+          "contact_profile": {
+            "candidate_pairs": 1362230,
+            "candidates_ms": 84.646415,
+            "narrow_ms": 35.26099699999999,
+            "refit_ms": 3.7150410000000003
+          },
+          "contact_terms": 126,
+          "contacts": 5,
+          "detection_ms": 128.62787699999998,
+          "detection_updates": 17,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 282.3777624515082,
+          "extension_p95_percent": 69.5471622878332,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.3734677221155022,
+          "minimum_distance_m": 0.0023553346900121613,
+          "residual_rms_n": 48.16376276601443,
+          "solve_ms": 277.91762300000005,
+          "step_ms": 406.5455,
+          "time_s": 0.03333333333333333,
+          "truncated_vertices": 3712
+        },
+        {
+          "step": 3,
+          "broad_phase_rebuilds": 17,
+          "contact_profile": {
+            "candidate_pairs": 1362688,
+            "candidates_ms": 89.04492099999999,
+            "narrow_ms": 38.402708999999994,
+            "refit_ms": 3.6835829999999996
+          },
+          "contact_terms": 851,
+          "contacts": 55,
+          "detection_ms": 136.687873,
+          "detection_updates": 17,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 407.2944103953449,
+          "extension_p95_percent": 111.65097857681809,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.33148062570616643,
+          "minimum_distance_m": 0.0010477683554148522,
+          "residual_rms_n": 28.509204392688467,
+          "solve_ms": 279.111168,
+          "step_ms": 415.799041,
+          "time_s": 0.05,
+          "truncated_vertices": 4484
+        }
+      ]
+    }
+  ],
+  "repeatability": {
+    "status": "pass",
+    "comparison": "Selected physical values and counts per step, exact JSON values; wall-clock timings excluded"
+  },
+  "screeningObservations": [
+    {
+      "case": "tshirt",
+      "transientExceedances": [
+        "max_seam_gap_m",
+        "extension_p95_percent",
+        "extension_max_percent"
+      ],
+      "assessment": "transient_only"
+    },
+    {
+      "case": "dress",
+      "transientExceedances": [
+        "max_seam_gap_m",
+        "extension_p95_percent",
+        "extension_max_percent"
+      ],
+      "assessment": "transient_only"
+    },
+    {
+      "case": "tshirt-repeat",
+      "transientExceedances": [
+        "max_seam_gap_m",
+        "extension_p95_percent",
+        "extension_max_percent"
+      ],
+      "assessment": "transient_only"
+    }
+  ],
+  "overall": "transient_observed_equilibrium_inconclusive",
+  "fitCertified": false
+}

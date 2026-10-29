@@ -1,0 +1,69 @@
+/* Full grading workstation: 24 tools left, rule editor right, two size tables below. */
+.clo-floating-tool[data-clo-floating-widget="grading"]{
+ width:min(1040px,calc(100vw - 24px))!important;
+ max-height:min(91vh,960px)!important;
+}
+.clo-floating-tool[data-clo-floating-widget="grading"]>.clo-native-grading{
+ display:grid;
+ grid-template-columns:minmax(225px,275px) minmax(0,1fr);
+ grid-template-rows:auto auto minmax(150px,1fr) auto auto;
+ align-items:start;
+ gap:8px 12px;
+ padding:11px;
+ max-height:calc(91vh - 40px);
+ overflow:auto;
+}
+.clo-floating-tool[data-clo-floating-widget="grading"] .exo-optitex-grade-toolbar{
+ grid-column:1;grid-row:1/6;align-self:start;position:sticky;top:0;
+ max-height:calc(91vh - 88px);overflow-y:auto;z-index:3;
+}
+.clo-floating-tool[data-clo-floating-widget="grading"] .exo-grade-studio-nav{grid-column:2;grid-row:1}
+.clo-floating-tool[data-clo-floating-widget="grading"] .exo-grade-studio-meta{grid-column:2;grid-row:2}
+.clo-floating-tool[data-clo-floating-widget="grading"] .clo-floating-tool-body{
+ grid-column:2;grid-row:3;min-width:0;max-height:260px;overflow:auto;
+ border:1px solid #596b75;border-radius:7px;
+}
+.clo-floating-tool[data-clo-floating-widget="grading"] .optitex-grading-table{grid-column:2;grid-row:4}
+.clo-floating-tool[data-clo-floating-widget="grading"] .optitex-native-grade-message{
+ grid-column:2;grid-row:5;margin:0;color:#c9e5f6;font-size:11px;line-height:1.4;
+}
+@media(max-width:760px){
+ .clo-floating-tool[data-clo-floating-widget="grading"]>.clo-native-grading{
+  grid-template-columns:minmax(0,1fr);grid-template-rows:auto;max-height:calc(91vh - 40px)
+ }
+ .clo-floating-tool[data-clo-floating-widget="grading"] .exo-optitex-grade-toolbar,
+ .clo-floating-tool[data-clo-floating-widget="grading"] .exo-grade-studio-nav,
+ .clo-floating-tool[data-clo-floating-widget="grading"] .exo-grade-studio-meta,
+ .clo-floating-tool[data-clo-floating-widget="grading"] .clo-floating-tool-body,
+ .clo-floating-tool[data-clo-floating-widget="grading"] .optitex-grading-table,
+ .clo-floating-tool[data-clo-floating-widget="grading"] .optitex-native-grade-message{
+  grid-column:1;grid-row:auto;position:static;max-height:none
+ }
+}
+/* Independent compact draggable grading analysis palettes live in document.body,
+   not in this floating engineering editor's grid or scroll region. */
+.clo-floating-tool[data-clo-floating-widget="grading"]>.clo-native-grading{
+ grid-template-rows:auto auto auto minmax(150px,1fr) auto;
+}
+.clo-floating-tool[data-clo-floating-widget="grading"] .exo-grade-bottom-triggers{
+ grid-column:2;grid-row:1;display:flex;align-items:center;gap:5px;
+}
+.clo-floating-tool[data-clo-floating-widget="grading"] .exo-grade-bottom-triggers button{
+ background:var(--studio-panel,#33383b);color:var(--studio-text,#eef1f3);
+ border:1px solid var(--studio-border,#59646a);border-radius:4px;
+ padding:5px 8px;font-size:11px;cursor:pointer;
+}
+.clo-floating-tool[data-clo-floating-widget="grading"] .exo-grade-bottom-triggers button[aria-pressed="true"]{
+ border-color:var(--studio-accent,#92b5c5);background:var(--studio-sidebar,#2d3336);
+}
+.clo-floating-tool[data-clo-floating-widget="grading"] .exo-grade-studio-nav{grid-column:2;grid-row:2}
+.clo-floating-tool[data-clo-floating-widget="grading"] .exo-grade-studio-meta{grid-column:2;grid-row:3}
+.clo-floating-tool[data-clo-floating-widget="grading"] .clo-floating-tool-body{grid-column:2;grid-row:4}
+.clo-floating-tool[data-clo-floating-widget="grading"] .optitex-native-grade-message{grid-column:2;grid-row:5}
+@media(max-width:760px){
+ .clo-floating-tool[data-clo-floating-widget="grading"] .exo-grade-bottom-triggers,
+ .clo-floating-tool[data-clo-floating-widget="grading"] .exo-grade-studio-nav,
+ .clo-floating-tool[data-clo-floating-widget="grading"] .exo-grade-studio-meta,
+ .clo-floating-tool[data-clo-floating-widget="grading"] .clo-floating-tool-body,
+ .clo-floating-tool[data-clo-floating-widget="grading"] .optitex-native-grade-message{grid-column:1;grid-row:auto}
+}

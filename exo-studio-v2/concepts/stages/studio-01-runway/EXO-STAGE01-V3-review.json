@@ -1,0 +1,22 @@
+{
+  "status": "STANDALONE VISUAL REVIEW",
+  "stageVersion": "V3",
+  "originalReference": "CLO Stage_01.zprj inspected without modification",
+  "blender": "EXO-STAGE01-V3-EDITORIAL-REVIEW.blend",
+  "stageOnlyGlb": "EXO-STAGE01-V3-STAGE-ONLY-REVIEW.glb",
+  "stageMeshCount": 836,
+  "bodyActor": 21,
+  "bodyInGlb": false,
+  "imagePbrMaterials": 9,
+  "feetAnchor": [
+    0,
+    0,
+    0
+  ],
+  "floorTop": 0,
+  "editorIntegration": "NOT INSTALLED",
+  "renderShots": [
+    "editorial",
+    "garment"
+  ]
+}

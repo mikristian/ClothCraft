@@ -1,0 +1,206 @@
+/* All four EXO CAD navigator views share the adjacent Library's neutral chrome.
+   Keep native geometry and command controls intact; these are visual tokens only. */
+.cc-embedded-root.cc-embedded-2d{
+  --exo-cad-side-bg:var(--studio-sidebar,var(--clo-chrome,#2d2d2e));
+  --exo-cad-side-panel:var(--studio-panel,var(--clo-surface,#343536));
+  --exo-cad-side-field:var(--studio-field,#292b2d);
+  --exo-cad-side-border:var(--studio-border,var(--clo-border,#494a4c));
+  --exo-cad-side-ink:var(--studio-text,#ededee);
+  --exo-cad-side-muted:var(--studio-muted,#bfc0c3);
+  --exo-cad-side-accent:var(--studio-accent,#a4c4d5);
+  --exo-cad-side-hover:color-mix(in srgb,var(--exo-cad-side-panel) 84%,var(--exo-cad-side-ink) 16%);
+}
+.cc-embedded-root.cc-embedded-2d .exo-modaris-side-tabs{
+  gap:1px;padding:3px 5px;
+  background:var(--exo-cad-side-panel);border:0;
+  border-bottom:1px solid var(--exo-cad-side-border);
+  box-shadow:none;
+}
+.cc-embedded-root.cc-embedded-2d .exo-modaris-side-tabs button{
+  min-height:29px;border:1px solid transparent;border-radius:3px;
+  background:transparent;color:var(--exo-cad-side-muted);
+  font:600 10px/1.2 Inter,system-ui,sans-serif;
+}
+.cc-embedded-root.cc-embedded-2d .exo-modaris-side-tabs button:hover{
+  background:var(--exo-cad-side-hover);color:var(--exo-cad-side-ink);
+}
+.cc-embedded-root.cc-embedded-2d .exo-modaris-side-tabs button[aria-pressed="true"]{
+  color:var(--exo-cad-side-ink);background:var(--exo-cad-side-hover);
+  border-color:var(--exo-cad-side-border);
+  box-shadow:inset 0 -2px 0 var(--exo-cad-side-accent);
+}
+.cc-embedded-root.cc-embedded-2d .exo-modaris-side-tabs button:focus-visible,
+.cc-embedded-root.cc-embedded-2d .exo-cad-mini-rail button:focus-visible{
+  outline:2px solid var(--exo-cad-side-accent);outline-offset:-2px;
+}
+.cc-embedded-root.cc-embedded-2d .exo-modaris-side-tabs .exo-modaris-collapse-tab{
+  flex:none;min-width:28px;max-width:28px;
+  border-left:1px solid var(--exo-cad-side-border);
+  font-size:18px;line-height:1;
+}
+.cc-embedded-root.cc-embedded-2d [data-modaris-geometry-navigator],
+.cc-embedded-root.cc-embedded-2d [data-modaris-precision-inspector],
+.cc-embedded-root.cc-embedded-2d .exo-cad-hotkeys{
+  background:var(--exo-cad-side-bg);color:var(--exo-cad-side-ink);
+  border:0;border-right:1px solid var(--exo-cad-side-border);
+  border-radius:0;box-shadow:none;
+}
+.cc-embedded-root.cc-embedded-2d .mgn27-header,
+.cc-embedded-root.cc-embedded-2d .mpi27-heading,
+.cc-embedded-root.cc-embedded-2d .exo-cad-hotkeys__header{
+  min-height:45px;padding:9px 11px;
+  background:var(--exo-cad-side-panel);color:var(--exo-cad-side-ink);
+  border-bottom:1px solid var(--exo-cad-side-border);
+  font-size:11px;letter-spacing:.025em;
+}
+.cc-embedded-root.cc-embedded-2d .mgn27-header span,
+.cc-embedded-root.cc-embedded-2d .mpi27-heading span,
+.cc-embedded-root.cc-embedded-2d .mpi27-heading svg,
+.cc-embedded-root.cc-embedded-2d .exo-cad-hotkeys small{
+  color:var(--exo-cad-side-muted);
+}
+.cc-embedded-root.cc-embedded-2d .mgn27-toolbar,
+.cc-embedded-root.cc-embedded-2d .exo-cad-hotkeys__filters{
+  padding:7px;background:var(--exo-cad-side-bg);
+  border-bottom:1px solid var(--exo-cad-side-border);
+}
+.cc-embedded-root.cc-embedded-2d .mgn27-toolbar label,
+.cc-embedded-root.cc-embedded-2d .mgn27-toolbar>button,
+.cc-embedded-root.cc-embedded-2d .exo-cad-hotkeys input,
+.cc-embedded-root.cc-embedded-2d .exo-cad-hotkeys select,
+.cc-embedded-root.cc-embedded-2d .exo-cad-hotkeys button{
+  background:var(--exo-cad-side-field);color:var(--exo-cad-side-ink);
+  border:1px solid var(--exo-cad-side-border);border-radius:4px;
+}
+.cc-embedded-root.cc-embedded-2d .mgn27-piece,
+.cc-embedded-root.cc-embedded-2d .mgn27-group-head,
+.cc-embedded-root.cc-embedded-2d .mgn27-row{
+  border-color:var(--exo-cad-side-border);
+}
+.cc-embedded-root.cc-embedded-2d .mgn27-piece-head,
+.cc-embedded-root.cc-embedded-2d .mgn27-group-head{
+  background:var(--exo-cad-side-panel);color:var(--exo-cad-side-ink);
+}
+.cc-embedded-root.cc-embedded-2d .mgn27-entity{
+  color:var(--exo-cad-side-ink);
+}
+.cc-embedded-root.cc-embedded-2d .mgn27-entity:not(:disabled):hover,
+.cc-embedded-root.cc-embedded-2d .mgn27-entity[aria-pressed="true"]{
+  background:var(--exo-cad-side-hover);color:var(--exo-cad-side-ink);
+}
+.cc-embedded-root.cc-embedded-2d .mgn27-entity[aria-pressed="true"]{
+  box-shadow:inset 2px 0 0 var(--exo-cad-side-accent);
+}
+.cc-embedded-root.cc-embedded-2d .mgn27-entity small,
+.cc-embedded-root.cc-embedded-2d .mgn27-group-head em,
+.cc-embedded-root.cc-embedded-2d .mgn27-empty,
+.cc-embedded-root.cc-embedded-2d .mgn27-footer{
+  color:var(--exo-cad-side-muted);
+}
+.cc-embedded-root.cc-embedded-2d .mgn27-footer{
+  border-top:1px solid var(--exo-cad-side-border);
+  background:var(--exo-cad-side-panel);
+}
+.cc-embedded-root.cc-embedded-2d .mpi27-scroll{padding:10px}
+.cc-embedded-root.cc-embedded-2d .mpi27-identity,
+.cc-embedded-root.cc-embedded-2d .mpi27-section,
+.cc-embedded-root.cc-embedded-2d .exo-cad-hotkeys__item{
+  background:var(--exo-cad-side-panel);
+  color:var(--exo-cad-side-ink);border:1px solid var(--exo-cad-side-border);border-radius:4px;
+}
+.cc-embedded-root.cc-embedded-2d .mpi27-identity>span,
+.cc-embedded-root.cc-embedded-2d .mpi27-identity small,
+.cc-embedded-root.cc-embedded-2d .mpi27-section h3,
+.cc-embedded-root.cc-embedded-2d .mpi27-section h3 svg,
+.cc-embedded-root.cc-embedded-2d .mpi27-grid span,
+.cc-embedded-root.cc-embedded-2d .mpi27-note,
+.cc-embedded-root.cc-embedded-2d .mpi27-selected span,
+.cc-embedded-root.cc-embedded-2d .mpi27-inputs label,
+.cc-embedded-root.cc-embedded-2d .mpi27-empty,
+.cc-embedded-root.cc-embedded-2d .exo-cad-hotkeys p{
+  color:var(--exo-cad-side-muted);
+}
+.cc-embedded-root.cc-embedded-2d .mpi27-picker button,
+.cc-embedded-root.cc-embedded-2d .mpi27-inputs input,
+.cc-embedded-root.cc-embedded-2d .mpi27-apply{
+  background:var(--exo-cad-side-field);color:var(--exo-cad-side-ink);
+  border:1px solid var(--exo-cad-side-border);border-radius:4px;
+}
+.cc-embedded-root.cc-embedded-2d .mpi27-picker button[aria-pressed="true"]{
+  background:var(--exo-cad-side-hover);border-color:var(--exo-cad-side-accent);
+}
+.cc-embedded-root.cc-embedded-2d .mpi27-selected{
+  color:var(--exo-cad-side-ink);
+}
+.cc-embedded-root.cc-embedded-2d .mpi27-picker button:focus-visible,
+.cc-embedded-root.cc-embedded-2d .mpi27-inputs input:focus-visible,
+.cc-embedded-root.cc-embedded-2d .mpi27-apply:focus-visible,
+.cc-embedded-root.cc-embedded-2d .exo-cad-hotkeys :is(button,input,select):focus-visible{
+  outline:2px solid var(--exo-cad-side-accent);outline-offset:-2px;
+}
+.cc-embedded-root.cc-embedded-2d .exo-cad-hotkeys__list{max-height:none;min-height:0;flex:1;overflow:auto}
+.cc-embedded-root.cc-embedded-2d .exo-cad-hotkeys output{
+  color:var(--exo-cad-side-ink);
+}
+/* A single collapse/expand rail for every left CAD tab, independent of 2D ribbons. */
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d[data-exo-cad-collapsed="true"]:not(.cc-3d-studio-focus){
+  --exo-pattern-inspector-width:44px;
+}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-cad-mini-rail{
+  position:absolute;left:0;top:var(--exo-cad-chrome-height,92px);bottom:0;
+  width:44px;z-index:152;box-sizing:border-box;
+  background:var(--exo-cad-side-bg);
+  border-right:1px solid var(--exo-cad-side-border);
+  display:flex;flex-direction:column;align-items:center;gap:16px;padding:8px 4px;
+}
+.cc-embedded-root.cc-embedded-2d .exo-cad-mini-rail button{
+  width:32px;height:32px;display:grid;place-items:center;
+  padding:0;color:var(--exo-cad-side-ink);
+  background:var(--exo-cad-side-panel);border:1px solid var(--exo-cad-side-border);
+  border-radius:4px;cursor:pointer;font-size:20px;
+}
+.cc-embedded-root.cc-embedded-2d .exo-cad-mini-rail button:hover{
+  background:var(--exo-cad-side-hover);
+}
+.cc-embedded-root.cc-embedded-2d .exo-cad-mini-rail>span{
+  writing-mode:vertical-rl;transform:rotate(180deg);
+  white-space:nowrap;letter-spacing:.14em;font-size:10px;
+  font-weight:750;color:var(--exo-cad-side-ink);
+}
+/* The CAD header occupies the first 46px; navigator tabs sit directly below.
+   They must stay clickable above the inspector instead of being covered by
+   its document title. Reserve their height inside each independent tab body. */
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-side-tabs{
+  z-index:210!important;
+}
+.cc-embedded-root.cc-embedded-2d .mpp27 .mpp27-document,
+.cc-embedded-root.cc-embedded-2d .mgn27 .mgn27-toolbar,
+.cc-embedded-root.cc-embedded-2d .mpi27 .mpi27-scroll{
+  margin-top:39px;
+}
+.cc-embedded-root.cc-embedded-2d .exo-cad-hotkeys__header+p{
+  margin-top:49px;
+}
+/* Match the user's fully hidden behavior: no residual CAD rail or reserved
+   gutter, only a small independently clickable restore arrow at canvas edge. */
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d[data-exo-cad-collapsed="true"]:not(.cc-3d-studio-focus){
+  --exo-pattern-inspector-width:0px!important;
+}
+.cc-embedded-root.cc-embedded-2d[data-exo-cad-collapsed="true"] .mpp27-rail-title,
+.cc-embedded-root.cc-embedded-2d[data-exo-cad-collapsed="true"] .mpp27-rail-count{
+  display:none;
+}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d[data-exo-cad-collapsed="true"]:not(.cc-3d-studio-focus) .mpp27--collapsed .mpp27-rail-expand{
+  background:var(--exo-cad-side-panel)!important;
+  border-color:var(--exo-cad-side-border)!important;
+  color:var(--exo-cad-side-ink)!important;
+}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-cad-mini-rail{
+  width:0;border:0;background:transparent;overflow:visible;pointer-events:none;
+  padding:0;z-index:205;
+}
+.cc-embedded-root.cc-embedded-2d .exo-cad-mini-rail>span{display:none}
+.cc-embedded-root.cc-embedded-2d .exo-cad-mini-rail button{
+  pointer-events:auto;position:absolute;top:6px;left:0;
+  width:26px;height:28px;z-index:206;
+}

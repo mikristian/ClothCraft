@@ -58,6 +58,53 @@ double orientedArea(const Json& points) {
 
 struct PieceInfo { double width = 0; std::size_t edges = 0; };
 
+// The polygon vertices below are rebased to their cutline minimum. ClothCraft
+// placement refers to that rebased local origin, so account for the width
+// when putting the fabric centre on an anatomical arrangement anchor.
+Json panelPlacement(const Json& piece, double width, double height, double fallbackX) {
+  const auto arrangement = piece.value("arrangement3d", Json::object());
+  if (!arrangement.is_object()) throw std::invalid_argument("arrangement3d must be an object");
+  const std::string wrap = arrangement.value("wrap", std::string());
+  const double x = field(arrangement, "x"), y = field(arrangement, "y");
+  const double z = field(arrangement, "z");
+  std::array<double, 3> translation{fallbackX, 1.5, 0.5};
+  std::array<double, 3> rotation{0, 0, 0};
+  bool placed = true;
+  if (wrap == "front" || wrap == "back" || wrap == "lower-front" || wrap == "lower-back") {
+    const bool back = wrap == "back" || wrap == "lower-back";
+    translation = {x + (back ? width / 2 : -width / 2), y, z};
+    if (back) rotation[1] = 180;
+  } else if (wrap == "left-leg-front" || wrap == "right-leg-front" ||
+             wrap == "left-leg-back" || wrap == "right-leg-back") {
+    const bool back = wrap.find("-back") != std::string::npos;
+    const double side = wrap.find("left-") == 0 ? -1 : 1;
+    // The stored source x is the anatomical leg centre, in metres.
+    translation = {x + (back ? width / 2 : -width / 2), y, z};
+    if (std::abs(x) < 0.01) translation[0] += side * 0.15;
+    if (back) rotation[1] = 180;
+  } else if (wrap == "left-arm" || wrap == "right-arm") {
+    const double side = wrap == "left-arm" ? -1 : 1;
+    translation = {x - width / 2, y, z};
+    if (std::abs(x) < 0.01) translation[0] += side * 0.34;
+    rotation[2] = side * -35;
+  } else if (wrap == "hood-left" || wrap == "hood-right") {
+    const double side = wrap == "hood-left" ? -1 : 1;
+    translation = {x - width / 2, y, z};
+    if (std::abs(x) < 0.01) translation[0] += side * 0.12;
+    rotation[1] = side * 35;
+  } else if (wrap == "neck" || wrap == "waist-band" ||
+             wrap == "left-wrist" || wrap == "right-wrist") {
+    translation = {x - width / 2, y, z};
+    rotation[0] = wrap == "neck" || wrap == "waist-band" ? 75 : 20;
+  } else placed = false;
+  if (!placed) return {{"translation", Json::array({fallbackX, 1.5, 0.5})},
+                       {"rotation_degrees", Json::array({0.0, 0.0, 0.0})}};
+  // Positive-area polygons stay untouched, preserving all edge/sewing IDs.
+  (void)height;
+  return {{"translation", Json::array({translation[0], translation[1], translation[2]})},
+          {"rotation_degrees", Json::array({rotation[0], rotation[1], rotation[2]})}};
+}
+
 Json fabricProperties(const Json& source) {
   // Textile stiffness/anisotropy cannot be inferred reliably from GS stretch
   // sliders. Use ClothCraft's documented reference coefficients instead.
@@ -111,7 +158,7 @@ Json exportClothCraftTemplate(const Document& document) {
 
   std::set<std::string> notices;
   auto note = [&](const std::string& value) { notices.insert(value); };
-  note("PREVIEW ONLY: flat separated 3D arrangement; not an avatar fit or simulation-ready assembly");
+  note("PREVIEW ONLY: anatomical panel placement is an initial pose, not a certified avatar fit or simulation-ready assembly");
   note("Uncalibrated material stiffness: ClothCraft reference coefficients used; density/thickness transferred");
   note("Source project remains authoritative; ClothCraft cannot round-trip all production metadata");
 
@@ -133,6 +180,7 @@ Json exportClothCraftTemplate(const Document& document) {
   }
 
   std::map<std::string, PieceInfo> pieces;
+  std::map<std::string, std::set<std::size_t>> curvedEdges;
   double cursor = 0;
   for (const auto& p : originals) {
     std::string panelId = id(p, "id");
@@ -165,6 +213,7 @@ Json exportClothCraftTemplate(const Document& document) {
         if (it.value().is_null()) continue;
         const auto index = std::stoul(it.key());
         if (index >= points.size()) throw std::invalid_argument("bad curve index");
+        curvedEdges[panelId].insert(index);
         const auto& a = points[index];
         const auto& b = points[(index + 1) % points.size()];
         double ax = field(a,"x"), ay = field(a,"y"), bx = field(b,"x"), by = field(b,"y");
@@ -181,8 +230,7 @@ Json exportClothCraftTemplate(const Document& document) {
                   {"pattern", {{"width", width}, {"height", height}, {"nx", 1}, {"ny", 1}}},
                   {"polygon", polygon}, {"fabric", fabricId},
                   {"grain_degrees", field(p,"grainAngleDeg",0)},
-                  {"placement", {{"translation", Json::array({cursor,1.5,0.5})},
-                                 {"rotation_degrees", Json::array({0.0,0.0,0.0})}}},
+                  {"placement", panelPlacement(p, width, height, cursor)},
                   {"pins", Json::array()}};
     if (p.contains("layout2d") && p["layout2d"].is_object())
       panel["layout_2d"] = Json::array({(field(p["layout2d"],"x")+minX)*kCmToM,
@@ -202,9 +250,23 @@ Json exportClothCraftTemplate(const Document& document) {
       auto a = boundary(s.at("a"), pieces), b = boundary(s.at("b"), pieces);
       auto measured = document.seamInfo(id(s, "id"));
       bool mismatch = measured.at("differenceCm").get<double>() > 1e-8;
+      const auto hasCurve = [&](const Json& endpoint) {
+        const auto panel = id(endpoint, "pieceId");
+        const auto edge = static_cast<std::size_t>(field(endpoint, "edgeIndex", -1));
+        const auto found = curvedEdges.find(panel);
+        return found != curvedEdges.end() && found->second.count(edge) != 0;
+      };
+      // Rust resamples quadratic source curves through the exported cubic
+      // contours; equal analytic lengths can differ by a few hundredths of a
+      // millimetre after meshing. Explicitly opt those near-equal curved seams
+      // into easing, without silently relaxing straight seams or topology.
+      const bool curvedSamplingAllowance = !mismatch &&
+          (hasCurve(s.at("a")) || hasCurve(s.at("b"))) &&
+          measured.at("differenceCm").get<double>() <= 0.01;
       Json seam = {{"id", id(s,"id")}, {"a", a}, {"b", b},
                    {"reverse_b", s.value("reverseB",false)},
-                   {"notches", Json::array()}, {"stiffness", 5000.0}, {"allow_ease", mismatch}};
+                   {"notches", Json::array()}, {"stiffness", 5000.0},
+                   {"allow_ease", mismatch || curvedSamplingAllowance}};
       out["seams"].push_back(seam);
       if (mismatch) note("Unequal sewn-edge lengths: allow_ease set, but ClothCraft has no physical gathering model");
       if (hasData(s,"notches") || hasData(s,"ease") || hasData(s,"gather"))

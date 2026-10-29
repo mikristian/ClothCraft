@@ -1,5 +1,7 @@
 import React,{useEffect,useState} from 'react'
 import {CLO_DRAFT_FIELDS,resolveCloDraftTarget} from '../core/cloPropertyCommands.js'
+import {listHardwarePresets} from '../data/hardwarePresets.js'
+import './CloObjectPropertyFieldsGray.css'
 
 // All editable values in this component resolve to existing EXO draft keys.
 // The separate native Rust material/physics editor is not emulated here.
@@ -8,38 +10,96 @@ const GROUP_FIELDS={
   fabric:{
     information:[['name','Name'],['itemNo','Item No.'],['construction','Construction'],['supplier','Supplier'],['owner','Owner']],
     physical:[['gsm','Weight','g/m²'],['thickness','Thickness','mm',1000],['stretchWarp','Warp Stretch','%',100],['stretchWeft','Weft Stretch','%',100],['bend','Bend Parameter'],['damping','Damping'],['friction','Friction']],
-    material:[['color','Color'],['roughness','Roughness'],['metalness','Metalness'],['sheen','Sheen']],
+    material:[['color','Color'],['opacity','Opacity','%',100],['roughness','Roughness'],['reflectionIntensity','Reflection Intensity'],['metalness','Metalness'],['sheen','Sheen']],
     // Backward-compatible data selectors for existing property consumers.
     simulation:[['gsm','Weight','g/m²'],['thickness','Thickness','mm',1000],['stretchWarp','Warp Stretch','%',100],['stretchWeft','Weft Stretch','%',100],['bend','Bend Parameter'],['damping','Damping'],['friction','Friction']],
     fabric:[['color','Color'],['roughness','Roughness'],['metalness','Metalness'],['sheen','Sheen']],
   },
-  button:{button:[['diameterCm','Diameter','cm'],['holes','Holes'],['color','Color']],position:[['x','Position X','cm'],['y','Position Y','cm']]},
-  buttonhole:{buttonhole:[['lengthCm','Length','cm'],['widthCm','Width','cm'],['orientationDeg','Angle','°'],['color','Thread Color']],position:[['x','Position X','cm'],['y','Position Y','cm']]},
-  topstitch:{topstitch:[['stitchLengthMm','Stitch Length','mm'],['offsetCm','Offset','cm'],['rows','Number of Lines'],['rowGapCm','Line Distance','cm'],['color','Thread Color']]},
+  button:{
+    information:[['name','Name'],['itemNo','Item No.'],['visible','Show in 2D / 3D']],
+    button:[['hardwarePresetId','Button Style'],['widthMm','Width','cm',0.1],['heightMm','Height','mm'],['thicknessMm','Thickness','mm'],['weightGrams','Weight','g'],['holes','Sewing Holes'],['holeDiameterMm','Hole Diameter','mm'],['holeSpacingMm','Hole Spacing','mm'],['angleDeg','Angle','°'],['threadType','Thread Type'],['threadLengthMm','Thread Length','mm'],['threadColor','Thread Color']],
+    'button-material':[['materialType','Material Type'],['color','Base Color'],['roughness','Roughness'],['metalness','Metalness'],['reflectionIntensity','Reflection Intensity'],['clearcoat','Clearcoat']],
+    position:[['x','Position X','cm'],['y','Position Y','cm']],
+  },
+  buttonhole:{
+    information:[['name','Name'],['visible','Show in 2D / 3D']],
+    buttonhole:[['hardwarePresetId','Buttonhole Style'],['openingShape','Opening Shape'],['lengthCm','Length','mm',10],['widthCm','Opening Width','mm',10],['orientationDeg','Angle','°'],['eyeDiameterMm','Keyhole Eye Diameter','mm'],['stitchBorderWidthMm','Stitch Border Width','mm'],['threadColor','Thread Color'],['recessColor','Opening / Recess Color']],
+    position:[['x','Position X','cm'],['y','Position Y','cm']],
+    'buttonhole-material':[['threadRoughness','Thread Roughness'],['threadMetalness','Thread Metalness'],['reflectionIntensity','Reflection Intensity']],
+  },
+  binding:{
+    information:[['name','Name'],['visible','Show in 2D / 3D']],
+    binding:[['edgeIndex','Pattern Edge'],['widthCm','Binding Width','mm',10],['ratio','Stay / Feed Ratio','%',100],['stiffness','Constraint Stiffness','%',100],['color','Binding Color']],
+    'binding-material':[['roughness','Roughness'],['metalness','Metalness'],['reflectionIntensity','Reflection Intensity']],
+  },
+  fastener:{
+    information:[['name','Name'],['visible','Show in 2D / 3D']],
+    fastener:[['type','Attachment Type'],['closed','Closed / Physically Fastened'],['diameterCm','Fastener Diameter','mm',10]],
+  },
+  zipper:{
+    'zipper-style':[['name','Name'],['visible','Show in 2D / 3D'],['hardwarePresetId','Zipper Style'],['edgeIndex','Pattern Edge'],['openFrom','Opening Direction']],
+    'zipper-mechanics':[['twoWay','Two-way Zipper'],['fastened','Fasten Zipper'],['offsetCm','Edge Offset','cm']],
+    'zipper-extension':[['startExtensionMm','Start Extension','mm'],['endExtensionMm','End Extension','mm']],
+    'zipper-specification':[['chainWidthMm','Chain Width','mm'],['tapeWidthMm','Tape Width / Side','mm'],['tapeThicknessMm','Tape Thickness','mm'],['toothPitchMm','Tooth Pitch','mm'],['toothThicknessMm','Tooth Thickness','mm'],['sliderWidthMm','Slider Width','mm'],['sliderLengthMm','Slider Length','mm'],['sliderThicknessMm','Slider Thickness','mm'],['pullerWidthMm','Puller Width','mm'],['pullerLengthMm','Puller Length','mm'],['pullerThicknessMm','Puller Thickness','mm'],['stopperThicknessMm','Stopper Thickness','mm'],['weightGrams','Total Weight (specification)','g']],
+    'zipper-material':[['tapeMaterialType','Tape Material'],['teethMaterialType','Chain / Teeth Material'],['sliderMaterialType','Slider Material'],['tapeColor','Tape Color'],['teethColor','Teeth Color'],['sliderColor','Slider Color'],['pullerColor','Puller Color'],['stopperColor','Stopper Color']],
+    'zipper-reflection':[['tapeRoughness','Tape Roughness'],['teethRoughness','Teeth Roughness'],['sliderRoughness','Slider Roughness'],['pullerRoughness','Puller Roughness'],['stopperRoughness','Stopper Roughness'],['metalness','Hardware Metalness'],['roughness','Global Hardware Roughness'],['reflectionIntensity','Reflected Lighting Intensity'],['clearcoat','Clearcoat'],['tapeSheen','Tape Sheen']],
+  },
+  topstitch:{topstitch:[['visible','Show in 2D / 3D'],['edgeIndex','Pattern Edge'],['stitchLengthMm','Stitch Length','mm'],['offsetCm','Offset','cm'],['rows','Number of Lines'],['rowGapCm','Line Distance','cm'],['color','Thread Color']]},
+  puckering:{puckering:[['edgeIndex','Pattern Edge'],['amplitudeMm','Visual Amplitude','mm'],['spacingMm','Wave Spacing','mm'],['widthCm','Band Width','cm'],['strength','Visual Strength'],['color','Appearance Color'],['visible','Show in Draft']]},
   graphic:{graphic:[['name','Name'],['opacity','Opacity','%',100],['rotationDeg','Rotation','°']],position:[['x','Position X','cm'],['y','Position Y','cm'],['widthCm','Width','cm'],['heightCm','Height','cm']]},
 }
+
+// A dimensional value has one project-backed source shared by its numeric
+// field and scrubber. Large coordinate/edge-index fields remain exact inputs.
+const SLIDER_FIELDS=new Set([
+ 'diameterCm','widthMm','heightMm','thicknessMm','weightGrams','holes','holeDiameterMm','holeSpacingMm',
+ 'angleDeg','threadLengthMm','roughness','metalness','reflectionIntensity','clearcoat',
+ 'threadRoughness','threadMetalness','tapeRoughness','teethRoughness','sliderRoughness',
+ 'pullerRoughness','stopperRoughness','tapeSheen',
+ 'lengthCm','widthCm','orientationDeg','eyeDiameterMm','stitchBorderWidthMm',
+ 'chainWidthMm','tapeWidthMm','tapeThicknessMm','toothPitchMm','offsetCm',
+ 'toothThicknessMm','sliderWidthMm','sliderLengthMm','sliderThicknessMm','pullerWidthMm','pullerLengthMm',
+ 'pullerThicknessMm','stopperThicknessMm',
+ 'startExtensionMm','endExtensionMm','stitchLengthMm','rows','rowGapCm',
+ 'ratio','stiffness','amplitudeMm','spacingMm','strength',
+ 'opacity','rotationDeg','widthCm','heightCm',
+])
 
 function EditorInput({field,label,unit='',factor=1,schema,value,selection,project,onEdit}){
  const displayed=schema.type==='number'&&typeof value==='number'?Number((value*factor).toFixed(5)):value
  const [draft,setDraft]=useState(String(displayed??''))
  const [error,setError]=useState('')
+ const scrubber=schema.type==='number'&&SLIDER_FIELDS.has(field)&&Number.isFinite(schema.min)&&Number.isFinite(schema.max)
+ const span=scrubber?(schema.max-schema.min)*factor:0
+ const scrubStep=schema.integer?String(factor):span<=2?'.01':span<=40?'.1':'1'
+ const pattern=project.pieces?.find(piece=>piece.id===selection?.pieceId)
+ const edges=field==='edgeIndex'&&Array.isArray(pattern?.points)?pattern.points:[]
  useEffect(()=>{setDraft(String(displayed??''));setError('')},[displayed,selection?.id,selection?.itemId,field])
  const submit=value=>{
+  if(schema.type==='number'&&String(value).trim()===''){setError('Enter a number');return}
   const converted=schema.type==='number'?Number(value)/factor:value
-  const result=onEdit?.(selection,field,converted)
+  if(typeof onEdit!=='function'){setError('Editing is unavailable for this selection');return}
+  const result=onEdit(selection,field,converted)
   if(result?.ok===false){setError(result.error);return}
   setError('')
  }
- return <div className="clo-pe-edit-field" data-property-field={field}>
+ return <div className={`clo-pe-edit-field clo-pe-gray-row${scrubber?' clo-pe-gray-range-row':''}${schema.type==='color'?' clo-pe-gray-color-row':''}`} data-property-field={field}>
    <label htmlFor={`clo-field-${selection.type}-${field}`}>{label}</label>
-   {schema.type==='boolean'?<input id={`clo-field-${selection.type}-${field}`} type="checkbox" checked={Boolean(value)} onChange={e=>submit(e.target.checked)} aria-label={label}/>
+   {schema.type==='boolean'?<input id={`clo-field-${selection.type}-${field}`} type="checkbox" checked={field==='visible'?value!==false:Boolean(value)} onChange={e=>submit(e.target.checked)} aria-label={label}/>
+   :field==='edgeIndex'&&edges.length?<select id={`clo-field-${selection.type}-${field}`} aria-label={label} value={value??0} onChange={e=>submit(e.target.value)}>{edges.map((_,index)=><option key={index} value={index}>Edge {index+1} · Point {index+1} → {((index+1)%edges.length)+1}</option>)}</select>
    :schema.type==='fabric'?<select id={`clo-field-${selection.type}-${field}`} aria-label={label} value={value??''} onChange={e=>submit(e.target.value)}>{Object.entries(project.fabrics||{}).map(([id,material])=><option key={id} value={id}>{material.name||id}</option>)}</select>
-   :schema.type==='color'?<input id={`clo-field-${selection.type}-${field}`} aria-label={label} type="color" value={typeof value==='string'&&/^#[\da-fA-F]{6}$/.test(value)?value:'#888888'} onChange={e=>submit(e.target.value)}/>
+   :schema.type==='hardwarePreset'||schema.type==='zipperPreset'||schema.type==='buttonholePreset'?<select id={`clo-field-${selection.type}-${field}`} aria-label={label} value={value??''} onChange={e=>submit(e.target.value)}>{listHardwarePresets(schema.type==='zipperPreset'?'zipper':schema.type==='buttonholePreset'?'buttonhole':'button').map(item=><option key={item.id} value={item.id}>{item.name}</option>)}</select>
+   :schema.type==='enum'?<select id={`clo-field-${selection.type}-${field}`} aria-label={label} value={value??schema.values[0]} onChange={e=>submit(e.target.value)}>{schema.values.map(option=><option key={option} value={option}>{option}</option>)}</select>
+   :schema.type==='color'?<div className="clo-pe-gray-color-control"><input id={`clo-field-${selection.type}-${field}`} aria-label={label} type="color" value={typeof value==='string'&&/^#[\da-fA-F]{6}$/.test(value)?value:'#888888'} onChange={e=>submit(e.target.value)}/><span>{typeof value==='string'?value.toUpperCase():'#888888'}</span></div>
    :<div className="clo-pe-edit-input"><input id={`clo-field-${selection.type}-${field}`} aria-label={label}
       type={schema.type==='number'?'number':'text'} value={draft}
-      {...(schema.type==='number'?{min:schema.min*factor,max:schema.max*factor,step:schema.integer?'1':'any'}:{maxLength:schema.maxLength})}
+      {...(schema.type==='number'?{min:Number.isFinite(schema.min)?schema.min*factor:undefined,max:Number.isFinite(schema.max)?schema.max*factor:undefined,step:schema.integer?factor:'any'}:{maxLength:schema.maxLength})}
       onChange={e=>setDraft(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'){e.preventDefault();e.currentTarget.blur()}}}
       onBlur={()=>{if(String(draft)!==String(displayed??''))submit(draft)}}/>{unit&&<span>{unit}</span>}</div>}
+   {scrubber&&<input className="clo-pe-edit-slider" type="range" aria-label={`Adjust ${label}`}
+      min={schema.min*factor} max={schema.max*factor} step={scrubStep}
+      value={Math.max(schema.min*factor,Math.min(schema.max*factor,Number(displayed??schema.min*factor)))}
+      onChange={e=>submit(e.target.value)}/>}
    {error&&<small role="alert" className="clo-pe-field-error">{error}</small>}
  </div>
 }
@@ -54,11 +114,13 @@ export default function CloObjectPropertyFields({group,selection,project,onEdit,
    const schema=CLO_DRAFT_FIELDS[kind]?.[field]
    if(!schema)return null
    return <EditorInput key={`${selection.id}:${field}`} field={field} label={label} unit={unit} factor={factor} schema={schema}
-      value={target[field]} selection={selection} project={project} onEdit={onEdit}/>
+      value={target[field]??(kind==='fabric'&&['opacity','reflectionIntensity'].includes(field)?1:undefined)} selection={selection} project={project} onEdit={onEdit}/>
   })}
   {kind==='topstitch'&&group==='topstitch'&&Number(target.stitchLengthMm)>0&&<div className="clo-pe-readout"><span>Stitches per Inch (derived)</span><strong>{(25.4/target.stitchLengthMm).toFixed(1)} SPI</strong></div>}
   {kind==='fabric'&&['simulation','physical'].includes(group)&&<p className="clo-pe-note">Draft material estimates, not CLO fabric lab calibration. Native Rust physical parameters are edited in the separate native Fabric workspace.</p>}
-  {kind==='button'&&group==='button'&&<p className="clo-pe-note">Button geometry is a draft hardware annotation. CLO thread-length forces and rigid button collisions are not simulated.</p>}
+  {kind==='button'&&group==='button'&&<p className="clo-pe-note">Width, thickness and thread parameters update the visible 3D button. Button/cloth collisions and thread tension are not yet solved by the native engine.</p>}
+  {kind==='zipper'&&group==='zipper-mechanics'&&<p className="clo-pe-note">Slider and Fasten control the zipper appearance and, when a compatible sewn edge pair is linked, the EXO draft zipper seam open fraction. Native Rust zipper contact still needs integration.</p>}
   {kind==='topstitch'&&group==='topstitch'&&<p className="clo-pe-note">These values update actual annotated stitch rows and appearance. Full CLO stitch-object physics is not implemented.</p>}
+  {kind==='puckering'&&group==='puckering'&&<p className="clo-pe-note">EXO draft puckering annotation: edge, width, frequency, color and amplitude are editable. The native Rust simulation has no puckering force or material displacement for this annotation.</p>}
  </div>
 }

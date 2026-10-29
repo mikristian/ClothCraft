@@ -1,0 +1,16 @@
+diff --git a/research/oss/clothcraft/src/bin/exo-session.rs b/research/oss/clothcraft/src/bin/exo-session.rs
+--- a/research/oss/clothcraft/src/bin/exo-session.rs
++++ b/research/oss/clothcraft/src/bin/exo-session.rs
+@@ -886,8 +886,12 @@
+   // saved size is active, the viewport must describe the mesh actually in use.
+   let visible_template=if let Some(candidate)=&self.active_variant_template {candidate} else {match (&self.project.grade_run,&self.active_grade_size) {
+-   (Some(run),Some(size))=>run.sizes.iter().position(|name|name==size)
+-    .and_then(|index|run.graded_templates.get(index)).unwrap_or(&self.project.template),
++   // The compiled native scene resolves external F7 aliases to canonical
++   // sizes. The snapshot must use the *same* resolution, or the 2D editor
++   // falsely displays the base pattern while the 3D mesh uses the grade.
++   (Some(run),Some(size))=>run.resolve_size(size)
++    .and_then(|canonical|run.sizes.iter().position(|name|name==canonical))
++    .and_then(|index|run.graded_templates.get(index)).unwrap_or(&self.project.template),
+    _=>&self.project.template,
+   }};

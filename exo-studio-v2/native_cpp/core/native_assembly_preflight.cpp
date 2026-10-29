@@ -19,6 +19,9 @@ struct Group {std::string id;int count=0;double total=0,max=0;std::set<std::stri
 Json inspectNativeAssemblyPose(const Json& payload,const Json& options){
  if(!payload.is_object()||!payload.contains("particles")||payload["particles"].is_null()||!payload.contains("pieces")||payload["pieces"].is_null()||!payload.contains("constraints")||payload["constraints"].is_null())throw std::invalid_argument("Native assembly payload is incomplete");
  const Json &particles=payload.at("particles");if(!particles.is_array()||!payload["pieces"].is_array()||!payload["constraints"].is_array())throw std::invalid_argument("Native assembly payload is incomplete");
+ if(!options.is_object()||(options.contains("maximumInitialSeamGapMm")&&!options["maximumInitialSeamGapMm"].is_number())||(options.contains("maximumInitialEdgeStrainPercent")&&!options["maximumInitialEdgeStrainPercent"].is_number()))throw std::out_of_range("Native assembly thresholds must be finite and nonnegative");
+ double thresholdGap=options.value("maximumInitialSeamGapMm",30.),thresholdStrain=options.value("maximumInitialEdgeStrainPercent",20.);
+ if(!std::isfinite(thresholdGap)||thresholdGap<0||!std::isfinite(thresholdStrain)||thresholdStrain<0)throw std::out_of_range("Native assembly thresholds must be finite and nonnegative");
  for(const auto& p:particles)if(!p.is_object()||!p.contains("position")||!finite3(p["position"]))throw std::out_of_range("Invalid initial particle "+(p.is_object()&&p.contains("id")?(p["id"].is_string()?p["id"].get<std::string>():p["id"].dump()):"undefined"));
  double maxGap=0,totalGap=0;int seamSamples=0;std::map<std::string,Group> groups;std::vector<std::string> order;
  auto add=[&](const std::string& key,double gap,const Json* a,const Json* b){
@@ -34,6 +37,13 @@ Json inspectNativeAssemblyPose(const Json& payload,const Json& options){
  if(payload.contains("virtualSeams")&&payload["virtualSeams"].is_array())for(const auto& seam:payload["virtualSeams"]){
   auto weighted=[&](const char* ids,const char* weights){
    Json point=Json::array({0.,0.,0.});const auto& inds=seam.at(ids);const auto& ws=seam.at(weights);
+   if(!inds.is_array()||!ws.is_array()||inds.empty()||inds.size()!=ws.size()||inds.size()>4)throw std::out_of_range("Invalid virtual sewing anchor weights or indices");
+   double total=0;
+   for(size_t i=0;i<inds.size();++i){
+    if(!inds[i].is_number_integer()||index(inds[i])<0||index(inds[i])>=int(particles.size())||!ws[i].is_number()||!std::isfinite(ws[i].get<double>())||ws[i].get<double>()<0||ws[i].get<double>()>1)throw std::out_of_range("Invalid virtual sewing anchor weights or indices");
+    total+=ws[i].get<double>();
+   }
+   if(std::abs(total-1.)>1e-6)throw std::out_of_range("Invalid virtual sewing anchor weights or indices");
    for(size_t i=0;i<inds.size();++i){auto* p=particle(particles,index(inds[i]));if(!p||!finite3((*p)["position"]))throw std::out_of_range("Invalid virtual sewing particle position");
     for(int axis=0;axis<3;++axis)point[axis]=point[axis].get<double>()+(*p)["position"][axis].get<double>()*ws.at(i).get<double>();
    }return point;
@@ -63,7 +73,6 @@ Json inspectNativeAssemblyPose(const Json& payload,const Json& options){
    if(strain>highStrain){highStrain=strain;worst={{"pieceId",piece.value("id",Json(nullptr))},{"particleA",a->value("id",Json(nullptr))},{"particleB",b->value("id",Json(nullptr))},{"restLengthMm",rounded(rest*1000)},{"startLengthMm",rounded(world*1000)}};}
   }
  }
- double thresholdGap=options.value("maximumInitialSeamGapMm",30.),thresholdStrain=options.value("maximumInitialEdgeStrainPercent",20.);
  Json reasons=Json::array();if(maxGap>thresholdGap)reasons.push_back("sewing-boundaries-too-far-apart");if(highStrain>thresholdStrain)reasons.push_back("initial-mesh-distorted-relative-to-flat-pattern");
  return Json{{"status",reasons.empty()?"GEOMETRIC_PRECHECK_PASS":"STAGING_REQUIRES_REPAIR"},{"simulationFitApproved",false},{"reasons",reasons},{"pairCount",seamSamples},{"totalRestEdges",edgeSamples},{"initialSeamGapMaximumMm",rounded(maxGap)},{"initialSeamGapAverageMm",seamSamples?rounded(totalGap/seamSamples):0.},{"initialMeshPeakEdgeStrainPercent",rounded(highStrain)},{"worstEdge",worst},{"worstSewingGroups",sewn},{"thresholds",{{"maximumInitialSeamGapMm",thresholdGap},{"maximumInitialEdgeStrainPercent",thresholdStrain}}}};
 }

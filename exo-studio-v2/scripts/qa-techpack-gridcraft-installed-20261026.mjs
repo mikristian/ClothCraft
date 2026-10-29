@@ -1,0 +1,41 @@
+import assert from 'node:assert/strict'
+import {chromium} from 'playwright-core'
+const origin=process.env.EXO_INSTALLED_ORIGIN||'http://127.0.0.1:5386'
+const browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',args:['--no-sandbox','--disable-gpu']})
+const page=await browser.newPage({viewport:{width:1650,height:965},acceptDownloads:true})
+page.setDefaultTimeout(17000)
+const errors=[];page.on('pageerror',e=>errors.push(e.message))
+try{
+ await page.goto(origin+'/?engine=clothcraft&techpackWorkspace=1',{waitUntil:'domcontentloaded',timeout:30000})
+ await page.locator('[data-techpack-sheet="patterns"]').waitFor({timeout:30000})
+ // Native V2 can briefly rehydrate and replace the tree after initial paint.
+ await page.waitForFunction(()=>document.querySelectorAll('[data-techpack-sheet]').length>=19,null,{timeout:25000})
+ await page.waitForTimeout(750)
+ await page.getByRole('button',{name:'Add custom page'}).evaluate(node=>node.click())
+ const custom=page.locator('[data-custom-blank="true"]').last()
+ await custom.waitFor({timeout:25000})
+ await page.waitForFunction(()=>document.querySelectorAll('[data-custom-blank=true]').length>=1)
+ await page.getByRole('tab',{name:'Templates'}).click()
+ await page.getByRole('button',{name:'Open Table templates templates'}).click()
+ const card=page.locator('.tpws-template-card').filter({hasText:'Factory POM with tolerances'}).first()
+ await card.waitFor()
+ await card.getByRole('button',{name:'Insert table'}).evaluate(node=>node.click())
+ const grid=custom.locator('.tps').first()
+ await grid.waitFor({state:'visible',timeout:25000})
+ assert.equal(await grid.locator('th.tps-colhead').count(),12)
+ await grid.locator('td').first().dblclick({force:true})
+ const editor=grid.locator('.tps-editor').first()
+ await editor.waitFor()
+ await editor.fill('=SUM(1,2,3)')
+ await editor.press('Enter')
+ await page.waitForFunction(()=>document.querySelector('[data-custom-blank=true] .tps-scroll td')?.textContent?.trim()==='6',null,{timeout:20000})
+ await grid.locator('td').first().click({force:true})
+ assert.equal(await grid.getByRole('textbox',{name:'Formula bar'}).inputValue(),'=SUM(1,2,3)')
+ await grid.getByRole('button',{name:'Verify Rust'}).click()
+ await grid.locator('.tps-rust-match').waitFor({timeout:12000})
+ const status=await grid.locator('.tps-rust-match').innerText()
+ assert.match(status,/GridCraft Rust confirmed: 6/)
+ assert.deepEqual(errors,[])
+ console.log('PASS INSTALLED_GRIDCRAFT_TECHPACK_BROWSER',JSON.stringify({nativeApp:true,headers:12,formula:'=SUM(1,2,3)',localValue:6,rustStatus:status,browserErrors:errors.length}))
+}catch(error){console.log('FAIL INSTALLED_GRIDCRAFT_BROWSER',error.stack||error.message,'browserErrors',JSON.stringify(errors));process.exitCode=1}
+finally{await browser.close()}

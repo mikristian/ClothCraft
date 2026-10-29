@@ -1,7 +1,11 @@
 .cc-native-context-menu {
   position:fixed;
+  box-sizing:border-box;
+  max-height:calc(100dvh - 16px);
+  overflow-y:auto;
+  overscroll-behavior:contain;
   z-index:2147483000;
-  width:236px;
+  width:278px;
   padding:4px;
   border:1px solid #67696d;
   border-radius:5px;

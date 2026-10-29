@@ -1,0 +1,42 @@
+import assert from 'node:assert/strict'
+import {chromium} from 'playwright-core'
+const browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',args:['--no-sandbox','--disable-gpu']})
+const page=await browser.newPage({viewport:{width:1650,height:960}})
+page.setDefaultTimeout(13000)
+const errors=[];page.on('pageerror',e=>errors.push(e.message))
+const svg=(name,color)=>({name,mimeType:'image/svg+xml',buffer:Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect width="80" height="80" fill="'+color+'"/></svg>')})
+try{
+ await page.goto('http://127.0.0.1:5174/?engine=clothcraft&techpackWorkspace=1',{waitUntil:'domcontentloaded',timeout:30000})
+ await page.locator('[data-techpack-sheet="patterns"]').waitFor({timeout:30000})
+ await page.getByRole('button',{name:'Add custom page'}).evaluate(n=>n.click())
+ const paper=page.locator('[data-custom-blank=true]').last()
+ await paper.waitFor()
+ await page.locator('input[aria-label="Upload techpack reference assets"]').setInputFiles([svg('asset-red.svg','#a12535')])
+ await page.waitForFunction(()=>document.querySelectorAll('[data-custom-blank=true] [data-board-object^=asset-]').length>=1,null,{timeout:20000})
+ const original=paper.locator('[data-board-object^="asset-"]').first()
+ const originalKey=await original.getAttribute('data-board-object')
+ await page.getByRole('button',{name:'Select tool'}).evaluate(n=>n.click())
+ await original.locator('.tpws-object-transform-cover').click({force:true})
+ await page.getByLabel('Object x').fill('23')
+ await page.getByLabel('Object x').press('Tab')
+ await page.waitForTimeout(100)
+ const before=await original.getAttribute('style')
+ assert.match(before,/translate\(23px,/)
+ await page.locator('input[aria-label="Upload techpack reference assets"]').setInputFiles([svg('asset-blue.svg','#1263bc')])
+ await page.waitForFunction(()=>document.querySelectorAll('[data-custom-blank=true] [data-board-object^=asset-]').length>=2,null,{timeout:20000})
+ await original.locator('.tpws-object-transform-cover').click({force:true})
+ await page.getByRole('tab',{name:'Assets'}).click()
+ // EXO intentionally displays the designer-friendly caption without the file
+ // extension; the original filename is retained in the asset record.
+ await page.locator('.tpws-native-assets button').filter({hasText:'asset-blue'}).first().click()
+ await page.getByRole('button',{name:'Replace selected object',exact:true}).click()
+ await page.waitForFunction(old=>!document.querySelector('[data-custom-blank=true] [data-board-object="'+old+'"]'),originalKey,{timeout:20000})
+ const afterKeys=await paper.locator('[data-board-object^="asset-"]').evaluateAll(nodes=>nodes.map(n=>n.dataset.boardObject))
+ assert.equal(afterKeys.length,1,'new visual replaces rather than duplicates first gallery reference')
+ const replaced=paper.locator('[data-board-object^="asset-"]').first()
+ const after=await replaced.getAttribute('style')
+ assert.match(after,/translate\(23px,/,'visual replacement preserves transform')
+ assert.deepEqual(errors,[])
+ console.log('PASS_TECHPACK_IMAGE_REPLACEMENT',JSON.stringify({originalKey,afterKeys,x:23,errors:errors.length}))
+}catch(e){console.error('FAIL_TECHPACK_IMAGE_REPLACEMENT',e.message,'errors',JSON.stringify(errors));process.exitCode=1}
+finally{await browser.close()}

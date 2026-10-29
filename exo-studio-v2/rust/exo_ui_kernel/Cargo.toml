@@ -1,0 +1,15 @@
+[package]
+name = "exo-ui-kernel"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Deterministic 2D pattern POM annotation geometry for native Rust and browser WASM"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "abort"

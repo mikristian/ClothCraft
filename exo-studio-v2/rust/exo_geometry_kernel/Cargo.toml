@@ -1,0 +1,15 @@
+[package]
+name = "exo-geometry-kernel"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Deterministic CLO-style drafting and native garment measurement geometry"
+
+[lib]
+crate-type = ["rlib", "cdylib"]
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "abort"

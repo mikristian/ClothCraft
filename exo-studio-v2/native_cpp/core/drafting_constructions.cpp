@@ -2,6 +2,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <limits>
+#include <regex>
 #include <stdexcept>
 
 namespace garment {
@@ -19,6 +20,19 @@ double jsNumber(const Json& value) {
     if (end!=s.c_str() && end && *end=='\0') return v;
   }
   return std::numeric_limits<double>::quiet_NaN();
+}
+double referenceIndexNumber(const Json& value) {
+  if (value.is_number()) return value.get<double>();
+  if (!value.is_string()) return std::numeric_limits<double>::quiet_NaN();
+  const auto raw=value.get<std::string>();
+  if (raw.size()>64) return std::numeric_limits<double>::quiet_NaN();
+  const auto begin=raw.find_first_not_of(" \t\r\n\f\v");
+  if (begin==std::string::npos) return std::numeric_limits<double>::quiet_NaN();
+  const auto end=raw.find_last_not_of(" \t\r\n\f\v");
+  const auto trimmed=raw.substr(begin,end-begin+1);
+  static const std::regex decimal(R"(^[+-]?([0-9]+(\.[0-9]*)?|\.[0-9]+)([eE][+-]?[0-9]+)?$)");
+  if (!std::regex_match(trimmed,decimal)) return std::numeric_limits<double>::quiet_NaN();
+  return std::strtod(trimmed.c_str(),nullptr);
 }
 double coordinate(const Json& value,const std::string& label) {
   const double n=jsNumber(value);
@@ -38,7 +52,7 @@ Json get(const Json& o,const char* key,const Json& fallback) {
 Point2 constructionReferencePoint(const Json& piece,const Json& oneBasedIndex) {
   const auto count=piece.is_object() && piece.contains("points") && piece.at("points").is_array()
     ?piece.at("points").size():0;
-  const double n=jsNumber(oneBasedIndex);
+  const double n=referenceIndexNumber(oneBasedIndex);
   if (!std::isfinite(n) || std::floor(n)!=n || n<1 || n>static_cast<double>(count))
     throw std::runtime_error("Reference index must be a pattern point between 1 and "+std::to_string(count));
   const auto& p=piece.at("points").at(static_cast<std::size_t>(n-1));

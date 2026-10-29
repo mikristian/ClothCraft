@@ -1,0 +1,304 @@
+{
+  "fabrics": {
+    "jersey": "./market-media/fabric-jersey.webp",
+    "fleece": "./market-media/fabric-fleece.webp",
+    "denim": "./market-media/fabric-denim.webp",
+    "silk": "./market-media/fabric-silk.webp",
+    "interfacing": "./market-media/fabric-interfacing.webp",
+    "cottonPoplin": "./market-media/fabric-cottonPoplin.webp",
+    "cottonCanvas": "./market-media/fabric-cottonCanvas.webp",
+    "woolSuiting": "./market-media/fabric-woolSuiting.webp",
+    "woolMelton": "./market-media/fabric-woolMelton.webp",
+    "softLeather": "./market-media/fabric-softLeather.webp",
+    "suede": "./market-media/fabric-suede.webp",
+    "lightNylon": "./market-media/fabric-lightNylon.webp",
+    "nylonRipstop": "./market-media/fabric-nylonRipstop.webp",
+    "linen": "./market-media/fabric-linen.webp",
+    "silkSatin": "./market-media/fabric-silkSatin.webp",
+    "ribKnit": "./market-media/fabric-ribKnit.webp",
+    "stretchDenim": "./market-media/fabric-stretchDenim.webp",
+    "velvet": "./market-media/fabric-velvet.webp",
+    "silkChiffon": "./market-media/fabric-silkChiffon.webp",
+    "silkOrganza": "./market-media/fabric-silkOrganza.webp",
+    "cottonCorduroy": "./market-media/fabric-cottonCorduroy.webp",
+    "scubaKnit": "./market-media/fabric-scubaKnit.webp",
+    "technicalSoftshell": "./market-media/fabric-technicalSoftshell.webp",
+    "cottonLightJersey": "./market-media/fabric-cottonLightJersey.webp",
+    "cottonHeavyJersey": "./market-media/fabric-cottonHeavyJersey.webp",
+    "cottonInterlock": "./market-media/fabric-cottonInterlock.webp",
+    "cottonPique": "./market-media/fabric-cottonPique.webp",
+    "waffleKnit": "./market-media/fabric-waffleKnit.webp",
+    "cottonRib1x1": "./market-media/fabric-cottonRib1x1.webp",
+    "cottonRib2x2": "./market-media/fabric-cottonRib2x2.webp",
+    "frenchTerryMid": "./market-media/fabric-frenchTerryMid.webp",
+    "frenchTerryHeavy": "./market-media/fabric-frenchTerryHeavy.webp",
+    "brushedFleece": "./market-media/fabric-brushedFleece.webp",
+    "polarFleece": "./market-media/fabric-polarFleece.webp",
+    "sherpa": "./market-media/fabric-sherpa.webp",
+    "cottonFlannel": "./market-media/fabric-cottonFlannel.webp",
+    "cottonOxford": "./market-media/fabric-cottonOxford.webp",
+    "cottonBroadcloth": "./market-media/fabric-cottonBroadcloth.webp",
+    "cottonChambray": "./market-media/fabric-cottonChambray.webp",
+    "cottonTwill": "./market-media/fabric-cottonTwill.webp",
+    "cottonDuck": "./market-media/fabric-cottonDuck.webp",
+    "waxedCanvas": "./market-media/fabric-waxedCanvas.webp",
+    "linenShirting": "./market-media/fabric-linenShirting.webp",
+    "linenHeavy": "./market-media/fabric-linenHeavy.webp",
+    "hempCanvas": "./market-media/fabric-hempCanvas.webp",
+    "rawDenim": "./market-media/fabric-rawDenim.webp",
+    "lightDenim": "./market-media/fabric-lightDenim.webp",
+    "heavyDenim": "./market-media/fabric-heavyDenim.webp",
+    "denimCottonElastane": "./market-media/fabric-denimCottonElastane.webp",
+    "woolFlannel": "./market-media/fabric-woolFlannel.webp",
+    "woolGabardine": "./market-media/fabric-woolGabardine.webp",
+    "woolTweed": "./market-media/fabric-woolTweed.webp",
+    "boucle": "./market-media/fabric-boucle.webp",
+    "cashmereKnit": "./market-media/fabric-cashmereKnit.webp",
+    "viscoseChallis": "./market-media/fabric-viscoseChallis.webp",
+    "tencelTwill": "./market-media/fabric-tencelTwill.webp",
+    "rayonCrepe": "./market-media/fabric-rayonCrepe.webp",
+    "silkCharmeuse": "./market-media/fabric-silkCharmeuse.webp",
+    "silkGeorgette": "./market-media/fabric-silkGeorgette.webp",
+    "polySatin": "./market-media/fabric-polySatin.webp",
+    "polyTaffeta": "./market-media/fabric-polyTaffeta.webp",
+    "spandexTricot": "./market-media/fabric-spandexTricot.webp",
+    "neoprene": "./market-media/fabric-neoprene.webp",
+    "shellNylon": "./market-media/fabric-shellNylon.webp",
+    "ripstopUltralight": "./market-media/fabric-ripstopUltralight.webp",
+    "veganLeather": "./market-media/fabric-veganLeather.webp",
+    "lambskin": "./market-media/fabric-lambskin.webp",
+    "nappaLeather": "./market-media/fabric-nappaLeather.webp",
+    "pebbledLeather": "./market-media/fabric-pebbledLeather.webp",
+    "vegetableLeather": "./market-media/fabric-vegetableLeather.webp",
+    "patentLeather": "./market-media/fabric-patentLeather.webp",
+    "nubuck": "./market-media/fabric-nubuck.webp",
+    "suedeLambskin": "./market-media/fabric-suedeLambskin.webp",
+    "fauxSuede": "./market-media/fabric-fauxSuede.webp",
+    "velour": "./market-media/fabric-velour.webp",
+    "fauxFur": "./market-media/fabric-fauxFur.webp",
+    "quiltedNylon": "./market-media/fabric-quiltedNylon.webp"
+  },
+  "hardware": [
+    {
+      "id": "black-matte-button",
+      "title": "Black Matte Button",
+      "image": "./market-media/hardware-black-matte-button.webp"
+    },
+    {
+      "id": "coat-shank-button",
+      "title": "Coat Shank Button",
+      "image": "./market-media/hardware-coat-shank-button.webp"
+    },
+    {
+      "id": "coil-zipper-5",
+      "title": "Coil Zipper 5",
+      "image": "./market-media/hardware-coil-zipper-5.webp"
+    },
+    {
+      "id": "d-ring",
+      "title": "D Ring",
+      "image": "./market-media/hardware-d-ring.webp"
+    },
+    {
+      "id": "denim-copper-rivet",
+      "title": "Denim Copper Rivet",
+      "image": "./market-media/hardware-denim-copper-rivet.webp"
+    },
+    {
+      "id": "denim-tack-button",
+      "title": "Denim Tack Button",
+      "image": "./market-media/hardware-denim-tack-button.webp"
+    },
+    {
+      "id": "flat-rivet",
+      "title": "Flat Rivet",
+      "image": "./market-media/hardware-flat-rivet.webp"
+    },
+    {
+      "id": "four-hole-shirt-button",
+      "title": "Four Hole Shirt Button",
+      "image": "./market-media/hardware-four-hole-shirt-button.webp"
+    },
+    {
+      "id": "gold-shank-button",
+      "title": "Gold Shank Button",
+      "image": "./market-media/hardware-gold-shank-button.webp"
+    },
+    {
+      "id": "horizontal-buttonhole",
+      "title": "Horizontal Buttonhole",
+      "image": "./market-media/hardware-horizontal-buttonhole.webp"
+    },
+    {
+      "id": "horn-look-button",
+      "title": "Horn Look Button",
+      "image": "./market-media/hardware-horn-look-button.webp"
+    },
+    {
+      "id": "invisible-zipper",
+      "title": "Invisible Zipper",
+      "image": "./market-media/hardware-invisible-zipper.webp"
+    },
+    {
+      "id": "jean-fly-button",
+      "title": "Jean Fly Button",
+      "image": "./market-media/hardware-jean-fly-button.webp"
+    },
+    {
+      "id": "keyhole-buttonhole",
+      "title": "Keyhole Buttonhole",
+      "image": "./market-media/hardware-keyhole-buttonhole.webp"
+    },
+    {
+      "id": "leather-wrapped-button",
+      "title": "Leather Wrapped Button",
+      "image": "./market-media/hardware-leather-wrapped-button.webp"
+    },
+    {
+      "id": "metal-jeans-zipper",
+      "title": "Metal Jeans Zipper",
+      "image": "./market-media/hardware-metal-jeans-zipper.webp"
+    },
+    {
+      "id": "molded-zipper-8",
+      "title": "Molded Zipper 8",
+      "image": "./market-media/hardware-molded-zipper-8.webp"
+    },
+    {
+      "id": "mother-of-pearl-look",
+      "title": "Mother Of Pearl Look",
+      "image": "./market-media/hardware-mother-of-pearl-look.webp"
+    },
+    {
+      "id": "oval-toggle-button",
+      "title": "Oval Toggle Button",
+      "image": "./market-media/hardware-oval-toggle-button.webp"
+    },
+    {
+      "id": "pearl-shirt-button",
+      "title": "Pearl Shirt Button",
+      "image": "./market-media/hardware-pearl-shirt-button.webp"
+    },
+    {
+      "id": "prong-buckle",
+      "title": "Prong Buckle",
+      "image": "./market-media/hardware-prong-buckle.webp"
+    },
+    {
+      "id": "ring-spring-snap",
+      "title": "Ring Spring Snap",
+      "image": "./market-media/hardware-ring-spring-snap.webp"
+    },
+    {
+      "id": "sew-on-snap",
+      "title": "Sew On Snap",
+      "image": "./market-media/hardware-sew-on-snap.webp"
+    },
+    {
+      "id": "silver-ring-button",
+      "title": "Silver Ring Button",
+      "image": "./market-media/hardware-silver-ring-button.webp"
+    },
+    {
+      "id": "slide-adjuster",
+      "title": "Slide Adjuster",
+      "image": "./market-media/hardware-slide-adjuster.webp"
+    },
+    {
+      "id": "square-fashion-button",
+      "title": "Square Fashion Button",
+      "image": "./market-media/hardware-square-fashion-button.webp"
+    },
+    {
+      "id": "two-hole-button",
+      "title": "Two Hole Button",
+      "image": "./market-media/hardware-two-hole-button.webp"
+    },
+    {
+      "id": "two-way-outerwear-zipper",
+      "title": "Two Way Outerwear Zipper",
+      "image": "./market-media/hardware-two-way-outerwear-zipper.webp"
+    }
+  ],
+  "nike_graphic": "./market-media/nike-graphic.webp",
+  "studio_camera": "./market-media/studio-camera.webp",
+  "avatar_fit": "./market-media/avatar-fit.webp",
+  "appStages": [
+    {
+      "id": "EXO01",
+      "name": "EXO Runway Chamber",
+      "description": "Architectural runway with gallery seating and full walkable podium",
+      "image": "./market-media/scene-EXO01.webp",
+      "sourcePoster": "/stage-posters/EXO01.png",
+      "render": "EXO native GLB scene rendered using Three.js GLTFLoader"
+    },
+    {
+      "id": "R02",
+      "name": "Studio R02",
+      "description": "Recovered EXO runway studio",
+      "image": "./market-media/scene-R02.webp",
+      "sourcePoster": "/stage-posters/R02.png",
+      "render": "EXO native GLB scene rendered using Three.js GLTFLoader"
+    },
+    {
+      "id": "R03",
+      "name": "Studio R03",
+      "description": "Recovered EXO studio scene",
+      "image": "./market-media/scene-R03.webp",
+      "sourcePoster": "/stage-posters/R03.png",
+      "render": "EXO native GLB scene rendered using Three.js GLTFLoader"
+    },
+    {
+      "id": "S01",
+      "name": "Studio S01",
+      "description": "Recovered EXO editorial studio",
+      "image": "./market-media/scene-S01.webp",
+      "sourcePoster": "/stage-posters/S01.png",
+      "render": "EXO native GLB scene rendered using Three.js GLTFLoader"
+    },
+    {
+      "id": "S10",
+      "name": "Studio S10",
+      "description": "Recovered EXO studio set",
+      "image": "./market-media/scene-S10.webp",
+      "sourcePoster": "/stage-posters/S10.png",
+      "render": "EXO native GLB scene rendered using Three.js GLTFLoader"
+    }
+  ],
+  "fabricBalls": {
+    "jersey": "./market-media/ball-jersey.webp",
+    "fleece": "./market-media/ball-fleece.webp",
+    "denim": "./market-media/ball-denim.webp",
+    "silk": "./market-media/ball-silk.webp",
+    "interfacing": "./market-media/ball-interfacing.webp",
+    "cottonPoplin": "./market-media/ball-cottonPoplin.webp",
+    "cottonCanvas": "./market-media/ball-cottonCanvas.webp",
+    "woolSuiting": "./market-media/ball-woolSuiting.webp",
+    "woolMelton": "./market-media/ball-woolMelton.webp",
+    "softLeather": "./market-media/ball-softLeather.webp",
+    "suede": "./market-media/ball-suede.webp",
+    "lightNylon": "./market-media/ball-lightNylon.webp",
+    "nylonRipstop": "./market-media/ball-nylonRipstop.webp",
+    "linen": "./market-media/ball-linen.webp",
+    "silkSatin": "./market-media/ball-silkSatin.webp",
+    "ribKnit": "./market-media/ball-ribKnit.webp",
+    "stretchDenim": "./market-media/ball-stretchDenim.webp",
+    "velvet": "./market-media/ball-velvet.webp",
+    "silkChiffon": "./market-media/ball-silkChiffon.webp",
+    "silkOrganza": "./market-media/ball-silkOrganza.webp",
+    "cottonCorduroy": "./market-media/ball-cottonCorduroy.webp",
+    "scubaKnit": "./market-media/ball-scubaKnit.webp",
+    "technicalSoftshell": "./market-media/ball-technicalSoftshell.webp",
+    "cottonLightJersey": "./market-media/ball-cottonLightJersey.webp",
+    "cottonHeavyJersey": "./market-media/ball-cottonHeavyJersey.webp",
+    "cottonInterlock": "./market-media/ball-cottonInterlock.webp",
+    "cottonPique": "./market-media/ball-cottonPique.webp",
+    "waffleKnit": "./market-media/ball-waffleKnit.webp",
+    "cottonRib1x1": "./market-media/ball-cottonRib1x1.webp",
+    "cottonRib2x2": "./market-media/ball-cottonRib2x2.webp",
+    "frenchTerryMid": "./market-media/ball-frenchTerryMid.webp",
+    "frenchTerryHeavy": "./market-media/ball-frenchTerryHeavy.webp",
+    "brushedFleece": "./market-media/ball-brushedFleece.webp",
+    "polarFleece": "./market-media/ball-polarFleece.webp"
+  }
+}

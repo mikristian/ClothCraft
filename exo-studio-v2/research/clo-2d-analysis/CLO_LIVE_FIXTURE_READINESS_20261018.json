@@ -1,0 +1,31 @@
+{
+  "checked_at": "2026-10-18T21:23:09.138828+00:00",
+  "fixture": "/Users/mikylecouto/Chat On Steroids Workspace/exo-clothcraft-v2/research/clo-2d-analysis/native-fixtures/Male_T-shirt-direct-test-20261018.zpac",
+  "fixture_bytes": 912850,
+  "fixture_integrity": true,
+  "fixture_sha256": "eb24014f28e46cd513ea603a3c441ceeda9dc62bc301d6457848ffe906b87a83",
+  "garment_pac_members": [
+    "Male_T-shirt.pac"
+  ],
+  "inspector_accessibility": true,
+  "inspector_generated_at": "2026-10-18T21:19:38Z",
+  "inspector_reported_window_count": 1,
+  "inspector_screen_recording": true,
+  "live_copied_document_ready": true,
+  "matching_original_bytes": true,
+  "original_sha256": "eb24014f28e46cd513ea603a3c441ceeda9dc62bc301d6457848ffe906b87a83",
+  "reported_window_names": [
+    "CLO Standalone OnlineAuth Academic"
+  ],
+  "reported_window_roles": [
+    "AXWindow"
+  ],
+  "warnings": [],
+  "zip_members": [
+    "sijub01.jpg",
+    "Male_T-shirt.pac",
+    "seam_puckering_2ol97pf293f2sdk98.png",
+    "singstitch01.jpg",
+    "clofiles.json"
+  ]
+}

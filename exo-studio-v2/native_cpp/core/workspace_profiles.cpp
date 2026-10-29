@@ -10,6 +10,8 @@ const char* const WORKSPACE_PROFILE_KEY="garment-studio-workspace-profile-v1";
 const char* const WORKSPACE_VIEW_KEY="garment-studio-workspace-windows-v1";
 const Json VIEWPORT_LAYOUTS={{"split","3D + 2D"},{"stack","3D over 2D"},{"3d","3D only"},{"2d","2D only"}};
 const Json WORKSPACE_PROFILES={
+ {"gradingStudio",{{"name","2D Grading + Production"},{"section","Production"},{"tab","Grading"},{"tool","select"},{"viewportTool","transform"},{"libraryWidth",190},{"inspectorWidth",510},{"objectBrowserHeight",290},{"objectBrowserVisible",true},{"topTabsVisible",true},{"libraryVisible",false},{"inspectorVisible",true},{"viewportLayout","2d"},{"viewportSplit",50}}},
+ {"patternFocus",{{"name","Pattern Focus · 2D"},{"section","Pattern"},{"tab","Scene"},{"tool","point"},{"viewportTool","transform"},{"libraryWidth",190},{"inspectorWidth",430},{"objectBrowserHeight",306},{"objectBrowserVisible",true},{"topTabsVisible",true},{"libraryVisible",true},{"inspectorVisible",true},{"viewportLayout","2d"},{"viewportSplit",50},{"patternFocus",true}}},
  {"drafting",{{"name","2D Pattern + 3D"},{"section","Pattern"},{"tab","Scene"},{"tool","point"},{"viewportTool","transform"},{"libraryWidth",196},{"inspectorWidth",432},{"objectBrowserHeight",306},{"objectBrowserVisible",true},{"topTabsVisible",true},{"libraryVisible",true},{"inspectorVisible",true},{"viewportLayout","split"},{"viewportSplit",44}}},
  {"sewing",{{"name","Sewing + Fit"},{"section","Sewing"},{"tab","Scene"},{"tool","sew"},{"viewportTool","orbit"},{"libraryWidth",174},{"inspectorWidth",434},{"objectBrowserHeight",280},{"objectBrowserVisible",true},{"topTabsVisible",true},{"libraryVisible",false},{"inspectorVisible",true},{"viewportLayout","split"},{"viewportSplit",55}}},
  {"materials",{{"name","Materials + Rendering"},{"section","Fabric"},{"tab","Fabric"},{"tool","select"},{"viewportTool","orbit"},{"libraryWidth",232},{"inspectorWidth",460},{"objectBrowserHeight",355},{"objectBrowserVisible",true},{"topTabsVisible",true},{"libraryVisible",true},{"inspectorVisible",true},{"viewportLayout","split"},{"viewportSplit",64}}},
@@ -61,6 +63,6 @@ Json normalizeWorkspaceProfile(const Json& value){
  {"objectBrowserVisible",visible("objectBrowserVisible")},{"topTabsVisible",visible("topTabsVisible")},
  {"libraryVisible",visible("libraryVisible")},{"inspectorVisible",visible("inspectorVisible")},
  {"viewportLayout",picked(field(value,"viewportLayout"),layouts,"split")},
- {"viewportSplit",sized(field(value,"viewportSplit"),20,80,50)}};
+ {"viewportSplit",sized(field(value,"viewportSplit"),20,80,50)},{"patternFocus",field(value,"patternFocus")==Json(true)}};
 }
 }

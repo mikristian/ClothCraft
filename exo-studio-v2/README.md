@@ -1,34 +1,46 @@
 # EXO Sample 3D
 
+## Download EXO ClothCraft Studio V2 — macOS Beta
+
+**[Download EXO ClothCraft Studio V2 v0.3.0-beta.1 for Apple Silicon](https://github.com/mikristian/exo-sample-3d/releases/tag/v0.3.0-beta.1)**. The GitHub release contains a self-contained, **unnotarized** DMG and the corresponding-source candidate archive. Supported target: Apple Silicon running macOS 13 or later; no Node, Rust, Xcode, or development environment needs to be installed to launch the bundled app.
+
+Open the DMG and drag the app to Applications. Because this is not Apple-notarized, macOS may require manual approval under **System Settings → Privacy & Security → Open Anyway** after you verify and trust the download. Do not disable Gatekeeper globally. This is an experimental prerelease: optional private models/assets are excluded, factory-readiness is not certified, and clean-Mac first-launch testing remains outstanding. [Installation details](docs/EXO_V2_UNNOTARIZED_BETA_INSTALL.md).
+
 **An open-source, experimental platform for fashion CAD, 2D patterns, 3D garments, cloth simulation, material visualization, and production engineering.**
 
 EXO Sample 3D is a research-driven garment design workspace that aims to connect the entire apparel-development process: draft a pattern, sew digital panels, assemble and simulate fabric on an avatar, refine material behavior, grade sizes, visualize the product, and prepare manufacturing deliverables. The long-term goal is an extensible alternative workflow inspired by the capabilities designers value in tools such as CLO3D, without distributing proprietary software, artwork, model assets, or internal code.
 
 **Project status: active development.** Pattern-editing and selected manufacturing operations have working tests; fitting physics, avatar contact, stable live cloth behavior and factory-ready exports remain under development. A screenshot, film or passing unit test is not a garment-fit certificate or a statement of feature-for-feature parity with commercial apparel CAD.
 
-[Explore the system](#what-exo-sample-3d-can-do) · [Watch the V16 film](#v16--full-project-showcase-film) · [Latest screenshots](#latest-real-application-screenshots) · [Start locally](#quick-start) · [Detailed documentation](#project-documentation) · [Roadmap](docs/EXO_MASTER_ROADMAP.md) · [Contribute](CONTRIBUTING.md)
+[Explore the system](#what-exo-sample-3d-can-do) · [Current ClothCraft Studio V2 UI](#clothcraft-studio-v2--real-ui-gallery) · [Earlier research screenshots](#earlier-application-screenshots) · [Start locally](#quick-start) · [Detailed documentation](#project-documentation) · [Roadmap](docs/EXO_MASTER_ROADMAP.md) · [Contribute](CONTRIBUTING.md)
 
 ---
 
-## V16 — full project showcase film
+## ClothCraft Studio V2 — real UI gallery
 
-[![EXO Sample 3D — V16 original promotional film preview](screenshots/v16-promo-preview.jpg)](media/exo-sample-3d-v16-showcase.mp4)
+**Updated October 19, 2026.** These are screenshots of the running EXO ClothCraft Studio V2 interface: real 2D pattern surfaces, a neutral fitting avatar, a live Three.js garment viewport, garment and fabric libraries, property editing, and appearance settings. The capture used a fresh Chrome browser session at **1600 × 900** and a separate local Rust test workspace. Cropped detail images are from the same interface. The screenshots do not imply production-ready simulation or certified fit.
 
-**[Play or download the complete V16 film (MP4)](media/exo-sample-3d-v16-showcase.mp4)**
+[![ClothCraft Studio V2 with garment asset library, 3D avatar, 2D drafting canvas and property editor](screenshots/clothcraft-v2-20261019-01-overview.jpg)](screenshots/clothcraft-v2-20261019-01-overview.jpg)
 
-- Full sequence: approximately **2 minutes 57 seconds**, with video and audio.
-- GitHub repository copy: approximately **64 MB**, H.264/AAC, produced from the larger local master.
-- The full film remains in the repository, rather than a link to an unavailable external service.
-- The master render stays in local project storage; we keep generated masters out of normal Git history.
-- The film documents the state of the product at V16 and may show work-in-progress simulation, fabric and UI behavior. It is **not a physics or manufacturing acceptance demonstration**.
+| Pattern drafting detail | Neutral avatar and live 3D viewport |
+| --- | --- |
+| [![Real 2D native front/back garment cutlines](screenshots/clothcraft-v2-20261019-02-pattern-drafting.jpg)](screenshots/clothcraft-v2-20261019-02-pattern-drafting.jpg) | [![Real 3D fitting avatar with a staged T-shirt](screenshots/clothcraft-v2-20261019-07-3d-viewport.jpg)](screenshots/clothcraft-v2-20261019-07-3d-viewport.jpg) |
 
-See [media gallery and capture provenance](docs/EXO_MEDIA_GALLERY.md) for a list of images, source-session notes and review standards.
+| Garment starter library | Fabric library and swatches |
+| --- | --- |
+| [![Current garment library and linked pattern workspace](screenshots/clothcraft-v2-20261019-06-garments.jpg)](screenshots/clothcraft-v2-20261019-06-garments.jpg) | [![Real fabric browser with material presets](screenshots/clothcraft-v2-20261019-04-fabrics.jpg)](screenshots/clothcraft-v2-20261019-04-fabrics.jpg) |
+
+| Sewing workspace | Theme customization |
+| --- | --- |
+| [![Current sewing workspace and inspector controls](screenshots/clothcraft-v2-20261019-03-sewing.jpg)](screenshots/clothcraft-v2-20261019-03-sewing.jpg) | [![Current ClothCraft theme preset settings](screenshots/clothcraft-v2-20261019-08-theme-settings.jpg)](screenshots/clothcraft-v2-20261019-08-theme-settings.jpg) |
+
+[Explore the hardware and trims tree](screenshots/clothcraft-v2-20261019-09-hardware.jpg) · [Capture method and honest feature status](docs/EXO_MEDIA_GALLERY.md)
 
 ---
 
-## Latest real application screenshots
+## Earlier application screenshots
 
-These October 2026 captures come from the **current first-party EXO Sample 3D React/Three.js application** at an isolated Foundation Tee test session. They show a **neutral CC0 MakeHuman-derived fitting avatar**, its visible **3D floor grid**, editable garment patterns, sewing tools, fabric controls and the rendering workspace. None of these gallery frames are a simulated final garment fit; they show genuine pre-sewing/staging UI or workspace views. The avatar and floor-grid imagery is not a third-party CLO3D screenshot.
+These earlier October 16, 2026 captures come from the first-party EXO Sample 3D React/Three.js application in an isolated Foundation Tee test session. They remain available as historical comparisons; the **ClothCraft Studio V2 gallery above is the newest visual documentation**. No image is a certified simulated garment fit, and none is a third-party CLO3D application screenshot.
 
 ### 3D garment on the neutral grid
 
@@ -48,7 +60,7 @@ These October 2026 captures come from the **current first-party EXO Sample 3D Re
 
 [View the dedicated 3D viewport](screenshots/exo-2026-current-3d-garment-grid.png) · [View the isolated fabric viewport](screenshots/exo-2026-fabric-viewport.png) · [All media notes](docs/EXO_MEDIA_GALLERY.md)
 
-The source captures can be regenerated in a local checkout with a compatible Chrome installation using the gallery capture command described below. The capture is isolated from personal saved garments and uses the first-party Foundation Tee template.
+These earlier captures can be regenerated with the legacy gallery command below; the latest ClothCraft V2 captures use the new private-session script.
 
 ---
 
@@ -147,6 +159,16 @@ The native sidecar uses the loopback host; actual port selection and build depen
 
 ### Reproduce the latest screenshot gallery
 
+For the current ClothCraft Studio V2 gallery, start the first-party Vite UI (default for this capture: port 5386) and a **private** local Rust test server (default: port 5688). Load a non-personal Foundation Tee fixture in that private backend, then run:
+
+~~~bash
+node scripts/capture-clothcraft-v2-github-gallery.mjs
+~~~
+
+The script blocks production port 5385, routes all `/workspace` calls to the private backend, and records screenshot evidence in `screenshots/clothcraft-v2-20261019-capture-evidence.json`. It does not install dependencies or modify the real garment project.
+
+To reproduce the earlier October 16 React/Three.js gallery:
+
 ~~~bash
 npm run capture:gallery
 ~~~
@@ -191,7 +213,7 @@ This repository includes **historic research logs** from October 2026 and a grow
 | [Contributor Playbook](docs/EXO_CONTRIBUTION_GUIDE.md) | Review standards, subsystem ownership, good first issues and documentation hygiene |
 | [Milestone Issue Board](docs/EXO_MILESTONE_ISSUE_BOARD.md) | 54 prioritized engineering tickets, dependencies and acceptance tests |
 | [Project History](docs/EXO_PROJECT_HISTORY.md) | Dated architecture, feature development and experiment provenance |
-| [Media Gallery](docs/EXO_MEDIA_GALLERY.md) | Recent screenshot index, rights provenance and V16 film status |
+| [Media Gallery](docs/EXO_MEDIA_GALLERY.md) | Current ClothCraft V2 screenshots, older comparison images and capture provenance |
 | [Release Readiness](docs/EXO_RELEASE_STATUS.md) | Public-source controls, current limitations and release checklist |
 
 Additional system references: [Backend API](docs/BACKEND_API.md), [Existing architecture](docs/ARCHITECTURE.md), [Rust backend](docs/RUST_BACKEND.md), [Third-party licensing](docs/LICENSING.md), [Security](SECURITY.md), and the [legacy comprehensive parity plan](docs/GARMENT_STUDIO_COMPLETE_CLO3D_PARITY_MASTER_PLAN_2026-10-13.md).
@@ -224,8 +246,7 @@ Read the full [master roadmap](docs/EXO_MASTER_ROADMAP.md) for design constraint
 | src/core/ | Geometry, drafting, sewing, simulation, materials, manufacturing and adapters |
 | src/data/ | Sample templates and controlled test documents |
 | scripts/ | Reproducibility, functional tests, visual QA and development tools |
-| screenshots/ | October 2026 current-UI screenshots and V16 still |
-| media/ | Full V16 showcase MP4 included with this repository |
+| screenshots/ | October 2026 ClothCraft V2 interface screenshots and earlier research captures |
 | docs/ | Master manuals, architectural notes, test reports and historic experiments |
 | native_backend/ | Native XPBD/solver sidecar and interop experiments |
 | ppf_backend/ | Integration server for external Rust PPF runtime |

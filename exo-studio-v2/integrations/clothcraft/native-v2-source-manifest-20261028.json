@@ -1,0 +1,9 @@
+{
+  "schema": "exo-native-v2-source-provenance.v1",
+  "sourcePath": "integrations/clothcraft/exo-session-v2-authoritative-20261028.rs",
+  "sha256": "ddf49b77d9d06d7f95cfe1668b891df10528ea7d8d7123cb19033d26dbff56cd",
+  "byteLength": 183091,
+  "lineCount": 3086,
+  "source": "Authoritative EXO V2 source after RUN33 saved point-binding edit-batch replacement bypass guard; targeted native build and regressions verified",
+  "status": "Engineering source provenance only; licensed CAD validation and factory approval remain absent"
+}

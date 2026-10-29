@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b1017">
-  <title>EXO Community — Designer projects, marketplace, explore and forum</title>
-  <meta name="description" content="A local EXO Community prototype with original project imagery, creative portfolios, a unified design marketplace, Explore feed and forum. Demonstration social data only.">
+  <meta name="theme-color" content="#050505">
+  <meta name="color-scheme" content="dark">
+  <title>EXO — The Creative Design Community</title>
+  <meta name="description" content="Discover digital fashion, original creator projects and a unified garment and fabric marketplace. EXO Community is an interactive local prototype.">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./screens-v2.css">
   <link rel="stylesheet" href="./dark-studio.css">
@@ -13,29 +14,40 @@
   <link rel="stylesheet" href="./materials-experience.css">
   <link rel="stylesheet" href="./edition-three.css">
   <link rel="stylesheet" href="./fabric-store.css">
+  <link rel="stylesheet" href="./fabric-showcase.css">
   <link rel="stylesheet" href="./project-home.css">
+  <link rel="stylesheet" href="./project-infinite-hero.css">
   <link rel="stylesheet" href="./community-social.css">
   <link rel="stylesheet" href="./designer-profiles.css">
+  <link rel="stylesheet" href="./techpack-profile.css">
   <link rel="stylesheet" href="./community-v4.css">
+  <link rel="stylesheet" href="./home-v5.css">
+  <link rel="stylesheet" href="./design-system.css">
+  <link rel="stylesheet" href="./editorial-v7.css">
+  <link rel="stylesheet" href="./garment-exhibition.css">
+  <link rel="stylesheet" href="./garment-media-v8.css">
+  <link rel="stylesheet" href="./editorial-v10.css">
+  <link rel="stylesheet" href="./awards-community.css">
+  <link rel="stylesheet" href="./marketplace-redesign.css">
   <script type="module" src="./app.js"></script>
 </head>
 <body>
-  <div class="prototype-ribbon" role="note"><span class="mini-led"></span> EXO / THE DIGITAL DESIGN ARCHIVE <span class="ribbon-right">INTERACTIVE CONCEPT · DEMONSTRATION ASSETS · NO PUBLIC MARKETPLACE</span></div>
+  <div class="prototype-ribbon" role="note"><span class="mini-led"></span> EXO COMMUNITY <span class="ribbon-right">LOCAL DESIGN PREVIEW · PROJECT IMAGES FROM OUR WORKSPACE</span></div>
   <div id="website" class="surface website">
     <header class="topbar">
-      <a class="brand" href="#home" aria-label="EXO home"><span class="brand-mark" aria-hidden="true">✳</span><span>EXO</span><small>COMMUNITY</small></a>
+      <a class="brand" href="#home" aria-label="EXO Community home"><span>EXO<span class="exo-brand-dot">.</span></span><small>COMMUNITY</small></a>
       <nav class="main-links" aria-label="Main navigation">
         <button data-nav="discover" class="nav-link selected">Home</button>
-        <button data-nav="marketplace" class="nav-link">Marketplace</button>
-        <button data-nav="explore" class="nav-link">Explore</button>
-        <button data-nav="forum" class="nav-link">Forum</button>
-        <button data-nav="profile" class="nav-link">Profile</button>
+        <button data-nav="marketplace" class="nav-link">Explore / Marketplace</button>
+        <div class="nav-discover-group"><button data-nav="explore" class="nav-link" aria-haspopup="true">Discover <span aria-hidden="true">⌄</span></button><div class="nav-discover-menu" aria-label="Discover subpages"><button type="button" data-nav="explore">Projects & inspiration</button><button type="button" data-nav="creators">Creators & portfolios</button><button type="button" data-nav="awards">Awards & contests</button></div></div>
+        <button data-nav="forum" class="nav-link">Community</button>
+        <a class="nav-link" href="./download/" aria-label="Download EXO ClothCraft Studio">Download Studio ↗</a>
       </nav>
       <div class="top-actions">
-        <button class="nav-search-trigger" id="top-search-trigger" aria-label="Search catalog"><span aria-hidden="true">⌕</span> Search <kbd>/</kbd></button>
-        <button class="ghost-btn header-team" data-view="teams">For teams</button>
-        <button class="line-btn header-submit" data-action="upload">Submit a project <span aria-hidden="true">↗</span></button>
-        <button class="avatar-button" id="profile-menu" aria-label="View my profile" data-view="profile">MK</button>
+        <button class="nav-search-trigger" id="top-search-trigger" aria-label="Search marketplace"><svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.5"></circle><path d="m16 16 4.3 4.3"></path></svg><span>Search</span> <kbd>⌘ K</kbd></button>
+        <button class="ghost-btn header-team" data-view="teams">Teams</button>
+        <button class="line-btn header-submit" data-action="upload">Share your work <span aria-hidden="true">↗</span></button>
+        <button class="avatar-button" id="profile-menu" aria-label="View designer profile" data-view="profile">MK</button>
       </div>
     </header>
 
@@ -67,45 +79,58 @@
       </section>
 
       <section class="discovery-section" id="catalog-section">
-        <div class="section-overline">THE EXO MARKETPLACE / ONE COLLECTION <span>ORIGINAL PROJECTS · DIGITAL RESOURCES</span></div>
-        <div class="heading-line"><div><h2 id="catalog-heading">Explore the collection.</h2><p id="catalog-subtitle">Garments, fabric, trims, avatars, patterns and scenes in one curated archive.</p></div><button class="outline-square" id="grid-toggle" aria-label="Toggle compact catalog view" title="Toggle compact view">▦ <span>GRID</span></button></div>
-        <div class="exo-market-tabs" role="group" aria-label="Marketplace categories"><button type="button" data-market-category="All" class="active" aria-pressed="true">All</button><button type="button" data-market-category="Garments" aria-pressed="false">Garments</button><button type="button" data-market-category="Fabrics" aria-pressed="false">Fabrics</button><button type="button" data-market-category="Trims" aria-pressed="false">Trims</button><button type="button" data-market-category="Avatars" aria-pressed="false">Avatars</button><button type="button" data-market-category="Scenes" aria-pressed="false">Scenes</button><button type="button" data-market-category="Patterns" aria-pressed="false">Patterns</button></div>
+        <div class="section-overline">EXO COMMUNITY <span>DIGITAL FASHION · CREATIVE DISCOVERY · LOCAL PREVIEW</span></div>
+        <div class="heading-line"><div><h2 id="catalog-heading">Explore the marketplace.</h2><p id="catalog-subtitle">Discover digital garments, patterns, avatar studies and 3D environments from the EXO archive.</p></div><button class="outline-square" id="grid-toggle" aria-label="Toggle compact catalog view" title="Toggle compact view">▦ <span>GRID</span></button></div>
+        <div class="exo-market-tabs" role="group" aria-label="Marketplace categories"><button type="button" data-market-category="All" class="active" aria-pressed="true">All</button><button type="button" data-market-category="Garments" aria-pressed="false">Garments</button><button type="button" data-market-category="Fabrics" aria-pressed="false">Fabrics</button><button type="button" data-market-category="Trims" aria-pressed="false">Trims</button><button type="button" data-market-category="Avatars" aria-pressed="false">Avatars</button><button type="button" data-market-category="Scenes" aria-pressed="false">Scenes</button><button type="button" data-market-category="Patterns" aria-pressed="false">Patterns</button><button type="button" data-market-category="Runways" aria-pressed="false">Runways</button><button type="button" data-market-category="Accessories" aria-pressed="false">Accessories</button><button type="button" data-market-category="Animation" aria-pressed="false">Animation</button><button type="button" data-market-category="Tech Packs" aria-pressed="false">Tech Packs</button></div>
+        <section id="garment-exhibition" aria-label="Garment form studies and construction development"></section>
         <div class="explore-shell">
-          <aside class="facet-panel" id="facets">
-            <div class="facet-header">FILTER COLLECTION <button id="clear-filters" class="subtle-link">Reset</button></div>
-            <div class="filter-group"><div class="filter-title">DISCIPLINE <span>−</span></div>
-              <label><input type="checkbox" name="discipline" value="Patterns"> Patterns <small>02</small></label>
-              <label><input type="checkbox" name="discipline" value="Garments"> Garments <small>02</small></label>
-              <label><input type="checkbox" name="discipline" value="Fabrics"> Fabrics <small>400+</small></label>
-              <label><input type="checkbox" name="discipline" value="Trims"> Trims <small>01</small></label>
-              <label><input type="checkbox" name="discipline" value="Avatars"> Avatars <small>01</small></label>
-              <label><input type="checkbox" name="discipline" value="Scenes"> Scenes <small>02+</small></label>
-            </div>
-            <div class="filter-group"><div class="filter-title">AVAILABILITY <span>−</span></div>
-              <label><input type="checkbox" name="license" value="Free"> Free concept</label>
-              <label><input type="checkbox" name="license" value="Paid"> Paid concept</label>
-              <label><input type="checkbox" name="license" value="View only"> View only</label>
-              <label><input type="checkbox" id="remix-check"> Remix permitted</label>
-            </div>
-            <div class="filter-group"><div class="filter-title">FILE FORMAT <span>−</span></div>
-              <label><input type="checkbox" name="format" value="DXF"> DXF / 2D CAD</label>
-              <label><input type="checkbox" name="format" value="GLB"> GLB / 3D</label>
-              <label><input type="checkbox" name="format" value="PBR"> PBR / textures</label>
-              <label><input type="checkbox" name="format" value="BLEND"> BLEND / scene</label>
-            </div>
-            <div class="filter-aside-note">CONSIDERED OBJECTS.<br>VISIBLE CONSTRUCTION.<br><span>Creator rights remain their own.</span></div>
-          </aside>
+          <div class="facet-panel" id="facets" aria-label="Marketplace horizontal filters">
+            <div class="facet-header"><span>REFINE</span><button id="clear-filters" class="subtle-link">Reset all</button></div>
+            <details class="filter-group"><summary>Category <span class="filter-arrow">⌄</span></summary><div class="filter-options">
+              <label><input type="checkbox" name="discipline" value="Patterns"> Patterns</label><label><input type="checkbox" name="discipline" value="Garments"> Garments</label>
+              <label><input type="checkbox" name="discipline" value="Fabrics"> Fabrics</label><label><input type="checkbox" name="discipline" value="Trims"> Trims</label>
+              <label><input type="checkbox" name="discipline" value="Avatars"> Avatars</label><label><input type="checkbox" name="discipline" value="Scenes"> Scenes</label>
+              <label><input type="checkbox" name="discipline" value="Runways"> Runways</label><label><input type="checkbox" name="discipline" value="Accessories"> Accessories</label>
+              <label><input type="checkbox" name="discipline" value="Tech Packs"> Tech Packs</label><label><input type="checkbox" name="discipline" value="Animation"> Animation</label>
+            </div></details>
+            <label class="market-select-control">Date <select id="date-choice" aria-label="Indexed date range"><option value="all">All time</option><option value="day">Today</option><option value="week">This week</option><option value="month">This month</option><option value="year">This year</option></select></label>
+            <details class="filter-group"><summary>License <span class="filter-arrow">⌄</span></summary><div class="filter-options">
+              <label><input type="checkbox" name="license" value="Free"> Free preview</label><label><input type="checkbox" name="license" value="Paid"> Paid concept</label><label><input type="checkbox" name="license" value="View only"> View only</label><label><input type="checkbox" id="remix-check"> Remix allowed*</label>
+            </div></details>
+            <details class="filter-group"><summary>File type <span class="filter-arrow">⌄</span></summary><div class="filter-options">
+              <label><input type="checkbox" name="format" value="DXF"> DXF</label><label><input type="checkbox" name="format" value="GLB"> GLB</label><label><input type="checkbox" name="format" value="PBR"> PBR</label><label><input type="checkbox" name="format" value="BLEND"> BLEND</label><label><input type="checkbox" name="format" value="PRESET"> Preset</label><label><input type="checkbox" name="format" value="IMAGE"> Image</label>
+            </div></details>
+            <label class="market-check-control"><input type="checkbox" id="downloadable-check"> Downloadable</label>
+            <label class="market-check-control"><input type="checkbox" id="animated-check"> Animated</label>
+            <label class="market-check-control market-free-check"><input type="checkbox" id="free-only-check"> Free</label>
+            <label class="market-select-control market-topic-control">Style <select id="topic-choice" aria-label="Marketplace style"><option value="All">All styles</option><option value="Fashion">Fashion</option><option value="Architecture">Architecture</option><option value="Material">Material studies</option><option value="Character">Characters & avatars</option><option value="Construction">Construction</option></select></label>
+          </div>
           <div class="result-column">
             <div class="browse-controls">
               <label class="catalog-search"><span aria-hidden="true">⌕</span><input id="catalog-search" type="search" placeholder="Find a pattern, fabric, creator, silhouette…" aria-label="Search assets" autocomplete="off"/><kbd>⌘ K</kbd></label>
-              <select id="sort-choice" aria-label="Sort assets"><option value="curated">Curated first</option><option value="new">Recently added</option><option value="name">Name A–Z</option><option value="free">Free first</option></select>
+              <select id="sort-choice" aria-label="Sort assets"><option value="curated">Featured</option><option value="new">Recently indexed</option><option value="popular">Most viewed · demo</option><option value="liked">Most liked · demo</option><option value="name">Name A–Z</option><option value="free">Free first</option></select>
               <button id="mobile-filter-toggle" class="mobile-filter">Filters</button>
             </div>
+            <div class="market-featured-creators" id="market-featured-creators" aria-label="Featured designers"></div><div class="market-data-note">Local prototype archive · date and popularity filters use sample groupings, not verified upload or engagement records · prices are illustrative; checkout and downloads are not enabled.</div>
             <div class="applied-row"><div id="active-filters" class="active-filters"><span class="quiet">SELECTED WORK / ALL DISCIPLINES</span></div><span id="result-count" class="count-label">08 OBJECTS</span></div>
             <div id="asset-grid" class="asset-grid" aria-live="polite"></div>
+            <div id="home-market-cta" class="exo-home-market-cta" hidden>
+              <div><span>THE COMPLETE INDEX</span><strong><span data-home-total>417</span> digital resources, one collection.</strong><small>Patterns, fabrics, garments, trims, avatars and environments.</small></div>
+              <button type="button" data-nav="marketplace">Explore all resources <span aria-hidden="true">↗</span></button>
+            </div>
             <div id="empty-results" class="empty-results" hidden><h3>No pieces found.</h3><p>Try another material, format, or category.</p><button class="line-btn" id="empty-clear">Reset filters</button></div>
           </div>
         </div>
+      </section>
+
+      <section id="home-action-reel" class="exo-home-action-reel" hidden aria-label="More ways to explore EXO">
+        <div class="exo-reel-kicker"><span>03 / BEYOND THE IMAGE</span><span>THE STUDIO CONTINUES</span></div>
+        <div class="exo-reel-heading"><h2>The work<br>doesn't <em>stop here.</em></h2><p>Discover the people behind the projects, enter design challenges and discover emerging talent.</p></div>
+        <div class="exo-reel-cards">
+          <button type="button" data-nav="explore" class="exo-reel-card"><span class="exo-reel-photo"><img src="./market-media/scene-EXO01.webp" loading="lazy" decoding="async" alt="EXO original runway chamber stage poster"><span>01 / CREATOR CULTURE</span></span><span class="exo-reel-copy"><strong>For You</strong><span>Explore work from designers and digital studios <b aria-hidden="true">↗</b></span></span></button>
+          <button type="button" data-nav="awards" class="exo-reel-card"><span class="exo-reel-photo"><img src="./market-media/scene-R03.webp" loading="lazy" decoding="async" alt="EXO existing R03 studio stage poster"><span>02 / VIRTUAL RESEARCH</span></span><span class="exo-reel-copy"><strong>Awards & contests</strong><span>Showcase talent, study featured submissions and build a portfolio <b aria-hidden="true">↗</b></span></span></button>
+        </div>
+        <p class="exo-reel-disclaimer">EXO COMMUNITY IS A LOCAL CONCEPT. NO PUBLIC SOCIAL NETWORK OR LIVE AWARD SUBMISSION IS ACTIVE.</p>
       </section>
 
       <section class="feature-banner"><div class="feature-abstract"><div class="square-track"><span>EXO<br>LAB</span></div><div class="feature-technical"><small>3D FORM</small><small>2D PATTERN</small><small>MATERIAL SURFACE</small></div></div><div class="feature-body"><span class="eyebrow">YOUR NEXT IDEA STARTS HERE</span><h2>From object<br>to <em>understanding.</em></h2><p>Bring the archive into a digital workroom. Examine a garment from every angle, match flat pattern pieces, and study the surfaces that make it possible.</p><button class="solid-btn solid-light" id="launch-lab">Explore Pattern Lab <span aria-hidden="true">↗</span></button></div></section>

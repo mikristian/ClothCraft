@@ -1,0 +1,94 @@
+    // QA-only injection. Never compile into the installed production shell.
+    // Called only in the isolated RUN43 app after the WKWebView finishes loading.
+    private func run43NativeWKWebViewProbe() {
+        guard webView.url?.scheme == "http",
+              webView.url?.host == "127.0.0.1",
+              webView.url?.port == 5486 else { return }
+        let javascript = """
+        (async function() {
+          const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+          const deadline = Date.now() + 25000;
+          while (Date.now() < deadline &&
+                 (!document.querySelector('.cc-board [data-panel]') ||
+                  !document.querySelector('.cc-viewport-3d canvas'))) await sleep(150);
+          const panels = document.querySelectorAll('.cc-board [data-panel]').length;
+          const canvases = document.querySelectorAll('canvas').length;
+          const undo = document.querySelector('button[title="Undo"], button[aria-label="Undo"]');
+          const redo = document.querySelector('button[title="Redo"], button[aria-label="Redo"]');
+          const library = document.querySelector('button[title="Open asset library"]');
+          const errors = [];
+          let qaNativeBridge = null;
+          try {
+            const response = await fetch('http://127.0.0.1:5485/workspace', {
+              method: 'POST',
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify({op:'snapshot'})
+            });
+            const payload = await response.json();
+            qaNativeBridge = {
+              status:response.status,
+              ok:payload.ok,
+              panels:payload.data?.template?.panels?.length ?? null,
+              error:payload.error ?? null
+            };
+          } catch(error) { qaNativeBridge = {error:String(error)}; }
+          let libraryOpened = false, libraryClosed = false, libraryRestored = false;
+          if (library && panels >= 2) {
+            try {
+              library.click();
+              await sleep(450);
+              libraryOpened = !!document.querySelector('[data-library-tree-root="Hardware and Trims"]');
+              const history = document.querySelector('button[title="Open undo and redo history"]');
+              if (!history) throw Error('History side-panel tab missing');
+              history.click();
+              await sleep(450);
+              libraryClosed = !document.querySelector('[data-library-tree-root="Hardware and Trims"]') &&
+                !!document.querySelector('.clo-history-browser');
+              library.click();
+              await sleep(450);
+              libraryRestored = !!document.querySelector('[data-library-tree-root="Hardware and Trims"]');
+            } catch(error) { errors.push(String(error)); }
+          }
+          return JSON.stringify({
+            pass: location.origin === 'http://127.0.0.1:5486' && panels >= 2 &&
+              canvases > 0 && !!undo && !!redo && libraryOpened && libraryClosed && libraryRestored &&
+              errors.length === 0,
+            title: document.title, origin: location.origin, panels, canvases,
+            qaNativeBridge,
+            boardPresent: !!document.querySelector('.cc-board'),
+            visibleStatus: [...document.querySelectorAll('[role="status"]')].map(
+              node => node.textContent?.trim().slice(0,160)).slice(0,6),
+            initialText:document.body.innerText.slice(0,360),
+            nativeToolbarUndoPresent: !!undo, nativeToolbarRedoPresent: !!redo,
+            libraryOpened, libraryClosed, libraryRestored, errors,
+            actualWKWebViewDOMInteraction: true,
+            physicalMouseOrKeyboardVerified: false,
+            manipulatedGarmentGeometry: false,
+            factoryApproved: false
+          });
+        })()
+        """
+        webView.callAsyncJavaScript("return await " + javascript, arguments: [:], in: nil, in: .page) { result in
+            var report: [String: Any] = [
+                "schema": "exo.run43.native-wkwebview-qa.v1", "pass": false,
+                "source": "isolated-macos-wkwebview",
+                "physicalMouseOrKeyboardVerified": false, "factoryApproved": false
+            ]
+            switch result {
+            case .success(let value):
+                if let json = value as? String,
+                   let data = json.data(using: .utf8),
+                   let parsed = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] {
+                    report.merge(parsed) { _, new in new }
+                } else { report["error"] = "Invalid native WebKit QA response" }
+            case .failure(let error):
+                report["error"] = "Native WebKit execution: " + error.localizedDescription
+            }
+            let folder = FileManager.default.homeDirectoryForCurrentUser
+                .appendingPathComponent("Library/Application Support/EXO-ClothCraft-Studio-V2-QA-Run43/Output", isDirectory: true)
+            try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+            if let data = try? JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys]) {
+                try? data.write(to: folder.appendingPathComponent("native-wkwebview-run43.json"), options: .atomic)
+            }
+        }
+    }

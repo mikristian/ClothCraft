@@ -14,6 +14,7 @@ import { createAvatarMeshCollider, correctMeshAvatarContacts, selectAvatarBodyMe
 import { applyAutoFitPlacement } from '../core/autoFitPlacement.js'
 import { mergeMeshFaceSelection } from '../core/meshSelection.js'
 import ViewportQuickTools from './ViewportQuickTools.jsx'
+import ClothCraftContextMenu from './ClothCraftContextMenu.jsx'
 import { assessNativeSolverResult } from '../core/backends/nativeServiceBackend.js'
 import { makeProceduralTextileMaps } from '../core/textileProcedurals.js'
 import { normalizeFabricOptics } from '../core/fabricSurfaceModel.js'
@@ -23,38 +24,18 @@ import { washTextureImage } from '../core/clothWashImage.js'
 import { tintLicensedFabricScan } from '../core/photographicScanToning.js'
 import { balanceScannedRoughness, shouldBalanceFabricRoughness } from '../core/fabricPbrAppearance.js'
 import { getHardwarePreset } from '../data/hardwarePresets.js'
-
-// Approximate hardware shell only: holes and optical finish follow the catalog
-// but metal bending, thread shanks and button/cloth rigid contact are separate.
-function buttonDiscGeometry(button, preset) {
-  const radius = Math.max(.004,Number(button.diameterCm ?? 1.8)*.005)
-  const thickness = Math.max(.0008,Number(preset?.dimensionsMm.thickness ?? preset?.dimensionsMm.capHeight ?? 2.5)/1000)
-  const holes = Number(button.holes ?? preset?.holes ?? 0)
-  if (holes === 2 || holes === 4) {
-    const face=new THREE.Shape()
-    face.absarc(0,0,radius,0,2*Math.PI,false)
-    const offset=Math.min(radius*.42,Math.max(.0013,Number(preset?.dimensionsMm.holeSpacing ?? 4)/2000))
-    const centers = holes===2 ? [[-offset,0],[offset,0]] : [
-      [-offset,-offset],[-offset,offset],[offset,-offset],[offset,offset],
-    ]
-    const holeRadius=Math.min(radius*.11,Math.max(.0004,Number(preset?.dimensionsMm.holeDiameter ?? 1.4)/2000))
-    for (const [x,y] of centers) {
-      const hole=new THREE.Path()
-      hole.absarc(x,y,holeRadius,0,Math.PI*2,true)
-      face.holes.push(hole)
-    }
-    const bevel=Math.min(.00035,thickness*.18)
-    const result=new THREE.ExtrudeGeometry(face,{
-      depth:thickness,bevelEnabled:true,bevelSegments:2,steps:1,
-      bevelThickness:bevel,bevelSize:bevel,curveSegments:24,
-    })
-    result.translate(0,0,-thickness*.5)
-    return result
-  }
-  const result=new THREE.CylinderGeometry(radius,radius*.98,thickness,32,1)
-  result.rotateX(Math.PI/2)
-  return result
-}
+import { createStageEnvironment,applyStageSettings } from '../core/createStageEnvironment.js'
+import { normalizeStageId } from '../data/stagePresets.js'
+import { paintStudioGradient } from './studioGradientBackdrop.js'
+import {applySceneCameraViewport} from '../core/sceneCameraViewport.js'
+import { createHanger3D } from './Library3DAssetPreview.jsx'
+import { createHardwareButton3D } from './HardwareButton3D.js'
+import {viewportHardwarePlacements} from '../core/hardwareViewportSelection.js'
+import { createButtonholeHardware3D } from './ButtonholeHardware3D.js'
+import { createZipperHardware3D } from './ZipperHardware3D.js'
+import { createImportedCloHardware3D, updateImportedCloHardware3D } from '../core/importedCloHardware3D.js'
+import {cursorForTool} from '../core/toolCursors.js'
+import {createFoamPaddingGeometry} from '../core/foamPaddingGeometry.js'
 
 function syncSurfaceOverlay(record) {
   const position = record.meshRecord.geometry.getAttribute('position')
@@ -81,9 +62,11 @@ function syncSurfaceOverlay(record) {
       nx /= normalLength
       ny /= normalLength
       nz /= normalLength
-      attribute.setXYZ(index, x + nx * record.lift, y + ny * record.lift, z + nz * record.lift)
+      const lift = record.lifts?.[index] ?? record.lift
+      attribute.setXYZ(index, x + nx * lift, y + ny * lift, z + nz * lift)
     }
     attribute.needsUpdate = true
+    if (record.lifts && record.object.isMesh) record.object.geometry.computeVertexNormals()
     record.object.geometry.computeBoundingSphere()
     return
   }
@@ -92,15 +75,52 @@ function syncSurfaceOverlay(record) {
     const attribute = record.object.geometry.getAttribute('position')
     for (let index = 0; index < record.indices.length; index += 1) {
       const vertexIndex = record.indices[index]
+      const before = record.indices[Math.max(0,index-1)]
+      const after = record.indices[Math.min(record.indices.length-1,index+1)]
+      const tx=position.getX(after)-position.getX(before)
+      const ty=position.getY(after)-position.getY(before)
+      const tz=position.getZ(after)-position.getZ(before)
+      const nx=normal.getX(vertexIndex),ny=normal.getY(vertexIndex),nz=normal.getZ(vertexIndex)
+      const ox=ty*nz-tz*ny,oy=tz*nx-tx*nz,oz=tx*ny-ty*nx
+      const sideLength=Math.hypot(ox,oy,oz)||1
       attribute.setXYZ(
         index,
-        position.getX(vertexIndex) + normal.getX(vertexIndex) * record.lift,
-        position.getY(vertexIndex) + normal.getY(vertexIndex) * record.lift,
-        position.getZ(vertexIndex) + normal.getZ(vertexIndex) * record.lift,
+        position.getX(vertexIndex) + nx * record.lift + ox/sideLength*(record.offsetM||0),
+        position.getY(vertexIndex) + ny * record.lift + oy/sideLength*(record.offsetM||0),
+        position.getZ(vertexIndex) + nz * record.lift + oz/sideLength*(record.offsetM||0),
       )
     }
     attribute.needsUpdate = true
     if (record.object.isLine && record.object.material?.isLineDashedMaterial) record.object.computeLineDistances()
+    return
+  }
+
+  if(record.type==='ribbon'){
+    // Keep a real millimetre-width band attached to the deformed cloth mesh.
+    // The width is authored in centimetres and converted to metres once.
+    const attribute=record.object.geometry.getAttribute('position')
+    const half=record.widthM*.5
+    for(let index=0;index<record.indices.length;index++){
+      const vertexIndex=record.indices[index]
+      const before=record.indices[Math.max(0,index-1)]
+      const after=record.indices[Math.min(record.indices.length-1,index+1)]
+      const tx=position.getX(after)-position.getX(before)
+      const ty=position.getY(after)-position.getY(before)
+      const tz=position.getZ(after)-position.getZ(before)
+      const nx=normal.getX(vertexIndex),ny=normal.getY(vertexIndex),nz=normal.getZ(vertexIndex)
+      const dx=ty*nz-tz*ny,dy=tz*nx-tx*nz,dz=tx*ny-ty*nx
+      const mag=Math.hypot(dx,dy,dz)||1
+      for(const side of [-1,1]){
+        const offset=side*half/mag
+        attribute.setXYZ(index*2+(side===-1?0:1),
+          position.getX(vertexIndex)+nx*record.lift+dx*offset,
+          position.getY(vertexIndex)+ny*record.lift+dy*offset,
+          position.getZ(vertexIndex)+nz*record.lift+dz*offset)
+      }
+    }
+    attribute.needsUpdate=true
+    record.object.geometry.computeVertexNormals()
+    record.object.geometry.computeBoundingSphere()
     return
   }
 
@@ -112,7 +132,12 @@ function syncSurfaceOverlay(record) {
       position.getY(vertexIndex) + normal.getY(vertexIndex) * record.lift,
       position.getZ(vertexIndex) + normal.getZ(vertexIndex) * record.lift,
     )
-    if (record.orientToSurface) record.object.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),surfaceNormal)
+    if (record.orientToSurface) {
+      record.object.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),surfaceNormal)
+      if (record.object.userData.angleDeg) record.object.quaternion.multiply(
+        new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1),THREE.MathUtils.degToRad(record.object.userData.angleDeg)),
+      )
+    }
     return
   }
 
@@ -133,13 +158,40 @@ function syncSurfaceOverlay(record) {
   }
 }
 
-function makeTrimLine(meshRecord, indices, material, lift = 0.0025) {
+function makeTrimLine(meshRecord, indices, material, lift = 0.0025, offsetM = 0) {
   if (!indices?.length || indices.length < 2) return null
   const geometry = new THREE.BufferGeometry()
   geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(indices.length * 3), 3))
   const object = new THREE.Line(geometry, material)
   object.renderOrder = 31
-  const record = { type: 'line', object, meshRecord, indices, lift }
+  const record = { type: 'line', object, meshRecord, indices, lift, offsetM }
+  syncSurfaceOverlay(record)
+  return record
+}
+
+function makeTrimRibbon(meshRecord,indices,binding){
+  if(!indices?.length||indices.length<2)return null
+  const geometry=new THREE.BufferGeometry()
+  geometry.setAttribute('position',new THREE.BufferAttribute(new Float32Array(indices.length*6),3))
+  const triangles=[]
+  for(let i=0;i<indices.length-1;i++){
+    const a=i*2,b=a+1,c=a+2,d=a+3
+    triangles.push(a,b,c,b,d,c)
+  }
+  geometry.setIndex(triangles)
+  const material=new THREE.MeshPhysicalMaterial({
+    color:binding.color||'#666666',side:THREE.DoubleSide,
+    roughness:Math.max(0,Math.min(1,Number(binding.roughness??.85))),
+    metalness:Math.max(0,Math.min(1,Number(binding.metalness??0))),
+    envMapIntensity:Math.max(0,Math.min(3,Number(binding.reflectionIntensity??1))),
+    transparent:true,opacity:.96,depthWrite:false,
+  })
+  const object=new THREE.Mesh(geometry,material)
+  object.renderOrder=32
+  const widthCm=Number(binding.widthCm)
+  const widthM=Number.isFinite(widthCm)?Math.max(.001,Math.min(.2,widthCm/100)):.018
+  const record={type:'ribbon',object,meshRecord,indices,lift:.004,widthM}
+  object.userData.printWidthMm=widthM*1000
   syncSurfaceOverlay(record)
   return record
 }
@@ -180,6 +232,109 @@ function mapFlatPointToMesh(simPiece, point) {
     if (weights) return { indices: [aIndex, bIndex, cIndex], weights }
   }
   return null
+}
+
+// Decorative CLO-style construction courses attached to actual cloth faces.
+// Mapping is purely visual: it neither edits source patterns nor reports strain.
+function makeStartingGarmentGuides(meshRecord) {
+  const piece = meshRecord.simPiece
+  if (!['front', 'back', 'sleeve-left', 'sleeve-right'].includes(piece.id)) return []
+  const points = piece.flatVertices || []
+  if (points.length < 3) return []
+  const minX = Math.min(...points.map(p => p.x)), maxX = Math.max(...points.map(p => p.x))
+  const minY = Math.min(...points.map(p => p.y)), maxY = Math.max(...points.map(p => p.y))
+  const dx = maxX - minX, dy = maxY - minY
+  if (!(dx > 0 && dy > 0)) return []
+  const isTorso = piece.id === 'front' || piece.id === 'back'
+  const courses = isTorso
+    ? [
+      ...[.18, .49, .83].map(t => ({ axis: 'y', t, color: '#827de4' })),
+      { axis: 'x', t: .5, color: '#8982e8' },
+      { axis: 'x', t: .13, color: '#ee6963' },
+      { axis: 'x', t: .2, color: '#26c1d3' },
+      { axis: 'x', t: .8, color: '#3bbb8a' },
+      { axis: 'x', t: .87, color: '#d85cbb' },
+    ]
+    : [{ axis: 'x', t: .35, color: '#e9605f' }, { axis: 'x', t: .65, color: '#29c0ca' }]
+  const records = []
+  for (const course of courses) {
+    const samples = []
+    const span = course.axis === 'x' ? dy : dx
+    // Sample in the authored flat coordinate system, then bind each sample
+    // to a real mesh triangle so it follows staging and later surface updates.
+    for (let i = 0; i <= 55; i++) {
+      const u = i / 55
+      const point = course.axis === 'x'
+        ? { x: minX + dx * course.t, y: minY + span * u }
+        : { x: minX + span * u, y: minY + dy * course.t }
+      samples.push(mapFlatPointToMesh(piece, point))
+    }
+    let run = []
+    const flush = () => {
+      if (run.length < 2) { run = []; return }
+      const geometry = new THREE.BufferGeometry()
+      geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(run.length * 3), 3))
+      const material = new THREE.LineBasicMaterial({ color: course.color, transparent: true, opacity: 1, depthTest: false, depthWrite: false })
+      const object = new THREE.Line(geometry, material)
+      object.name = `starting-garment-construction-${piece.id}`
+      object.renderOrder = 61
+      const record = { type: 'graphic', object, meshRecord, mappings: run, lift: .008, startingConstructionGuide: true }
+      syncSurfaceOverlay(record)
+      records.push(record)
+      run = []
+    }
+    for (const mapping of samples) { if (mapping) run.push(mapping); else flush() }
+    flush()
+  }
+  return records
+}
+
+function curvedTeeStaging(simPiece, positions, templateId, avatar = {}) {
+  if (templateId !== 'tee') return positions
+  const arrangement = simPiece.piece.arrangement3d || {}
+  // Template-defined staging offsets and rotations are intentional defaults.
+  // Only an actual user displacement opts out of the automatic fitting pose.
+  if (arrangement.userPlacementRotationEdited || ['userPlacementDeltaX', 'userPlacementDeltaY', 'userPlacementDeltaZ']
+    .some(key => Math.abs(Number(arrangement[key]) || 0) > 1e-5)) return positions
+  if (['sleeve-left', 'sleeve-right'].includes(simPiece.id) && positions.length > 2) {
+    const distances = positions.map(point => Math.abs(point.x))
+    const inner = Math.min(...distances)
+    const span = Math.max(...distances) - inner
+    if (span < .001) return positions
+    const side = simPiece.id === 'sleeve-left' ? -1 : 1
+    return positions.map((point, index) => {
+      const u = THREE.MathUtils.clamp((distances[index] - inner) / span, 0, 1)
+      const drop = .095 * Math.pow(u, 1.3)
+      // Wrap around the upper arm, tapering gently toward the cuff. Keeping
+      // the sleeve cap anchored avoids a visible gap at the shoulder.
+      const roundness = Math.sin(Math.PI * u)
+      const inward = .105 * Math.pow(u, .85)
+      return point.clone().add(new THREE.Vector3(-side * inward, -drop, .115 * roundness))
+    })
+  }
+  if (!['front','back'].includes(simPiece.id)) return positions
+  const flat = simPiece.flatVertices || []
+  if (flat.length !== positions.length || !flat.length) return positions
+  const minX = Math.min(...flat.map(p => p.x))
+  const maxX = Math.max(...flat.map(p => p.x))
+  const halfWidth = (maxX - minX) / 2
+  if (halfWidth < 1e-5) return positions
+  const centerX = (minX + maxX) / 2
+  const direction = simPiece.id === 'back' ? -1 : 1
+  const stagedCenterX = (Math.min(...positions.map(p => p.x)) + Math.max(...positions.map(p => p.x))) * .5
+  return positions.map((position, index) => {
+    const normalizedX = THREE.MathUtils.clamp((flat[index].x - centerX) / halfWidth, -1, 1)
+    // A deeper sweep carries side seams just around the flank. Keep each
+    // point outside the analytic torso ellipse, even at narrower waists.
+    const angle = normalizedX * 1.67
+    const radii = getAvatarTorsoRadii(avatar, position.y)
+    const clearance = .019
+    // Follow the avatar's elliptical chest and waist, continuing toward its
+    // flanks at the side seams. No authored vertices or solver data change.
+    const targetX = stagedCenterX + (radii.x + clearance) * Math.sin(angle)
+    const targetZ = direction * ((radii.z + clearance) * Math.cos(angle))
+    return new THREE.Vector3(targetX, position.y, targetZ)
+  })
 }
 
 function makeGraphicOverlay(meshRecord, graphic, segments = 12) {
@@ -247,6 +402,84 @@ function makeGraphicOverlay(meshRecord, graphic, segments = 12) {
   return record
 }
 
+// Relief remains attached to the exact underlying cloth triangles. The pad
+// contour is an editable construction object, while actual stacked fabric and
+// real stitch constraints require a separate cloth-solver operation.
+function makeFoamPaddingOverlays(meshRecord, pad) {
+  const shape = createFoamPaddingGeometry({points:pad.points,depthCm:pad.depthCm,edgeWidthCm:pad.edgeWidthCm})
+  if (!shape?.valid || !shape.vertices?.length || !shape.indices?.length) return []
+  const source=pad.points
+  const minX=Math.min(...source.map(p=>p.x)),maxX=Math.max(...source.map(p=>p.x))
+  const minY=Math.min(...source.map(p=>p.y)),maxY=Math.max(...source.map(p=>p.y))
+  const sourceWidth=Math.max(.0001,maxX-minX)
+  const sourceHeight=Math.max(.0001,maxY-minY)
+  const scaleX=Math.max(.01,Number(pad.widthCm)||sourceWidth)/sourceWidth
+  const scaleY=Math.max(.01,Number(pad.heightCm)||sourceHeight)/sourceHeight
+  const angle=THREE.MathUtils.degToRad(Number(pad.rotationDeg)||0)
+  const sin=Math.sin(angle),cos=Math.cos(angle)
+  const cx=(minX+maxX)/2,cy=(minY+maxY)/2
+  const centerX=Number(pad.x)||0,centerY=Number(pad.y)||0
+  const convert=(point)=>{
+    const dx=(point.x-cx)*scaleX,dy=(point.y-cy)*scaleY
+    return {x:centerX+dx*cos-dy*sin,y:centerY+dx*sin+dy*cos}
+  }
+  const points=shape.vertices.map(convert)
+  const mappings=points.map(point=>mapFlatPointToMesh(meshRecord.simPiece,point))
+  const positions=new Float32Array(points.length*3)
+  const underlyingUv=meshRecord.geometry.getAttribute('uv')
+  const textureUv=new Float32Array(points.length*2)
+  if(underlyingUv){
+    for(let i=0;i<mappings.length;i++){
+      const mapping=mappings[i]
+      if(!mapping)continue
+      const {indices,weights}=mapping
+      textureUv[2*i]=indices.reduce((sum,id,k)=>sum+underlyingUv.getX(id)*weights[k],0)
+      textureUv[2*i+1]=indices.reduce((sum,id,k)=>sum+underlyingUv.getY(id)*weights[k],0)
+    }
+  }
+  const indices=[]
+  for(let i=0;i<shape.indices.length;i+=3){
+    const a=shape.indices[i],b=shape.indices[i+1],c=shape.indices[i+2]
+    if(mappings[a]&&mappings[b]&&mappings[c])indices.push(a,b,c)
+  }
+  if(indices.length<3)return []
+  const geometry=new THREE.BufferGeometry()
+  geometry.setAttribute('position',new THREE.BufferAttribute(positions,3))
+  geometry.setAttribute('uv',new THREE.BufferAttribute(textureUv,2))
+  geometry.setIndex(indices)
+  // Clone the same garment fabric and project its true cloth UVs onto the pad,
+  // so woven texture and printed materials continue across the raised relief.
+  // Material maps remain shared; the foam cleanup disposes only this clone.
+  const material=meshRecord.material?.clone?.()||new THREE.MeshStandardMaterial({color:0x87929d,roughness:.85})
+  material.side=THREE.DoubleSide
+  material.polygonOffset=true
+  material.polygonOffsetFactor=-1
+  material.flatShading=false
+  material.needsUpdate=true
+  const object=new THREE.Mesh(geometry,material)
+  object.name=`foam-padding-${pad.id}`
+  object.renderOrder=30
+  const lifts=shape.vertices.map(point=>Math.max(.0015,(Number(point.heightCm)||0)/100+.0015))
+  const records=[{type:'graphic',kind:'foam-padding',object,meshRecord,mappings,lifts,lift:.002}]
+  syncSurfaceOverlay(records[0])
+  if(pad.sewn){
+    for(const [index,path] of (shape.stitchPaths||[]).entries()){
+      if(!Array.isArray(path)||path.length<3)continue
+      const stitchMappings=path.map(convert).map(point=>mapFlatPointToMesh(meshRecord.simPiece,point))
+      if(stitchMappings.some(mapping=>!mapping))continue
+      const outlineGeometry=new THREE.BufferGeometry()
+      outlineGeometry.setAttribute('position',new THREE.BufferAttribute(new Float32Array(path.length*3),3))
+      const stitch=new THREE.LineLoop(outlineGeometry,new THREE.LineBasicMaterial({color:0x26303a,transparent:true,opacity:.88,depthTest:true}))
+      stitch.name=`foam-stitch-guide-${pad.id}-${index}`
+      stitch.renderOrder=31
+      const lineRecord={type:'graphic',kind:'foam-padding',object:stitch,meshRecord,mappings:stitchMappings,lift:.0025}
+      syncSurfaceOverlay(lineRecord)
+      records.push(lineRecord)
+    }
+  }
+  return records
+}
+
 function makeAvatarTorsoGeometry(avatar) {
   const verticalSegments = 20
   const radialSegments = 40
@@ -295,8 +528,8 @@ function makeFabricTexture(fabric, sourceField = 'src', colorTexture = false) {
     if (!appliesWash && !isLicensedPhoto && !rebalanceRoughness) return
     const sourceImage=loaded.image
     const size={
-      width:Math.min(768,sourceImage?.naturalWidth||sourceImage?.width||512),
-      height:Math.min(768,sourceImage?.naturalHeight||sourceImage?.height||512),
+      width:Math.min(1024,sourceImage?.naturalWidth||sourceImage?.width||512),
+      height:Math.min(1024,sourceImage?.naturalHeight||sourceImage?.height||512),
     }
     // A real scan supplies material yarn variation; tinting reproduces the
     // selected dye color rather than multiplying its original dye twice.
@@ -310,9 +543,13 @@ function makeFabricTexture(fabric, sourceField = 'src', colorTexture = false) {
   texture.colorSpace = colorTexture ? THREE.SRGBColorSpace : THREE.NoColorSpace
   texture.wrapS = THREE.RepeatWrapping
   texture.wrapT = THREE.RepeatWrapping
+  texture.anisotropy = 8
+  texture.minFilter = THREE.LinearMipmapLinearFilter
+  texture.magFilter = THREE.LinearFilter
   texture.center.set(0.5, 0.5)
   texture.rotation = THREE.MathUtils.degToRad(Number(fabric.texture.rotationDeg || 0))
-  texture.needsUpdate = true
+  // TextureLoader sets needsUpdate after the real image arrives. Marking it
+  // ready here races image decoding and triggers repeated empty-map uploads.
   return texture
 }
 
@@ -508,10 +745,11 @@ async function upgradeAvatarVisualization(group, project, customAvatar = null, i
   return detailed
 }
 
-export default function GarmentViewport({ project, ppfPreview = null, running, hasSimulated = false, resetSignal, wireframe, analysisMode = 'surface', backendId = 'browser-pbd', nativeSolveSignal = 0, nativeQuality = 'draft', exportSignal = 0, glbExportSignal = 0, renderSignal = 0, hdriUrl = '', customAvatar = null, viewportTool = 'orbit', onMeshSelection, fitCameraSignal = 0, selectedPieceId = null, onSelectPiece, showSewingGuides = true, highlightSeamId = null, arrangementSpread = 0, onMoveStagedPanel, onExportMesh, onExportGlb, onRenderStill, onStats, onNativeSolve, onToggleWireframe, onToggleSewingGuides, onChangeAnalysisMode, onChangeViewportTool }) {
+export default function GarmentViewport({ project, ppfPreview = null, running, hasSimulated = false, resetSignal, wireframe, analysisMode = 'surface', backendId = 'browser-pbd', nativeSolveSignal = 0, nativeQuality = 'draft', exportSignal = 0, glbExportSignal = 0, renderSignal = 0, hdriUrl = '', customAvatar = null, studioAppearance = null, studioPreferences = null, stageSettings = null, viewportTool = 'orbit', onMeshSelection, fitCameraSignal = 0, selectedPieceId = null, onSelectPiece, showSewingGuides = true, highlightSeamId = null, arrangementSpread = 0, onMoveStagedPanel, onExportMesh, onExportGlb, onRenderStill, onStats, onNativeSolve, onToggleWireframe, onToggleSewingGuides, onChangeAnalysisMode, onChangeViewportTool, onRemoveStage, onCollapse3D }) {
   const [showAvatar, setShowAvatar] = useState(true)
   const [showFloor, setShowFloor] = useState(true)
   const [cameraPreset, setCameraPreset] = useState('perspective')
+  const [stageContextMenu, setStageContextMenu] = useState(null)
   const [selectedMeshTriangles, setSelectedMeshTriangles] = useState(null)
   const selectedMeshRef = useRef(null)
   const meshSelectionNotifyRef = useRef(onMeshSelection)
@@ -532,6 +770,8 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
   const meshAvatarColliderRef = useRef(null)
   const floorRef = useRef(null)
   const gridRef = useRef(null)
+  const stageSceneRef = useRef(null)
+  const hangerSceneRef = useRef(null)
   const windHelperRef = useRef(null)
   const cameraRef = useRef(null)
   const controlsRef = useRef(null)
@@ -569,6 +809,7 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
 
   projectRef.current = project
   const physicsKey = physicsInputFingerprint(project)
+  const foamPaddingKey=JSON.stringify((project.pieces||[]).map(piece=>[piece.id,piece.foamPads||[]]))
   const fabricOpticsKey = opticalFabricFingerprint(project)
   runningRef.current = running
   wireframeRef.current = wireframe
@@ -591,17 +832,9 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
     const gradientCanvas = document.createElement('canvas')
     gradientCanvas.width = 8
     gradientCanvas.height = 512
-    const gradientContext = gradientCanvas.getContext('2d')
-    const gradient = gradientContext.createLinearGradient(0, 0, 0, 512)
-    // CLO's daylight stage is shaded from darker neutral gray overhead to
-    // near-white at the floor, rather than black or a saturated backdrop.
-    gradient.addColorStop(0, '#919298')
-    gradient.addColorStop(0.48, '#d4d5d9')
-    gradient.addColorStop(1, '#f2f2f7')
-    gradientContext.fillStyle = gradient
-    gradientContext.fillRect(0, 0, 8, 512)
     const studioBackdrop = new THREE.CanvasTexture(gradientCanvas)
     studioBackdrop.colorSpace = THREE.SRGBColorSpace
+    paintStudioGradient(studioBackdrop)
     scene.userData.studioBackdrop = studioBackdrop
     scene.background = studioBackdrop
     scene.fog = new THREE.Fog(0xe9e9eb, 6, 16)
@@ -612,7 +845,7 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
     camera.position.set(0.9 * initialHeightScale, 1.55 * initialHeightScale, 4.15 * initialHeightScale)
     cameraRef.current = camera
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: true })
+    const renderer = new THREE.WebGLRenderer({ antialias: studioPreferences?.antialias!==false, powerPreference: 'high-performance', preserveDrawingBuffer: true })
     rendererRef.current = renderer
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
     renderer.shadowMap.enabled = true
@@ -757,6 +990,8 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
       positions: stagedRef.current
         ? record.stagedPositions.map((point) => point.clone())
         : record.simPiece.particles.map((particle) => particle.position.clone()),
+      visualPositions:stagedRef.current
+        ? (record.stagedDisplayPositions||record.stagedPositions).map(point=>point.clone()):null,
       position: gizmoPivot.position.clone(),
       quaternion: gizmoPivot.quaternion.clone(),
     })
@@ -773,10 +1008,18 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
           if (!particle) continue
           particle.position.copy(next)
           particle.previous.copy(next)
-        } else record.stagedPositions[index].copy(next)
+        } else {
+          record.stagedPositions[index].copy(next)
+          // Apply the same rigid transformation to the curved display shape.
+          // Editing the 3D transform must never flatten the preview or write
+          // the visually bowed vertices into the cloth solver's rest shape.
+          const visual=start.visualPositions?.[index]
+          if(visual)record.stagedDisplayPositions[index].copy(visual).sub(position)
+            .applyQuaternion(rotation).add(position).add(translation)
+        }
       }
       if (simulated) syncGeometry(record.simPiece, record.geometry, projectRef.current)
-      else setStagedGeometry(record.geometry, record.stagedPositions)
+      else setStagedGeometry(record.geometry, record.stagedDisplayPositions||record.stagedPositions)
       if (simulated && record.simPiece.particles.length) {
         const origin = positions[0]
         const current = record.simPiece.particles[0].position
@@ -908,6 +1151,7 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
           record,
           start: hit.point.clone(),
           original: record.stagedPositions.map((point) => point.clone()),
+          originalVisual:(record.stagedDisplayPositions||record.stagedPositions).map(point=>point.clone()),
           center: gizmoPivot.position.clone(),
           offset: new THREE.Vector3(),
           plane: new THREE.Plane().setFromNormalAndCoplanarPoint(camera.getWorldDirection(new THREE.Vector3()), hit.point),
@@ -999,8 +1243,9 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
         fabricDrag.offset.copy(offset)
         for (let index = 0; index < fabricDrag.record.stagedPositions.length; index += 1) {
           fabricDrag.record.stagedPositions[index].copy(fabricDrag.original[index]).add(offset)
+          fabricDrag.record.stagedDisplayPositions[index].copy(fabricDrag.originalVisual[index]).add(offset)
         }
-        setStagedGeometry(fabricDrag.record.geometry, fabricDrag.record.stagedPositions)
+        setStagedGeometry(fabricDrag.record.geometry,fabricDrag.record.stagedDisplayPositions)
         if (toolRef.current === 'transform') {
           gizmoPivot.position.copy(fabricDrag.center).add(offset)
           updateRings()
@@ -1148,7 +1393,7 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
             const fitted = record.stagedPositions.map((_, index) => new THREE.Vector3(
               fittedAttribute.getX(index), fittedAttribute.getY(index), fittedAttribute.getZ(index),
             ))
-            setStagedGeometry(record.geometry, record.stagedPositions, fitted, stageBlendRef.current)
+            setStagedGeometry(record.geometry, record.stagedDisplayPositions || record.stagedPositions, fitted, stageBlendRef.current)
           }
           syncAnalysisColors(record.simPiece, record.geometry, analysisModeRef.current)
         }
@@ -1158,6 +1403,11 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
       const records = meshRecordsRef.current
       for (let index = 0; index < records.length; index += 1) {
         const record = records[index]
+        // CLO's new-template white assembly presentation is a reversible
+        // viewport material. The real authored textile remains on record.material
+        // and is restored as soon as staging ends or analysis begins.
+        record.mesh.material = record.stagedReferenceMaterial && stagedRef.current && analysisModeRef.current === 'surface' && !wireframeRef.current
+          ? record.stagedReferenceMaterial : record.material
         // Exploded arrangement is a rendering-only inspection transform; it
         // never alters the solver's actual particles or sewing constraints.
         const column = index % 4
@@ -1188,6 +1438,17 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
       }
       for (const trim of trimRecordsRef.current) {
         if (!trim.meshRecord) continue
+        if (trim.startingConstructionGuide) {
+          trim.object.visible = stagedRef.current && trim.meshRecord.mesh.visible && analysisModeRef.current === 'surface'
+        }
+        if (trim.type === 'imported-clo-hardware') {
+          updateImportedCloHardware3D(trim)
+          continue
+        }
+        if (trim.type === 'zipper-hardware') {
+          trim.update()
+          continue
+        }
         if (trim.type === 'button' || trim.type === 'surface-object') {
           syncSurfaceOverlay(trim)
           trim.object.position.add(trim.meshRecord.mesh.position)
@@ -1228,6 +1489,47 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
       }
       controls.update()
       updateRings()
+      // Read-only QA probe of actual live scene nodes, refreshed every frame.
+      // Counts instantiated child meshes rather than project/DOM annotations.
+      let hardwareButtonMeshCount = 0
+      let hardwareButtonGroupCount = 0
+      let hardwareButtonholeMeshCount = 0
+      let hardwareButtonholeGroupCount = 0
+      for (const record of trimRecordsRef.current) {
+        if (record.type !== 'button' || !record.object.isGroup || !record.object.parent) continue
+        const isButtonhole=record.object.userData.hardware?.kind==='buttonhole'
+        if(isButtonhole)hardwareButtonholeGroupCount++
+        else hardwareButtonGroupCount++
+        record.object.traverse(child => {
+          if (child.isMesh && child.geometry?.getAttribute('position')?.count > 0 && child.parent){
+            if(isButtonhole)hardwareButtonholeMeshCount++
+            else hardwareButtonMeshCount++
+          }
+        })
+      }
+      renderer.domElement.dataset.hardwareButtonMeshCount = String(hardwareButtonMeshCount)
+      renderer.domElement.dataset.hardwareButtonGroupCount = String(hardwareButtonGroupCount)
+      renderer.domElement.dataset.hardwareButtonholeMeshCount = String(hardwareButtonholeMeshCount)
+      renderer.domElement.dataset.hardwareButtonholeGroupCount = String(hardwareButtonholeGroupCount)
+      const zipperHardware = trimRecordsRef.current.filter(record => record.type === 'zipper-hardware' && record.object.parent)
+      const bindingRibbons=trimRecordsRef.current.filter(record=>record.type==='ribbon'&&record.object.parent)
+      renderer.domElement.dataset.hardwareBindingRibbonCount=String(bindingRibbons.length)
+      renderer.domElement.dataset.hardwareBindingWidthsMm=bindingRibbons.map(record=>record.widthM*1000).join(',')
+      renderer.domElement.dataset.hardwareTopstitchRenderedRows=String(trimRecordsRef.current.filter(record=>record.object.name.startsWith('topstitch-')).length)
+      renderer.domElement.dataset.hardwareZipperGroupCount = String(zipperHardware.length)
+      renderer.domElement.dataset.hardwareZipperTapeMeshCount = String(zipperHardware.reduce((sum, record) => sum + record.tapeCount, 0))
+      renderer.domElement.dataset.hardwareZipperToothInstanceCount = String(zipperHardware.reduce((sum, record) => sum + record.toothInstanceCount, 0))
+      renderer.domElement.dataset.hardwareZipperSliderCount = String(zipperHardware.reduce((sum, record) => sum + record.sliderCount, 0))
+      renderer.domElement.dataset.hardwareZipperStopCount = String(zipperHardware.reduce((sum, record) => sum + record.stopCount, 0))
+      renderer.domElement.dataset.hardwareZipperEngagedToothCount = String(zipperHardware.reduce((sum, record) => sum + record.engagedToothCount, 0))
+      renderer.domElement.dataset.hardwareZipperOpenToothCount = String(zipperHardware.reduce((sum, record) => sum + record.openToothCount, 0))
+      renderer.domElement.dataset.hardwareZipperTerminalExtensionMm = String(zipperHardware.reduce((sum, record) => sum + record.endExtensionM * 1000, 0))
+      renderer.domElement.dataset.hardwareZipperStartExtensionMm = String(zipperHardware.reduce((sum, record) => sum + record.startExtensionM * 1000, 0))
+      renderer.domElement.dataset.hardwareZipperEndExtensionMm = String(zipperHardware.reduce((sum, record) => sum + record.endExtensionM * 1000, 0))
+      renderer.domElement.dataset.hardwareZipperPrimarySliderFractions = zipperHardware.map(record => record.primarySliderFraction.toFixed(4)).join(',')
+      renderer.domElement.dataset.hardwareZipperBottomSliderFractions = zipperHardware.map(record => record.bottomSliderFraction.toFixed(4)).join(',')
+      renderer.domElement.dataset.hardwareZipperOpenStartFractions = zipperHardware.map(record => record.openStartFraction.toFixed(4)).join(',')
+      renderer.domElement.dataset.hardwareZipperOpenEndFractions = zipperHardware.map(record => record.openEndFraction.toFixed(4)).join(',')
       renderer.render(scene, camera)
       statsClock += dt
       if (statsClock > 0.5 && simulation) {
@@ -1319,11 +1621,145 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
           materials.forEach((material) => material.dispose?.())
         }
       })
+      if (stageSceneRef.current) stageSceneRef.current.userData.disposed = true
+      stageSceneRef.current = null
+      hangerSceneRef.current = null
       sceneRef.current = null
       cameraRef.current = null
       controlsRef.current = null
     }
   }, [])
+
+  // Scene environments are decorative, reversible Three.js objects. Rebuilding
+  // the stage never rebuilds the cloth solver or changes garment particles.
+  useEffect(() => {
+    const scene = sceneRef.current
+    const canvas = rendererRef.current?.domElement
+    if (!scene || !canvas) return undefined
+    const stageId = normalizeStageId(project.render?.stageId)
+    if (stageSceneRef.current) {
+      const previous = stageSceneRef.current
+      previous.userData.disposed = true
+      scene.remove(previous)
+      previous.traverse(node => {
+        node.geometry?.dispose?.()
+        const materials = Array.isArray(node.material) ? node.material : node.material ? [node.material] : []
+        materials.forEach(material => material.dispose?.())
+      })
+      stageSceneRef.current = null
+    }
+    const enabled = stageId !== 'none'
+    if (floorRef.current) floorRef.current.visible = !enabled
+    if (gridRef.current) gridRef.current.visible = !enabled
+    const refreshStageCount = () => {
+      if (stageSceneRef.current?.userData.disposed || !rendererRef.current?.domElement) return
+      let count = 0
+      stageSceneRef.current?.traverse(node => { if (node.isMesh && node.geometry?.getAttribute('position')?.count > 0) count++ })
+      canvas.dataset.stageMeshCount = String(count)
+      canvas.dataset.stageLoaded = String(Boolean(stageSceneRef.current?.userData.loaded))
+      canvas.dataset.stageLoadError = String(stageSceneRef.current?.userData.loadError || '')
+      canvas.dataset.stageStatus = !enabled ? 'none' : stageSceneRef.current?.userData.loadError ? 'error' : stageSceneRef.current?.userData.loaded && count > 0 ? 'ready' : 'loading'
+      // Stage ID signals a completed selection to browser QA and UI observers.
+      // Keep the pending marker until asynchronous GLB geometry has arrived.
+      canvas.dataset.stageId = stageSceneRef.current ? stageId : 'none'
+    }
+    if (enabled) {
+      const stage = createStageEnvironment(THREE, stageId, loadedStage => {
+        if (stageSceneRef.current !== loadedStage) return
+        refreshStageCount()
+      },stageSettings || {})
+      if (stage) {
+        stageSceneRef.current = stage
+        scene.add(stage)
+      }
+    }
+    refreshStageCount()
+    return () => {
+      const current = stageSceneRef.current
+      if (!current || current.userData.stageId !== stageId) return
+      current.userData.disposed = true
+      scene.remove(current)
+      current.traverse(node => {
+        node.geometry?.dispose?.()
+        const materials = Array.isArray(node.material) ? node.material : node.material ? [node.material] : []
+        materials.forEach(material => material.dispose?.())
+      })
+      stageSceneRef.current = null
+    }
+  }, [project.render?.stageId])
+
+  // Live studio transform/logo editing is a purely visual scene operation.
+  // Avoid reloading the GLB and resetting fabric when a Property Editor value
+  // changes; the native renderer applies the same settings to its own group.
+  useEffect(()=>{
+    if(stageSceneRef.current)applyStageSettings(THREE,stageSceneRef.current,stageSettings||{})
+  },[stageSettings,project.render?.stageId])
+
+  // The selected hanger is a visual display prop, independent of garment
+  // simulation and all physical collision/attachment constraints.
+  useEffect(() => {
+    const scene = sceneRef.current
+    const canvas = rendererRef.current?.domElement
+    if (!scene || !canvas) return
+    let cancelled = false
+    const disposeHanger = object => {
+      if(!object)return
+      scene.remove(object)
+      object.traverse(node => {
+        node.geometry?.dispose?.()
+        ;(Array.isArray(node.material)?node.material:[node.material]).forEach(mat=>{
+          if(!mat)return
+          for(const key of ['map','normalMap','roughnessMap','metalnessMap','aoMap','emissiveMap'])mat[key]?.dispose?.()
+          mat.dispose?.()
+        })
+      })
+    }
+    const updateDiagnostics = (preset, hanger, source='procedural') => {
+      canvas.dataset.hangerPreset = hanger ? preset : 'none'
+      let meshCount=0
+      hanger?.traverse(node=>{if(node.isMesh)meshCount++})
+      canvas.dataset.hangerMeshCount = String(meshCount)
+      canvas.dataset.hangerGeometrySource = hanger ? source : 'none'
+    }
+    const previous = hangerSceneRef.current
+    if (previous) {
+      disposeHanger(previous)
+      hangerSceneRef.current = null
+    }
+    const hangerPreset = project.render?.hangerPreset || 'none'
+    if (['wood','chrome','velvet','padded','trouser-clip'].includes(hangerPreset)) {
+      // Fast deterministic prop while the two actual CC0 hanger GLBs load.
+      const hanger = createHanger3D(hangerPreset==='trouser-clip'?'chrome':hangerPreset)
+      hanger.position.set(0, 1.55, -.3)
+      hanger.scale.setScalar(.31)
+      hangerSceneRef.current = hanger
+      scene.add(hanger)
+    }
+    updateDiagnostics(hangerPreset,hangerSceneRef.current,'procedural-fallback')
+    const importedUrls={
+      wood:'/hangers/innerscene-shoulder-form.glb',
+      'trouser-clip':'/hangers/innerscene-clip-rail.glb',
+    }
+    if(importedUrls[hangerPreset]){
+      new GLTFLoader().load(importedUrls[hangerPreset],gltf=>{
+        const imported=gltf.scene
+        if(cancelled){imported.traverse(node=>{node.geometry?.dispose?.();(Array.isArray(node.material)?node.material:[node.material]).forEach(mat=>mat?.dispose?.())});return}
+        const bounds=new THREE.Box3().setFromObject(imported)
+        const size=bounds.getSize(new THREE.Vector3())
+        if(!Number.isFinite(size.x)||size.x<.001)return
+        const center=bounds.getCenter(new THREE.Vector3())
+        const scale=.54/size.x
+        imported.scale.setScalar(scale)
+        imported.position.set(-center.x*scale,1.65-center.y*scale,-.3-center.z*scale)
+        imported.traverse(node=>{if(node.isMesh){node.castShadow=true;node.receiveShadow=true}})
+        disposeHanger(hangerSceneRef.current)
+        hangerSceneRef.current=imported
+        scene.add(imported)
+        updateDiagnostics(hangerPreset,imported,'imported-cc0-glb')
+      },undefined,()=>{if(!cancelled)updateDiagnostics(hangerPreset,hangerSceneRef.current,'procedural-fallback')})
+    }
+    return ()=>{cancelled=true}
+  }, [project.render?.hangerPreset])
 
   useEffect(() => {
     const scene = sceneRef.current
@@ -1331,7 +1767,7 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
     if (!scene || !renderer) return
     const settings = project.render || {}
     renderer.toneMappingExposure = Math.max(0.2, Math.min(4, Number(settings.exposure ?? 1.1)))
-    const preset = settings.environmentPreset || 'studio'
+    const preset = studioAppearance?.environmentPreset || settings.environmentPreset || 'studio'
     const lighting = {
       studio: { hemi: 1.85, key: 2.6, rim: 0.85, background: 0xd4d5d9 },
       softbox: { hemi: 2.35, key: 2.15, rim: 0.62, background: 0xe4e4e6 },
@@ -1339,18 +1775,59 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
       neutral: { hemi: 1.95, key: 2.3, rim: 0.8, background: 0xf0f0f1 },
     }[preset] || { hemi: 1.85, key: 2.6, rim: 0.85, background: 0xd4d5d9 }
     if (hemiLightRef.current) hemiLightRef.current.intensity = lighting.hemi
-    if (keyLightRef.current) keyLightRef.current.intensity = lighting.key
-    if (rimLightRef.current) rimLightRef.current.intensity = lighting.rim
+    const primary=settings.light||{},secondary=settings.light2||{}
+    if(keyLightRef.current){
+      keyLightRef.current.intensity=lighting.key*(primary.enabled===false?0:Math.max(0,Math.min(10,Number(primary.intensity??1))))*Math.max(0,Math.min(5,Number(studioAppearance?.lightIntensity??1)))
+      keyLightRef.current.color.set(studioAppearance?.lightColor||primary.color||'#fffcf8')
+      keyLightRef.current.position.set(
+        Number(studioAppearance?.lightPositionX??2.5),
+        Number(studioAppearance?.lightPositionY??4.5),
+        Number(studioAppearance?.lightPositionZ??3.1),
+      )
+    }
+    if(rimLightRef.current){
+      rimLightRef.current.intensity=lighting.rim*(secondary.enabled===false?0:Math.max(0,Math.min(10,Number(secondary.intensity??1))))
+      rimLightRef.current.color.set(secondary.color||'#e2ecff')
+    }
+    if(renderer.domElement){
+      renderer.domElement.dataset.sceneLightIntensity=String(keyLightRef.current?.intensity||0)
+      renderer.domElement.dataset.sceneLight2Intensity=String(rimLightRef.current?.intensity||0)
+    }
     const environment = customEnvironmentRef.current || studioEnvironmentRef.current
     scene.environment = environment || null
     if (settings.showEnvironment && hdriUrl && environment) {
       scene.background = environment
       scene.fog = null
     } else {
-      scene.background = scene.userData.studioBackdrop || new THREE.Color(lighting.background)
-      scene.fog = new THREE.Fog(0xe9e9eb, 6, 16)
+      const customColor=studioAppearance?.backgroundMode==='color' ? studioAppearance.studioColor:null
+      const backdrop=scene.userData.studioBackdrop
+      const fogColor=paintStudioGradient(backdrop,customColor)
+      scene.background = backdrop || new THREE.Color(lighting.background)
+      scene.fog = new THREE.Fog(fogColor, 6, 16)
     }
-  }, [project.render, hdriUrl])
+    if(renderer.domElement){
+      renderer.domElement.dataset.customStudioBackground=studioAppearance?.studioColor||''
+      renderer.domElement.dataset.customStudioLight=studioAppearance?.lightColor||''
+      renderer.domElement.dataset.studioBackgroundMode=studioAppearance?.backgroundMode||'default'
+      renderer.domElement.dataset.studioLightPosition=keyLightRef.current?.position.toArray().map(v=>v.toFixed(2)).join(',')||''
+    }
+  }, [project.render, hdriUrl, studioAppearance?.studioColor, studioAppearance?.backgroundMode,studioAppearance?.environmentPreset, studioAppearance?.lightColor, studioAppearance?.lightIntensity,studioAppearance?.lightPositionX,studioAppearance?.lightPositionY,studioAppearance?.lightPositionZ])
+
+  useEffect(()=>{
+    const renderer=rendererRef.current
+    const controls=controlsRef.current
+    if(!renderer||!controls)return
+    const quality=studioPreferences?.graphicsQuality||'high'
+    const ratios={low:1,medium:1.25,high:2,ultra:2.5}
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,ratios[quality]||2))
+    renderer.domElement.dataset.studioGraphicsQuality=quality
+    renderer.domElement.dataset.studioAntialias=String(studioPreferences?.antialias!==false)
+    const blender=studioPreferences?.viewControls==='blender'
+    controls.mouseButtons=blender
+      ? {LEFT:THREE.MOUSE.PAN,MIDDLE:THREE.MOUSE.ROTATE,RIGHT:THREE.MOUSE.DOLLY}
+      : {LEFT:THREE.MOUSE.ROTATE,MIDDLE:THREE.MOUSE.DOLLY,RIGHT:THREE.MOUSE.PAN}
+    renderer.domElement.dataset.studioViewControls=studioPreferences?.viewControls||'clo'
+  },[studioPreferences?.graphicsQuality,studioPreferences?.antialias,studioPreferences?.viewControls])
 
   useEffect(() => {
     const scene = sceneRef.current
@@ -1408,6 +1885,12 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
     controls.update()
   }, [project.avatar?.heightCm])
 
+  useEffect(()=>{
+    const camera=cameraRef.current,controls=controlsRef.current
+    if(!camera||!controls)return
+    applySceneCameraViewport(camera,controls,project.render?.camera,rendererRef.current?.domElement)
+  },[project.render?.camera])
+
   useEffect(() => {
     const scene = sceneRef.current
     if (!scene) return undefined
@@ -1431,14 +1914,29 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
       record.alphaMap?.dispose?.()
       record.displacementMap?.dispose?.()
       record.material.dispose()
+      record.stagedReferenceMaterial?.dispose()
     }
     meshRecordsRef.current = []
 
     for (const record of trimRecordsRef.current) {
       scene.remove(record.object)
-      record.object.geometry?.dispose?.()
-      record.object.material?.map?.dispose?.()
-      record.object.material?.dispose?.()
+      if(record.kind==='foam-padding'){
+        record.object.geometry?.dispose?.()
+        record.object.material?.dispose?.()
+        continue
+      }
+      if (record.type === 'imported-clo-hardware') {
+        record.dispose()
+        continue
+      }
+      record.object.traverse(child => {
+        child.geometry?.dispose?.()
+        const materials = Array.isArray(child.material) ? child.material : (child.material ? [child.material] : [])
+        for (const material of materials) {
+          material.map?.dispose?.()
+          material.dispose?.()
+        }
+      })
     }
     trimRecordsRef.current = []
 
@@ -1527,7 +2025,8 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
       const geometry = createGeometry(simPiece)
       syncGeometry(simPiece, geometry, project)
       const stagedPositions = stagedPanelPositions(simPiece, project.avatar)
-      if (!hasSimulated) setStagedGeometry(geometry, stagedPositions)
+      const stagedDisplayPositions = curvedTeeStaging(simPiece, stagedPositions, project.templateId, project.avatar)
+      if (!hasSimulated) setStagedGeometry(geometry, stagedDisplayPositions)
       const fabric = project.fabrics?.[simPiece.piece.fabricId] || project.fabrics?.main || {}
       const optics = normalizeFabricOptics(fabric)
       const wash=normalizeWashSpec(fabric.wash)
@@ -1559,6 +2058,7 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
         anisotropyRotation: optics.anisotropyRotation,
         clearcoat: optics.clearcoat,
         clearcoatRoughness: optics.clearcoatRoughness,
+        envMapIntensity: Math.max(0,Math.min(3,Number(fabric.reflectionIntensity ?? 1) || 0)),
         // Keep garment surfaces in the transparent render queue at full
         // opacity so they draw after the semi-transparent fitting avatar.
         // This avoids the avatar visually washing over correctly draped cloth.
@@ -1586,12 +2086,58 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
       scene.add(mesh)
       const meshRecord = {
         simPiece, geometry, material, mesh, fabricColor,
-        fabricMap: albedoMap, normalMap, roughnessMap, metalnessMap, alphaMap, displacementMap, stagedPositions,
+        fabricMap: albedoMap, normalMap, roughnessMap, metalnessMap, alphaMap, displacementMap, stagedPositions, stagedDisplayPositions,
         proceduralChannels: surfaceMaps.proceduralChannels,
         proceduralSignature: textileMapSignature(fabric),
         outline: null, outlinePairs: [],
       }
+      if (project.templateId === 'tee' && !isInterfacing) {
+        meshRecord.stagedReferenceMaterial = new THREE.MeshStandardMaterial({
+          color: 0xf3f3f0, roughness: .91, metalness: 0,
+          side: THREE.DoubleSide, transparent: false,
+        })
+      }
       meshRecordsRef.current.push(meshRecord)
+      // In reset/new-template mode this is the actual drawn 3D depth, not a
+      // hardcoded claim that the panels are bent. Used for non-destructive QA.
+      if(rendererRef.current?.domElement){
+        const canvas=rendererRef.current.domElement
+        const torsoRecords=meshRecordsRef.current.filter(item=>['front','back'].includes(item.simPiece.id))
+        const torsoDepthMm=torsoRecords.map(item=>{
+          const zs=(item.stagedDisplayPositions||item.stagedPositions).map(point=>point.z)
+          return (Math.max(...zs)-Math.min(...zs))*1000
+        })
+        canvas.dataset.preSimulationTorsoDepthMm=String(Math.round(Math.max(0,...torsoDepthMm)))
+        canvas.dataset.preSimulationCurvedPanelCount=String(meshRecordsRef.current.filter(item=>{
+          const points=item.stagedDisplayPositions||item.stagedPositions
+          const original=item.stagedPositions
+          return points.some((point,index)=>point.distanceTo(original[index])>.002)
+        }).length)
+        // Quantify the actually displayed preview, not its unchanged solver
+        // particle pose. Body clearance uses the same elliptic torso profile
+        // as the analytic avatar mesh at each displayed vertex's height.
+        const torsoPoints=torsoRecords.flatMap(item=>item.stagedDisplayPositions||item.stagedPositions)
+        if(torsoPoints.length){
+          const radiiAt=(point)=>getAvatarTorsoRadii(project.avatar,point.y)
+          const gaps=torsoPoints.map(point=>{
+            const radii=radiiAt(point)
+            const q=Math.hypot(point.x/radii.x,point.z/radii.z)
+            return (q-1)*Math.min(radii.x,radii.z)
+          })
+          const allX=torsoPoints.map(point=>point.x)
+          const allZ=torsoPoints.map(point=>point.z)
+          canvas.dataset.preSimulationTorsoMinimumClearanceMm=String(Math.round(Math.min(...gaps)*1000))
+          canvas.dataset.preSimulationTorsoWidthMm=String(Math.round((Math.max(...allX)-Math.min(...allX))*1000))
+          canvas.dataset.preSimulationTorsoTotalDepthMm=String(Math.round((Math.max(...allZ)-Math.min(...allZ))*1000))
+        }
+      }
+      if (project.templateId === 'tee') {
+        for (const guide of makeStartingGarmentGuides(meshRecord)) {
+          guide.object.visible = !hasSimulated && mesh.visible
+          scene.add(guide.object)
+          trimRecordsRef.current.push(guide)
+        }
+      }
       // Inspectable QA metadata: confirms actual THREE shader textures are
       // bound to each garment panel, not merely shown in a fabric swatch.
       if (rendererRef.current?.domElement) {
@@ -1636,39 +2182,31 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
         }
       }
 
-      for (const stitch of simPiece.piece.topstitches || []) {
+      for (const stitch of (simPiece.piece.topstitches || []).filter(item=>item.visible!==false)) {
         const indices = boundaryIndicesForEdge(simPiece, stitch.edgeIndex)
-        const trimRecord = makeTrimLine(
-          meshRecord,
-          indices,
-          new THREE.LineDashedMaterial({
-            color: stitch.color || '#b2b2b2',
-            dashSize: Math.max(0.003, Number(stitch.stitchLengthMm ?? 3) / 1000),
-            gapSize: 0.0025,
-            transparent: true,
-            opacity: 0.96,
-          }),
-          0.0028,
-        )
-        if (trimRecord) {
-          trimRecord.object.name = `topstitch-${stitch.id}`
-          scene.add(trimRecord.object)
-          trimRecordsRef.current.push(trimRecord)
+        const rows=Math.max(1,Math.min(8,Math.round(Number(stitch.rows)||1)))
+        for(let row=0;row<rows;row++){
+          const offsetM=(Number(stitch.offsetCm??.7)+row*Number(stitch.rowGapCm??.45))/100
+          const trimRecord = makeTrimLine(
+            meshRecord,indices,
+            new THREE.LineDashedMaterial({
+              color:stitch.color||'#b2b2b2',
+              dashSize:Math.max(.0003,Number(stitch.stitchLengthMm??3)/1000),
+              gapSize:.0012,transparent:true,opacity:.96,
+            }),
+            .0028,offsetM,
+          )
+          if(trimRecord){
+            trimRecord.object.name=`topstitch-${stitch.id}-row-${row+1}`
+            scene.add(trimRecord.object)
+            trimRecordsRef.current.push(trimRecord)
+          }
         }
       }
 
-      for (const binding of simPiece.piece.bindings || []) {
+      for (const binding of (simPiece.piece.bindings || []).filter(item=>item.visible!==false)) {
         const indices = boundaryIndicesForEdge(simPiece, binding.edgeIndex)
-        const trimRecord = makeTrimLine(
-          meshRecord,
-          indices,
-          new THREE.LineBasicMaterial({
-            color: binding.color || '#666666',
-            transparent: true,
-            opacity: 0.94,
-          }),
-          0.0036,
-        )
+        const trimRecord=makeTrimRibbon(meshRecord,indices,binding)
         if (trimRecord) {
           trimRecord.object.name = `binding-${binding.id}`
           scene.add(trimRecord.object)
@@ -1676,48 +2214,15 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
         }
       }
 
-      for (const zipper of simPiece.piece.zippers || []) {
-        const indices = boundaryIndicesForEdge(simPiece, zipper.edgeIndex)
-        const trimRecord = makeTrimLine(
-          meshRecord,
-          indices,
-          new THREE.LineDashedMaterial({
-            color: zipper.color || '#c2c2c2',
-            dashSize: 0.004,
-            gapSize: 0.0015,
-            transparent: true,
-            opacity: 0.98,
-          }),
-          0.0042,
-        )
-        if (trimRecord) {
-          trimRecord.object.name = `zipper-${zipper.id}`
-          scene.add(trimRecord.object)
-          trimRecordsRef.current.push(trimRecord)
-        }
-      }
-
-      for (const button of simPiece.piece.buttons || []) {
+      for (const button of viewportHardwarePlacements(simPiece.piece).proceduralButtons) {
         const preset = getHardwarePreset(button.hardwarePresetId)
-        const radius = Math.max(0.004, Number(button.diameterCm ?? 1.8) * 0.005)
-        const buttonMesh = new THREE.Mesh(
-          buttonDiscGeometry(button,preset),
-          new THREE.MeshPhysicalMaterial({
-            color: button.color || preset?.pbr.baseColor || '#222222',
-            roughness: preset?.pbr.roughness ?? .48,
-            metalness: preset?.pbr.metalness ?? .05,
-            clearcoat: preset?.pbr.metalness > .6 ? .08 : .2,
-            clearcoatRoughness: .28,
-          }),
-        )
-        buttonMesh.castShadow = true
-        buttonMesh.renderOrder = 32
+        const buttonMesh = createHardwareButton3D(button,preset)
         const trimRecord = {
           type: 'button',
           object: buttonMesh,
           meshRecord,
           vertexIndex: nearestFlatVertexIndex(simPiece, button),
-          lift: Math.max(.001,Number(preset?.dimensionsMm.thickness ?? preset?.dimensionsMm.capHeight ?? 2.5)/2000+.0008),
+          lift: buttonMesh.userData.rearExtensionM + .00055,
           orientToSurface:true,
         }
         syncSurfaceOverlay(trimRecord)
@@ -1726,22 +2231,16 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
         trimRecordsRef.current.push(trimRecord)
       }
 
-      for (const buttonhole of simPiece.piece.buttonholes || []) {
-        const length = Math.max(0.006, Number(buttonhole.lengthCm ?? 2.4) * 0.01)
-        const width = Math.max(0.0015, Number(buttonhole.widthCm ?? 0.35) * 0.01)
-        const slotMesh = new THREE.Mesh(
-          new THREE.BoxGeometry(length, width, 0.0012),
-          new THREE.MeshStandardMaterial({ color: buttonhole.color || '#575757', roughness: 0.7, metalness: 0 }),
-        )
-        slotMesh.castShadow = false
-        slotMesh.renderOrder = 33
+      for (const buttonhole of (simPiece.piece.buttonholes || []).filter(item=>item.visible!==false)) {
+        const slotMesh = createButtonholeHardware3D(buttonhole,getHardwarePreset(buttonhole.hardwarePresetId))
+        slotMesh.traverse(child=>{if(child.isMesh)child.renderOrder=33})
         const trimRecord = {
-          type: 'surface-object',
+          type: 'button',
           object: slotMesh,
           meshRecord,
           vertexIndex: nearestFlatVertexIndex(simPiece, buttonhole),
-          lift: 0.0045,
-          orientationDeg: buttonhole.orientationDeg || 0,
+          lift: 0.0015,
+          orientToSurface:true,
         }
         syncSurfaceOverlay(trimRecord)
         slotMesh.name = `buttonhole-${buttonhole.id}`
@@ -1750,7 +2249,7 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
       }
     }
 
-    for (const fastener of project.fasteners || []) {
+    for (const fastener of (project.fasteners || []).filter(item=>item.visible!==false)) {
       const type = fastener.type || 'button'
       const radius = Math.max(0.004, Number(fastener.diameterCm ?? 1.8) * 0.005)
       for (const [role, endpoint] of [['a', fastener.a], ['b', fastener.b]]) {
@@ -1759,16 +2258,18 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
         if (!meshRecord) continue
         const isPrimary = role === 'a'
         const hardwareRadius = isPrimary ? radius : radius * (type === 'button' ? 0.62 : 0.82)
-        const hardware = new THREE.Mesh(
-          new THREE.SphereGeometry(hardwareRadius, 16, 10),
-          new THREE.MeshStandardMaterial({
-            color: type === 'snap' ? '#b8b8b8' : type === 'hook' ? '#8d8d8d' : '#252525',
-            roughness: type === 'button' ? 0.5 : 0.28,
-            metalness: type === 'button' ? 0.05 : 0.72,
-            transparent: fastener.closed === false,
-            opacity: fastener.closed === false ? 0.58 : 1,
-          }),
-        )
+        const hardware = type === 'button' && isPrimary
+          ? createHardwareButton3D({ ...fastener, diameterCm: hardwareRadius * 200, holes: fastener.holes ?? 4 }, getHardwarePreset(fastener.hardwarePresetId))
+          : new THREE.Mesh(
+            new THREE.SphereGeometry(hardwareRadius, 16, 10),
+            new THREE.MeshStandardMaterial({
+              color: type === 'snap' ? '#b8b8b8' : type === 'hook' ? '#8d8d8d' : '#252525',
+              roughness: type === 'button' ? 0.5 : 0.28,
+              metalness: type === 'button' ? 0.05 : 0.72,
+              transparent: fastener.closed === false,
+              opacity: fastener.closed === false ? 0.58 : 1,
+            }),
+          )
         hardware.castShadow = true
         hardware.renderOrder = 34
         const trimRecord = {
@@ -1776,7 +2277,8 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
           object: hardware,
           meshRecord,
           vertexIndex: nearestFlatVertexIndex(meshRecord.simPiece, endpoint),
-          lift: hardwareRadius * 0.82,
+          lift: hardware.userData.rearExtensionM ? hardware.userData.rearExtensionM + .00055 : hardwareRadius * 0.82,
+          orientToSurface: Boolean(hardware.userData.rearExtensionM),
         }
         syncSurfaceOverlay(trimRecord)
         hardware.name = `fastener-${fastener.id}-${role}`
@@ -1785,49 +2287,36 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
       }
     }
 
+    const renderedZipperSeams = new Set()
+    const zipperRecordsById = new Map(meshRecordsRef.current.map(record => [record.simPiece.id, record]))
+    for (const meshRecord of meshRecordsRef.current) {
+      for (const zipper of (meshRecord.simPiece.piece.zippers || []).filter(item=>item.visible!==false)) {
+        const indices = boundaryIndicesForEdge(meshRecord.simPiece, zipper.edgeIndex)
+        if (indices.length < 2) continue
+        const pairedSeam = (project.seams || []).find(seam => seam.id === zipper.pairedSeamId || (seam.type === 'zipper' && ((seam.a?.pieceId === meshRecord.simPiece.id && seam.a?.edgeIndex === zipper.edgeIndex) || (seam.b?.pieceId === meshRecord.simPiece.id && seam.b?.edgeIndex === zipper.edgeIndex))))
+        if (pairedSeam && renderedZipperSeams.has(pairedSeam.id)) continue
+        const opposite = pairedSeam && (pairedSeam.a?.pieceId === meshRecord.simPiece.id && pairedSeam.a?.edgeIndex === zipper.edgeIndex ? pairedSeam.b : pairedSeam.a)
+        const opposingRecord = zipperRecordsById.get(opposite?.pieceId)
+        const opposingIndices = opposingRecord && boundaryIndicesForEdge(opposingRecord.simPiece, opposite.edgeIndex)
+        const hardware = createZipperHardware3D(zipper, [{ record: meshRecord, indices }, ...(opposingIndices?.length >= 2 ? [{ record: opposingRecord, indices: opposingIndices }] : [])])
+        if (!hardware) continue
+        if (pairedSeam) renderedZipperSeams.add(pairedSeam.id)
+        scene.add(hardware.object)
+        trimRecordsRef.current.push({ type: 'zipper-hardware', meshRecord, ...hardware })
+      }
+    }
     for (const seam of project.seams || []) {
-      if (seam.type !== 'zipper') continue
-      const meshRecord = meshRecordsRef.current.find((record) => record.simPiece.id === seam.a?.pieceId)
-      if (!meshRecord) continue
-      const edgeIndices = boundaryIndicesForEdge(meshRecord.simPiece, seam.a.edgeIndex)
-      if (!edgeIndices.length) continue
-      const openFraction = Math.max(0, Math.min(1, Number(seam.openFraction ?? 0)))
-      const sliderT = seam.openFrom === 'start' ? openFraction : 1 - openFraction
-      const edgeSlot = Math.max(0, Math.min(edgeIndices.length - 1, Math.round(sliderT * (edgeIndices.length - 1))))
-      const vertexIndex = edgeIndices[edgeSlot]
-      const sliderMaterial = new THREE.MeshStandardMaterial({ color: '#b9b9b9', roughness: 0.24, metalness: 0.78 })
-      const slider = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.018, 0.005), sliderMaterial)
-      slider.castShadow = true
-      slider.renderOrder = 35
-      const sliderRecord = {
-        type: 'button',
-        object: slider,
-        meshRecord,
-        vertexIndex,
-        lift: 0.0062,
-      }
-      syncSurfaceOverlay(sliderRecord)
-      slider.name = `zipper-slider-${seam.id}`
-      scene.add(slider)
-      trimRecordsRef.current.push(sliderRecord)
-
-      const pull = new THREE.Mesh(
-        new THREE.TorusGeometry(0.0055, 0.0012, 8, 18),
-        new THREE.MeshStandardMaterial({ color: '#c8c8c8', roughness: 0.2, metalness: 0.82 }),
-      )
-      pull.castShadow = true
-      pull.renderOrder = 36
-      const pullRecord = {
-        type: 'button',
-        object: pull,
-        meshRecord,
-        vertexIndex,
-        lift: 0.012,
-      }
-      syncSurfaceOverlay(pullRecord)
-      pull.name = `zipper-pull-${seam.id}`
-      scene.add(pull)
-      trimRecordsRef.current.push(pullRecord)
+      if (seam.type !== 'zipper' || renderedZipperSeams.has(seam.id)) continue
+      const aRecord = zipperRecordsById.get(seam.a?.pieceId)
+      const bRecord = zipperRecordsById.get(seam.b?.pieceId)
+      if (!aRecord) continue
+      const aIndices = boundaryIndicesForEdge(aRecord.simPiece, seam.a.edgeIndex)
+      const bIndices = bRecord && boundaryIndicesForEdge(bRecord.simPiece, seam.b.edgeIndex)
+      const hardware = createZipperHardware3D({ ...seam, sliderFraction: 1 - Number(seam.openFraction ?? 0) }, [{ record: aRecord, indices: aIndices }, ...(bIndices?.length >= 2 ? [{ record: bRecord, indices: bIndices }] : [])])
+      if (!hardware) continue
+      scene.add(hardware.object)
+      trimRecordsRef.current.push({ type: 'zipper-hardware', meshRecord: aRecord, ...hardware })
+      renderedZipperSeams.add(seam.id)
     }
 
     // Show the actual paired solver cutline constraints (including fractional
@@ -1871,6 +2360,70 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
     return undefined
   }, [physicsKey, project.previewSize, resetSignal, backendId, customAvatar])
 
+  // Visual foam relief is updated independently of the cloth solver. Dragging
+  // an SVG pad across the flat pattern must retain the settled garment drape.
+  useEffect(()=>{
+    const scene=sceneRef.current
+    if(!scene)return
+    const keep=[]
+    for(const record of trimRecordsRef.current){
+      if(record.kind!=='foam-padding'){
+        keep.push(record)
+        continue
+      }
+      scene.remove(record.object)
+      record.object.geometry?.dispose?.()
+      record.object.material?.dispose?.()
+    }
+    trimRecordsRef.current=keep
+    for(const meshRecord of meshRecordsRef.current){
+      const piece=project.pieces?.find(item=>item.id===meshRecord.simPiece.id)
+      for(const pad of piece?.foamPads||[]){
+        for(const record of makeFoamPaddingOverlays(meshRecord,pad)){
+          scene.add(record.object)
+          trimRecordsRef.current.push(record)
+        }
+      }
+    }
+  },[foamPaddingKey,physicsKey,project.previewSize,resetSignal,backendId,customAvatar])
+
+  // Hardware loads into the existing cloth scene and follows barycentric surface
+  // points each frame. GLB geometry stays shared in the loader cache; only the
+  // placement's cloned materials are owned and released by this effect.
+  useEffect(() => {
+    const scene = sceneRef.current
+    if (!scene) return undefined
+    let cancelled = false
+    const records = []
+    const liveMeshes = meshRecordsRef.current
+    for (const meshRecord of liveMeshes) {
+      const piece = meshRecord.simPiece.piece
+      const placements = viewportHardwarePlacements(piece).imported
+      for (const placement of placements) {
+        const glbUrl = placement.glbUrl || placement.glb
+        if (!glbUrl) continue
+        void createImportedCloHardware3D(placement, meshRecord).then(record => {
+          if (cancelled || !sceneRef.current || !meshRecordsRef.current.includes(meshRecord)) {
+            record.dispose()
+            return
+          }
+          scene.add(record.object)
+          trimRecordsRef.current.push(record)
+          records.push(record)
+        }).catch(error => console.warn('Unable to load imported CLO hardware', placement.assetId || placement.id, error))
+      }
+    }
+    return () => {
+      cancelled = true
+      for (const record of records) {
+        scene.remove(record.object)
+        record.dispose()
+        const index = trimRecordsRef.current.indexOf(record)
+        if (index >= 0) trimRecordsRef.current.splice(index, 1)
+      }
+    }
+  }, [physicsKey, resetSignal, project.pieces])
+
   // Optical editing is a material operation, never a new physical simulation.
   // Material maps and shader uniforms update in place, so cloth positions,
   // interactive time, and the existing drape survive fabric swatch tuning.
@@ -1894,6 +2447,7 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
       material.anisotropyRotation=optics.anisotropyRotation
       material.clearcoat=optics.clearcoat
       material.clearcoatRoughness=optics.clearcoatRoughness
+      material.envMapIntensity=Math.max(0,Math.min(3,Number(fabric.reflectionIntensity ?? 1) || 0))
       material.displacementScale=optics.displacementMm / 1000
       material.displacementBias=-optics.displacementMm / 2000
       const isInterfacing = record.simPiece.piece.generatedRole === 'interfacing'
@@ -2036,7 +2590,7 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
         canvas.dataset.simulatedPoseEdited = ''
         canvas.dataset.simulatedParticleDeltaM = ''
       }
-      for (const record of meshRecordsRef.current) setStagedGeometry(record.geometry, record.stagedPositions)
+      for (const record of meshRecordsRef.current) setStagedGeometry(record.geometry, record.stagedDisplayPositions || record.stagedPositions)
       return
     }
     if (stagedSimulationStartedRef.current) return
@@ -2109,7 +2663,7 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
             particle.position.copy(initial)
             particle.previous.copy(initial)
           })
-          setStagedGeometry(record.geometry, record.stagedPositions)
+          setStagedGeometry(record.geometry, record.stagedDisplayPositions)
         }
         stageBlendRef.current = 1
       }
@@ -2415,7 +2969,7 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
 
   return (
     <div className="viewport-shell">
-      <ViewportQuickTools dimension="3d" activeTool={viewportTool} onChangeTool={onChangeViewportTool}/>
+      <ViewportQuickTools dimension="3d" activeTool={viewportTool} onChangeTool={onChangeViewportTool} onCollapse3D={onCollapse3D}/>
       <div className="workspace-head viewport-head">
         <div>
           <strong>3D GARMENT</strong>
@@ -2423,7 +2977,17 @@ export default function GarmentViewport({ project, ppfPreview = null, running, h
         </div>
         <div className={`sim-indicator ${running ? 'active' : ''}`}><i />{!hasSimulated ? 'PRE-SEW' : running ? 'SOLVING' : 'PAUSED'}</div>
       </div>
-      <div ref={mountRef} className="three-mount" data-selected-piece={selectedPieceId || ''} data-transform-mode={viewportTool} data-gizmo-location="selected-cloth-panel" data-simulation-pose-editable={hasSimulated && !running && backendId === 'browser-pbd' ? 'true' : 'false'} />
+      <div ref={mountRef} className="three-mount" data-selected-piece={selectedPieceId || ''} data-transform-mode={viewportTool} data-gizmo-location="selected-cloth-panel" data-simulation-pose-editable={hasSimulated && !running && backendId === 'browser-pbd' ? 'true' : 'false'} style={{cursor:viewportTool==='orbit'?'grab':viewportTool==='hand'?'grab':cursorForTool(viewportTool)||'default'}}
+        onContextMenu={event=>{
+          if((project.render?.stageId||'none')==='none'||!onRemoveStage)return
+          event.preventDefault()
+          event.stopPropagation()
+          setStageContextMenu({dimension:'3d',x:event.clientX,y:event.clientY})
+        }}/>
+      <ClothCraftContextMenu context={(project.render?.stageId||'none')!=='none' && onRemoveStage ? stageContextMenu : null}
+        items={[{id:'remove-stage',label:'Remove Stage',danger:true}]}
+        onChoose={()=>{setStageContextMenu(null);onRemoveStage?.()}}
+        onClose={()=>setStageContextMenu(null)}/>
       {analysisMode !== 'surface' && (
         <div className={`analysis-legend ${analysisMode}`}>
           <span>{analysisMode === 'ease' ? 'TIGHT' : 'LOW'}</span><i /><span>{analysisMode === 'ease' ? 'LOOSE' : analysisMode === 'pressure' ? 'HIGH CONTACT' : 'HIGH STRAIN'}</span>

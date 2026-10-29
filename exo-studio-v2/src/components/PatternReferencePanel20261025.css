@@ -1,0 +1,47 @@
+.pr26{display:flex;flex-direction:column;gap:12px;padding:12px;color:inherit;font-size:12px;min-width:0;min-height:0;overflow-y:auto;scrollbar-width:thin}
+.clo-object-browser>.pr26{flex:1 1 auto}
+.pr26-head{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.pr26-head div{display:flex;flex-direction:column;gap:4px}
+.pr26-head strong{font-size:14px}.pr26-head small,.pr26-info{opacity:.7;line-height:1.5}
+.pr26 button,.pr26 input{font:inherit}.pr26 button{cursor:pointer;border:1px solid #626b78;border-radius:5px;background:transparent;color:inherit;padding:6px 8px}
+.pr26 button:disabled{opacity:.45;cursor:default}
+.pr26-list{display:grid;gap:5px;max-height:235px;overflow:auto}
+.pr26-item{display:flex;border:1px solid #5558;border-radius:6px;align-items:center}
+.pr26-item.active{outline:1px solid #83a9e6}
+.pr26 .pr26-pick{display:flex;align-items:center;gap:9px;flex:1;border:0;text-align:left;min-width:0}
+.pr26-pick img{width:42px;height:42px;object-fit:contain;background:#e8e8e8;border-radius:3px}
+.pr26-pick span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pr26-pick small{display:block;opacity:.6;margin-top:4px}
+.pr26-controls{display:grid;gap:12px}.pr26-controls label{display:grid;gap:5px}
+.pr26-controls label:has(input[type=checkbox]){display:flex;align-items:center}
+.pr26-controls input[type=text],.pr26-controls input[type=number]{max-width:100%;min-width:0;border:1px solid #7776;border-radius:4px;padding:6px;background:transparent;color:inherit}
+.pr26-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.pr26-preview{background:repeating-conic-gradient(#bbb 0 25%,#eee 0 50%) 50% / 16px 16px;min-height:110px;display:grid;place-items:center;overflow:hidden}
+.pr26-preview img{max-width:85%;max-height:160px;object-fit:contain}
+.pr26-error{color:#e89999}
+.pr26 .pr26-head button{background:#424b50;border-color:#717b83}
+.pr26-item.active{background:rgba(107,157,182,.12)}
+.pr26 .pr26-controls{border-top:1px solid #495159;padding-top:12px}
+.pr26 button:focus-visible,.pr26 input:focus-visible{outline:2px solid #9ec9de;outline-offset:1px}
+.pr26-calibration-canvas{position:relative;display:inline-block;max-width:88%;max-height:160px;line-height:0}
+.pr26-calibration-canvas img{display:block;max-width:100%;max-height:160px;object-fit:contain}
+.pr26-calibration-marker{position:absolute;transform:translate(-50%,-50%);display:grid;place-items:center;width:17px;height:17px;border:2px solid #fff;border-radius:50%;background:#267aab;color:#fff;font:600 10px/1 sans-serif;pointer-events:none;box-shadow:0 1px 3px #000}
+.pr26-calibration{display:grid;gap:7px;border:1px solid #505960;padding:10px;background:#30373b}
+.pr26-calibration>div{display:flex;align-items:center;justify-content:space-between;gap:9px}
+.pr26-calibration strong{font-size:11px;color:#d5e2e7}
+.pr26-calibration small{font-size:9px;color:#a9b9c1;text-align:right}
+.pr26-calibration p{font-size:10px;line-height:1.45;margin:0;color:#bbc7cf}
+
+/* The Object Browser Reference tab shares Graphic's exact row, toolbar and
+   search components. These rules only provide the flexible content wrapper;
+   the active gray/custom theme owns the colors and interaction states. */
+.clo-object-browser>.pr26-object-browser{
+  display:flex;flex:1 1 auto;flex-direction:column;min-height:0;min-width:0;
+  overflow:hidden;background:inherit;color:inherit;
+}
+.pr26-object-browser>.clo-object-list{flex:1 1 auto;min-height:0;overflow-y:auto;}
+.pr26-object-browser .clo-object-graphic-row{box-sizing:border-box;}
+.pr26-object-browser .clo-object-row-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pr26-object-browser .clo-object-row-name small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pr26-object-browser .clo-object-mini-action:disabled{opacity:.4;cursor:default;}
+.pr26-object-browser .pr26-browser-notice{margin:0;padding:8px 12px;font-size:10px;line-height:1.4;}

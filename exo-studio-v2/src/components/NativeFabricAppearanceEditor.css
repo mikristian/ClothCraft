@@ -1,0 +1,24 @@
+.app-shell .clo-inspector .clo-pe-native-appearance{display:grid;gap:0;border-top:1px solid var(--pe-hairline,#414245)}
+.app-shell .clo-inspector .clo-pe-native-optical-row,
+.app-shell .clo-inspector .clo-pe-native-color-row{
+  display:grid;grid-template-columns:minmax(78px,1fr) minmax(108px,1.35fr);align-items:center;
+  gap:5px 8px;padding:8px 0;border-bottom:1px solid var(--pe-hairline,#414245);
+}
+.app-shell .clo-inspector .clo-pe-native-optical-row>label,
+.app-shell .clo-inspector .clo-pe-native-color-row>label{
+  color:var(--pe-muted,#afb1b4);font-size:10px;line-height:1.4;
+}
+.app-shell .clo-inspector .clo-pe-native-optical-value{display:grid;gap:5px;min-width:0}
+.app-shell .clo-inspector .clo-pe-native-optical-number{display:flex;align-items:center;gap:5px}
+.app-shell .clo-inspector .clo-pe-native-optical-number input{
+  width:100%;min-width:0;height:27px;box-sizing:border-box;padding:4px 7px;border:1px solid #595b5d;
+  background:var(--pe-control,#292a2c);border-radius:2px;color:var(--pe-text,#e2e3e4);
+  font-size:11px;font-variant-numeric:tabular-nums;
+}
+.app-shell .clo-inspector .clo-pe-native-optical-number span{color:var(--pe-muted,#afb1b4);font-size:9px}
+.app-shell .clo-inspector .clo-pe-native-optical-value input[type=range]{width:100%;min-width:0;height:12px;margin:0;accent-color:#b9babe;cursor:ew-resize}
+.app-shell .clo-inspector .clo-pe-native-color-value{display:flex;align-items:center;gap:8px;min-width:0}
+.app-shell .clo-inspector .clo-pe-native-color-value input[type=color]{width:36px;height:27px;min-width:36px;box-sizing:border-box;padding:2px;border:1px solid #595b5d;border-radius:2px;background:#292a2c;cursor:pointer}
+.app-shell .clo-inspector .clo-pe-native-color-value span{font-size:10px;color:#c8c9cb;overflow:hidden;text-overflow:ellipsis}
+.app-shell .clo-inspector .clo-pe-native-optical-row>.clo-pe-field-error,
+.app-shell .clo-inspector .clo-pe-native-color-row>.clo-pe-field-error{grid-column:1/-1;font-size:10px}

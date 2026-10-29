@@ -1,0 +1,17 @@
+.cc-native-sewing-dock{position:absolute;z-index:35;right:10px;bottom:10px;width:min(260px,calc(100% - 20px));max-height:min(290px,75%);overflow-y:auto;box-sizing:border-box;background:rgba(38,43,47,.97);border:1px solid #666f76;border-radius:5px;box-shadow:0 3px 14px rgba(14,18,23,.21);color:#e8edf0;padding:8px 10px;font:10px/1.4 -apple-system,BlinkMacSystemFont,Arial,sans-serif}
+.cc-native-sewing-dock-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cc-native-sewing-dock-head strong{font-size:10px;letter-spacing:.07em;color:#f0f4f6}
+.cc-native-sewing-dock p{margin:7px 0;color:#c4d4de;font-size:10px}
+.cc-native-sewing-dock-options{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:3px 10px;border-top:1px solid #525a60;padding-top:6px}
+.cc-native-sewing-dock-options label{display:flex;align-items:center;gap:4px;cursor:pointer}
+.cc-native-sewing-dock input{accent-color:#83b6ce;margin:0}
+.cc-native-sewing-dock button{border:1px solid #626f76;border-radius:3px;padding:3px 6px;background:#343d42;color:#eaf0f3;font:inherit;cursor:pointer}
+.cc-native-sewing-dock button:hover:not(:disabled){background:#4f626b}
+.cc-native-sewing-dock button:disabled{opacity:.45;cursor:default}
+.cc-native-sewing-dock button:focus-visible,.cc-native-sewing-dock input:focus-visible{outline:2px solid #aad7eb;outline-offset:1px}
+.cc-native-sewing-dock-head button{border:0;font-size:17px;line-height:1;padding:0 3px;background:transparent}
+.cc-native-sewing-dock-foot{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-top:6px;color:#adc4ce;font-size:9px}
+.cc-native-sewing-dock-groups{border-top:1px solid #525a60;padding:6px 0;display:grid;gap:5px}
+.cc-native-sewing-dock-groups label{display:flex;align-items:center;justify-content:space-between;gap:7px}
+.cc-native-sewing-dock-groups select{min-width:88px;max-width:157px;box-sizing:border-box;background:#343d42;border:1px solid #626f76;border-radius:3px;color:#eaf0f3;font:inherit;padding:2px}
+.cc-native-sewing-dock-groups small{color:#aabac3;font-size:9px}

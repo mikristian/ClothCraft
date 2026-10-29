@@ -1,0 +1,48 @@
+.clo-floating-tool .cc-embedded-sew-commit {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin:0;
+  padding:15px 18px;
+  background:#2d2d2f;
+  border:0;
+  color:#e6e8ea;
+}
+.clo-floating-tool .cc-embedded-sew-commit label {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.clo-floating-tool .cc-embedded-sew-commit input:not([type=checkbox]),
+.clo-floating-tool .cc-embedded-sew-commit select,
+.clo-walk-body select {
+  min-width:115px;
+  width:57%;
+  max-width:100%;
+  padding:5px 7px;
+  color:#f1f1f2;
+  border:1px solid #191a1d;
+  border-radius:3px;
+  background:#242527;
+}
+.clo-floating-tool .cc-embedded-sew-commit button,.clo-walk-close,
+.clo-floating-tool[data-clo-floating-widget="pattern-validation"] button {
+  padding:7px 10px;
+  color:#f2f3f4;
+  border:1px solid #4b5055;
+  border-radius:3px;
+  background:#42474c;
+  cursor:pointer;
+}
+.clo-floating-tool .cc-embedded-sew-commit button:disabled {opacity:.45;cursor:not-allowed;}
+.clo-floating-tool .cc-embedded-sew-commit small,.clo-walk-body small {color:#a2a7ae;line-height:1.5;}
+.clo-walk-label {display:block;font-size:12px;margin:0 0 14px;}
+.clo-walk-body label {display:flex;justify-content:space-between;align-items:center;gap:12px;margin:10px 0;}
+.clo-walk-measures {display:grid;gap:3px;margin:13px 0;}
+.clo-walk-measures>div {display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #3a3c40;}
+.clo-walk-measures span {color:#aeb2b7;}
+.clo-walk-slider {flex-wrap:wrap;}
+.clo-walk-slider input {width:100%;accent-color:#31b9ef;}
+.clo-walk-slider output {margin-left:auto;font-variant-numeric:tabular-nums;}
+.clo-walk-close {margin-top:12px;min-width:86px;}

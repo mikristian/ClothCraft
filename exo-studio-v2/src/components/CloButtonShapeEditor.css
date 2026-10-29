@@ -1,0 +1,16 @@
+.clo-button-shape-editor{display:flex;flex-direction:column;gap:10px;min-width:0;color:var(--clo-pe-text,#d7d7da)}
+.clo-button-shape-title{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--clo-pe-muted,#a9a9af)}
+.clo-button-shape-current{display:flex;align-items:center;gap:10px;background:#29292d;border:1px solid #414147;border-radius:5px;padding:8px}
+.clo-button-shape-svg{width:76px;height:76px;min-width:0;background:radial-gradient(circle at 42% 32%,#49494e,#26262a);border-radius:4px}
+.clo-button-shape-current-details{display:flex;flex:1;min-width:0;flex-direction:column;gap:7px;font-size:11px}
+.clo-button-shape-current-details strong{font-weight:600;line-height:1.4}
+.clo-button-shape-current-details span{color:#aaaab1;font-size:10px;line-height:1.4;overflow-wrap:anywhere;text-transform:capitalize}
+.clo-button-shape-current-details button{align-self:flex-start;background:#39393f;border:1px solid #5a5a62;border-radius:3px;color:inherit;padding:5px 9px;cursor:pointer}
+.clo-button-style-picker{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;max-height:265px;overflow:auto}
+.clo-button-style-option{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0;background:#28282c;color:#cfcfd3;border:1px solid #404047;border-radius:4px;padding:5px;cursor:pointer;font-size:9px;line-height:1.25;text-align:center}
+.clo-button-style-option[aria-pressed="true"]{border-color:#adadb6;background:#45454b}
+.clo-button-style-option .clo-button-shape-svg{width:58px;height:58px;max-width:100%}
+.clo-button-thread-row{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:11px}
+.clo-button-thread-row select{min-width:100px;max-width:55%;background:#2c2c31;color:inherit;border:1px solid #55555c;border-radius:3px;padding:5px}
+.clo-button-specification-trigger{display:flex;align-items:center;gap:7px;width:100%;background:#34343a;color:inherit;border:1px solid #494950;border-radius:3px;text-align:left;padding:7px 9px;font-size:11px;font-weight:600;cursor:pointer}
+.clo-button-specification{min-width:0}

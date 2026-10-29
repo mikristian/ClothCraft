@@ -1,0 +1,65 @@
+/* Scoped hardware, trim and draft-object controls; retains the existing editor commands. */
+.clo-inspector .clo-pe-typed-fields:has(.clo-pe-gray-row) {
+  gap: 0;
+  padding: 3px 0 9px;
+  border-bottom-color: #484848;
+}
+.clo-inspector .clo-pe-edit-field.clo-pe-gray-row {
+  grid-template-columns: minmax(100px, 46%) minmax(0, 1fr);
+  column-gap: 8px;
+  row-gap: 2px;
+  padding: 5px 6px;
+  min-height: 30px;
+  border-bottom: 1px solid #414141;
+  background: #333333;
+}
+.clo-inspector .clo-pe-edit-field.clo-pe-gray-row:nth-of-type(even) {background:#373737;}
+.clo-inspector .clo-pe-gray-row > label {
+  color:#cecece;
+  font-size:10.5px;
+  font-weight:500;
+  letter-spacing:0;
+  overflow-wrap:normal;
+}
+.clo-inspector .clo-pe-gray-row > select,
+.clo-inspector .clo-pe-gray-row .clo-pe-edit-input input {
+  background:#292929;
+  color:#eeeeee;
+  border:1px solid #595959;
+  border-radius:3px;
+  min-height:25px;
+  font-size:11px;
+  padding:3px 6px;
+  color-scheme:dark;
+}
+.clo-inspector .clo-pe-gray-row > select {cursor:pointer;}
+.clo-inspector .clo-pe-gray-row > select:focus-visible,
+.clo-inspector .clo-pe-gray-row .clo-pe-edit-input input:focus-visible,
+.clo-inspector .clo-pe-gray-color-control input:focus-visible {
+  outline:1px solid #a3b7cb;
+  outline-offset:1px;
+}
+.clo-inspector .clo-pe-gray-row .clo-pe-edit-input > span {color:#b1b1b1;font-size:10px;}
+.clo-inspector .clo-pe-gray-row > input[type=checkbox] {accent-color:#a5a5a5;width:15px;height:15px;}
+.clo-inspector .clo-pe-gray-row > input.clo-pe-edit-slider {
+  grid-column:2;
+  min-height:13px;
+  height:13px;
+  margin:1px 0 3px;
+  accent-color:#b6b6b6;
+}
+.clo-inspector .clo-pe-gray-color-control {display:flex;align-items:center;gap:7px;min-width:0;}
+.clo-inspector .clo-pe-gray-color-control input[type=color] {
+  box-sizing:border-box;
+  width:40px;
+  height:24px;
+  flex:none;
+  padding:2px;
+  cursor:pointer;
+  background:#292929;
+  border:1px solid #606060;
+  border-radius:3px;
+}
+.clo-inspector .clo-pe-gray-color-control span {color:#bcbcbc;font-size:10px;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.clo-inspector .clo-pe-typed-fields .clo-pe-note {color:#adadad;font-size:10px;line-height:1.45;padding:5px 7px;margin:0;}
+.clo-inspector .clo-pe-typed-fields .clo-pe-readout {color:#d2d2d2;padding:8px 6px;}

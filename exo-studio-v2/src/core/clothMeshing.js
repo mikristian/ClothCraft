@@ -3,16 +3,10 @@
 // which generate badly conditioned PBD structural constraints if triangulated
 // directly. Simplify only a COPY used by the physics tessellator; preserve
 // every original source pattern point and fractional sewing relationship.
+import {rustSegmentDistanceSquared} from './rustCoreMathKernel.js'
 
 function squaredDistanceToSegment(point, start, end) {
-  const dx = end.x - start.x
-  const dy = end.y - start.y
-  const len = dx * dx + dy * dy
-  const t = len > 1e-15 ? Math.max(0, Math.min(1,
-    ((point.x - start.x) * dx + (point.y - start.y) * dy) / len)) : 0
-  const rx = point.x - (start.x + dx * t)
-  const ry = point.y - (start.y + dy * t)
-  return rx * rx + ry * ry
+  return rustSegmentDistanceSquared(point,start,end)
 }
 
 function reduceChain(points, minIndex, maxIndex, toleranceSquared, selected) {

@@ -1,0 +1,50 @@
+{
+  "schema": "exo.physics-lab.v2",
+  "phase": "initial_assembly_transient",
+  "equilibriumEstablished": false,
+  "fitDefectEstablished": false,
+  "releaseGate": false,
+  "interpretation": "Separated panels start with large initial seam gaps. Three steps cannot establish equilibrium, converged garment fit, a defective seam solver, or a release failure.",
+  "backendClaim": "Native exo-session snapshot backend field; GPU selection is not independently attested",
+  "requestedBackend": "gpu",
+  "actualBackendReported": [
+    null
+  ],
+  "execution": "GPU requested (--gpu), single garment smoke",
+  "binary": "/Users/mikylecouto/Chat On Steroids Workspace/exo-clothcraft-v2/research/oss/clothcraft/target/debug/exo-session",
+  "avatar": "/Users/mikylecouto/Chat On Steroids Workspace/exo-clothcraft-v2/research/oss/clothcraft/assets/makehuman/mannequin.obj",
+  "binarySha256": "55bbb94ebecac80e4da49395d8f8a29cb212de2643ca0f58d21991e1fa7346d2",
+  "sourceSha256": "f60332c94f3abf9d5ce3e065bdb9b1164b9be43284db108d031e08744497ae3b",
+  "sourceHashNote": "Current working-tree source fingerprint only; provenance of prebuilt executable cannot be independently established",
+  "avatarSha256": "f10b3f9d169c9ec6c2503e6e2f66d3800996bfa7650890b7885e0010d3184867",
+  "crossBackendSpeedComparison": "prohibited_without_verified_same_source_build_fixture_settings_and_executable",
+  "thresholds": {
+    "max_seam_gap_m": 0.025,
+    "extension_p95_percent": 15,
+    "extension_max_percent": 60,
+    "minimum_distance_m": 0
+  },
+  "thresholdPolicy": "Provisional engineering screening thresholds for future settled-state runs only. Transient exceedances are diagnostic observations, not release failures, fit certification, or evidence of faulty seam enforcement.",
+  "cases": [
+    {
+      "id": "tshirt-gpu-smoke",
+      "preset": "tshirt",
+      "status": "inconclusive",
+      "error": "Error: Build with desktop for GPU simulation",
+      "stepsCompleted": 0
+    }
+  ],
+  "repeatability": {
+    "status": "not_applicable",
+    "reason": "Single-case GPU smoke does not measure repeatability"
+  },
+  "screeningObservations": [
+    {
+      "case": "tshirt-gpu-smoke",
+      "transientExceedances": [],
+      "assessment": "transient_only"
+    }
+  ],
+  "overall": "inconclusive",
+  "fitCertified": false
+}

@@ -1,0 +1,18 @@
+.exo-custom-toolbar{position:absolute;z-index:35;display:flex;gap:3px;align-items:stretch;padding:5px;max-height:calc(100% - 32px);max-width:calc(100% - 32px);overflow:auto;background:var(--exo-toolbar-bg,rgba(34,36,44,.92));border:1px solid var(--exo-toolbar-border,rgba(190,195,208,.2));border-radius:10px;box-shadow:0 5px 16px #0003;color:var(--exo-toolbar-fg,#f0f0f3);pointer-events:auto;backdrop-filter:blur(10px)}
+.exo-custom-toolbar--left{left:12px;top:50%;transform:translateY(-50%);flex-direction:column}
+.exo-custom-toolbar--right{right:12px;top:50%;transform:translateY(-50%);flex-direction:column}
+.exo-custom-toolbar--top{top:12px;left:50%;transform:translateX(-50%);flex-direction:row}
+.exo-custom-toolbar--bottom{bottom:12px;left:50%;transform:translateX(-50%);flex-direction:row}
+.exo-custom-toolbar--floating{flex-direction:column;transform:none;max-height:min(78vh,650px)}
+.exo-custom-toolbar__move{border:1px solid color-mix(in srgb,var(--studio-accent,#b3bad0) 56%,transparent);background:#ffffff12;color:inherit;font-size:17px;border-radius:5px;padding:4px;cursor:move;touch-action:none}
+.exo-custom-toolbar[data-edit-mode="true"]{outline:1px dashed var(--studio-accent,#b3bad0);outline-offset:2px}
+.exo-custom-toolbar__action,.exo-custom-toolbar__customize{display:flex;gap:7px;align-items:center;justify-content:flex-start;min-width:32px;min-height:32px;padding:5px 8px;border:0;border-radius:6px;background:transparent;color:inherit;cursor:pointer;font:inherit;font-size:11px;white-space:nowrap}
+.exo-custom-toolbar__action:hover,.exo-custom-toolbar__customize:hover{background:rgba(170,175,210,.2)}
+.exo-custom-toolbar__action:focus-visible,.exo-custom-toolbar__customize:focus-visible{outline:2px solid var(--exo-toolbar-accent,#a59df4);outline-offset:-2px}
+.exo-custom-toolbar__glyph{font-size:17px;width:20px;line-height:1;text-align:center}
+.exo-custom-toolbar__customize{justify-content:center;border-top:1px solid #8885;font-size:17px}
+.exo-custom-toolbar--top .exo-custom-toolbar__customize,.exo-custom-toolbar--bottom .exo-custom-toolbar__customize{border-top:0;border-left:1px solid #8885}
+.exo-custom-toolbar--compact .exo-custom-toolbar__action{padding:5px;justify-content:center}
+.exo-custom-toolbar__action[data-implementation="reference"]{position:relative;opacity:.78}
+.exo-custom-toolbar__action[data-implementation="reference"]::after{content:"";position:absolute;right:3px;bottom:3px;width:5px;height:5px;border:1px solid currentColor;border-radius:50%}
+@media(max-width:700px){.exo-custom-toolbar{max-width:calc(100% - 16px)}.exo-custom-toolbar--top,.exo-custom-toolbar--bottom{left:8px;right:8px;transform:none}.exo-custom-toolbar__label{display:none}}

@@ -1,0 +1,121 @@
+/* One real 2D command row, not a separate Modaris status header above the
+   grading dock. Palette tokens come from the active EXO appearance theme. */
+.cc-embedded-root.cc-embedded-2d > .exo-grade-workspace-dock-host--top[data-exo-dock-edge="top"] {
+ --exo-top-bg:var(--studio-panel,var(--studio-sidebar,#273139));
+ --exo-top-control:var(--studio-control,var(--studio-panel,#35424d));
+ --exo-top-hover:var(--studio-control-hover,var(--studio-sidebar,#415262));
+ --exo-top-selected:var(--studio-control-active,var(--studio-accent,#466d88));
+ --exo-top-ink:var(--studio-text,#edf3f6);
+ --exo-top-muted:var(--studio-muted,#b4c0c8);
+ --exo-top-edge:var(--studio-border,#52616c);
+ --exo-top-accent:var(--studio-accent,#87b8d3);
+ color:var(--exo-top-ink)!important;
+ color-scheme:normal!important;
+ background:var(--exo-top-bg)!important;
+ border-bottom:1px solid var(--exo-top-edge)!important;
+}
+.cc-embedded-root.cc-embedded-2d > .exo-grade-workspace-dock-host--top > .exo-grade-top-command-rail{
+ display:flex!important;flex-direction:row!important;align-items:center!important;
+ flex-wrap:nowrap!important;gap:3px!important;
+ height:30px!important;min-height:30px!important;max-height:30px!important;
+ box-sizing:border-box!important;min-width:max-content!important;
+ padding:0 5px!important;margin:0!important;
+ overflow:visible!important;white-space:nowrap!important;
+ color:var(--exo-top-ink)!important;background:var(--exo-top-bg)!important;
+ border:0!important;
+}
+.cc-embedded-root.cc-embedded-2d .exo-grade-top-command-rail > .exo-bottom-dock-tab{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ gap:5px!important;flex:0 0 auto!important;
+ min-height:25px!important;height:25px!important;
+ padding:2px 7px!important;white-space:nowrap!important;
+ font:600 10px/1.2 Inter,system-ui,sans-serif!important;
+ border:1px solid transparent!important;border-radius:4px!important;
+ box-shadow:none!important;
+ background:var(--exo-top-control)!important;color:var(--exo-top-ink)!important;
+ cursor:pointer;
+}
+.cc-embedded-root.cc-embedded-2d .exo-grade-top-command-rail > .exo-bottom-dock-tab svg{
+ width:13px;min-width:13px;height:13px;flex:none;color:currentColor;
+}
+.cc-embedded-root.cc-embedded-2d .exo-grade-top-command-rail > .exo-bottom-dock-tab:is(:hover,:focus-visible){
+ border-color:var(--exo-top-accent)!important;
+ background:var(--exo-top-hover)!important;
+ outline-offset:1px;
+}
+.cc-embedded-root.cc-embedded-2d .exo-grade-top-command-rail > .exo-bottom-dock-tab[aria-pressed="true"]{
+ background:var(--exo-top-selected)!important;
+ border-color:var(--exo-top-accent)!important;
+ color:var(--exo-top-ink)!important;
+}
+.cc-embedded-root.cc-embedded-2d .exo-grade-top-command-rail > .exo-bottom-dock-tab:disabled{
+ opacity:.5;cursor:not-allowed;
+}
+.exo-grade-top-separator{
+ flex:0 0 1px;align-self:center;height:16px;margin:0 3px;
+ background:var(--exo-top-edge);
+}
+.exo-grade-top-status{
+ flex:0 0 auto;margin-left:4px;padding:2px 5px;
+ color:var(--exo-top-muted);font:500 10px/1.3 Inter,system-ui,sans-serif;
+ font-variant-numeric:tabular-nums;
+}
+/* The empty top dock consumes only the same 32px row as its controls. */
+.cc-embedded-root.cc-embedded-2d > .exo-grade-workspace-dock-host--top[data-exo-grade-dock-occupied="false"]{
+ display:flex!important;align-items:center!important;
+ flex:0 0 32px!important;height:32px!important;min-height:32px!important;
+ padding:0 3px!important;overflow-x:auto!important;overflow-y:hidden!important;
+}
+/* A single Grading Toolbar embedded at the top joins that SAME command row.
+   No second dock title or header is added above the 12 functional tools. */
+.cc-embedded-root.cc-embedded-2d > .exo-grade-workspace-dock-host--top[data-exo-grade-dock-occupied="true"]:has(>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"]):not(:has(>.exo-grade-bottom-widget--docked)):not(:has(>.clo-floating-tool--docked:not([data-clo-floating-widget="grading-quick-toolbar"]))):not(:has(>.exo-bottom-dock-live-insert)){
+ display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+ align-items:center!important;align-content:center!important;
+ grid-template-columns:none!important;grid-template-rows:none!important;
+ flex:0 0 34px!important;height:34px!important;min-height:34px!important;
+ max-height:34px!important;padding:1px 3px!important;gap:4px!important;
+ background:var(--exo-top-bg)!important;
+ overflow-x:auto!important;overflow-y:hidden!important;
+}
+.cc-embedded-root.cc-embedded-2d > .exo-grade-workspace-dock-host--top:has(>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"]):not(:has(>.exo-grade-bottom-widget--docked)):not(:has(>.clo-floating-tool--docked:not([data-clo-floating-widget="grading-quick-toolbar"]))) > .exo-grade-top-command-rail{
+ display:flex!important;flex:0 0 auto!important;width:auto!important;
+ grid-column:auto!important;grid-row:auto!important;
+ padding:0 4px!important;
+}
+.cc-embedded-root.cc-embedded-2d > .exo-grade-workspace-dock-host--top:has(>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"]):not(:has(>.exo-grade-bottom-widget--docked)):not(:has(>.clo-floating-tool--docked:not([data-clo-floating-widget="grading-quick-toolbar"]))) > .clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"]{
+ display:flex!important;position:relative!important;
+ flex:1 0 485px!important;min-width:485px!important;
+ max-width:none!important;width:auto!important;height:30px!important;
+ min-height:30px!important;max-height:30px!important;
+ grid-row:auto!important;grid-column:auto!important;align-self:center!important;
+ margin:0!important;padding:1px 3px!important;
+ background:var(--exo-top-bg)!important;color:var(--exo-top-ink)!important;
+ border-color:var(--exo-top-edge)!important;
+ overflow:hidden!important;
+}
+.cc-embedded-root.cc-embedded-2d > .exo-grade-workspace-dock-host--top:has(>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"]) > .clo-floating-tool--docked .clo-floating-tool-header{
+ background:var(--exo-top-bg)!important;color:var(--exo-top-ink)!important;
+ border-color:var(--exo-top-edge)!important;
+}
+.cc-embedded-root.cc-embedded-2d > .exo-grade-workspace-dock-host--top:has(>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"]) > .clo-floating-tool--docked .exo-quick-grade{
+ background:var(--exo-top-bg)!important;color:var(--exo-top-ink)!important;
+}
+/* The compact top row is fixed-height. Resize/split controls remain available
+   when additional widgets are docked, not over the native grading icons. */
+.cc-embedded-root.cc-embedded-2d > .exo-grade-workspace-dock-host--top:has(>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"]):not(:has(>.exo-grade-bottom-widget--docked)):not(:has(>.clo-floating-tool--docked:not([data-clo-floating-widget="grading-quick-toolbar"]))) > :is(.exo-dock-layout-controls,.exo-bottom-dock-height-grip){
+ display:none!important;
+}
+/* With other top-docked widgets the controls stay one compact rail; those
+   independently resizable widgets use the usual second row underneath. */
+.cc-embedded-root.cc-embedded-2d > .exo-grade-workspace-dock-host--top[data-exo-grade-dock-occupied="true"]:not(:has(>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"])){
+ min-height:60px;
+}
+@media(max-width:1120px){
+ .cc-embedded-root.cc-embedded-2d .exo-grade-top-command-rail > .exo-grade-top-secondary,
+ .cc-embedded-root.cc-embedded-2d .exo-grade-top-status{display:none!important}
+}
+@media(max-width:760px){
+ .cc-embedded-root.cc-embedded-2d .exo-grade-top-command-rail > .exo-bottom-dock-tab{
+  gap:3px!important;padding:2px 5px!important;font-size:9px!important;
+ }
+}

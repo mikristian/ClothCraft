@@ -5,21 +5,33 @@ ARCH="${1:-$(uname -m)}"
 case "$ARCH" in arm64|x86_64) ;; *) echo "Unsupported macOS architecture: $ARCH" >&2; exit 2 ;; esac
 APP="build/${ARCH}/GarmentStudioNative.app"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources/fixtures" "$APP/Contents/Resources/assets" "$APP/Contents/Resources/solved" "$APP/Contents/Resources/web"
-xcrun swiftc -O -target "${ARCH}-apple-macos13.0" -framework AppKit -framework SceneKit -framework WebKit GarmentStudioNative.swift NativeSolver.swift NativeGarmentGeometry.swift NativeWebWorkspace.swift -o "$APP/Contents/MacOS/GarmentStudioNative"
+xcrun swiftc -O -target "${ARCH}-apple-macos13.0" -framework AppKit -framework SceneKit -framework WebKit GarmentStudioNative.swift NativeSolver.swift NativeGarmentGeometry.swift NativeWebWorkspace.swift NativeWebAcceptance.swift -o "$APP/Contents/MacOS/GarmentStudioNative"
 cat > "$APP/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict><key>CFBundleExecutable</key><string>GarmentStudioNative</string><key>CFBundleIdentifier</key><string>com.mikristian.garmentstudio.nativepreview</string><key>CFBundleName</key><string>Garment Studio Native</string><key>CFBundlePackageType</key><string>APPL</string><key>CFBundleVersion</key><string>0.1.0</string><key>LSMinimumSystemVersion</key><string>13.0</string><key>NSHighResolutionCapable</key><true/></dict></plist>
 PLIST
-for fixture in tee-quality.native-sim.json hoodie-quality.native-sim.json pants.native-sim.json zip-hoodie-quality.native-sim.json; do
-  cp "../native_backend/fixtures/$fixture" "$APP/Contents/Resources/fixtures/$fixture"
+for entry in 'tee-quality.native-sim.json:tee-distance-isometric-xpbd.json' 'hoodie-quality.native-sim.json:hoodie-distance-isometric-xpbd.json' 'pants.native-sim.json:pants-distance-isometric-xpbd.json' 'zip-hoodie-quality.native-sim.json:zip-hoodie-distance-isometric-xpbd.json'; do
+  destination="${entry%%:*}"
+  source="${entry#*:}"
+  if [[ -f "../native_backend/fixtures/$destination" ]]; then
+    cp "../native_backend/fixtures/$destination" "$APP/Contents/Resources/fixtures/$destination"
+  elif [[ -f "../native_backend/fixtures/$source" ]]; then
+    # Use an existing real XPBD test fixture, not fabricated physics results.
+    cp "../native_backend/fixtures/$source" "$APP/Contents/Resources/fixtures/$destination"
+  else
+    echo "Missing garment XPBD fixture: $destination or $source" >&2
+    exit 1
+  fi
 done
 if [[ "${INCLUDE_FULL_WORKSPACE:-1}" == "1" ]]; then
   if [[ ! -s ../dist/index.html ]]; then
     echo "Missing Vite output; run npm run build at repo root" >&2
     exit 1
   fi
-  rsync -a --delete --exclude='clo-thomas.glb' ../dist/ "$APP/Contents/Resources/web/"
+  # A public bundle must not inherit private assets from an earlier local
+  # build, including alternate preview copies or nested backups.
+  rsync -a --delete --exclude='*thomas*' --exclude='*Thomas*' ../dist/ "$APP/Contents/Resources/web/"
   if [[ "${INCLUDE_PRIVATE_THOMAS:-0}" == "1" && -f ../dist/avatars/clo-thomas.glb ]]; then
     mkdir -p "$APP/Contents/Resources/web/avatars"
     cp ../dist/avatars/clo-thomas.glb "$APP/Contents/Resources/web/avatars/clo-thomas.glb"

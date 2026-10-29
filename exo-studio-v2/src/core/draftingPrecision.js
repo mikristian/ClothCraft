@@ -1,5 +1,8 @@
 // Precision drafting operations in centimeters. These are independent of
 // React, the renderer, simulation, and any private Seamly/CLO implementation.
+import {rustQuadraticArcLength} from './rustGeometryKernel.js'
+import {rustChordCoordinates,rustChordControl} from './rustPrecisionChordKernel.js'
+import {rustPointFromPolar,rustPolarFromDeltas} from './rustPrecisionPolarKernel.js'
 const EPSILON = 1e-9
 
 export function assertDraftCoordinate(value, label = 'coordinate') {
@@ -14,17 +17,15 @@ export function pointFromPolar(anchor, lengthCm, angleDeg) {
   const length = assertDraftCoordinate(lengthCm, 'Length')
   const angle = assertDraftCoordinate(angleDeg, 'Angle')
   if (length < 0) throw new Error('Length must not be negative')
-  const radians = angle * Math.PI / 180
-  return {
-    x: assertDraftCoordinate(anchor.x, 'Anchor X') + length * Math.cos(radians),
-    y: assertDraftCoordinate(anchor.y, 'Anchor Y') + length * Math.sin(radians),
-  }
+  const anchorX=assertDraftCoordinate(anchor.x,'Anchor X')
+  const anchorY=assertDraftCoordinate(anchor.y,'Anchor Y')
+  return rustPointFromPolar(anchorX,anchorY,length,angle)
 }
 
 export function polarFromPoints(anchor, point) {
   const dx = point.x - anchor.x
   const dy = point.y - anchor.y
-  return { lengthCm: Math.hypot(dx, dy), angleDeg: Math.atan2(dy, dx) * 180 / Math.PI }
+  return rustPolarFromDeltas(dx,dy)
 }
 
 export function precisePointEdit(piece, pointIndex, { x, y, lengthCm, angleDeg, mode = 'absolute' }) {
@@ -52,12 +53,7 @@ export function curveChordCoordinates(a, control, b) {
   const dy = b.y - a.y
   const length = Math.hypot(dx, dy)
   if (length < 0.001) throw new Error('Curve endpoints must be at least 0.001 cm apart')
-  const mx = (a.x + b.x) / 2
-  const my = (a.y + b.y) / 2
-  return {
-    alongCm: ((control.x - mx) * dx + (control.y - my) * dy) / length,
-    depthCm: (-(control.x - mx) * dy + (control.y - my) * dx) / length,
-  }
+  return rustChordCoordinates(a,control,b,length)
 }
 
 export function preciseCurveEdit(piece, edgeIndex, { cx, cy, alongCm, depthCm, mode = 'absolute' }) {
@@ -74,9 +70,10 @@ export function preciseCurveEdit(piece, edgeIndex, { cx, cy, alongCm, depthCm, m
   const dy = b.y - a.y
   const length = Math.hypot(dx, dy)
   if (length < 0.001) throw new Error('Curve endpoints must be at least 0.001 cm apart')
+  const control=rustChordControl(a,b,along,depth,length)
   return {
-    cx: assertDraftCoordinate((a.x + b.x) / 2 + (along * dx - depth * dy) / length, 'Handle X'),
-    cy: assertDraftCoordinate((a.y + b.y) / 2 + (along * dy + depth * dx) / length, 'Handle Y'),
+    cx: assertDraftCoordinate(control.cx, 'Handle X'),
+    cy: assertDraftCoordinate(control.cy, 'Handle Y'),
   }
 }
 
@@ -99,6 +96,8 @@ export function quadraticArcLength(a, control, b, start = 0, end = 1, tolerance 
   // properties. Only validate the six geometric components, never the whole
   // vertex object, or precision reports fail on correctly annotated patterns.
   if (![a?.x, a?.y, control?.x, control?.y, b?.x, b?.y, start, end].every(Number.isFinite)) throw new Error('Non-finite Bézier curve')
+  const rustValue=rustQuadraticArcLength(a,control,b,start,end,tolerance)
+  if(rustValue!==null)return rustValue
   const begin = Math.max(0, Math.min(1, start))
   const finish = Math.max(0, Math.min(1, end))
   if (Math.abs(finish - begin) <= EPSILON) return 0
@@ -124,8 +123,19 @@ export function quadraticArcLength(a, control, b, start = 0, end = 1, tolerance 
 }
 
 export function quadraticAtLengthFraction(a, control, b, fraction) {
-  const f = Math.max(0, Math.min(1, Number(fraction)))
-  if (!Number.isFinite(f)) throw new Error('Invalid curve length fraction')
+  // Reject invalid authored stations before clamping: Infinity otherwise
+  // becomes a plausible endpoint, and null/blank silently becomes zero.
+  // Number('0x1') and Number('0b0') silently turn non-decimal text into
+  // physical curve stations. Only decimal/exponent notation is authored CAD
+  // input; keep numeric callers and the existing [0,1] clamping behavior.
+  const numericInput = typeof fraction === 'number' ||
+    (typeof fraction === 'string' &&
+      /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(fraction.trim()))
+  const station = numericInput ? Number(fraction) : NaN
+  if (!Number.isFinite(station)) {
+    throw new Error('Invalid curve length fraction')
+  }
+  const f = Math.max(0, Math.min(1, station))
   const total = quadraticArcLength(a, control, b)
   if (total < EPSILON) return { point: { ...a }, tangent: { x: 1, y: 0 }, fraction: f }
   const target = f * total

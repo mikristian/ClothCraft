@@ -32,10 +32,18 @@ export default function ClothCraftContextMenu({context, items=[], onChoose, onCl
     if (context) menuRef.current?.querySelector('button:not(:disabled)')?.focus({preventScroll:true})
   }, [context])
   if (!context) return null
-  const width=236
-  const height=Math.min(window.innerHeight - 24, 34 + items.length * 34)
-  const x=Math.max(8,Math.min(context.x,window.innerWidth-width-8))
-  const y=Math.max(8,Math.min(context.y,window.innerHeight-height-8))
+  const width=278
+  // Menus can include several native seam operations. Reserve enough height
+  // for button rows, section dividers, title and padding before clamping.
+  // The CSS also scrolls very tall menus on short screens.
+  const height=Math.min(window.innerHeight - 16, 66 + items.length * 43)
+  // Browser events normally provide both coordinates. Keyboard-initiated or
+  // programmatically forwarded context-menu actions may not; never render an
+  // otherwise valid menu at an unusable NaN/off-screen position.
+  const requestedX=Number.isFinite(context.x)?context.x:window.innerWidth/2
+  const requestedY=Number.isFinite(context.y)?context.y:window.innerHeight/2
+  const x=Math.max(8,Math.min(requestedX,window.innerWidth-width-8))
+  const y=Math.max(8,Math.min(requestedY,window.innerHeight-height-8))
   return createPortal(<div ref={menuRef} className="cc-native-context-menu"
     style={{left:x,top:y}} role="menu" aria-label={context.dimension === '2d' ? '2D pattern context actions' : '3D garment context actions'}
     onContextMenu={event=>event.preventDefault()}
@@ -50,7 +58,7 @@ export default function ClothCraftContextMenu({context, items=[], onChoose, onCl
     {items.map((item,i)=>item.separator
       ? <div key={'sep'+i} role="separator" className="cc-native-context-divider"/>
       : <button type="button" role="menuitem" key={item.id}
-        disabled={item.disabled}
+        disabled={item.disabled} title={item.title||undefined}
         className={item.danger?'danger':''}
         onClick={()=>{onClose();onChoose(item.id,context)}}>
         <span>{item.label}</span>{item.shortcut&&<kbd>{item.shortcut}</kbd>}

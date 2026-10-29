@@ -2,12 +2,19 @@
 // iterative particle projection, NOT collision-certified triangle CCD.
 // Keep this module independent of a particular avatar implementation by
 // injecting the collision projector from the solver.
+import {rustAvatarLayerOffset,rustAvatarMargin} from '../rustAvatarContactParametersKernel.js'
 
 export function avatarContactParameters(project, piece) {
   const thickness = piece.fabric?.thickness ?? 0.002
-  const layerOffset = (piece.layerIndex || 0) * Math.max(0.0025, thickness * 1.15)
+  const layerIndex = piece.layerIndex || 0
+  const layerOffset = typeof layerIndex === 'number' && typeof thickness === 'number'
+    ? rustAvatarLayerOffset(layerIndex, thickness)
+    : layerIndex * Math.max(0.0025, thickness * 1.15)
+  const baseMargin = project.simulation?.collisionMargin ?? 0.012
   return {
-    margin: (project.simulation?.collisionMargin ?? 0.012) + thickness + layerOffset,
+    margin: typeof baseMargin === 'number' && typeof thickness === 'number'
+      ? rustAvatarMargin(baseMargin,thickness,layerOffset)
+      : baseMargin + thickness + layerOffset,
     friction: piece.fabric?.friction ?? 0.3,
   }
 }

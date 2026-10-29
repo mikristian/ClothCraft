@@ -9,9 +9,19 @@ import { physicsInputFingerprint, opticalFabricFingerprint } from '../src/core/v
 import { createTemplateProject } from '../src/data/templates.js'
 import { buildTechPack } from '../src/core/measurements.js'
 
-const samples='research/oss/Seamly2D/src/app/share/samples/measurements/'
-const complexDraft=parseSeamlyConstructionReference(fs.readFileSync('research/oss/Seamly2D/src/app/share/samples/patterns/male_shirt.sm2d','utf8'),{filename:'male_shirt.sm2d'})
-const emptyDraft=parseSeamlyConstructionReference(fs.readFileSync('research/oss/Seamly2D/src/test/CollectionTest/tst_seamly2d/empty.sm2d','utf8'))
+// The research checkout moved into pattern-cad. Accept both layouts without
+// creating a symlink or downloading source; keep the existing real male-shirt
+// and multi-size fixture assertions unchanged.
+const seamlySource = fs.existsSync('research/oss/pattern-cad/Seamly2D/src')
+  ? 'research/oss/pattern-cad/Seamly2D/src'
+  : 'research/oss/Seamly2D/src'
+const samples=`${seamlySource}/app/share/samples/measurements/`
+const complexDraft=parseSeamlyConstructionReference(fs.readFileSync(`${seamlySource}/app/share/samples/patterns/male_shirt.sm2d`,'utf8'),{filename:'male_shirt.sm2d'})
+const upstreamEmpty=`${seamlySource}/test/CollectionTest/tst_seamly2d/empty.sm2d`
+// Some upstream mirrors omit test fixtures. In that case exercise a minimal
+// construction graph explicitly, never pretend it came from the source repo.
+const minimalDraft='<pattern><version>0.6.8</version><unit>cm</unit><draftBlock name="Minimal"><calculation><point id="1" type="single" /></calculation></draftBlock></pattern>'
+const emptyDraft=parseSeamlyConstructionReference(fs.existsSync(upstreamEmpty) ? fs.readFileSync(upstreamEmpty,'utf8') : minimalDraft)
 assert.equal(complexDraft.kind,'sm2d')
 assert.equal(complexDraft.version,'0.6.8')
 assert.equal(complexDraft.toolCount,188)
@@ -67,7 +77,10 @@ assert.deepEqual(avatar.pieces,source.pieces)
 assert.deepEqual(avatar.seams,source.seams)
 assert.equal(JSON.stringify(source),original)
 const profiles=Object.entries(WORKSPACE_PROFILES)
-assert.equal(profiles.length,4)
+// Pattern Focus was added without removing the four original layouts. The
+// quality gate checks continuity of established choices, not a stale count.
+assert.ok(profiles.length>=4)
+for(const name of ['drafting','sewing','materials','render']) assert.ok(Object.hasOwn(WORKSPACE_PROFILES,name),`Missing ${name} workspace profile`)
 for(const [name, profile] of profiles) {
   const normalized=normalizeWorkspaceProfile(profile)
   assert.equal(normalized.name,profile.name,name)

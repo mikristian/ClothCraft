@@ -78,9 +78,18 @@ assert.ok(bom.TrimsAndConstruction)
 assert.ok(bom.FabricCostEstimates)
 assert.ok(xml.includes('cutQuantityPerGarment'))
 
-const files = unzipSync(buildFactoryPackageZip(hoodie))
+// The narrow rib marker is deliberately impossible for XS/S. A production
+// ZIP must fail closed rather than omit physical cut pieces, even if its
+// preflight report would otherwise mark the project BLOCKED.
+assert.throws(() => buildFactoryPackageZip(hoodie),
+  /marker\/DXF physical CUT parity failed:.*(UNUSED_MARKER_PIECES|PLACEMENT_QUANTITY|MISSING_INSTANCE)/)
+// Verify the same garment can be packaged when both fabric widths allow
+// every required cut instance: do not weaken marker/DXF parity enforcement.
+const packableHoodie = structuredClone(hoodie)
+packableHoodie.markerSettings = { fabricWidthCm: 165, gapCm: 2, fabricWidthsCm: { main: 165, rib: 165 } }
+const files = unzipSync(buildFactoryPackageZip(packableHoodie))
 const preflight = JSON.parse(strFromU8(files['production-preflight.json']))
-assert.equal(preflight.status, 'BLOCKED')
+assert.ok(['REVIEW', 'READY'].includes(preflight.status))
 assert.ok(files['bom.xml'] && files['materials-bom.csv'])
 assert.ok(files['fabric-costing.csv'])
 assert.ok(Object.keys(files).filter((file) => file.endsWith('.svg') && file.startsWith('markers/')).length >= 12)

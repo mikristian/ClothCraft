@@ -1,0 +1,1958 @@
+{
+  "free_bytes_before": 2152640512,
+  "expected_logical_bytes": 46546294,
+  "source_count": 162,
+  "mirror_count": 162,
+  "hydrated_count": 0,
+  "hash_matches": 0,
+  "hash_mismatches": 0,
+  "pending": [
+    "Zipper/YKK/Slider/YKK_Slider_03CDAREVERSE.zsd",
+    "Zipper/YKK/Slider/YKK_Slider_03VSSTANDARD.zsd",
+    "Zipper/YKK/Slider/YKK_Slider_05CNREVERSE.zsd",
+    "Zipper/YKK/Slider/YKK_Slider_03CDFSTANDARD.zsd",
+    "Zipper/YKK/Slider/YKK_Slider_03MSTANDARD.zsd",
+    "Zipper/YKK/Slider/YKK_Slider_05CNSTANDARD.zsd",
+    "Zipper/YKK/Slider/YKK_Slider_05MSTANDARD.zsd",
+    "Zipper/YKK/Slider/YKK_Slider_03CDFREVERSE.zsd",
+    "Zipper/YKK/Slider/YKK_Slider_03CDASTANDARD.zsd",
+    "Zipper/YKK/Slider/YKK_Slider_05CNSEMILOCK.zsd",
+    "Zipper/YKK/Slider/YKK_Slider_05VSSTANDARD.zsd",
+    "Zipper/YKK/Puller/YKK_Puller_METALDA.zpl",
+    "Zipper/YKK/Puller/YKK_Puller_DADR4.zpl",
+    "Zipper/YKK/Puller/YKK_Puller_COILDA.zpl",
+    "Zipper/YKK/Puller/YKK_Puller_DFL.zpl",
+    "Zipper/YKK/Puller/YKK_Puller_DADR7.zpl",
+    "Zipper/YKK/Puller/YKK_Puller_VISLONDA.zpl",
+    "Zipper/YKK/Puller/YKK_Puller_DSYG.zpl",
+    "Zipper/YKK/Puller/YKK_Puller_3VSDFL.zpl",
+    "Zipper/YKK/Puller/YKK_Puller_DFW.zpl",
+    "Zipper/YKK/Puller/YKK_Puller_DALH.zpl",
+    "Zipper/Slider/Slider_06.zsd",
+    "Zipper/Slider/Slider_07.zsd",
+    "Zipper/Slider/Slider_05.zsd",
+    "Zipper/Slider/Slider_04.zsd",
+    "Zipper/Slider/Slider_01.zsd",
+    "Zipper/Slider/Slider_03.zsd",
+    "Zipper/Slider/Slider_02.zsd",
+    "Zipper/Slider/Slider_09.zsd",
+    "Zipper/Slider/Slider_08.zsd",
+    "Zipper/Slider/OBJ/Slider_08.zip",
+    "Zipper/Slider/OBJ/Slider_09.zip",
+    "Zipper/Slider/OBJ/Slider_07.zip",
+    "Zipper/Slider/OBJ/Slider_06.zip",
+    "Zipper/Slider/OBJ/Slider_04.zip",
+    "Zipper/Slider/OBJ/Slider_05.zip",
+    "Zipper/Slider/OBJ/Slider_01.zip",
+    "Zipper/Slider/OBJ/Slider_02.zip",
+    "Zipper/Slider/OBJ/Slider_03.zip",
+    "Zipper/Tape/Plastic_02/Plastic_02_Teeth.png",
+    "Zipper/Tape/Plastic_02/Plastic_02_Tape.png",
+    "Zipper/Tape/Plastic_02/Plastic_02_Teeth_NRM.png",
+    "Zipper/Tape/Plastic_02/Plastic_02_Tape_NRM.png",
+    "Zipper/Tape/Conceal_02/Conceal_02.png",
+    "Zipper/Tape/Metal/Metal_Teeth_NRM.png",
+    "Zipper/Tape/Metal/Metal_Teeth.png",
+    "Zipper/Tape/Metal/Metal_Tape_NRM.png",
+    "Zipper/Tape/Metal/Metal_Tape.png",
+    "Zipper/Tape/Plastic_01/Plastic_01_Teeth_NRM.png",
+    "Zipper/Tape/Plastic_01/Plastic_01_Tape_NRM.png",
+    "Zipper/Tape/Plastic_01/Plastic_01_Teeth.png",
+    "Zipper/Tape/Plastic_01/Plastic_01_Tape.png",
+    "Zipper/Tape/Conceal_01/Conceal_01.png",
+    "Zipper/Tape/Nylon/Nylon_Tape_NRM.png",
+    "Zipper/Tape/Nylon/Nylon_Teeth_NRM.png",
+    "Zipper/Tape/Nylon/Nylon_Tape.png",
+    "Zipper/Tape/Nylon/Nylon_Teeth.png",
+    "Zipper/Stopper/Top/Top_Stopper_02.zsp",
+    "Zipper/Stopper/Top/Top_Stopper_01.zsp",
+    "Zipper/Stopper/Bottom/Closed/Closed_Bottom_Stopper_02.zsp",
+    "Zipper/Stopper/Bottom/Closed/Closed_Bottom_Stopper_01.zsp",
+    "Zipper/Stopper/Bottom/Open/Open_Bottom_Stopper_01.zsp",
+    "Zipper/Stopper/Bottom/Open/Open_Bottom_Stopper_02.zsp",
+    "Zipper/Stopper/Bottom/Open/Open_Bottom_Stopper_03.zsp",
+    "Zipper/Puller/Puller_07.zpl",
+    "Zipper/Puller/Puller_13.zpl",
+    "Zipper/Puller/Puller_12.zpl",
+    "Zipper/Puller/Puller_06.zpl",
+    "Zipper/Puller/Puller_10.zpl",
+    "Zipper/Puller/Puller_04.zpl",
+    "Zipper/Puller/Puller_05.zpl",
+    "Zipper/Puller/Puller_11.zpl",
+    "Zipper/Puller/Puller_15.zpl",
+    "Zipper/Puller/Puller_01.zpl",
+    "Zipper/Puller/Puller_14.zpl",
+    "Zipper/Puller/Puller_02.zpl",
+    "Zipper/Puller/Puller_16.zpl",
+    "Zipper/Puller/Puller_17.zpl",
+    "Zipper/Puller/Puller_03.zpl",
+    "Zipper/Puller/Puller_19.zpl",
+    "Zipper/Puller/Puller_18.zpl",
+    "Zipper/Puller/Puller_20.zpl",
+    "Zipper/Puller/Puller_08.zpl",
+    "Zipper/Puller/Puller_09.zpl",
+    "Zipper/Puller/Puller_21.zpl",
+    "Zipper/Puller/OBJ/Puller_18.zip",
+    "Zipper/Puller/OBJ/Puller_19.zip",
+    "Zipper/Puller/OBJ/Puller_09.zip",
+    "Zipper/Puller/OBJ/Puller_21.zip",
+    "Zipper/Puller/OBJ/Puller_20.zip",
+    "Zipper/Puller/OBJ/Puller_08.zip",
+    "Zipper/Puller/OBJ/Puller_06.zip",
+    "Zipper/Puller/OBJ/Puller_12.zip",
+    "Zipper/Puller/OBJ/Puller_13.zip",
+    "Zipper/Puller/OBJ/Puller_07.zip",
+    "Zipper/Puller/OBJ/Puller_11.zip",
+    "Zipper/Puller/OBJ/Puller_05.zip",
+    "Zipper/Puller/OBJ/Puller_04.zip",
+    "Zipper/Puller/OBJ/Puller_10.zip",
+    "Zipper/Puller/OBJ/Puller_14.zip",
+    "Zipper/Puller/OBJ/Puller_01.zip",
+    "Zipper/Puller/OBJ/Puller_15.zip",
+    "Zipper/Puller/OBJ/Puller_03.zip",
+    "Zipper/Puller/OBJ/Puller_17.zip",
+    "Zipper/Puller/OBJ/Puller_16.zip",
+    "Zipper/Puller/OBJ/Puller_02.zip",
+    "Graphic/BI_CLO_Blue.grp",
+    "Button & Buttonhole/Buttonhole/Buttonhole_Radial.bth",
+    "Button & Buttonhole/Buttonhole/Buttonhole_Bound.bth",
+    "Button & Buttonhole/Buttonhole/Buttonhole_Eyelet_A_Square.bth",
+    "Button & Buttonhole/Buttonhole/Buttonhole_Eyelet_B_Taper_Bartacking_B.bth",
+    "Button & Buttonhole/Buttonhole/Buttonhole_Eyelet_A_Taper_Bartacking_A.bth",
+    "Button & Buttonhole/Buttonhole/Buttonhole_Eyelet_A_Radial.bth",
+    "Button & Buttonhole/Buttonhole/Buttonhole_Radial_Square.bth",
+    "Button & Buttonhole/Buttonhole/Buttonhole_Eyelet_B_Radial.bth",
+    "Button & Buttonhole/Buttonhole/Buttonhole_Square_B.bth",
+    "Button & Buttonhole/Buttonhole/Buttonhole_Square_A.bth",
+    "Button & Buttonhole/Button/1_Sew-through_Button_02_Square.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_04_Cross.btn",
+    "Button & Buttonhole/Button/3_Snap_Rivet_01.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_07_Parallel.btn",
+    "Button & Buttonhole/Button/3_Snap_Rivet_03.btn",
+    "Button & Buttonhole/Button/3_Snap_Rivet_02.btn",
+    "Button & Buttonhole/Button/3_Snap_Rivet_06.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_02_Cross.btn",
+    "Button & Buttonhole/Button/3_Snap_Rivet_07.btn",
+    "Button & Buttonhole/Button/3_Snap_Rivet_05.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_07_Square.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_06_Parallel.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_01_Parallel.btn",
+    "Button & Buttonhole/Button/3_Snap_Rivet_04.btn",
+    "Button & Buttonhole/Button/3_Snap_Rivet_10.btn",
+    "Button & Buttonhole/Button/2_Shank_Button_02.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_05_Cross.btn",
+    "Button & Buttonhole/Button/2_Shank_Button_03.btn",
+    "Button & Buttonhole/Button/2_Shank_Button_01.btn",
+    "Button & Buttonhole/Button/2_Shank_Button_04.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_03_Cross.btn",
+    "Button & Buttonhole/Button/2_Shank_Button_05.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_11.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_10.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_05_Square.btn",
+    "Button & Buttonhole/Button/2_Shank_Button_06.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_09.btn",
+    "Button & Buttonhole/Button/4_Eyelet_01.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_06_Cross.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_08.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_06_Square.btn",
+    "Button & Buttonhole/Button/4_Eyelet_02.btn",
+    "Button & Buttonhole/Button/4_Eyelet_03.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_03_Square.btn",
+    "Button & Buttonhole/Button/4_Eyelet_04.btn",
+    "Button & Buttonhole/Button/3_Snap_Rivet_09.btn",
+    "Button & Buttonhole/Button/3_Snap_Rivet_08.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_07_Cross.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_04_Square.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_03_Parallel.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_04_Parallel.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_01_Cross.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_01_Square.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_05_Parallel.btn",
+    "Button & Buttonhole/Button/1_Sew-through_Button_02_Parallel.btn"
+  ],
+  "failures": [],
+  "records": [
+    {
+      "path": "Zipper/YKK/Slider/YKK_Slider_03CDAREVERSE.zsd",
+      "logical_size": 631946,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/YKK/Slider/YKK_Slider_03VSSTANDARD.zsd",
+      "logical_size": 659124,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/YKK/Slider/YKK_Slider_05CNREVERSE.zsd",
+      "logical_size": 677495,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/YKK/Slider/YKK_Slider_03CDFSTANDARD.zsd",
+      "logical_size": 612719,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/YKK/Slider/YKK_Slider_03MSTANDARD.zsd",
+      "logical_size": 624355,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/YKK/Slider/YKK_Slider_05CNSTANDARD.zsd",
+      "logical_size": 666011,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/YKK/Slider/YKK_Slider_05MSTANDARD.zsd",
+      "logical_size": 671640,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/YKK/Slider/YKK_Slider_03CDFREVERSE.zsd",
+      "logical_size": 616983,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/YKK/Slider/YKK_Slider_03CDASTANDARD.zsd",
+      "logical_size": 614843,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/YKK/Slider/YKK_Slider_05CNSEMILOCK.zsd",
+      "logical_size": 636345,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/YKK/Slider/YKK_Slider_05VSSTANDARD.zsd",
+      "logical_size": 688168,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/YKK/Puller/YKK_Puller_METALDA.zpl",
+      "logical_size": 449597,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/YKK/Puller/YKK_Puller_DADR4.zpl",
+      "logical_size": 382446,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/YKK/Puller/YKK_Puller_COILDA.zpl",
+      "logical_size": 448237,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/YKK/Puller/YKK_Puller_DFL.zpl",
+      "logical_size": 436860,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/YKK/Puller/YKK_Puller_DADR7.zpl",
+      "logical_size": 490993,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/YKK/Puller/YKK_Puller_VISLONDA.zpl",
+      "logical_size": 506799,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/YKK/Puller/YKK_Puller_DSYG.zpl",
+      "logical_size": 497872,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/YKK/Puller/YKK_Puller_3VSDFL.zpl",
+      "logical_size": 875186,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/YKK/Puller/YKK_Puller_DFW.zpl",
+      "logical_size": 441118,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/YKK/Puller/YKK_Puller_DALH.zpl",
+      "logical_size": 520713,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Slider/Slider_06.zsd",
+      "logical_size": 480442,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Slider/Slider_07.zsd",
+      "logical_size": 511467,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Slider/Slider_05.zsd",
+      "logical_size": 516464,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Slider/Slider_04.zsd",
+      "logical_size": 504024,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Slider/Slider_01.zsd",
+      "logical_size": 469838,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Slider/Slider_03.zsd",
+      "logical_size": 466292,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Slider/Slider_02.zsd",
+      "logical_size": 462240,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Slider/Slider_09.zsd",
+      "logical_size": 472900,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Slider/Slider_08.zsd",
+      "logical_size": 502729,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Slider/OBJ/Slider_08.zip",
+      "logical_size": 286170,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Slider/OBJ/Slider_09.zip",
+      "logical_size": 236396,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Slider/OBJ/Slider_07.zip",
+      "logical_size": 239597,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Slider/OBJ/Slider_06.zip",
+      "logical_size": 231638,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Slider/OBJ/Slider_04.zip",
+      "logical_size": 249327,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Slider/OBJ/Slider_05.zip",
+      "logical_size": 247026,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Slider/OBJ/Slider_01.zip",
+      "logical_size": 223166,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Slider/OBJ/Slider_02.zip",
+      "logical_size": 222831,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Slider/OBJ/Slider_03.zip",
+      "logical_size": 226281,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Tape/Plastic_02/Plastic_02_Teeth.png",
+      "logical_size": 81292,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Tape/Plastic_02/Plastic_02_Tape.png",
+      "logical_size": 215127,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Tape/Plastic_02/Plastic_02_Teeth_NRM.png",
+      "logical_size": 85402,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Tape/Plastic_02/Plastic_02_Tape_NRM.png",
+      "logical_size": 418511,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Tape/Conceal_02/Conceal_02.png",
+      "logical_size": 249273,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Tape/Metal/Metal_Teeth_NRM.png",
+      "logical_size": 89101,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Tape/Metal/Metal_Teeth.png",
+      "logical_size": 84220,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Tape/Metal/Metal_Tape_NRM.png",
+      "logical_size": 392889,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Tape/Metal/Metal_Tape.png",
+      "logical_size": 207369,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Tape/Plastic_01/Plastic_01_Teeth_NRM.png",
+      "logical_size": 80271,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Tape/Plastic_01/Plastic_01_Tape_NRM.png",
+      "logical_size": 418511,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Tape/Plastic_01/Plastic_01_Teeth.png",
+      "logical_size": 80146,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Tape/Plastic_01/Plastic_01_Tape.png",
+      "logical_size": 215127,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Tape/Conceal_01/Conceal_01.png",
+      "logical_size": 249365,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Tape/Nylon/Nylon_Tape_NRM.png",
+      "logical_size": 454797,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Tape/Nylon/Nylon_Teeth_NRM.png",
+      "logical_size": 147814,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Tape/Nylon/Nylon_Tape.png",
+      "logical_size": 181577,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Tape/Nylon/Nylon_Teeth.png",
+      "logical_size": 67917,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Stopper/Top/Top_Stopper_02.zsp",
+      "logical_size": 690964,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Stopper/Top/Top_Stopper_01.zsp",
+      "logical_size": 622838,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Stopper/Bottom/Closed/Closed_Bottom_Stopper_02.zsp",
+      "logical_size": 405252,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Stopper/Bottom/Closed/Closed_Bottom_Stopper_01.zsp",
+      "logical_size": 257704,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Stopper/Bottom/Open/Open_Bottom_Stopper_01.zsp",
+      "logical_size": 663924,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Stopper/Bottom/Open/Open_Bottom_Stopper_02.zsp",
+      "logical_size": 652315,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Stopper/Bottom/Open/Open_Bottom_Stopper_03.zsp",
+      "logical_size": 636120,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_07.zpl",
+      "logical_size": 371947,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_13.zpl",
+      "logical_size": 354018,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_12.zpl",
+      "logical_size": 356059,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_06.zpl",
+      "logical_size": 333136,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_10.zpl",
+      "logical_size": 417570,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_04.zpl",
+      "logical_size": 315495,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_05.zpl",
+      "logical_size": 301433,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_11.zpl",
+      "logical_size": 376798,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_15.zpl",
+      "logical_size": 313163,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_01.zpl",
+      "logical_size": 358310,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_14.zpl",
+      "logical_size": 351319,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_02.zpl",
+      "logical_size": 347735,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_16.zpl",
+      "logical_size": 361410,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_17.zpl",
+      "logical_size": 368101,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_03.zpl",
+      "logical_size": 308053,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_19.zpl",
+      "logical_size": 360322,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_18.zpl",
+      "logical_size": 369716,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_20.zpl",
+      "logical_size": 382063,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_08.zpl",
+      "logical_size": 321961,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_09.zpl",
+      "logical_size": 334595,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/Puller_21.zpl",
+      "logical_size": 382428,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_18.zip",
+      "logical_size": 270417,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_19.zip",
+      "logical_size": 292351,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_09.zip",
+      "logical_size": 229468,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_21.zip",
+      "logical_size": 272799,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_20.zip",
+      "logical_size": 299055,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_08.zip",
+      "logical_size": 220528,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_06.zip",
+      "logical_size": 227511,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_12.zip",
+      "logical_size": 222155,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_13.zip",
+      "logical_size": 236557,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_07.zip",
+      "logical_size": 225858,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_11.zip",
+      "logical_size": 233617,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_05.zip",
+      "logical_size": 220455,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_04.zip",
+      "logical_size": 223615,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_10.zip",
+      "logical_size": 282871,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_14.zip",
+      "logical_size": 220707,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_01.zip",
+      "logical_size": 229015,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_15.zip",
+      "logical_size": 225998,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_03.zip",
+      "logical_size": 219161,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_17.zip",
+      "logical_size": 263670,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_16.zip",
+      "logical_size": 227993,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Zipper/Puller/OBJ/Puller_02.zip",
+      "logical_size": 231003,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Graphic/BI_CLO_Blue.grp",
+      "logical_size": 1622834,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Buttonhole/Buttonhole_Radial.bth",
+      "logical_size": 211835,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Buttonhole/Buttonhole_Bound.bth",
+      "logical_size": 161772,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Buttonhole/Buttonhole_Eyelet_A_Square.bth",
+      "logical_size": 241478,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Buttonhole/Buttonhole_Eyelet_B_Taper_Bartacking_B.bth",
+      "logical_size": 279038,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Buttonhole/Buttonhole_Eyelet_A_Taper_Bartacking_A.bth",
+      "logical_size": 234841,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Buttonhole/Buttonhole_Eyelet_A_Radial.bth",
+      "logical_size": 240727,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Buttonhole/Buttonhole_Radial_Square.bth",
+      "logical_size": 222794,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Buttonhole/Buttonhole_Eyelet_B_Radial.bth",
+      "logical_size": 334671,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Buttonhole/Buttonhole_Square_B.bth",
+      "logical_size": 228870,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Buttonhole/Buttonhole_Square_A.bth",
+      "logical_size": 205110,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_02_Square.btn",
+      "logical_size": 145998,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_04_Cross.btn",
+      "logical_size": 82578,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/3_Snap_Rivet_01.btn",
+      "logical_size": 67376,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_07_Parallel.btn",
+      "logical_size": 96765,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/3_Snap_Rivet_03.btn",
+      "logical_size": 93112,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/3_Snap_Rivet_02.btn",
+      "logical_size": 48547,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/3_Snap_Rivet_06.btn",
+      "logical_size": 46667,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_02_Cross.btn",
+      "logical_size": 93210,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/3_Snap_Rivet_07.btn",
+      "logical_size": 14702,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/3_Snap_Rivet_05.btn",
+      "logical_size": 42056,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_07_Square.btn",
+      "logical_size": 137682,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_06_Parallel.btn",
+      "logical_size": 100563,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_01_Parallel.btn",
+      "logical_size": 90631,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/3_Snap_Rivet_04.btn",
+      "logical_size": 84350,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/3_Snap_Rivet_10.btn",
+      "logical_size": 17632,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/2_Shank_Button_02.btn",
+      "logical_size": 21612,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_05_Cross.btn",
+      "logical_size": 99394,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/2_Shank_Button_03.btn",
+      "logical_size": 25068,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/2_Shank_Button_01.btn",
+      "logical_size": 22857,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/2_Shank_Button_04.btn",
+      "logical_size": 30515,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_03_Cross.btn",
+      "logical_size": 89752,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/2_Shank_Button_05.btn",
+      "logical_size": 19191,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_11.btn",
+      "logical_size": 148254,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_10.btn",
+      "logical_size": 63141,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_05_Square.btn",
+      "logical_size": 161858,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/2_Shank_Button_06.btn",
+      "logical_size": 142367,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_09.btn",
+      "logical_size": 56235,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/4_Eyelet_01.btn",
+      "logical_size": 68265,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_06_Cross.btn",
+      "logical_size": 96975,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_08.btn",
+      "logical_size": 58656,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_06_Square.btn",
+      "logical_size": 142003,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/4_Eyelet_02.btn",
+      "logical_size": 68528,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/4_Eyelet_03.btn",
+      "logical_size": 141418,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_03_Square.btn",
+      "logical_size": 149991,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/4_Eyelet_04.btn",
+      "logical_size": 120250,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/3_Snap_Rivet_09.btn",
+      "logical_size": 27927,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/3_Snap_Rivet_08.btn",
+      "logical_size": 20278,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_07_Cross.btn",
+      "logical_size": 94038,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_04_Square.btn",
+      "logical_size": 145970,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_03_Parallel.btn",
+      "logical_size": 96031,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_04_Parallel.btn",
+      "logical_size": 90928,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_01_Cross.btn",
+      "logical_size": 91514,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_01_Square.btn",
+      "logical_size": 105827,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_05_Parallel.btn",
+      "logical_size": 102999,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    },
+    {
+      "path": "Button & Buttonhole/Button/1_Sew-through_Button_02_Parallel.btn",
+      "logical_size": 92073,
+      "allocated_bytes": 0,
+      "flags": "0x40000060",
+      "download_request": {
+        "returncode": 0,
+        "error": ""
+      },
+      "hydrated": false
+    }
+  ]
+}

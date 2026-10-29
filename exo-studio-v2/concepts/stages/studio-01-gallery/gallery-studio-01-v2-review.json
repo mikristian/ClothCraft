@@ -1,0 +1,23 @@
+{
+  "stage": "STUDIO-01-GALLERY-V2-DRAFT",
+  "status": "visual-review-only",
+  "blend": "gallery-studio-01-v2.blend",
+  "draftGlb": "gallery-studio-01-v2-STAGE-ONLY-DRAFT.glb",
+  "coordinates": "Blender Z-up, GLB Y-up, metres",
+  "avatarFeetOrigin": [
+    0,
+    0,
+    0
+  ],
+  "platformTopZ": 0,
+  "stageOnlyMeshCount": 41,
+  "referenceAvatarSource": "public/avatars/preview/clo-thomas.glb",
+  "referenceAvatarHeightMetres": 1.75,
+  "referenceInGlb": false,
+  "scenes": [
+    "01 editorial three-quarter",
+    "02 straight-on catalog",
+    "03 stage side"
+  ],
+  "approvedForIntegration": false
+}

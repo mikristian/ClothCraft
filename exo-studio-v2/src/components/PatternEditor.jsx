@@ -3,11 +3,23 @@ import { createPortal } from 'react-dom'
 import { closestEdgeFraction, edgeLength, edgePointAt, getEdgeSeamAllowance, sampleEdge, samplePieceBoundary, seamAllowanceBoundary, seamLengthReport, pieceArea } from '../core/project.js'
 import { offsetEdgePath, topstitchPaths, zipperPaths } from '../core/trims.js'
 import ViewportQuickTools from './ViewportQuickTools.jsx'
+import ClothCraftContextMenu from './ClothCraftContextMenu.jsx'
+import {PatternReferenceImageLayer, PatternReferenceImageControls, usePatternReferenceImage} from './PatternReferenceImage.jsx'
+import {droppedReferenceImage,referenceImageDragAvailable} from '../core/referenceImageDrop20261028.js'
 import FlatAvatarSilhouette from './FlatAvatarSilhouette.jsx'
 import { polarFromPoints, precisePointEdit, preciseCurveEdit, curveChordCoordinates } from '../core/draftingPrecision.js'
 import { DRAFT_CONSTRUCTION_MODES, preciseConstructionEdit } from '../core/draftingConstructions.js'
 import { constrainDraftAxis, snapDraftGrid, snapDraftPattern } from '../core/draftingSnapping.js'
 import { draftingSplitFractions, SPLIT_MODES } from '../core/draftingSplit.js'
+import {snapControlAngle} from '../core/vectorPatternBezier.js'
+import AccuMarkDraftGradeOverlay20261023 from './AccuMarkDraftGradeOverlay20261023.jsx'
+import AccuMarkFullPatternGradeNest20261023 from './AccuMarkFullPatternGradeNest20261023.jsx'
+import {readAccuMarkGradeDeltaMatrix} from '../core/accumarkNumericGradeDelta20261023.js'
+import CadViewportRulers20261023 from './CadViewportRulers20261023.jsx'
+import {cadColor20261023,cadDotStep20261023} from '../core/cadDotAppearance20261023.js'
+import {cadAutoContrastColors} from '../core/cadAutoContrast.js'
+import '../cadAutoContrast.css'
+import {initializeRustPomKernel, rustPomKernelReady, rustPomLabelAnchor, rustPomHorizontalCrossing} from '../core/rustPomKernel.js'
 
 const VIEWBOX = { width: 330, height: 170 }
 const snapStorageKey = () => {
@@ -75,7 +87,7 @@ function horizontalSpanAt(piece, y) {
       if (Math.abs(y-a.y)<.01) xs.push(a.x,b.x)
       continue
     }
-    if (y>=Math.min(a.y,b.y) && y<=Math.max(a.y,b.y)) xs.push(a.x+(b.x-a.x)*(y-a.y)/(b.y-a.y))
+    if (y>=Math.min(a.y,b.y) && y<=Math.max(a.y,b.y)) xs.push(rustPomHorizontalCrossing(a,b,y) ?? (a.x+(b.x-a.x)*(y-a.y)/(b.y-a.y)))
   }
   return xs.length>=2 ? { left:Math.min(...xs), right:Math.max(...xs), width:Math.max(...xs)-Math.min(...xs) } : null
 }
@@ -83,12 +95,23 @@ function horizontalSpanAt(piece, y) {
 export default function PatternEditor({
   project,
   showGrid = true,
+  studioPreferences = null,
+  expanded2D = false,
+  full2D = false,
   showSeamLinks = true,
   layout2DSignal = 0,
   onToggleGrid,
   onToggleSeams,
   onAutoArrange,
   gradeNestProjects = [],
+  gradeSourceProject = null,
+  gradePreviewSize = null,
+  showGradeNest = false,
+  onToggleGradeNest,
+  onSelectGradeSize,
+  onGradePointDrag=null,
+  onGradePointSelected=null,
+  gradeBusy=false,
   highlightSeamId = null,
   selectedPieceId,
   tool,
@@ -96,6 +119,7 @@ export default function PatternEditor({
   onSelectPiece,
   onSelectedEdgeChange,
   onMovePiece,
+  onMoveFoamPadding,
   onMovePoint,
   onSetPoint,
   onMoveCurve,
@@ -105,6 +129,7 @@ export default function PatternEditor({
   onSplitEdgePrecise,
   onUnfoldEdge,
   onDeletePoint,
+  onDeletePiece,
   onCreatePin,
   onRemovePin,
   onCreateInternalLine,
@@ -116,6 +141,7 @@ export default function PatternEditor({
   onEndGesture,
 }) {
   const svgRef = useRef(null)
+  const reference = usePatternReferenceImage(`draft:${project?.id || project?.templateId || project?.name || 'default'}`)
   const dragRef = useRef(null)
   const [pendingEdge, setPendingEdge] = useState(null)
   const [pendingSewStart, setPendingSewStart] = useState(null)
@@ -135,6 +161,34 @@ export default function PatternEditor({
   const [splitError, setSplitError] = useState('')
   const [unfoldError, setUnfoldError] = useState('')
   const [selectedPoint, setSelectedPoint] = useState(null)
+  const [selectedGradePoint,setSelectedGradePoint] = useState(null)
+  const [showGradePointAnnotations,setShowGradePointAnnotations] = useState(true)
+  const [gradeNestScope,setGradeNestScope] = useState('all')
+  const [gradeNestPointMode,setGradeNestPointMode] = useState('all')
+  const [gradeNestLabels,setGradeNestLabels] = useState(true)
+  const [gradeNestVectors,setGradeNestVectors] = useState(true)
+  const [gradeNestDrag,setGradeNestDrag] = useState(false)
+  const [gradeNestMaintainGrowths,setGradeNestMaintainGrowths] = useState(false)
+  const [gradeNestEditMessage,setGradeNestEditMessage] = useState('')
+  const gradePointMatrix=useMemo(()=>{
+    if(!selectedGradePoint||!gradeSourceProject)return null
+    try{
+      return readAccuMarkGradeDeltaMatrix(gradeSourceProject,{
+        pieceId:selectedGradePoint.pieceId,pointIndex:selectedGradePoint.pointIndex,
+      })
+    }catch{return null}
+  },[gradeSourceProject,selectedGradePoint])
+  const selectedGradedRow=gradePointMatrix?.rows?.find(row=>row.size===gradePreviewSize)
+  const gradeEditAvailable=Boolean(showGradeNest&&gradeSourceProject&&gradePreviewSize
+    &&gradePreviewSize!==gradeSourceProject.grading?.baseSize&&!gradeBusy&&onGradePointDrag)
+  const applyGradeNudge=(dxCm,dyCm)=>{
+    if(!gradeEditAvailable||!selectedGradePoint)return
+    try{
+      onGradePointDrag({pieceId:selectedGradePoint.pieceId,pointIndex:selectedGradePoint.pointIndex,
+        size:gradePreviewSize,dxCm,dyCm,maintainGrowths:gradeNestMaintainGrowths})
+      setGradeNestEditMessage('')
+    }catch(error){setGradeNestEditMessage(error.message||String(error))}
+  }
   const [selectedCurve, setSelectedCurve] = useState(null)
   const [curveEditMode, setCurveEditMode] = useState('chord')
   const [curveDraft, setCurveDraft] = useState({cx:'',cy:'',alongCm:'',depthCm:''})
@@ -147,7 +201,39 @@ export default function PatternEditor({
   const [pointError, setPointError] = useState('')
   const [edgeAllowanceDraft, setEdgeAllowanceDraft] = useState('')
   const [view, setView] = useState({ x: 0, y: 0, width: VIEWBOX.width, height: VIEWBOX.height })
+  const [canvasSize,setCanvasSize] = useState([800,500])
+  useEffect(()=>{
+    if(!svgRef.current || typeof ResizeObserver==='undefined')return
+    const observer=new ResizeObserver(([entry])=>setCanvasSize([entry.contentRect.width,entry.contentRect.height]))
+    observer.observe(svgRef.current)
+    return ()=>observer.disconnect()
+  },[])
+  const rulerScreenUnit=Math.max(view.width/Math.max(1,canvasSize[0]),view.height/Math.max(1,canvasSize[1]))
+  const accumarkGreen=studioPreferences?.twoDCanvasTheme==='accumark-green'
+  const markerStyle=studioPreferences?.twoDGridStyle||'grid'
+  const dottedGrid=markerStyle==='dots'
+  const showRulers=studioPreferences?.twoDShowRulers!==false&&expanded2D
+  const rulerUnits=studioPreferences?.units||'mm'
+  const canvasColor=cadColor20261023(studioPreferences?.twoDCanvasColor,accumarkGreen?'#174e39':'#c6c7c9')
+  const adaptiveCad=studioPreferences?.twoDAutoContrast!==false
+    ?cadAutoContrastColors({canvas:canvasColor,paper:cadColor20261023(studioPreferences?.twoDPatternColor,'#f4f4f3'),
+      grid:studioPreferences?.twoDGridColor,edge:studioPreferences?.twoDEdgeColor,point:studioPreferences?.twoDPointColor,
+      selection:studioPreferences?.twoDSelectionColor,notch:studioPreferences?.twoDNotchColor,ruler:studioPreferences?.twoDRulerMarkColor}) : null
+  const markerColor=cadColor20261023(studioPreferences?.twoDGridColor,accumarkGreen?'#79a992':'#6e747a')
+  const markerOpacity=Math.max(.15,Math.min(1,Number(studioPreferences?.twoDGridOpacity??.8)||.8))
+  const dotScale=Math.max(.65,Math.min(2,Number(studioPreferences?.twoDDotSize??1)||1))
+  const dotStep=cadDotStep20261023(rulerScreenUnit,.01)||5
+  const [referenceContextMenu,setReferenceContextMenu]=useState(null)
+  const [pieceContextMenu,setPieceContextMenu]=useState(null)
   const panRef = useRef(null)
+  const [pomRustReady,setPomRustReady] = useState(rustPomKernelReady)
+  useEffect(() => {
+    let mounted = true
+    void initializeRustPomKernel().then(ready => {
+      if (mounted && ready) setPomRustReady(true)
+    })
+    return () => { mounted = false }
+  }, [])
   useEffect(() => {
     try { window.localStorage.setItem(snapStorageKey(), JSON.stringify(snapSettings)) }
     catch { /* Saving UI preferences must never block drafting. */ }
@@ -162,6 +248,7 @@ export default function PatternEditor({
     setPendingMeasurement(null)
     setInternalPreview(null)
     setSnapGuide(null)
+    setSelectedGradePoint(null)
   }, [tool, project.templateId])
   const selectedEdgePiece = project.pieces.find(piece => piece.id === selectedEdge?.pieceId)
   const activeEdge = selectedEdgePiece && Number.isInteger(selectedEdge?.edgeIndex) && selectedEdge.edgeIndex >= 0 && selectedEdge.edgeIndex < selectedEdgePiece.points.length
@@ -181,13 +268,20 @@ export default function PatternEditor({
   const activeCurveHandle = activeCurve ? (selectedCurvePiece.curves?.[activeCurve.edgeIndex] || null) : null
   const revealDockedPrecision = () => {
     // When selecting a vertex in the drawing, the appropriate fields should
-    // be immediately available even if the Property Editor was scrolled down
-    // to fabric/manufacturing settings. Only the right panel is scrolled.
+    // be in view, including when the dedicated dock follows the accordion
+    // sections. Scroll only the right-side Property Editor list.
     requestAnimationFrame(() => {
       const host = document.getElementById('clo-pattern-properties-host')
       if (host && !host.hidden) {
-        const scroller = host.closest('.clo-property-panel')
-        if (scroller) scroller.scrollTop = 0
+        const scroller = host.closest('.clo-pe-list')
+        const selectedControls = host.querySelector('.precision-point-inspector')
+          || host.querySelector('.precision-curve-inspector')
+          || host.querySelector('.draft-edge-inspector')
+          || host.querySelector('.clo-draft-split-settings')
+        if (scroller) {
+          const target = selectedControls || host
+          scroller.scrollTop += target.getBoundingClientRect().top - scroller.getBoundingClientRect().top - 10
+        }
       }
     })
   }
@@ -510,6 +604,17 @@ export default function PatternEditor({
     svgRef.current?.setPointerCapture?.(event.pointerId)
   }
 
+  const beginFoamPadDrag=(event,piece,pad)=>{
+    if(event.button!==0||tool!=='select'||piece.locked||pad.locked||!onMoveFoamPadding)return
+    event.preventDefault()
+    event.stopPropagation()
+    onSelectPiece(piece.id)
+    onBeginGesture?.()
+    dragRef.current={kind:'foam-pad',pointerId:event.pointerId,pieceId:piece.id,padId:pad.id,
+      start:clientToSvg(event),origin:{x:Number(pad.x)||0,y:Number(pad.y)||0}}
+    svgRef.current?.setPointerCapture?.(event.pointerId)
+  }
+
   const beginPointDrag = (event, piece, pointIndex) => {
     if (tool !== 'point' || piece.locked) return
     event.preventDefault()
@@ -639,6 +744,11 @@ export default function PatternEditor({
       const snapped = snapGlobal(destination, event, { allowPattern: false })
       setSnapGuide(snapped.guide)
       onMovePiece(drag.pieceId, snapped.point)
+    } else if (drag.kind === 'foam-pad') {
+      onMoveFoamPadding?.(drag.pieceId,drag.padId,{
+        x:Math.round((drag.origin.x+dx)*1000)/1000,
+        y:Math.round((drag.origin.y-dy)*1000)/1000,
+      })
     } else if (drag.kind === 'point') {
       const piece = project.pieces.find(item => item.id === drag.pieceId)
       if (!piece) return
@@ -656,8 +766,17 @@ export default function PatternEditor({
       })
     } else if (drag.kind === 'curve') {
       let destination = { x: drag.origin.x + dx, y: drag.origin.y - dy }
-      if (event.shiftKey) destination = constrainDraftAxis(drag.origin, destination)
       const curvePiece = project.pieces.find(item => item.id === drag.pieceId)
+      if(!curvePiece)return
+      if(event.shiftKey){
+        // Use VectorCraft's 45° handle constraint without rewriting the
+        // legacy quadratic-curve representation or its factory exports.
+        const a=curvePiece.points[drag.edgeIndex]
+        const b=curvePiece.points[(drag.edgeIndex+1)%curvePiece.points.length]
+        const midpoint=[(a.x+b.x)/2,(a.y+b.y)/2]
+        const snapped=snapControlAngle(midpoint,[destination.x,destination.y])
+        destination={x:snapped[0],y:snapped[1]}
+      }
       const global = svgPoint(destination, curvePiece.layout2d)
       const grid = snapGlobal(global, event, { allowPattern: false })
       const snapped = { x: grid.point.x - curvePiece.layout2d.x,
@@ -707,7 +826,13 @@ export default function PatternEditor({
       beginPieceDrag(event, piece)
       return
     }
-    if (tool === 'point' || tool === 'curve') {
+    if (tool === 'curve') {
+      event.preventDefault()
+      event.stopPropagation()
+      selectDraftCurve(piece,edgeIndex)
+      return
+    }
+    if (tool === 'point') {
       event.preventDefault()
       event.stopPropagation()
       selectDraftEdge(piece,edgeIndex)
@@ -795,7 +920,11 @@ export default function PatternEditor({
   }
 
   return (
-    <div className="pattern-editor-shell">
+    <div className="pattern-editor-shell" data-cad-auto-contrast={String(Boolean(adaptiveCad))} data-cad-expanded={String(showRulers)} data-2d-canvas-theme={accumarkGreen?'accumark-green':'classic'} data-2d-grid-style={markerStyle}
+      data-pattern-surface-style={studioPreferences?.twoDPatternSurfaceStyle||'solid'}
+      style={adaptiveCad?{'--cad-adaptive-edge':adaptiveCad.edge,'--cad-adaptive-measure':adaptiveCad.measure,
+        '--cad-adaptive-measure-halo':adaptiveCad.measurementHalo,'--cad-adaptive-paper':adaptiveCad.patternPaper,
+        '--cad-adaptive-selected':adaptiveCad.selection,'--cad-adaptive-point':adaptiveCad.point,'--cad-adaptive-notch':adaptiveCad.notch}:undefined}>
       <ViewportQuickTools dimension="2d" activeTool={tool} onChangeTool={onChangeTool}/>
       <div className="workspace-head">
         <div>
@@ -803,12 +932,36 @@ export default function PatternEditor({
           <span>{project.units.toUpperCase()} · {project.pieces.length} PIECES</span>
         </div>
         <div className="workspace-hint">
+          {full2D&&gradeSourceProject?.grading?.sizes?.length>1&&<div className="exo-grade-canvas-controls" aria-label="Grading overlays on pattern blocks">
+            <button type="button" aria-label="Show nested grading outlines and points for every pattern block"
+              aria-pressed={showGradeNest} onClick={()=>onToggleGradeNest?.(!showGradeNest)}>
+              {showGradeNest?'NEST ON':'NEST OFF'}
+            </button>
+            {showGradeNest&&<>
+              <label>Blocks<select aria-label="Which pattern blocks show graded outlines" value={gradeNestScope}
+                onChange={event=>setGradeNestScope(event.target.value)}>
+                <option value="all">ALL BLOCKS</option><option value="selected">SELECTED BLOCK</option>
+              </select></label>
+              <label>Points<select aria-label="Which graded points are visible" value={gradeNestPointMode}
+                onChange={event=>setGradeNestPointMode(event.target.value)}>
+                <option value="all">ALL SIZES</option><option value="selected">SELECTED BLOCK</option><option value="off">HIDDEN</option>
+              </select></label>
+              <button type="button" aria-label="Toggle size labels on grading outlines" aria-pressed={gradeNestLabels}
+                onClick={()=>setGradeNestLabels(v=>!v)}>SIZE LABELS</button>
+              <button type="button" aria-label="Toggle grading point movement vectors" aria-pressed={gradeNestVectors}
+                onClick={()=>setGradeNestVectors(v=>!v)}>VECTORS</button>
+              <button type="button" aria-label="Toggle direct on-canvas grade point dragging" aria-pressed={gradeNestDrag}
+                onClick={()=>{setGradeNestDrag(value=>!value);setGradeNestEditMessage('')}}>EDIT POINTS</button>
+            </>}
+            {!showGradeNest&&<label><input type="checkbox" aria-label="Show selected pattern grade points"
+              checked={showGradePointAnnotations} onChange={event=>setShowGradePointAnnotations(event.target.checked)}/>POINTS</label>}
+          </div>}
           {tool === 'select' && 'Drag a piece to arrange it'}
           {tool === 'point' && 'Drag anchor points to edit · Option/Alt-click a point to delete it'}
           {tool === 'split' && (splitMode === 'numeric'
             ? 'Select an edge, then enter precise split divisions in Properties'
             : 'Click an edge to insert a new pattern point')}
-          {tool === 'curve' && 'Drag an edge handle to shape a curve · double-click to straighten'}
+          {tool === 'curve' && 'Click a pattern edge to reveal its curve point · drag the handle · Shift snaps to 45° · double-click to straighten'}
           {tool === 'internal' && 'Drag inside a pattern to create a construction line · classify it as fold or dart in the inspector'}
           {tool === 'pin' && 'Click inside the pattern to add a manual 3D pin · click a pin to remove it'}
           {tool === 'notch' && 'Click a pattern edge to place a production notch at that exact curve position'}
@@ -821,18 +974,91 @@ export default function PatternEditor({
           {tool === 'measure' && (pendingMeasurement ? 'Click the second measurement point on this pattern' : 'Click the first measurement point')}
         </div>
       </div>
+      {showGradeNest&&gradeNestDrag&&gradeSourceProject&&<div className="exo-grade-direct-editor"
+        role="group" aria-label="AccuMark direct point grading inspector">
+        <strong>DIRECT GRADING</strong>
+        <span>{selectedGradePoint?`${selectedGradePoint.pieceId} · P${selectedGradePoint.pointIndex+1}`:'Select a graded point on the canvas'}</span>
+        <span>{gradePreviewSize}{gradePreviewSize===gradeSourceProject.grading?.baseSize?' · BASE FIXED':''}</span>
+        {selectedGradedRow&&<span>X {selectedGradedRow.dxCm.toFixed(2)} cm · Y {selectedGradedRow.dyCm.toFixed(2)} cm</span>}
+        <label><input type="checkbox" checked={gradeNestMaintainGrowths}
+          onChange={event=>setGradeNestMaintainGrowths(event.target.checked)}/> Keep outer-size growths</label>
+        <div role="group" aria-label="Nudge the selected point by a tenth of a centimeter">
+          {[["X −",-.1,0],["X +",.1,0],["Y −",0,-.1],["Y +",0,.1]].map(([label,dx,dy])=>
+            <button type="button" key={label} disabled={!gradeEditAvailable||!selectedGradedRow}
+              onClick={()=>applyGradeNudge(dx,dy)}>{label}</button>)}
+        </div>
+        <small>{gradeEditAvailable?'Drag the selected-size point or nudge X/Y. Every edit is one undoable grade-rule transaction.':'Choose a non-base graded size to edit.'}</small>
+        {gradeNestEditMessage&&<span role="alert">{gradeNestEditMessage}</span>}
+      </div>}
+      <PatternReferenceImageControls {...reference} unitsPerCm={1} menuOnly editorScope="draft"
+        viewBounds={[view.x,view.y,view.width,view.height]}/>
+      <ClothCraftContextMenu context={pieceContextMenu&&{...pieceContextMenu,dimension:'2d',hit:{panel:pieceContextMenu.pieceId}}}
+        items={[{id:'select',label:'Select Pattern'}, {separator:true},
+          {id:reference.image?'replace':'add',label:reference.image?'Replace Background Image…':'Add Background Image…'},
+          {separator:true}, {id:'delete',label:'Delete Pattern',shortcut:'⌫',danger:true}]}
+        onClose={()=>setPieceContextMenu(null)}
+        onChoose={(action,context)=>{
+          if(action==='add'||action==='replace'){
+            window.dispatchEvent(new CustomEvent('exo-open-2d-background-image',{detail:{editor:'draft',action}}))
+            setPieceContextMenu(null)
+            return
+          }
+          const id=context?.pieceId
+          if(!project.pieces.some(piece=>piece.id===id))return
+          if(action==='delete')onDeletePiece?.(id)
+          if(action==='select')onSelectPiece(id)
+          setPieceContextMenu(null)
+        }}/>
+      <ClothCraftContextMenu context={referenceContextMenu&&{...referenceContextMenu,dimension:'2d',hit:null}}
+        items={reference.image ? [
+          {id:'format',label:'Format 2D Background…'},
+          {id:'replace',label:'Replace Background Image…'},
+          {separator:true},
+          {id:'remove',label:'Remove Background Image',danger:true},
+        ] : [{id:'add',label:'Add Background Image…'}]}
+        onClose={()=>setReferenceContextMenu(null)}
+        onChoose={action=>{
+          window.dispatchEvent(new CustomEvent('exo-open-2d-background-image',{detail:{editor:'draft',action}}))
+          setReferenceContextMenu(null)
+        }}/>
       <svg
         ref={svgRef}
         className={`pattern-canvas tool-${tool}`}
+        onDragOver={event=>{
+          if(referenceImageDragAvailable(event.dataTransfer)){
+            event.preventDefault()
+            event.dataTransfer.dropEffect='copy'
+          }
+        }}
+        onDrop={event=>{
+          const source=droppedReferenceImage(event.dataTransfer)
+          if(!source)return
+          event.preventDefault()
+          event.stopPropagation()
+          const at=clientToSvg(event)
+          void reference.importImage(source,{viewBounds:[view.x,view.y,view.width,view.height],unitsPerCm:1,dropPoint:at})
+        }}
+        style={{background:canvasColor}}
         role="application"
         tabIndex={0}
         aria-label="2D pattern canvas: wheel to zoom; F fit all; Shift F focus selected; plus or minus zoom; Shift A tidy"
         viewBox={`${view.x} ${view.y} ${view.width} ${view.height}`}
         onWheel={onCanvasWheel}
         onKeyDown={onCanvasKeyDown}
-        // macOS trackpads can synthesize a secondary-click/contextmenu while
-        // moving a pattern. Never open a menu above the 2D drafting surface.
-        onContextMenu={(event) => event.preventDefault()}
+        // Resolve the piece directly under the secondary click. Selection can
+        // lag React's next render, so Delete Pattern receives the hit ID.
+        onContextMenu={(event) => {
+          event.preventDefault()
+          const hitId=event.target?.closest?.('[data-piece-id]')?.getAttribute('data-piece-id')
+          if(hitId&&project.pieces.some(piece=>piece.id===hitId)){
+            setReferenceContextMenu(null)
+            setPieceContextMenu({x:event.clientX,y:event.clientY,pieceId:hitId})
+            onSelectPiece(hitId)
+          }else{
+            setPieceContextMenu(null)
+            setReferenceContextMenu({x:event.clientX,y:event.clientY})
+          }
+        }}
         onPointerMove={(event) => {
           if (panRef.current?.pointerId === event.pointerId) {
             const bounds = svgRef.current.getBoundingClientRect()
@@ -843,11 +1069,12 @@ export default function PatternEditor({
             panRef.current.y = event.clientY
           } else handlePointerMove(event)
         }}
-        onPointerUp={(event) => { if (panRef.current?.pointerId === event.pointerId) panRef.current = null; else endDrag(event) }}
-        onPointerCancel={(event) => { panRef.current = null; endDrag(event) }}
+        onPointerUp={(event) => { if (panRef.current?.pointerId === event.pointerId) { panRef.current = null; event.currentTarget.classList.remove('is-panning') } else endDrag(event) }}
+        onPointerCancel={(event) => { panRef.current = null; event.currentTarget.classList.remove('is-panning'); endDrag(event) }}
         onPointerDown={(event) => {
           if (event.button === 1 || (event.button === 0 && event.altKey && event.target === event.currentTarget)) {
             panRef.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY }
+            event.currentTarget.classList.add('is-panning')
             event.currentTarget.setPointerCapture(event.pointerId)
             event.preventDefault()
             return
@@ -857,11 +1084,17 @@ export default function PatternEditor({
       >
         <defs>
           <pattern id="minor-grid" width="5" height="5" patternUnits="userSpaceOnUse">
-            <path d="M 5 0 L 0 0 0 5" fill="none" stroke="rgba(77,78,82,.16)" strokeWidth=".28" />
+            <path d="M 5 0 L 0 0 0 5" fill="none" stroke={studioPreferences?.twoDGridColor&&studioPreferences.twoDGridColor!=='auto'?markerColor:'rgba(77,78,82,.16)'} strokeWidth=".28" />
           </pattern>
           <pattern id="major-grid" width="25" height="25" patternUnits="userSpaceOnUse">
             <rect width="25" height="25" fill="url(#minor-grid)" />
-            <path d="M 25 0 L 0 0 0 25" fill="none" stroke="rgba(75,76,79,.27)" strokeWidth=".38" />
+            <path d="M 25 0 L 0 0 0 25" fill="none" stroke={studioPreferences?.twoDGridColor&&studioPreferences.twoDGridColor!=='auto'?markerColor:'rgba(75,76,79,.27)'} strokeWidth=".38" />
+          </pattern>
+          <pattern id="draft-dot-grid" width={dotStep} height={dotStep} patternUnits="userSpaceOnUse">
+            <circle cx={dotStep/2} cy={dotStep/2} r={rulerScreenUnit*.86*dotScale} fill={markerColor}/>
+          </pattern>
+          <pattern id="draft-major-dots" width={dotStep*5} height={dotStep*5} patternUnits="userSpaceOnUse">
+            <circle cx={dotStep*2.5} cy={dotStep*2.5} r={rulerScreenUnit*1.45*dotScale} fill={markerColor}/>
           </pattern>
           <marker id="grain-arrow" markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" orient="auto-start-reverse" markerUnits="strokeWidth">
             <path d="M 0 0 L 5 2.5 L 0 5 z" fill="currentColor" />
@@ -894,29 +1127,24 @@ export default function PatternEditor({
         </defs>
         {/* Overscan the SVG camera's visible rectangle. Grid coverage is
             continuous even during rapid cursor-centric zoom and panning. */}
-        {showGrid && <rect x={view.x-view.width} y={view.y-view.height} width={view.width*3} height={view.height*3} fill="url(#major-grid)" pointerEvents="none" data-grid-coverage="overscanned"/>}
+        {showGrid&&markerStyle!=='none'&&<g opacity={markerOpacity} pointerEvents="none" data-grid-coverage="overscanned">
+          <rect x={view.x-view.width} y={view.y-view.height} width={view.width*3} height={view.height*3} fill={dottedGrid?'url(#draft-dot-grid)':'url(#major-grid)'}/>
+          {dottedGrid&&<rect x={view.x-view.width} y={view.y-view.height} width={view.width*3} height={view.height*3} fill="url(#draft-major-dots)"/>}
+        </g>}
+        <PatternReferenceImageLayer image={reference.image} setImage={reference.setImage} unitsPerCm={1}
+          screenUnit={rulerScreenUnit}
+          interactive={tool === 'select' || reference.image?.calibrating === true}/>
         {/* World-space drafting origin is aligned with the center of the guide
             figure. Unlike an HTML overlay, it pans and zooms with the patterns.
             The reference figure never intercepts pattern selection or sewing. */}
         <g className="draft-avatar-guide" aria-label={`Centered 2D drafting avatar: ${project.avatar?.name || 'Fitting body'}`} pointerEvents="none" transform={`translate(165 85) scale(${Math.max(.82, Math.min(1.22, Number(project.avatar?.heightCm || 180) / 180))})`}>
           <FlatAvatarSilhouette avatar={project.avatar}/>
         </g>
-        {showGrid && <g className="draft-center-axes" pointerEvents="none" aria-label="2D drafting center axes">
+        {showGrid&&markerStyle!=='none'&&!accumarkGreen && <g className="draft-center-axes" pointerEvents="none" aria-label="2D drafting center axes">
           <path className="draft-center-horizontal" d="M-900 85H1230"/>
           <path className="draft-center-vertical" d="M165-900V1100"/>
           <circle className="draft-origin-dot" cx="165" cy="85" r="1.5"/>
         </g>}
-
-        {gradeNestProjects.map((gradedProject, index) => {
-          const piece = gradedProject.pieces?.find((item) => item.id === selectedPieceId)
-          if (!piece) return null
-          return (
-            <g key={`grade-nest-${gradedProject.previewSize || index}`} className="grade-nest-group">
-              <path d={polygonPath(piece)} className="grade-nest-path" />
-              <text x={piece.layout2d.x} y={piece.layout2d.y - Math.max(...piece.points.map((point) => point.y)) - 3 - index * 3.2} className="grade-nest-label">{gradedProject.previewSize || ''}</text>
-            </g>
-          )
-        })}
 
         {project.pieces.map((piece) => {
           const selected = piece.id === selectedPieceId
@@ -978,6 +1206,29 @@ export default function PatternEditor({
                   />
                 )
               })}
+              {(piece.foamPads || []).map(pad => {
+                if(!pad.points?.length)return null
+                const xs=pad.points.map(p=>p.x),ys=pad.points.map(p=>p.y)
+                const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys)
+                const sourceWidth=Math.max(.0001,maxX-minX),sourceHeight=Math.max(.0001,maxY-minY)
+                const scaleX=(Number(pad.widthCm)||sourceWidth)/sourceWidth
+                const scaleY=(Number(pad.heightCm)||sourceHeight)/sourceHeight
+                const theta=(Number(pad.rotationDeg)||0)*Math.PI/180
+                const cos=Math.cos(theta),sin=Math.sin(theta)
+                const cx=(minX+maxX)*.5,cy=(minY+maxY)*.5
+                const points=pad.points.map(p=>{
+                  const x=(p.x-cx)*scaleX,y=(p.y-cy)*scaleY
+                  return svgPoint({x:(Number(pad.x)||0)+x*cos-y*sin,y:(Number(pad.y)||0)+x*sin+y*cos},piece.layout2d)
+                })
+                const d=points.map((p,i)=>`${i?'L':'M'}${p.x} ${p.y}`).join(' ')+' Z'
+                return <path key={pad.id} d={d} clipPath={`url(#pattern-clip-${piece.id})`}
+                  fill="rgba(124,173,199,0.24)" stroke="#58a8cd" strokeWidth=".55"
+                  strokeDasharray={pad.sewn?'none':'1.8 1.2'}
+                  style={{cursor:tool==='select'&&!piece.locked&&!pad.locked?'move':'default'}}
+                  onPointerDown={event=>beginFoamPadDrag(event,piece,pad)}>
+                  <title>{pad.name||'Foam padding'} · {Number(pad.depthCm||0).toFixed(1)} cm raised · drag to position</title>
+                </path>
+              })}
               {(piece.pins || []).map((pin) => {
                 const rendered = svgPoint(pin, piece.layout2d)
                 return (
@@ -998,7 +1249,7 @@ export default function PatternEditor({
                   </g>
                 )
               })}
-              {(project.fasteners || []).flatMap((fastener) => {
+              {(project.fasteners || []).filter(item=>item.visible!==false).flatMap((fastener) => {
                 const markers = []
                 for (const [role, endpoint] of [['a', fastener.a], ['b', fastener.b]]) {
                   if (endpoint?.pieceId !== piece.id) continue
@@ -1094,18 +1345,24 @@ export default function PatternEditor({
                 const a=svgPoint({x:cx,y:minY+2},piece.layout2d),b=svgPoint({x:cx,y:maxY-2},piece.layout2d)
                 const chest=horizontalSpanAt(piece,chestY), stomach=horizontalSpanAt(piece,stomachY)
                 const center=svgPoint({x:cx,y:chestY},piece.layout2d)
-                return <g className="clo-bodice-drafting-guides" pointerEvents="none" clipPath={`url(#pattern-clip-${piece.id})`}>
+                return <g className="clo-bodice-drafting-guides" data-draft-center-guide={piece.id} pointerEvents="none" clipPath={`url(#pattern-clip-${piece.id})`}>
                   <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} className="bodice-center-guide"/>
                   {[[chest,chestY,'bodice-chest-guide','CHEST'],[stomach,stomachY,'bodice-stomach-guide','STOMACH']].map(([span,y,klass,label])=> span && (()=>{
                     const left=svgPoint({x:span.left+.6,y},piece.layout2d)
                     const right=svgPoint({x:span.right-.6,y},piece.layout2d)
                     const mid=svgPoint({x:cx,y},piece.layout2d)
-                    return <g key={label} className={`clo-pom-station ${klass}`} data-pom={label.toLowerCase()}>
+                    const labelFallback={x:mid.x+3.9,y:mid.y-1.8}
+                    const labelAnchor=pomRustReady ? rustPomLabelAnchor(left,right,{
+                      dx:labelFallback.x-(left.x+right.x)*0.5,
+                      dy:labelFallback.y-(left.y+right.y)*0.5,
+                    }) : null
+                    const labelPosition=labelAnchor ?? labelFallback
+                    return <g key={label} className={`clo-pom-station ${klass}`} data-pom={label.toLowerCase()} data-pom-backend={labelAnchor ? 'rust-wasm' : 'javascript-fallback'} data-draft-measure-guide={`${piece.id}-${label.toLowerCase()}`}>
                       <line x1={left.x} x2={right.x} y1={left.y} y2={right.y}/>
                       <circle cx={left.x} cy={left.y} r=".95"/><circle cx={right.x} cy={right.y} r=".95"/>
                       <circle cx={mid.x} cy={mid.y} r="1.35"/>
                       <path d={`M${mid.x-2.8} ${mid.y}h5.6M${mid.x} ${mid.y-2.8}v5.6`} />
-                      {selected && <text x={mid.x+3.9} y={mid.y-1.8} className="clo-pom-measurement-label">{label} {span.width.toFixed(1)} CM</text>}
+                      {selected && <text x={labelPosition.x} y={labelPosition.y} className="clo-pom-measurement-label">{label} {span.width.toFixed(1)} CM</text>}
                     </g>
                   })())}
                   <circle cx={center.x} cy={center.y} r=".85"/>
@@ -1118,7 +1375,7 @@ export default function PatternEditor({
                   ? [Math.max(0.01, (notch.t ?? 0.5) - gap), Math.min(0.99, (notch.t ?? 0.5) + gap)]
                   : [notch.t ?? 0.5]
                 return (
-                  <g key={notch.id} className={`pattern-notch ${notch.matchGroupId ? 'matched' : ''}`}>
+                  <g key={notch.id} className={`pattern-notch ${notch.matchGroupId ? 'matched' : ''}`} data-draft-armhole-notch={notch.matchGroupId?notch.id:undefined}>
                     {fractions.map((fraction, notchIndex) => {
                       const located = edgePointAt(piece, notch.edgeIndex, fraction, 48)
                       if (!located) return null
@@ -1130,8 +1387,8 @@ export default function PatternEditor({
                   </g>
                 )
               })}
-              {(piece.topstitches || []).map((stitch) => (
-                <g key={stitch.id} className="pattern-topstitch">
+              {(piece.topstitches || []).filter(item=>item.visible!==false).map((stitch) => (
+                <g key={stitch.id} className="pattern-topstitch" data-draft-hem-stitch={stitch.rows >= 2 && project.templateId==='tee'?piece.id:undefined} data-draft-hem-rows={stitch.rows}>
                   {topstitchPaths(piece, stitch).map((path, rowIndex) => (
                     <polyline
                       key={`${stitch.id}-${rowIndex}`}
@@ -1139,12 +1396,13 @@ export default function PatternEditor({
                         const rendered = svgPoint(point, piece.layout2d)
                         return `${rendered.x},${rendered.y}`
                       }).join(' ')}
-                      style={{ stroke: stitch.color || '#8d8d8d' }}
+                      style={{ stroke:project.templateId==='tee' && (stitch.color||'#8d8d8d').toLowerCase()==='#8d8d8d'
+                        ? '#6e71c4' : stitch.color || '#8d8d8d' }}
                     />
                   ))}
                 </g>
               ))}
-              {(piece.bindings || []).map((binding) => {
+              {(piece.bindings || []).filter(item=>item.visible!==false).map((binding) => {
                 const path = offsetEdgePath(piece, binding.edgeIndex, Number(binding.widthCm ?? 1.8) * 0.45, 32)
                 return (
                   <polyline
@@ -1158,7 +1416,7 @@ export default function PatternEditor({
                   />
                 )
               })}
-              {(piece.zippers || []).map((zipper) => {
+              {(piece.zippers || []).filter(item=>item.visible!==false).map((zipper) => {
                 const rails = zipperPaths(piece, zipper)
                 const centerPath = sampleEdge(piece, zipper.edgeIndex, 32)
                 return (
@@ -1176,7 +1434,7 @@ export default function PatternEditor({
                   </g>
                 )
               })}
-              {(piece.buttons || []).map((button) => {
+              {(piece.buttons || []).filter(item=>item.visible!==false).map((button) => {
                 const center = svgPoint(button, piece.layout2d)
                 const radius = Math.max(0.35, Number(button.diameterCm ?? 1.8) * 0.5)
                 return (
@@ -1187,7 +1445,7 @@ export default function PatternEditor({
                   </g>
                 )
               })}
-              {(piece.buttonholes || []).map((buttonhole) => {
+              {(piece.buttonholes || []).filter(item=>item.visible!==false).map((buttonhole) => {
                 const center = svgPoint(buttonhole, piece.layout2d)
                 const halfLength = Math.max(0.3, Number(buttonhole.lengthCm ?? 2.4) * 0.5)
                 const angle = (Number(buttonhole.orientationDeg || 0) * Math.PI) / 180
@@ -1256,11 +1514,22 @@ export default function PatternEditor({
                         <circle cx={position.x} cy={position.y} r="4" fill="none" stroke="#f3b970" strokeWidth="0.5" strokeDasharray="1 1" />
                       </g>
                     })()}
-                    {selected && !['sew', 'notch'].includes(tool) && edgeIndex % 2 === 0 && (
-                      <text x={(a.x + b.x) / 2} y={(a.y + b.y) / 2 - 1.5} className="edge-measure">
+                    {selected && !['sew', 'notch'].includes(tool) && (() => {
+                      // CLO's selected cutline readout follows each individual
+                      // segment. A curved edge's midpoint is its true arc
+                      // midpoint, not the chord between its two end points.
+                      const midpoint = edgePointAt(piece, edgeIndex, 0.5)
+                      if (!midpoint) return null
+                      const position = svgPoint(midpoint.point, piece.layout2d)
+                      return <text
+                        x={position.x + midpoint.normal.x * 1.5}
+                        y={position.y - midpoint.normal.y * 1.5}
+                        className="edge-measure"
+                        aria-label={`Edge ${edgeIndex + 1}: ${edgeLength(piece, edgeIndex).toFixed(2)} cm`}
+                      >
                         {edgeLength(piece, edgeIndex).toFixed(1)}
                       </text>
-                    )}
+                    })()}
                   </g>
                 )
               })}
@@ -1293,7 +1562,13 @@ export default function PatternEditor({
                       if (tool !== 'point') return
                       event.preventDefault()
                       event.stopPropagation()
-                      onDeletePoint?.(piece.id, pointIndex)
+                      // Edit Pattern in CLO uses a double-click to select the
+                      // containing pattern. Point deletion is a distinct,
+                      // intentional Option/Alt-click command.
+                      onSelectPiece(piece.id)
+                      setSelectedPoint(null)
+                      setSelectedEdge(null)
+                      setSelectedCurve(null)
                     }}
                   />
                 )
@@ -1301,6 +1576,8 @@ export default function PatternEditor({
               {selected && tool === 'curve' && piece.points.map((point, edgeIndex) => {
                 const next = piece.points[(edgeIndex + 1) % piece.points.length]
                 const curve = piece.curves?.[edgeIndex]
+                const focused=activeCurve?.pieceId===piece.id&&activeCurve.edgeIndex===edgeIndex
+                if(!curve&&!focused)return null
                 const controlLocal = curve
                   ? { x: curve.cx, y: curve.cy }
                   : { x: (point.x + next.x) * 0.5, y: (point.y + next.y) * 0.5 }
@@ -1308,12 +1585,14 @@ export default function PatternEditor({
                 const a = svgPoint(point, piece.layout2d)
                 const b = svgPoint(next, piece.layout2d)
                 return (
-                  <g key={`${piece.id}-curve-${edgeIndex}`} className={`curve-control ${curve ? 'active' : ''}`}>
+                  <g key={`${piece.id}-curve-${edgeIndex}`} data-pattern-curve-control={`${piece.id}:${edgeIndex}`}
+                    className={`curve-control ${curve ? 'active' : ''} ${focused?'selected':''}`}>
                     {curve && <><line x1={a.x} y1={a.y} x2={control.x} y2={control.y} /><line x1={b.x} y1={b.y} x2={control.x} y2={control.y} /></>}
                     <circle
                       cx={control.x}
                       cy={control.y}
-                      r={1.55}
+                      r={focused?2.1:1.55}
+                      title="VectorCraft-style quadratic control · Shift snaps at 45° · double-click to straighten"
                       onPointerDown={(event) => beginCurveDrag(event, piece, edgeIndex)}
                       onDoubleClick={(event) => { event.stopPropagation(); if (!piece.locked) onSetCurve?.(piece.id, edgeIndex, null) }}
                     />
@@ -1327,6 +1606,40 @@ export default function PatternEditor({
             </g>
           )
         })}
+        {showGradeNest&&gradeSourceProject?.grading?.sizes?.length>1&&<AccuMarkFullPatternGradeNest20261023
+          sourceProject={gradeSourceProject}
+          selectedPieceId={selectedPieceId}
+          selectedPointIndex={selectedGradePoint?.pieceId===selectedPieceId?selectedGradePoint.pointIndex:null}
+          selectedSize={gradePreviewSize||gradeSourceProject.grading.baseSize}
+          scope={gradeNestScope} pointMode={gradeNestPointMode}
+          showLabels={gradeNestLabels} showVectors={gradeNestVectors}
+          showSizeLabels={gradeNestLabels} viewWidth={view.width}
+          dragGradePoints={gradeNestDrag} onGradePointDrag={spec=>{
+            if(!onGradePointDrag)return
+            try{onGradePointDrag(spec);setGradeNestEditMessage('')}
+            catch(error){setGradeNestEditMessage(error.message||String(error))}
+          }}
+          maintainGrowths={gradeNestMaintainGrowths} disabled={!gradeEditAvailable}
+          onSelectPiece={onSelectPiece}
+          onSelectGradePoint={(pieceId,pointIndex)=>{
+            setSelectedGradePoint({pieceId,pointIndex})
+            onGradePointSelected?.({pieceId,pointIndex})
+          }}
+          onSelectSize={onSelectGradeSize}/>}
+        {!showGradeNest&&showGradePointAnnotations&&gradeSourceProject?.grading?.sizes?.length>1&&selectedPieceId&&(()=>{
+          const sourcePiece=gradeSourceProject.pieces?.find(piece=>piece.id===selectedPieceId)
+          const previewPiece=project.pieces?.find(piece=>piece.id===selectedPieceId)
+          if(!sourcePiece||!previewPiece)return null
+          return <AccuMarkDraftGradeOverlay20261023
+            sourcePiece={sourcePiece} previewPiece={previewPiece}
+            sizes={gradeSourceProject.grading.sizes} gradeNestProjects={gradeNestProjects}
+            previewSize={gradePreviewSize||gradeSourceProject.grading.baseSize}
+            selectedPointIndex={selectedGradePoint?.pieceId===selectedPieceId?selectedGradePoint.pointIndex:null}
+            onSelectPoint={pointIndex=>{
+              setSelectedGradePoint({pieceId:selectedPieceId,pointIndex})
+            }}
+            showNest={gradeNestProjects.length>0} viewWidth={view.width}/>
+        })()}
         {showSeamLinks && (project.seams || []).map((seam) => {
           const pieceA = project.pieces.find((piece) => piece.id === seam.a?.pieceId)
           const pieceB = project.pieces.find((piece) => piece.id === seam.b?.pieceId)
@@ -1355,7 +1668,13 @@ export default function PatternEditor({
           <circle cx={snapGuide.x} cy={snapGuide.y} r={2.3}/>
           <path d={`M ${snapGuide.x - 4.5} ${snapGuide.y} h 9 M ${snapGuide.x} ${snapGuide.y - 4.5} v 9`}/>
         </g>}
+        <PatternReferenceImageLayer image={reference.image} setImage={reference.setImage} unitsPerCm={1}
+          screenUnit={rulerScreenUnit}
+          interactive={tool === 'select'} handlesOnly/>
       </svg>
+      {showRulers&&<CadViewportRulers20261023 svgRef={svgRef} view={[view.x,view.y,view.width,view.height]}
+        worldToMetres={.01} units={rulerUnits} green={accumarkGreen} topInsetPx={39}
+        markColor={adaptiveCad?.ruler||studioPreferences?.twoDRulerMarkColor} glassColor={studioPreferences?.twoDRulerGlassColor} glassOpacity={studioPreferences?.twoDRulerGlassOpacity} glow={studioPreferences?.twoDRulerGlow}/>}
       {propertyDockHost && createPortal(
         <div className="clo-2d-docked-tools" aria-label="2D drafting property tools">
           <section className="clo-draft-snap-settings" aria-label="2D drafting snap preferences">

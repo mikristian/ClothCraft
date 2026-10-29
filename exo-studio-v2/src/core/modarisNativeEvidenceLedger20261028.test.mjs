@@ -1,0 +1,6 @@
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import {registerModarisIntakeEvidence20261028 as register} from './modarisNativeEvidenceLedger20261028.mjs'
+const entry=()=>({fileName:'style.mdl',bytes:Uint8Array.of(0,1,2,3,4),sha256:'a'.repeat(64),companionNames:['style.iba','style.vet']})
+test('preserves an opaque native-file evidence inventory without enabling edits',()=>{const input=entry(),before=[...input.bytes],report=register(input);assert.equal(report.ok,true);assert.equal(report.nativeEditable,false);assert.equal(report.roundTripVerified,false);assert.deepEqual([...input.bytes],before);assert.deepEqual(report.companionExtensions,['iba','vet']);assert.equal(report.byteCount,5)})
+test('invalid hashes, paths, and forged evidence cannot certify native compatibility',()=>{assert.equal(register({...entry(),sha256:'bad'}).code,'MISSING_SHA256');assert.equal(register({...entry(),fileName:'../../style.mdl'}).code,'INVALID_FILE_NAME');const report=register({...entry(),receiverEvidence:{application:'Modaris',version:'V8',operatorId:'operator1',artifacts:['claim.txt'],approved:true}});assert.equal(report.ok,true);assert.equal(report.approved,false);assert.equal(report.receiverEvidence.claimedOnly,true)})

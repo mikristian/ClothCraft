@@ -171,6 +171,7 @@ final class NativeApp: NSObject, NSApplicationDelegate, NSTableViewDataSource, N
     var fullWorkspaceRoot: NSView?
     var fullWebView: WKWebView?
     var bundledSchemeHandler: BundledWorkspaceSchemeHandler?
+    var acceptanceHarness: NativeWebAcceptance?
     var nativeSplit: NSSplitView?
 
     func applicationDidFinishLaunching(_ notification: Notification) {

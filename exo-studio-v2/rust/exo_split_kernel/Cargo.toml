@@ -1,0 +1,18 @@
+[package]
+name = "exo-split-kernel"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Native and WASM numeric split-position calculation for EXO 2D garment patterns"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+exo-geometry-kernel = { path = "../exo_geometry_kernel" }
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "abort"

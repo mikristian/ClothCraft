@@ -1,0 +1,147 @@
+.exo-workspace-widget-layer{position:absolute;inset:0;pointer-events:none;z-index:90;overflow:visible}
+.exo-workspace-widget{pointer-events:auto;min-width:0;border:1px solid var(--studio-border,#56616b);background:var(--studio-panel,#28313a);color:var(--studio-text,#e9eef4);box-shadow:0 10px 32px #0005;border-radius:7px;overflow:hidden}
+.exo-workspace-widget[data-glass="true"]{background:color-mix(in srgb,var(--studio-panel,#2b3440) 64%,transparent);backdrop-filter:blur(18px) saturate(145%);-webkit-backdrop-filter:blur(18px) saturate(145%);border-color:color-mix(in srgb,var(--studio-accent,#90bcdf) 45%,var(--studio-border,#58626c));border-radius:14px}
+.exo-workspace-widget--floating{position:absolute;width:max-content;max-width:min(480px,95%)}
+.exo-workspace-widget--left,.exo-workspace-widget--right{position:absolute;top:60px;max-height:calc(100% - 150px);width:49px}
+.exo-workspace-widget--left{left:0}.exo-workspace-widget--right{right:0}
+.exo-workspace-widget--top,.exo-workspace-widget--bottom{position:absolute;left:50%;transform:translateX(-50%);max-width:calc(100% - 70px)}
+.exo-workspace-widget--top{top:10px}.exo-workspace-widget--bottom{bottom:32px}
+.exo-workspace-widget-head{min-height:23px;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:3px 7px;background:color-mix(in srgb,var(--studio-sidebar,#303741) 80%,transparent);border-bottom:1px solid var(--studio-border,#58626c);font-size:10px;cursor:grab;touch-action:none;user-select:none}
+.exo-workspace-widget-head button{width:18px;height:18px;padding:0;border:0;background:transparent;color:var(--studio-text,#eee);cursor:pointer}
+.exo-workspace-widget-tools{display:grid;grid-template-columns:repeat(var(--widget-columns,2),minmax(0,1fr));gap:3px;padding:5px}
+.exo-workspace-widget--top .exo-workspace-widget-tools,.exo-workspace-widget--bottom .exo-workspace-widget-tools{display:flex;flex-wrap:nowrap}
+.exo-workspace-widget--left .exo-workspace-widget-tools,.exo-workspace-widget--right .exo-workspace-widget-tools{grid-template-columns:1fr;overflow:hidden}
+.exo-workspace-widget--left .exo-workspace-widget-head,.exo-workspace-widget--right .exo-workspace-widget-head{height:23px;padding:2px;justify-content:center}
+.exo-workspace-widget--left .exo-workspace-widget-head span,.exo-workspace-widget--right .exo-workspace-widget-head span{display:none}
+.exo-workspace-widget-tools button{display:flex;align-items:center;justify-content:center;gap:6px;min-width:31px;min-height:29px;border:1px solid var(--studio-border,#56616b);border-radius:4px;padding:3px;background:color-mix(in srgb,var(--studio-sidebar,#293341) 83%,transparent);color:var(--studio-text,#e9eef4);cursor:pointer}
+.exo-workspace-widget-tools button:hover{background:color-mix(in srgb,var(--studio-accent,#80b5df) 27%,var(--studio-panel,#28313a));border-color:var(--studio-accent,#80b5df)}
+.exo-workspace-widget-tools button:focus-visible{outline:2px solid var(--studio-accent,#80b5df);outline-offset:1px}
+.exo-workspace-widget-tools button span{font-size:11px;white-space:nowrap}
+@media(max-width:800px){.exo-workspace-widget--floating{max-width:260px}.exo-workspace-widget--top,.exo-workspace-widget--bottom{max-width:75%}}
+
+/* Workstation-wide docking uses the same responsive contract as custom bars.
+   The widget header always stays available for dragging, placement and removal. */
+.exo-workspace-widget-layer{display:block;isolation:isolate;z-index:100191}
+.exo-workspace-widget{max-height:calc(100% - 20px);display:flex;flex-direction:column}
+.exo-workspace-widget-head{min-width:0;gap:3px;min-height:28px;flex:none}
+.exo-workspace-widget-head span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.exo-workspace-widget-head select{max-width:82px;min-width:0;border:1px solid #546d80;border-radius:4px;background:#233747;color:#ecf5ff;font:10px system-ui;padding:3px;cursor:pointer}
+.exo-workspace-widget-head button{flex:none;min-width:23px;min-height:23px;font-size:13px;border-radius:4px}
+.exo-workspace-widget-head button:hover{background:#34526b}
+.exo-workspace-widget-tools{min-height:0;overflow:auto;scrollbar-width:thin;grid-template-columns:repeat(var(--widget-columns,2),36px)}
+.exo-workspace-widget--left,.exo-workspace-widget--right{width:max-content;max-width:min(240px,calc(100% - 12px));min-width:47px;max-height:calc(100% - 80px)}
+.exo-workspace-widget--left{left:5px}.exo-workspace-widget--right{right:5px}
+.exo-workspace-widget--left .exo-workspace-widget-head,.exo-workspace-widget--right .exo-workspace-widget-head{height:auto;padding:3px;justify-content:space-between;flex-wrap:wrap}
+.exo-workspace-widget--left .exo-workspace-widget-head span,.exo-workspace-widget--right .exo-workspace-widget-head span{display:block;flex-basis:100%;font-size:10px;text-align:center}
+.exo-workspace-widget--left .exo-workspace-widget-tools,.exo-workspace-widget--right .exo-workspace-widget-tools{grid-template-columns:repeat(min(var(--widget-columns,2),3),36px);overflow:auto}
+.exo-workspace-widget--top,.exo-workspace-widget--bottom{max-width:min(600px,calc(100% - 24px));width:max-content}
+.exo-workspace-widget--top .exo-workspace-widget-tools,.exo-workspace-widget--bottom .exo-workspace-widget-tools{flex-wrap:wrap;justify-content:center}
+.exo-workspace-widget-context{position:fixed;z-index:2147483000;width:205px;display:flex;flex-direction:column;gap:2px;padding:6px;background:#142130;color:#e4f0fb;border:1px solid #60849d;border-radius:7px;box-shadow:0 16px 35px #000a;font:12px/1.3 system-ui}
+.exo-workspace-widget-context strong{padding:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-bottom:1px solid #40576b}
+.exo-workspace-widget-context button{border:0;text-align:left;border-radius:4px;padding:8px 9px;color:#e4f0fb;background:transparent;cursor:pointer;font:inherit}
+.exo-workspace-widget-context button:hover,.exo-workspace-widget-context button:focus-visible{background:#255477;outline:1px solid #77c4ed}
+.exo-workspace-widget-context button:last-child{border-top:1px solid #40576b;color:#ffcece}
+.exo-workspace-widget-drop-target{position:absolute;pointer-events:none;z-index:1000;border:2px solid #6ac0ff;background:#3977aa47;color:#fff;border-radius:6px;display:grid;place-items:center;font:700 12px system-ui;text-transform:capitalize;text-shadow:0 1px 4px #000}
+.exo-workspace-widget-drop-target--left,.exo-workspace-widget-drop-target--right{top:46px;bottom:8px;width:90px}
+.exo-workspace-widget-drop-target--left{left:5px}.exo-workspace-widget-drop-target--right{right:5px}
+.exo-workspace-widget-drop-target--top,.exo-workspace-widget-drop-target--bottom{left:8px;right:8px;height:58px}
+.exo-workspace-widget-drop-target--top{top:4px}.exo-workspace-widget-drop-target--bottom{bottom:4px}
+
+/* Universal compact docking: the float retains generous spacing while rails
+   automatically take the minimum useful footprint, without clipped tools. */
+.exo-workspace-widget{--exo-dock-cell:34px;--exo-dock-gap:3px;box-sizing:border-box}
+.exo-workspace-widget--left,.exo-workspace-widget--right{width:max-content;max-width:min(178px,calc(100% - 12px));container-type:inline-size}
+.exo-workspace-widget--left .exo-workspace-widget-tools,.exo-workspace-widget--right .exo-workspace-widget-tools{
+ grid-template-columns:repeat(min(var(--widget-columns,2),3),var(--exo-dock-cell));gap:var(--exo-dock-gap);padding:4px;align-content:start;
+}
+.exo-workspace-widget--top,.exo-workspace-widget--bottom{width:max-content;max-width:calc(100% - 24px);container-type:inline-size}
+.exo-workspace-widget--top .exo-workspace-widget-head,.exo-workspace-widget--bottom .exo-workspace-widget-head{min-height:23px;padding:2px 5px}
+.exo-workspace-widget--top .exo-workspace-widget-tools,.exo-workspace-widget--bottom .exo-workspace-widget-tools{
+ display:flex;flex-flow:row wrap;align-content:center;gap:2px;padding:3px 5px;
+}
+.exo-workspace-widget--top .exo-workspace-widget-tools button,.exo-workspace-widget--bottom .exo-workspace-widget-tools button{
+ width:29px;min-width:29px;height:27px;min-height:27px;padding:2px;
+}
+.exo-workspace-widget--left .exo-workspace-widget-tools button,.exo-workspace-widget--right .exo-workspace-widget-tools button{
+ width:var(--exo-dock-cell);min-width:var(--exo-dock-cell);height:var(--exo-dock-cell);min-height:var(--exo-dock-cell);
+}
+.exo-workspace-widget--top .exo-workspace-widget-head span,.exo-workspace-widget--bottom .exo-workspace-widget-head span{font-size:10px}
+.exo-workspace-widget--left .exo-workspace-widget-head select,.exo-workspace-widget--right .exo-workspace-widget-head select{max-width:65px}
+@container (max-width:105px){.exo-workspace-widget--left .exo-workspace-widget-head span,.exo-workspace-widget--right .exo-workspace-widget-head span{font-size:9px}}
+
+/* Universal side-embed rule: ONE unbroken vertical tool column, never an
+   internal scrollbar. Long palettes remain in normal vertical flow. */
+.exo-workspace-widget--left,.exo-workspace-widget--right{
+ width:48px!important;min-width:48px!important;max-width:48px!important;
+ max-height:none!important;overflow:visible!important;container-type:normal!important;
+}
+.exo-workspace-widget--left .exo-workspace-widget-tools,.exo-workspace-widget--right .exo-workspace-widget-tools{
+ display:flex!important;flex-direction:column!important;flex-wrap:nowrap!important;
+ width:46px!important;max-height:none!important;overflow:visible!important;
+ padding:3px!important;gap:2px!important;box-sizing:border-box!important;
+ scrollbar-width:none!important;
+}
+.exo-workspace-widget--left .exo-workspace-widget-tools button,.exo-workspace-widget--right .exo-workspace-widget-tools button{
+ flex:0 0 34px!important;width:34px!important;height:34px!important;
+}
+.exo-workspace-widget--left .exo-workspace-widget-head,.exo-workspace-widget--right .exo-workspace-widget-head{
+ display:flex!important;flex-direction:column!important;align-items:center!important;gap:2px!important;
+}
+.exo-workspace-widget--left .exo-workspace-widget-head span,.exo-workspace-widget--right .exo-workspace-widget-head span{
+ font-size:0!important;height:14px!important;flex:0 0 14px!important;
+}
+.exo-workspace-widget--left .exo-workspace-widget-head select,.exo-workspace-widget--right .exo-workspace-widget-head select{
+ width:38px!important;max-width:38px!important;font-size:9px!important;
+}
+
+/* Polished one-column rail: controls remain accessible without a scroll panel. */
+.exo-workspace-widget:is(.exo-workspace-widget--left,.exo-workspace-widget--right){
+ border:1px solid #465463!important;border-radius:7px!important;
+ background:#171e27!important;color:#e9edf2!important;
+ box-shadow:0 5px 16px #0005!important;
+}
+.exo-workspace-widget:is(.exo-workspace-widget--left,.exo-workspace-widget--right) .exo-workspace-widget-head{
+ padding:4px 2px!important;min-height:0!important;gap:3px!important;
+ background:#232d38!important;border-bottom:1px solid #475665!important;
+}
+.exo-workspace-widget:is(.exo-workspace-widget--left,.exo-workspace-widget--right) .exo-workspace-widget-head span{
+ display:block!important;font-size:0!important;height:12px!important;line-height:12px!important;
+ color:#a7b5c4!important;overflow:hidden;
+}
+.exo-workspace-widget:is(.exo-workspace-widget--left,.exo-workspace-widget--right) .exo-workspace-widget-head :is(button,select){
+ width:36px!important;max-width:36px!important;min-width:0!important;min-height:23px!important;
+ height:23px!important;padding:1px 2px!important;border:1px solid #536577!important;
+ background:#2d3946!important;color:#f0f4f8!important;border-radius:4px!important;
+}
+.exo-workspace-widget:is(.exo-workspace-widget--left,.exo-workspace-widget--right) .exo-workspace-widget-tools{
+ align-items:center!important;padding:4px 3px!important;gap:3px!important;
+}
+.exo-workspace-widget:is(.exo-workspace-widget--left,.exo-workspace-widget--right) .exo-workspace-widget-tools button{
+ border:1px solid #43505f!important;border-radius:5px!important;background:#242f3b!important;
+ color:#e8edf4!important;box-shadow:none!important;padding:4px!important;
+}
+.exo-workspace-widget:is(.exo-workspace-widget--left,.exo-workspace-widget--right) .exo-workspace-widget-tools button:is(:hover,:focus-visible){
+ background:#3b4c5e!important;border-color:#9cb0c2!important;outline:2px solid #a4b5c5!important;outline-offset:0!important;
+}
+
+/* The liquid-glass effect is an optical material, not a black replacement
+   panel. Docking must preserve the user's background and usable tool size. */
+.exo-workspace-widget[data-glass="true"]{background:color-mix(in srgb,var(--studio-panel,#293747) 87%,transparent)!important;color:var(--studio-text,#edf5ff)!important;backdrop-filter:blur(9px) saturate(115%);-webkit-backdrop-filter:blur(9px) saturate(115%)}
+.exo-workspace-widget:is(.exo-workspace-widget--left,.exo-workspace-widget--right){background:var(--studio-panel,#263340)!important;color:var(--studio-text,#edf5ff)!important;max-height:calc(100% - 78px)!important;overflow:hidden!important}
+.exo-workspace-widget:is(.exo-workspace-widget--left,.exo-workspace-widget--right) .exo-workspace-widget-tools{overflow-y:auto!important;overflow-x:hidden!important;min-height:0!important;scrollbar-width:thin!important}
+.exo-workspace-widget:is(.exo-workspace-widget--top,.exo-workspace-widget--bottom){background:var(--studio-panel,#263340)!important;max-height:min(50%,320px)!important;overflow:hidden!important}
+.exo-workspace-widget:is(.exo-workspace-widget--top,.exo-workspace-widget--bottom) .exo-workspace-widget-tools{overflow-y:auto!important;overflow-x:hidden!important}
+.exo-workspace-widget-drop-target{border:2px solid #61c5ff!important;background:rgba(47,134,231,.20)!important;color:#f5faff!important;box-shadow:inset 0 0 20px #2f8fe34d,0 0 18px #2792ee66!important}
+/* Top and bottom share a responsive, full-lane horizontal arrangement. */
+.exo-workspace-widget:is(.exo-workspace-widget--top,.exo-workspace-widget--bottom){
+ left:8px!important;right:8px!important;transform:none!important;
+ width:calc(100% - 16px)!important;max-width:none!important;
+}
+.exo-workspace-widget:is(.exo-workspace-widget--top,.exo-workspace-widget--bottom) .exo-workspace-widget-head{width:100%;box-sizing:border-box}
+.exo-workspace-widget:is(.exo-workspace-widget--top,.exo-workspace-widget--bottom) .exo-workspace-widget-tools{
+ display:grid!important;grid-template-columns:repeat(auto-fit,minmax(32px,1fr))!important;
+ width:100%!important;box-sizing:border-box!important;gap:3px!important;
+}
+.exo-workspace-widget:is(.exo-workspace-widget--top,.exo-workspace-widget--bottom) .exo-workspace-widget-tools button{
+ width:100%!important;min-width:0!important;height:30px!important;min-height:30px!important;
+}

@@ -1,0 +1,23 @@
+{
+  "status": "VISUAL APPROVAL PENDING",
+  "source": "User CLO Stage_01.zprj inspected; source untouched",
+  "design": "EXO Stage01 Runway Chamber",
+  "stageGeometryGLB": "EXO-STAGE01-RUNWAY-CHAMBER-FINAL-STAGE-ONLY-REVIEW.glb",
+  "blend": "EXO-STAGE01-RUNWAY-CHAMBER-FINAL-REVIEW.blend",
+  "metres": true,
+  "floorSurfaceHeight": 0,
+  "avatarFeetAnchor": [
+    0,
+    0,
+    0
+  ],
+  "meshNodes": 836,
+  "stageBuildRequiresAppCodeChanges": false,
+  "stageIntegratedIntoApp": false,
+  "repairedOverlap": true,
+  "views": [
+    "editorial",
+    "garment",
+    "front"
+  ]
+}

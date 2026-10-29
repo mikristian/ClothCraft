@@ -1,0 +1,48 @@
+import assert from 'node:assert/strict'
+import {chromium} from 'playwright-core'
+const browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',args:['--no-sandbox','--disable-gpu']})
+const page=await browser.newPage({viewport:{width:1710,height:980}})
+page.setDefaultTimeout(26000)
+const errors=[];page.on('pageerror',e=>errors.push(e.message))
+let dialogs=0;page.on('dialog',async d=>{dialogs++;await d.accept(d.type()==='prompt'?'Installed EXO Designer AutoPack QA':undefined)})
+const log=(name,detail)=>console.log('PASS '+name+': '+JSON.stringify(detail))
+try{
+  await page.goto('http://127.0.0.1:5386/?engine=clothcraft&techpackWorkspace=1',{waitUntil:'domcontentloaded',timeout:30000})
+  // EXO native UI asynchronously rehydrates its five external portal hosts.
+  // A transient canvas may precede the real Library/Object Browser mount.
+  await page.waitForFunction(()=>Boolean(document.querySelector('.tpws-native-objects')&&
+    [...document.querySelectorAll('.tpws-native-objects button')].some(b=>b.textContent?.includes('Add custom page'))),null,{timeout:34000})
+  await page.waitForTimeout(700)
+  const initial=await page.locator('[data-techpack-sheet]').count()
+  await page.locator('.tpws-native-objects').getByRole('button',{name:'Add custom page'}).click()
+  const artboard=page.locator('[data-custom-blank=true]').last()
+  await artboard.waitFor({timeout:27000})
+  await page.getByRole('button',{name:'Toggle visible artboard grid'}).evaluate(el=>el.click())
+  assert.equal(await artboard.getAttribute('data-artboard-grid'),'visible')
+  await page.getByRole('button',{name:'Toggle snap to 8 pixel artboard grid'}).evaluate(el=>el.click())
+  log('Native custom artboard and snap/grid',{initialPages:initial})
+  await page.getByRole('button',{name:'Insert Excel table widget'}).evaluate(el=>el.click())
+  const grid=artboard.locator('.tps').first();await grid.waitFor({timeout:25000})
+  const width=await grid.locator('xpath=ancestor::*[contains(@class,"tpws-freeform-box")]').first().evaluate(el=>el.getBoundingClientRect().width)
+  assert(width>=475,'Table should fill usable portrait artboard width; actual '+width)
+  await grid.locator('td').first().dblclick({force:true})
+  const editor=grid.locator('.tps-editor').first();await editor.fill('=SUM(7,8)');await editor.press('Enter')
+  await page.waitForFunction(()=>document.querySelector('[data-custom-blank=true] .tps td')?.textContent?.trim()==='15',null,{timeout:17000})
+  const theme=grid.getByRole('combobox',{name:'Table style'});await theme.selectOption('dark')
+  assert.equal(await theme.inputValue(),'dark')
+  log('Large spreadsheet and formula/theme',{width:Math.round(width),formula:'=SUM(7,8)',calculated:15,theme:'dark'})
+  await page.getByRole('button',{name:'Layout edit mode'}).evaluate(el=>el.click())
+  const save=page.getByRole('button',{name:'Save full system + my content'})
+  await save.waitFor({timeout:20000})
+  await save.evaluate(el=>el.click())
+  await page.getByRole('tab',{name:'Templates'}).click()
+  await page.getByRole('button',{name:'Open Saved presets templates'}).click()
+  const saved=page.locator('.tpws-template-card').filter({hasText:'Installed EXO Designer AutoPack QA'}).first()
+  await saved.waitFor({timeout:18000})
+  await saved.getByRole('button',{name:'Use complete system'}).evaluate(el=>el.click())
+  await page.waitForFunction(()=>document.querySelectorAll('[data-custom-blank=true]').length>=2,null,{timeout:27000})
+  const reused=await page.locator('[data-custom-blank=true]').count()
+  assert.deepEqual(errors,[])
+  log('Saved and re-applied whole Techpack system',{reusedCustomArtboards:reused,dialogs,errors:errors.length})
+}catch(e){console.error('FAILED INSTALLED_TECHPACK_ARTBOARD_QA',e.stack||e.message,'BROWSER_ERRORS',JSON.stringify(errors));process.exitCode=1}
+finally{await browser.close()}

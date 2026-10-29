@@ -1,6 +1,9 @@
 /** Native ClothCraft selection dimensions, measured from the exact active
  * VBD mesh (3D) and authored UV pattern (2D), never from the unrelated EXO
  * draft. Mesh positions and UV are metres, return values are centimetres. */
+import {rustSegmentLength2D,rustSegmentLength3D} from './rustGeometryKernel.js'
+import {initializeRustSelectionMetricsKernel,rustMeasuredSewingInterval} from './rustSelectionMetricsKernel.js'
+if(typeof window!=='undefined' && typeof fetch==='function')void initializeRustSelectionMetricsKernel()
 const finitePoint = (p, dimensions) => Array.isArray(p) && p.length >= dimensions && p.slice(0, dimensions).every(Number.isFinite)
 
 export function boundaryLength(indices, points, dimensions = 3) {
@@ -9,9 +12,12 @@ export function boundaryLength(indices, points, dimensions = 3) {
   for (let i = 1; i < indices.length; i++) {
     const a = points[indices[i - 1]], b = points[indices[i]]
     if (!finitePoint(a, dimensions) || !finitePoint(b, dimensions)) return null
-    length += Math.hypot(...a.slice(0, dimensions).map((v, d) => v - b[d]))
+    length += dimensions===2?rustSegmentLength2D(a,b):
+      dimensions===3?rustSegmentLength3D(a,b):
+      Math.hypot(...a.slice(0, dimensions).map((v,d)=>v-b[d]))
   }
-  return Number.isFinite(length) ? length * 100 : null
+  const centimetres = length * 100
+  return Number.isFinite(centimetres) ? centimetres : null
 }
 
 // A sewn segment may cover only part of a named pattern boundary. Evaluate
@@ -26,10 +32,14 @@ function measuredSewingInterval(snapshot,side){
     range.some(n=>!Number.isFinite(n))||range[0]<0||range[1]>1||range[0]>=range[1])return null
   const uv=indices.map(i=>snapshot.uv?.[i]),live=indices.map(i=>snapshot.positions?.[i])
   if(uv.some(p=>!finitePoint(p,2))||live.some(p=>!finitePoint(p,3)))return null
+  const wasmResult=rustMeasuredSewingInterval(uv,live,range)
+  if(wasmResult)return [wasmResult.length2DCm,wasmResult.length3DCm].every(n=>Number.isFinite(n)&&n>=0)
+    ? wasmResult : null
   const segments=uv.slice(1).map((p,i)=>Math.hypot(p[0]-uv[i][0],p[1]-uv[i][1]))
   const total=segments.reduce((a,b)=>a+b,0)
-  if(!(total>0))return null
+  if(!Number.isFinite(total)||total<=0)return null
   const start=total*range[0],end=total*range[1]
+  if(!Number.isFinite(start)||!Number.isFinite(end))return null
   let cum=0,dist=0
   for(let i=0;i<segments.length;i++){
     const span=segments[i],lo=Math.max(start,cum),hi=Math.min(end,cum+span)
@@ -40,7 +50,9 @@ function measuredSewingInterval(snapshot,side){
     }
     cum+=span
   }
-  return {length2DCm:(end-start)*100,length3DCm:dist*100}
+  const length2DCm=(end-start)*100,length3DCm=dist*100
+  return Number.isFinite(length2DCm)&&Number.isFinite(length3DCm)
+    ? {length2DCm,length3DCm} : null
 }
 
 export function measureNativeSelection(snapshot, selected) {
@@ -73,8 +85,11 @@ export function measureNativeSelection(snapshot, selected) {
     drapedCm: boundaryLength(edges[id], snapshot.positions, 3),
   }))
   const allMeasured = measured.every(e => Number.isFinite(e.flatCm) && Number.isFinite(e.drapedCm))
-  const length2DCm = allMeasured ? measured.reduce((total, e) => total + e.flatCm, 0) : null
-  const length3DCm = allMeasured ? measured.reduce((total, e) => total + e.drapedCm, 0) : null
+  const total2D = allMeasured ? measured.reduce((total, e) => total + e.flatCm, 0) : null
+  const total3D = allMeasured ? measured.reduce((total, e) => total + e.drapedCm, 0) : null
+  const length2DCm = Number.isFinite(total2D) ? total2D : null
+  const length3DCm = Number.isFinite(total3D) ? total3D : null
+  const elongationPercent = length2DCm > 0 && length3DCm != null ? (length3DCm / length2DCm - 1) * 100 : null
   const seams = (snapshot.template.seams || []).filter(spec =>
     [spec.a, spec.b].some(side => side?.panel === selected.panel && (!selected.edge || side?.edge === selected.edge)))
   const material=snapshot.template.fabrics?.find(f=>f.id===panel.fabric)
@@ -91,7 +106,7 @@ export function measureNativeSelection(snapshot, selected) {
     positionCm:Array.isArray(panel.placement?.translation)? panel.placement.translation.map(x=>x*100):null,
     rotationDeg:panel.placement?.rotation_degrees || null,
     length2DCm, length3DCm,
-    elongationPercent:length2DCm > 0 && length3DCm != null ? (length3DCm / length2DCm - 1) * 100 : null,
+    elongationPercent:Number.isFinite(elongationPercent)?elongationPercent:null,
     edgeCount:selectedEdges.length,
     seamIds:seams.map(spec=>spec.id),
     targetLengthCm: selected.edge ? Number.isFinite(panel.polygon?.target_lengths?.[selected.edge])

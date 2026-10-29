@@ -1,0 +1,27 @@
+/* Optical-clear ruler glass: the patterned canvas remains fully continuous
+   underneath. No backdrop blur, filters or opaque masking. */
+.cad-viewport-rulers,.cad-viewport-rulers *{
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+  filter:none!important;
+}
+/* The expanded pattern board's left ruler occupies 38 px, its top 25 px.
+   Move both toolbars outside the mark tracks without hiding the expand arrow. */
+.app-shell .cc-board[data-cad-expanded="true"] .cc-corner-tool-host,
+.cc-board[data-cad-expanded="true"] .cc-corner-tool-host{
+  left:51px!important;
+  top:70px!important;
+}
+.app-shell .cc-board[data-cad-expanded="true"] .cc-v2-orientation.cc-v2-board-orientation,
+.cc-board[data-cad-expanded="true"] .cc-v2-board-orientation{
+  top:36px!important;
+  right:14px!important;
+}
+.pattern-editor-shell[data-cad-expanded="true"]>.clo-corner-toolkit,
+.pattern-editor-shell[data-cad-expanded="true"]>.exo-viewport-inline-tools{
+  top:74px!important;
+  left:51px!important;
+}
+.cad-viewport-rulers .cad-ruler-illumination :is(line,path,text){
+  filter:drop-shadow(0 0 2px var(--cad-ruler-glow,#a7dfff)) drop-shadow(0 0 4px var(--cad-ruler-glow,#a7dfff))!important;
+}

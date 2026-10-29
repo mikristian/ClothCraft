@@ -50,6 +50,27 @@
 .clo-menu-popover button:hover:not(:disabled), .clo-simulation-popover button:hover:not(:disabled) { background: #31576d; color: white; }
 .clo-menu-popover button:disabled, .clo-simulation-popover button:disabled { opacity: .48; cursor: not-allowed; }
 .clo-menu-popover small, .clo-simulation-popover small { margin-left: auto; color: #95a0a8; font-size: 8px; letter-spacing: .05em; }
+.clo-menu-popover { min-width: 235px; }
+.clo-menu-flyout { position: relative; }
+.clo-menu-flyout > button { width: 100%; justify-content: space-between; }
+.clo-menu-flyout > button svg { margin-left: auto; color: #9ca9b6; }
+.clo-menu-flyout.is-expanded > button, .clo-menu-flyout:hover > button, .clo-menu-flyout:focus-within > button {
+  background: rgba(103,167,210,.2); color: #eef8ff;
+}
+.clo-menu-subpanel {
+  display: none; position: absolute; left: calc(100% - 3px); top: -6px;
+  min-width: 280px; max-width: 390px; max-height: min(70vh, 580px); overflow-y: auto;
+  padding: 6px; border: 1px solid #52606e; border-radius: 9px;
+  background: rgba(27,32,39,.99); box-shadow: 0 15px 45px rgba(0,0,0,.66);
+  backdrop-filter: blur(18px) saturate(120%); z-index: 350;
+}
+.clo-menu-flyout.is-expanded > .clo-menu-subpanel, .clo-menu-flyout:hover > .clo-menu-subpanel,
+.clo-menu-flyout:focus-within > .clo-menu-subpanel { display:flex; flex-direction:column; }
+.clo-menu-subpanel > button { width: 100%; min-height: 31px; height: auto; padding-block: 7px; white-space: normal; }
+.clo-menu-subpanel > button > span { flex:1; }
+.clo-menu-subpanel kbd { flex-shrink:0; padding-left: 8px; color: #aab5c2; font-family: inherit; font-size: 10px; }
+.clo-menu-subpanel small { flex-shrink:0; }
+.clo-menu-group.flyout-left .clo-menu-subpanel { left:auto; right:calc(100% - 3px); }
 .clo-simulation-popover { left: auto; right: 0; top: calc(100% + 7px); width: 248px; }
 .clo-simulation-popover > strong { font-size: 10px; color: #92a1af; font-weight: 600; padding: 8px 10px; }
 .topbar { grid-template-columns: 194px minmax(370px, 1fr) auto; background: #15171a; }
@@ -87,6 +108,23 @@
 .clo-library-search button { flex-shrink: 0; background: transparent; border: none; color: #bfcbd3; cursor: pointer; }
 .asset-library-content { display: flex; gap: 5px; align-content: start; flex-wrap: wrap; padding: 9px 7px 12px; }
 .asset-library-content .asset-section-heading { width: 100%; display: flex; align-items: center; gap: 5px; margin: 1px 2px 6px; color: #a6aeb7; }
+.asset-library-content .asset-section-heading-toggle{background:transparent;border:0;padding:7px 3px;text-align:left;cursor:pointer;font:inherit}
+.asset-library-content .asset-section-heading-toggle:hover,.asset-library-content .asset-section-heading-toggle:focus-visible{color:#e7edf0;outline:1px solid #777f85;outline-offset:0;border-radius:3px}
+.clo-library-categories .clo-library-tree-group{width:100%;min-width:0}
+.clo-library-categories .clo-library-tree-root-line{display:flex;align-items:center;width:100%;min-width:0;border-radius:3px}
+.clo-library-categories .clo-library-tree-root-line.active{background:#35383c}
+.clo-library-categories .clo-library-tree-root{flex:1 1 auto;min-width:0;width:auto;font-weight:550;padding-left:2px}
+.clo-library-categories .clo-library-tree-expand{width:20px;min-width:20px;max-width:20px;min-height:26px;padding:0;border:0;background:transparent;display:grid;place-items:center;color:#b5b9bd}
+.clo-library-categories .clo-library-tree-expand:hover{background:#3c434a;color:#e4f4fb}
+.clo-library-categories .clo-library-tree-root.active svg{transform:none}
+.clo-library-tree-children,.clo-library-tree-branch{border-left:1px solid #484b4f;margin-left:13px;padding-left:5px}
+.clo-library-tree-branch{margin-left:14px;border-color:#4d5258}
+.clo-library-categories .clo-library-tree-children button{display:flex;width:100%;align-items:center;gap:5px;text-align:left;padding:5px 4px;min-height:25px;background:transparent;border:0;border-radius:3px;cursor:pointer;color:#b6bec5;font-size:10px}
+.clo-library-categories .clo-library-tree-children button svg{flex:none;color:#8d98a1;transform:none}
+.clo-library-categories .clo-library-tree-children button:hover,.clo-library-categories .clo-library-tree-children button:focus-visible{color:#f0f6f8;background:#363a3f;outline:1px solid #5a6571}
+.clo-library-categories .clo-library-tree-children button.selected{background:#303f4b;color:#a7dffc}
+.clo-library-tree-spacer{width:12px;min-width:12px}
+.clo-library-selected-folder{display:inline-block;color:#9db6c9;font-size:9px;font-weight:500;letter-spacing:0;text-transform:none;white-space:nowrap;max-width:105px;overflow:hidden;text-overflow:ellipsis}
 .asset-library-content.thumbnail-mode .garment-tile { width: calc(50% - 3px); padding: 4px; min-width: 0; flex-direction: column; align-items: center; gap: 5px; border: 1px solid transparent; }
 .asset-library-content.list-mode .garment-tile { width: 100%; flex-direction: row; }
 .garment-tile:hover { border-color: #45687b !important; background: rgba(96,155,192,.10) !important; }
@@ -797,6 +835,36 @@
 .tool-rail > button {flex-shrink:0;}
 .tool-rail .clo-rail-section,.tool-rail .rail-divider {flex-shrink:0;}
 .clo-reference-dual-bars>.clo-reference-column.clo-right-tool-grid button {flex-shrink:0;}
+/* CLO inspector AX coordinates: 2D A/B each start at y130, with 30px buttons
+   every 34px and 44px where the source has a tool-group divider. Keep the
+   observed horizontal pairs aligned independently, even after unequal gaps. */
+.clo-reference-dual-bars.clo-observed-bars { min-height:0; }
+.clo-reference-dual-bars.clo-observed-bars>.clo-observed-column.clo-right-tool-grid {
+  position:relative;
+  height:624px;
+  min-height:624px;
+  box-sizing:border-box;
+  padding:0;
+  gap:0;
+}
+.clo-reference-dual-bars.clo-observed-bars>.clo-observed-column.clo-right-tool-grid button {
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  width:34px;
+  height:30px;
+}
+.clo-reference-dual-bars.clo-observed-bars>.clo-observed-column button[data-clo-divider-after="true"]::after {
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:calc(100% + 3px);
+  height:3px;
+  border-top:1px solid #17191d;
+  border-bottom:1px solid #505358;
+  pointer-events:none;
+}
 .clo-right-tool-palette { background:#303135; border-color:#202226; }
 .clo-palette-scroll { background:#303135; }
 @media(max-width:1250px) {
@@ -814,7 +882,8 @@
 /* Compact native CAD chrome: menus and project tools occupy one bar rather
    than stacking a large seven-workspace ribbon above the drawing surface. */
 .app-shell,.desktop-workspace .app-shell {
-  grid-template-rows: 35px 35px minmax(0,1fr) 41px;
+  grid-template-rows: 35px minmax(0,1fr) 41px;
+  position: relative;
 }
 .clo-mac-menu {
   padding:0 6px;
@@ -861,6 +930,25 @@
 .project-meta span {font-size:9px;}
 .project-strip .command-bar {height:25px;}
 .project-strip .command-bar input {font-size:10px;}
+/* ARAI is an opt-in floating conversation, rather than a permanent second
+   toolbar taking valuable height away from the pattern and cloth viewports. */
+.clo-arai-launch {display:inline-flex;align-items:center;gap:5px;justify-content:center;min-width:61px;}
+.clo-arai-launch.active {color:#e7f5ff;background:#344452;border-color:#738696;}
+.clo-arai-popover {position:absolute;z-index:180;top:39px;right:14px;width:min(440px,calc(100vw - 28px));display:flex;flex-direction:column;gap:12px;padding:14px;border:1px solid #424d57;border-radius:12px;background:#20252c;color:#e9edf2;box-shadow:0 22px 75px #000b;}
+.clo-arai-header,.clo-arai-header > div {display:flex;align-items:center;gap:9px;}
+.clo-arai-header {justify-content:space-between;}
+.clo-arai-header strong {font-size:13px;letter-spacing:.09em;}
+.clo-arai-header span {font-size:9px;letter-spacing:.08em;color:#9babb8;}
+.clo-arai-header > button {width:27px;height:27px;line-height:1;border:1px solid #404950;border-radius:6px;background:#303943;color:#d7e2eb;cursor:pointer;font-size:22px;}
+.clo-arai-conversation {display:flex;flex-direction:column;gap:9px;min-height:90px;max-height:38vh;overflow-y:auto;padding:7px 1px;}
+.clo-arai-message {max-width:94%;padding:11px 12px;border-radius:9px;border:1px solid #364450;background:#28313a;}
+.clo-arai-message.user {align-self:flex-end;background:#344454;}
+.clo-arai-message small {font-size:9px;font-weight:750;letter-spacing:.08em;color:#a7c9e2;}
+.clo-arai-message p {margin:6px 0 0;font-size:12px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;}
+.clo-arai-popover .command-bar {margin:0;width:100%;height:38px;grid-template-columns:30px minmax(0,1fr) 56px;background:#171d23;border-color:#495665;}
+.clo-arai-popover .command-bar input {font-size:11px;}
+.clo-arai-popover .command-bar button {font-size:9px;cursor:pointer;}
+.clo-arai-hint {margin:0;color:#a4adb7;font-size:10px;line-height:1.4;}
 .pattern-editor-shell .draft-avatar-guide {
   opacity:.27;
   pointer-events:none;
@@ -938,15 +1026,65 @@
 .clo-left-3d-column:nth-child(2){border-right:0;border-left:1px solid #45484c;}
 .tool-rail .clo-left-3d-column button,
 .desktop-workspace .tool-rail .clo-left-3d-column button {
-  width:30px;height:32px;flex-shrink:0;padding:0;display:grid;place-items:center;
+  position:relative;width:30px;height:32px;flex-shrink:0;padding:0;display:grid;place-items:center;
   border:1px solid transparent;border-radius:2px;color:#bec0c4;background:#303135;
 }
 .tool-rail .clo-left-3d-column button:hover:not(:disabled){background:#42464d;border-color:#5e646b;color:#fff;}
 .tool-rail .clo-left-3d-column button.active{background:#344857;border-color:#587e9a;color:#5cc9f7;}
 .tool-rail .clo-left-3d-column button:disabled{opacity:.3;cursor:not-allowed;}
+.tool-rail .clo-left-3d-column button[data-clo-group-end="true"]{margin-bottom:9px;}
+.tool-rail .clo-left-3d-column button[data-clo-group-end="true"]::before{
+  content:"";position:absolute;left:7px;right:7px;bottom:-6px;height:1px;
+  background:#4a5058;pointer-events:none;
+}
+.tool-rail .clo-left-3d-column button:focus-visible{
+  outline:2px solid #a3dcf5;outline-offset:1px;z-index:2;
+}
+/* Measured CLO 7 3D reference layout: A/B are 36px apart, each 34x30px.
+   Independent absolute offsets preserve the 34/44px rhythm and divider gaps. */
+.tool-rail > .clo-left-3d-double-bars.clo-observed-3d-bars {
+  grid-template-columns:repeat(2,34px);
+  gap:2px;
+  width:70px;
+  justify-self:center;
+  align-items:start;
+  min-height:756px;
+}
+.clo-left-3d-double-bars.clo-observed-3d-bars>.clo-observed-3d-column {
+  position:relative;
+  height:756px;
+  min-height:756px;
+  box-sizing:border-box;
+  padding:0;
+  gap:0;
+  min-width:0;
+}
+.tool-rail .clo-left-3d-double-bars.clo-observed-3d-bars>.clo-observed-3d-column button,
+.desktop-workspace .tool-rail .clo-left-3d-double-bars.clo-observed-3d-bars>.clo-observed-3d-column button {
+  position:absolute;
+  left:0;
+  width:34px;
+  height:30px;
+  margin:0;
+}
+.tool-rail .clo-left-3d-double-bars.clo-observed-3d-bars>.clo-observed-3d-column button[data-clo-group-end="true"]::before {
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-5px;
+  height:3px;
+  border-top:1px solid #17191d;
+  border-bottom:1px solid #505358;
+  background:transparent;
+  pointer-events:none;
+}
+@media (max-height:760px){
+  .tool-rail > .clo-left-3d-double-bars{max-height:calc(100dvh - 175px);overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#525e68 transparent;}
+}
 
-/* Daily workspace: show only real working tools by default. The full CLO
-   reference inventory is opt-in and never impersonates an implemented tool. */
+/* Reference positions retain CLO's original independent two-column ordering.
+   Disabled tools show their descriptive native availability tooltip. */
 .tool-rail > .clo-reference-mode-toggle {
   grid-column:1 / -1;
   width:100%;
@@ -980,6 +1118,26 @@
 }
 .clo-left-3d-column button.clo-placeholder-tool,
 .clo-reference-column button.clo-placeholder-tool {opacity:.3;filter:grayscale(1);}
+.clo-left-3d-column button.clo-tool-inquire[data-clo-slot] {
+  position:relative;
+  color:#87929e;
+  background:#26292d;
+  border:1px solid #333940;
+}
+.clo-left-3d-column button.clo-tool-inquire[data-clo-slot]:hover,
+.clo-left-3d-column button.clo-inspect-tool[data-clo-slot]:hover {
+  color:#d8e2ed;
+  border-color:#7193a9;
+  background:#34404a;
+}
+.clo-left-3d-column button.clo-inspect-tool[data-clo-slot] {
+  color:#c4c2ae;
+  border:1px solid #575548;
+  background:#33322c;
+}
+.clo-left-3d-column button[data-clo-implementation="unavailable"]::after {
+  content:none;
+}
 .clo-tool-palette-label .clo-palette-mode-text {
   flex:1 1 0;
   width:auto;
@@ -1128,3 +1286,128 @@
 .clo-object-select {display:flex;align-items:center;gap:8px;flex:1;min-width:0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer;padding:5px 2px}
 .clo-object-mini-action {display:flex;align-items:center;justify-content:center;flex:0 0 25px;height:25px;border-radius:4px}
 .clo-object-mini-action:hover,.clo-object-mini-action:focus-visible {background:#455366;color:#fff}
+/* The Graphics tab is the actual print-layer stack. Selection and visibility
+   are separate targets, like an illustration editor's Layers panel. */
+.clo-object-graphic-row {min-height:54px;gap:7px;border-bottom:1px solid #34383f}
+.clo-object-graphic-row.selected {background:#313b48;box-shadow:inset 2px 0 #c7d6e7}
+.clo-object-graphic-row.is-hidden .clo-object-select {opacity:.5}
+.clo-object-graphic-row .clo-object-select {padding:5px 0;gap:10px}
+.clo-object-graphic-row .clo-object-row-name {display:block;font-size:11px;line-height:1.25;font-weight:550;color:#e8edf4}
+.clo-object-graphic-row .clo-object-row-name small {display:block;margin-top:5px;color:#929ca7;font-weight:400;font-size:10px;font-variant-numeric:tabular-nums}
+.clo-object-graphic-thumbnail {width:37px;height:37px;flex:0 0 37px;object-fit:contain;box-sizing:border-box;padding:4px;background:#e9e9e9;border:1px solid #5a5f67;border-radius:5px}
+.clo-object-graphic-toggle {display:flex;align-items:center;justify-content:center;flex:0 0 25px;min-height:34px;cursor:pointer}
+.clo-object-graphic-toggle input {width:15px;height:15px;cursor:pointer;accent-color:#dce7f3}
+.clo-object-graphic-toggle input:disabled {cursor:not-allowed;opacity:.45}
+.clo-object-graphic-row .clo-object-select:focus-visible,.clo-object-graphic-toggle input:focus-visible {outline:2px solid #c3d8ef;outline-offset:1px}
+.clo-inspector .clo-native-graphic-host {width:100%;min-width:0;flex:1 0 auto}
+/* The additional Trim tab scrolls inside the inspector on narrow displays. */
+.clo-inspector .clo-object-tabs {display:flex;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;min-width:0}
+.clo-inspector .clo-object-tabs button {flex:1 0 27px;min-width:27px}
+
+/* 2026-10-17 CLO Object Browser reference: a quiet fabric swatch stack and
+   the same compact Add / Copy / Assign row in every object category. */
+.clo-inspector .clo-object-actions-compact{
+  display:flex;align-items:center;justify-content:flex-end;gap:9px;
+  height:40px;padding:0 9px;background:#2b2c2f;
+  border-bottom:1px solid #434447;
+}
+.clo-object-actions-count{margin-right:auto;color:#8e9499;font-size:9px;font-variant-numeric:tabular-nums}
+.clo-object-action-buttons{display:flex;align-items:center;gap:4px;min-width:0}
+.clo-inspector .clo-object-actions-compact .clo-object-action-buttons button{
+  display:inline-flex;align-items:center;justify-content:center;gap:4px;
+  min-height:26px;padding:3px 8px;border:1px solid #161718;
+  border-radius:2px;background:linear-gradient(#38393d,#303135);
+  color:#dddfe3;font-size:11px;font-weight:510;box-shadow:inset 0 1px 0 #ffffff0a;
+  white-space:nowrap
+}
+.clo-inspector .clo-object-actions-compact .clo-object-action-buttons button:hover:not(:disabled){
+  background:#42474c;border-color:#60686e;color:#fff
+}
+.clo-inspector .clo-object-actions-compact .clo-object-action-buttons button:disabled{
+  opacity:.34;cursor:not-allowed;color:#aaa
+}
+.clo-inspector .clo-object-fabric-row{
+  min-height:53px;gap:7px;padding:5px 10px;background:#2b2b2d;
+  border-bottom:1px solid #434346;color:#dddfe2
+}
+.clo-inspector .clo-object-fabric-row.selected{background:#303438;box-shadow:inset 2px 0 #42c5f2}
+.clo-inspector .clo-object-fabric-row:hover{background:#35383c}
+.clo-object-fabric-row .clo-object-graphic-toggle{flex:0 0 19px;min-height:32px}
+.clo-object-fabric-row .clo-object-graphic-toggle input{
+  accent-color:#02b9ee;width:16px;height:16px
+}
+.clo-object-fabric-row .clo-object-select{gap:12px;padding:2px 0}
+.clo-object-fabric-row .clo-material-swatch{
+  width:37px;height:37px;flex:0 0 37px;background:#f1f1f1;
+  border:1px solid #b1b3b5;border-radius:0;box-shadow:0 0 0 1px #161719
+}
+.clo-object-fabric-row .clo-object-row-name{font-size:11px;font-weight:520;color:#e5e5e5}
+.clo-object-fabric-icons{display:flex;align-items:center;gap:2px;margin-left:auto;flex:none}
+.clo-object-fabric-icons button{
+  display:grid;place-items:center;width:23px;height:25px;padding:0;
+  border:0;border-radius:2px;color:#8c9194;background:transparent;cursor:pointer
+}
+.clo-object-fabric-icons button:hover,.clo-object-fabric-icons button:focus-visible{
+  color:#b5e7f4;background:#42484d;outline:none
+}
+.exo-pattern-import-bar{padding:8px 8px 11px;display:grid;gap:6px;border-bottom:1px solid #282e34}
+.exo-pattern-import-bar>.wide-action{margin:0;min-height:34px;font-size:10px}
+.exo-pattern-import-bar>span{color:#9ca9b6;font-size:10px;line-height:1.45}
+
+/* Continuous CLO-style grey strips for the native 3D and 2D tool rails.
+   Tool availability must not create a border around every icon. */
+.tool-rail,
+.clo-right-tool-palette,
+.clo-palette-scroll,
+.clo-reference-dual-bars,
+.clo-reference-column,
+.clo-reference-column:nth-child(2),
+.clo-left-3d-column {
+  background:#303236;
+}
+.tool-rail {border-right:1px solid #202225;}
+.clo-right-tool-palette {border-right:1px solid #202225;}
+.clo-reference-column {border-right:1px solid #24262a;}
+.clo-reference-column:nth-child(2) {border-right:0;border-left:1px solid #44474b;}
+.clo-left-3d-column {border-right:1px solid #24262a;}
+.clo-left-3d-column:nth-child(2) {border-right:0;border-left:1px solid #44474b;}
+
+.tool-rail .clo-left-3d-column button,
+.desktop-workspace .tool-rail .clo-left-3d-column button,
+.clo-reference-column button,
+.clo-left-3d-column button.clo-supported-tool,
+.clo-reference-column button.clo-supported-tool,
+.clo-left-3d-column button.clo-tool-inquire[data-clo-slot],
+.clo-left-3d-column button.clo-inspect-tool[data-clo-slot] {
+  border:1px solid transparent;
+  border-radius:3px;
+  background:transparent;
+  color:#c7cbcf;
+  box-shadow:none;
+}
+.tool-rail .clo-left-3d-column button:hover:not(:disabled),
+.clo-reference-column button:hover:not(:disabled),
+.clo-left-3d-column button.clo-supported-tool:hover,
+.clo-reference-column button.clo-supported-tool:hover,
+.clo-left-3d-column button.clo-tool-inquire[data-clo-slot]:hover,
+.clo-left-3d-column button.clo-inspect-tool[data-clo-slot]:hover {
+  background:#43474d;
+  color:#f4f7fb;
+  border-color:transparent;
+}
+.tool-rail .clo-left-3d-column button.active,
+.desktop-workspace .tool-rail .clo-left-3d-column button.active,
+.clo-reference-column button.active,
+.tool-rail .clo-left-3d-column button.clo-supported-tool.active,
+.clo-reference-column button.clo-supported-tool.active {
+  background:#245d88;
+  color:#f4fbff;
+  border-color:#55b8ff;
+  box-shadow:inset 0 0 0 1px #398bc4;
+}
+.tool-rail .clo-left-3d-column button:focus-visible,
+.clo-reference-column button:focus-visible {
+  outline:2px solid #6fc6ff;
+  outline-offset:1px;
+  z-index:2;
+}

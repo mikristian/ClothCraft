@@ -1,0 +1,17 @@
+/* A single two-column toolbar: preserve original 2D icon positions, append
+   Pattern Studio icons beneath the originals without reflowing or overlapping. */
+.app-shell .main-layout[data-pattern-workspace="true"] .clo-right-tool-palette.exo-four-column-pattern-toolbar{background:#0b0e13!important;flex:0 0 77px!important;width:77px!important;min-width:77px!important;max-width:77px!important}
+.exo-four-column-pattern-toolbar .clo-palette-scroll{overflow-x:hidden!important;overflow-y:auto!important;flex:1 1 auto!important}
+.app-shell .main-layout[data-pattern-workspace="true"] .exo-four-column-pattern-toolbar .clo-reference-dual-bars.clo-observed-bars.exo-two-column-combined-bars{display:grid!important;grid-template-columns:repeat(2,36px)!important;width:72px!important;min-height:990px!important;gap:0!important;padding:0!important;align-items:start!important}
+.exo-four-column-pattern-toolbar .exo-two-column-combined-bars>.clo-observed-column.clo-right-tool-grid{position:relative!important;display:block!important;width:36px!important;min-width:36px!important;flex:0 0 36px!important;height:990px!important;min-height:990px!important;background:#0b0e13!important;padding:0!important}
+.exo-four-column-pattern-toolbar .exo-two-column-combined-bars>.clo-observed-column.clo-right-tool-grid>button{position:absolute!important;left:50%!important;transform:translateX(-50%)!important;width:34px!important;height:30px!important;margin:0!important}
+.exo-pattern-studio-embedded-column{display:contents}
+.exo-four-column-pattern-toolbar .exo-two-column-combined-bars .exo-pattern-studio-embedded-column>button{position:absolute!important;left:50%!important;transform:translateX(-50%)!important;width:34px!important;height:30px!important;margin:0!important;border:1px solid transparent;border-radius:2px;background:transparent!important;color:#c4d1df!important;display:grid;place-items:center;padding:0;cursor:pointer}
+.exo-four-column-pattern-toolbar .exo-two-column-combined-bars .exo-pattern-studio-embedded-column>button:hover:not(:disabled){background:#293845!important;border-color:#516578!important;color:white!important}
+.exo-four-column-pattern-toolbar .exo-two-column-combined-bars .exo-pattern-studio-embedded-column>button[aria-pressed=true]{background:#344857!important;border-color:#587e9a!important;color:#5cc9f7!important}
+.exo-four-column-pattern-toolbar .exo-two-column-combined-bars .exo-pattern-studio-embedded-column>button:disabled{opacity:.35;cursor:not-allowed}
+.exo-four-column-pattern-toolbar .exo-combined-toolbar-header{display:flex;align-items:center;justify-content:space-between;min-height:27px;padding:2px 4px;border-bottom:1px solid #29323d;background:#0b0e13;color:#d7e6ef}
+.exo-four-column-pattern-toolbar .exo-combined-toolbar-header strong{font-size:8px;letter-spacing:0;line-height:1.2}
+.exo-four-column-pattern-toolbar .exo-combined-toolbar-header button{display:grid;place-items:center;width:19px;height:21px;flex:0 0 19px;border:1px solid #394a59;border-radius:3px;background:#17202a;color:#dce8f5;cursor:pointer}
+.exo-four-column-pattern-toolbar .clo-palette-workflows,.exo-four-column-pattern-toolbar .clo-palette-count,.exo-four-column-pattern-toolbar .clo-reset-fabric-panels{display:none!important}
+.exo-four-column-pattern-toolbar .exo-two-column-combined-bars[data-tools-collapsed="true"]{display:none!important}

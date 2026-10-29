@@ -36,7 +36,10 @@ try {
   near((await read()).pieces.find(p=>p.id==='front').points[0].x,changedX)
 
   await page.getByRole('button',{name:'Edit Curves',exact:true}).first().click()
-  await front.locator('.curve-control circle').first().click({force:true})
+  // Uncurved edge controls are deliberately hidden until their edge is
+  // selected; use the actual edge-to-control workflow.
+  await front.locator('.edge-hit').first().dispatchEvent('pointerdown',{button:0,pointerId:35,isPrimary:true})
+  await front.locator('[data-pattern-curve-control="front:0"] circle').first().click({force:true})
   const curveEditor=page.getByRole('region',{name:'Precision curve editor'})
   assert.ok(await curveEditor.isVisible(),'Curve editor must open on a real curve-handle click')
   await curveEditor.getByRole('spinbutton',{name:'Curve handle along chord in centimeters'}).fill('0.2500')

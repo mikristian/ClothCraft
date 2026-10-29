@@ -1,0 +1,9 @@
+[package]
+name = "exo-mesh-avatar-contact-kernel"
+version = "0.1.0"
+edition = "2021"
+[lib]
+crate-type = ["rlib", "cdylib"]
+[profile.release]
+opt-level = "s"
+lto = true

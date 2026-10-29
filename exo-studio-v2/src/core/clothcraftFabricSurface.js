@@ -9,6 +9,27 @@ const tau=2*Math.PI
 // Periodic micro-irregularity avoids a visible discontinuity at texture tile edges.
 const noise=(x,y)=>.5+.27*Math.sin(tau*(13*x+19*y)/64)+.23*Math.cos(tau*(17*x-11*y)/64)
 const clamp01=x=>Math.max(0,Math.min(1,x))
+const validRange=(value,min,max)=>typeof value==='number'&&Number.isFinite(value)&&value>=min&&value<=max
+export function applyFabricSurfaceAppearance(material,appearance) {
+ if(!material?.isMeshPhysicalMaterial)return material
+ const overrides=appearance&&typeof appearance==='object'&&!Array.isArray(appearance)?appearance:{}
+ const color=typeof overrides.color==='string'&&/^#[0-9a-f]{6}$/i.test(overrides.color)?overrides.color:null
+ if(color)material.color.set(color)
+ if(validRange(overrides.opacity,0,1)){
+  material.opacity=overrides.opacity
+  material.transparent=overrides.opacity<1
+  material.depthWrite=overrides.opacity===1
+ }
+ if(validRange(overrides.roughness,0,1))material.roughness=overrides.roughness
+ if(validRange(overrides.metalness,0,1))material.metalness=overrides.metalness
+ if(validRange(overrides.reflectionIntensity,0,3)){
+  material.envMapIntensity=overrides.reflectionIntensity
+  material.specularIntensity=overrides.reflectionIntensity
+ }
+ material.userData.fabricAppearance=Object.fromEntries(Object.entries({color,opacity:overrides.opacity,roughness:overrides.roughness,metalness:overrides.metalness,reflectionIntensity:overrides.reflectionIntensity}).filter(([key,value])=>key==='color'?Boolean(value):validRange(value,0,key==='reflectionIntensity'?3:1)))
+ material.needsUpdate=true
+ return material
+}
 function relief(kind,u,v,x,y) {
  const warp=(Math.cos(u*tau)+1)*.5
  const weft=(Math.cos(v*tau)+1)*.5
@@ -29,7 +50,7 @@ function relief(kind,u,v,x,y) {
  if (kind==='ripstop') return clamp01(.33+.12*warp+.12*weft+.31*Math.pow(Math.cos(u*tau*.125),18)+.09*grain)
  return clamp01(.3+.26*warp+.26*weft+.08*grain)
 }
-export function createFabricSurface(fabric,grainDegrees=0) {
+export function createFabricSurface(fabric,grainDegrees=0,appearance=null,onTextureUpdate=null) {
  const preset=presetForFabric(fabric),a=preset?.appearance
  const wash=normalizeWashSpec(preset?.wash)
  const washed=wash.type!=='raw'&&wash.strength>0
@@ -43,7 +64,7 @@ export function createFabricSurface(fabric,grainDegrees=0) {
  })
  material.userData.fabricPreset=preset?.id||'custom'
  material.userData.washEffect=washed?wash.type:'raw'
- if(!a)return material
+ if(!a)return applyFabricSurfaceAppearance(material,appearance)
  const size=64,data=new Uint8Array(size*size*4),albedo=new Uint8Array(size*size*4)
  const dyed=/^#[\da-f]{6}$/i.test(a.color||'')?[1,3,5].map(i=>parseInt(a.color.slice(i,i+2),16)):[184,180,171]
  for(let y=0;y<size;y++)for(let x=0;x<size;x++){
@@ -88,12 +109,15 @@ export function createFabricSurface(fabric,grainDegrees=0) {
     if(colorChannel){
       const graded=tintLicensedFabricScan(loaded.image,{
         color:photo.color, wash:photo.wash,
-      },{width:Math.min(768,loaded.image?.naturalWidth||1024),height:Math.min(768,loaded.image?.naturalHeight||1024)})
+      },{width:Math.min(1024,loaded.image?.naturalWidth||1024),height:Math.min(1024,loaded.image?.naturalHeight||1024)})
       if(graded){
        loaded.image=graded;loaded.needsUpdate=true
-       // Avoid multiplying the manufactured colour twice. If a canvas is
-       // unavailable, leave the original dyed material tint in place.
+       // Retargeted scan already contains the dye and must not be tinted twice.
        material.color.set('#ffffff')
+      }else{
+       // A raw photographic scan must not inherit the washed procedural
+       // fallback's white material tint when canvas access is unavailable.
+       material.color.set(photo.color||a.color||'#b8b4ab')
       }
       material.map=loaded
     }else if(key==='normalMap'){
@@ -103,17 +127,23 @@ export function createFabricSurface(fabric,grainDegrees=0) {
       const graded=balanceScannedRoughness(loaded.image,{
         name:preset.name,
         texture:photo,
-      },{width:Math.min(768,loaded.image?.naturalWidth||1024),height:Math.min(768,loaded.image?.naturalHeight||1024)})
+      },{width:Math.min(1024,loaded.image?.naturalWidth||1024),height:Math.min(1024,loaded.image?.naturalHeight||1024)})
       if(graded){loaded.image=graded;loaded.needsUpdate=true}
       material.roughnessMap=loaded
     }
-    material.needsUpdate=true
+    applyFabricSurfaceAppearance(material,appearance)
+    onTextureUpdate?.(material)
    })
    texture.wrapS=texture.wrapT=THREE.RepeatWrapping
    texture.repeat.set(repeat.x,repeat.y)
    texture.colorSpace=colorChannel?THREE.SRGBColorSpace:THREE.NoColorSpace
    texture.anisotropy=8
-   texture.needsUpdate=true
+   texture.minFilter=THREE.LinearMipmapLinearFilter
+   texture.magFilter=THREE.LinearFilter
+   // TextureLoader performs the first needsUpdate when the image is decoded.
+   // Forcing it here, while texture.image is still undefined, repeatedly
+   // logged 'Texture marked for update but no image data found' in the native
+   // garment viewport. The procedural DataTexture remains the fallback.
    owned.push(texture)
   }
   load(photo.src,'map',true)
@@ -125,5 +155,85 @@ export function createFabricSurface(fabric,grainDegrees=0) {
   disposed=true
   for(const texture of owned)texture.dispose()
  }}
- return material
+ return applyFabricSurfaceAppearance(material,appearance)
+}
+
+// Both sides share the same cloth coordinates and texture ownership. The back
+// inherits current front optics unless a specific back field was edited.
+export function createFabricFaceMaterials(fabric,grainDegrees=0,appearance=null) {
+ const frontAppearance=appearance&&typeof appearance==='object'?appearance:{}
+ const backOverrides=frontAppearance.back&&typeof frontAppearance.back==='object'?frontAppearance.back:{}
+ let back=null,side=null
+ const syncBack=front=>{
+  if(!back)return
+  for(const key of ['map','bumpMap','normalMap','roughnessMap'])back[key]=front[key]
+  back.color.copy(front.color)
+  back.opacity=front.opacity
+  back.transparent=front.transparent
+  back.depthWrite=front.depthWrite
+  back.roughness=front.roughness
+  back.metalness=front.metalness
+  back.envMapIntensity=front.envMapIntensity
+  back.specularIntensity=front.specularIntensity
+  applyFabricSurfaceAppearance(back,backOverrides)
+  if(side){
+   for(const key of ['map','bumpMap','normalMap','roughnessMap'])side[key]=front[key]
+   side.color.copy(front.color)
+   for(const key of ['opacity','transparent','depthWrite','roughness','metalness','envMapIntensity','specularIntensity'])side[key]=front[key]
+   applyFabricSurfaceAppearance(side,sideOverrides)
+  }
+ }
+ const sideOverrides=frontAppearance.side&&typeof frontAppearance.side==='object'?frontAppearance.side:{}
+ const front=createFabricSurface(fabric,grainDegrees,frontAppearance,syncBack)
+ front.side=THREE.FrontSide
+ back=front.clone()
+ back.side=THREE.BackSide
+ // Only the front owns texture disposal. A clone shares every texture object.
+ back.userData={...front.userData,ownedTexture:null}
+ side=front.clone()
+ side.side=THREE.DoubleSide
+ side.userData={...front.userData,ownedTexture:null}
+ syncBack(front)
+ return {front,back,side}
+}
+
+// A render-only ribbon for topological open edges. This does not alter the
+// indexed physics surface. Closed manifolds produce no visible SIDE geometry.
+export function createFabricEdgeRibbon(surface,thicknessMeters) {
+ const empty={geometry:null,edgeCount:0,thicknessMeters:0}
+ if(!surface?.isBufferGeometry||!Number.isFinite(thicknessMeters)||thicknessMeters<=0)return empty
+ const position=surface.getAttribute('position'),normal=surface.getAttribute('normal'),uv=surface.getAttribute('uv')
+ const index=surface.getIndex()
+ if(!position||!normal||!index)return empty
+ const counts=new Map()
+ const vertices=index.array
+ for(let i=0;i+2<vertices.length;i+=3){
+  for(const [a,b] of [[vertices[i],vertices[i+1]],[vertices[i+1],vertices[i+2]],[vertices[i+2],vertices[i]]]){
+   const key=`${Math.min(a,b)}:${Math.max(a,b)}`
+   const record=counts.get(key)
+   if(record)record.count++
+   else counts.set(key,{a,b,count:1})
+  }
+ }
+ const boundary=[...counts.values()].filter(edge=>edge.count===1)
+ if(!boundary.length)return empty
+ // Cap display thickness to prevent bad metadata from producing huge fins.
+ const thickness=Math.min(.01,thicknessMeters)
+ const xyz=[],tex=[],indices=[]
+ for(const {a,b} of boundary){
+  const start=xyz.length/3
+  for(const vertex of [a,b])for(const sign of [1,-1]){
+   xyz.push(position.getX(vertex)+normal.getX(vertex)*sign*thickness*.5,
+    position.getY(vertex)+normal.getY(vertex)*sign*thickness*.5,
+    position.getZ(vertex)+normal.getZ(vertex)*sign*thickness*.5)
+   tex.push(uv?.getX(vertex)??0,uv?.getY(vertex)??0)
+  }
+  indices.push(start,start+1,start+2,start+1,start+3,start+2)
+ }
+ const geometry=new THREE.BufferGeometry()
+ geometry.setAttribute('position',new THREE.Float32BufferAttribute(xyz,3))
+ geometry.setAttribute('uv',new THREE.Float32BufferAttribute(tex,2))
+ geometry.setIndex(indices)
+ geometry.computeVertexNormals()
+ return {geometry,edgeCount:boundary.length,thicknessMeters:thickness}
 }

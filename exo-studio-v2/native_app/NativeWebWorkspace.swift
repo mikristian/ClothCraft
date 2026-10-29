@@ -63,7 +63,7 @@ extension NativeApp {
         let handler = BundledWorkspaceSchemeHandler(baseURL: resourceURL.appendingPathComponent("web"))
         configuration.setURLSchemeHandler(handler, forURLScheme: "garmentstudio")
         configuration.defaultWebpagePreferences.allowsContentJavaScript = true
-        configuration.websiteDataStore = .default()
+        configuration.websiteDataStore = CommandLine.arguments.contains("--acceptance-test") ? .nonPersistent() : .default()
         let web = WKWebView(frame: .zero, configuration: configuration)
         if #available(macOS 13.3, *) { web.isInspectable = true }
         web.translatesAutoresizingMaskIntoConstraints = false
@@ -77,6 +77,9 @@ extension NativeApp {
         ])
         fullWebView = web
         bundledSchemeHandler = handler
+        if CommandLine.arguments.contains("--acceptance-test"), let index = CommandLine.arguments.firstIndex(of: "--acceptance-report"), CommandLine.arguments.indices.contains(index + 1) {
+            acceptanceHarness = NativeWebAcceptance(web: web, output: URL(fileURLWithPath: CommandLine.arguments[index + 1]))
+        }
         let privateAvatar = FileManager.default.fileExists(atPath: resourceURL.appendingPathComponent("web/avatars/clo-thomas.glb").path)
         let teeTestSession = CommandLine.arguments.contains("--tee-test")
         let startup = "garmentstudio://app/index.html?desktop=1" +

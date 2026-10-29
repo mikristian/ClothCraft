@@ -1,0 +1,181 @@
+Hardware_and_Trims/ (162 files)
+  Button & Buttonhole/Buttonhole/ [10]
+    Buttonhole_Bound.bth
+    Buttonhole_Eyelet_A_Radial.bth
+    Buttonhole_Eyelet_A_Square.bth
+    Buttonhole_Eyelet_A_Taper_Bartacking_A.bth
+    Buttonhole_Eyelet_B_Radial.bth
+    Buttonhole_Eyelet_B_Taper_Bartacking_B.bth
+    Buttonhole_Radial.bth
+    Buttonhole_Radial_Square.bth
+    Buttonhole_Square_A.bth
+    Buttonhole_Square_B.bth
+  Button & Buttonhole/Button/ [45]
+    1_Sew-through_Button_01_Cross.btn
+    1_Sew-through_Button_01_Parallel.btn
+    1_Sew-through_Button_01_Square.btn
+    1_Sew-through_Button_02_Cross.btn
+    1_Sew-through_Button_02_Parallel.btn
+    1_Sew-through_Button_02_Square.btn
+    1_Sew-through_Button_03_Cross.btn
+    1_Sew-through_Button_03_Parallel.btn
+    1_Sew-through_Button_03_Square.btn
+    1_Sew-through_Button_04_Cross.btn
+    1_Sew-through_Button_04_Parallel.btn
+    1_Sew-through_Button_04_Square.btn
+    1_Sew-through_Button_05_Cross.btn
+    1_Sew-through_Button_05_Parallel.btn
+    1_Sew-through_Button_05_Square.btn
+    1_Sew-through_Button_06_Cross.btn
+    1_Sew-through_Button_06_Parallel.btn
+    1_Sew-through_Button_06_Square.btn
+    1_Sew-through_Button_07_Cross.btn
+    1_Sew-through_Button_07_Parallel.btn
+    1_Sew-through_Button_07_Square.btn
+    1_Sew-through_Button_08.btn
+    1_Sew-through_Button_09.btn
+    1_Sew-through_Button_10.btn
+    1_Sew-through_Button_11.btn
+    2_Shank_Button_01.btn
+    2_Shank_Button_02.btn
+    2_Shank_Button_03.btn
+    2_Shank_Button_04.btn
+    2_Shank_Button_05.btn
+    2_Shank_Button_06.btn
+    3_Snap_Rivet_01.btn
+    3_Snap_Rivet_02.btn
+    3_Snap_Rivet_03.btn
+    3_Snap_Rivet_04.btn
+    3_Snap_Rivet_05.btn
+    3_Snap_Rivet_06.btn
+    3_Snap_Rivet_07.btn
+    3_Snap_Rivet_08.btn
+    3_Snap_Rivet_09.btn
+    3_Snap_Rivet_10.btn
+    4_Eyelet_01.btn
+    4_Eyelet_02.btn
+    4_Eyelet_03.btn
+    4_Eyelet_04.btn
+  Graphic/ [1]
+    BI_CLO_Blue.grp
+  Zipper/Puller/OBJ/ [21]
+    Puller_01.zip
+    Puller_02.zip
+    Puller_03.zip
+    Puller_04.zip
+    Puller_05.zip
+    Puller_06.zip
+    Puller_07.zip
+    Puller_08.zip
+    Puller_09.zip
+    Puller_10.zip
+    Puller_11.zip
+    Puller_12.zip
+    Puller_13.zip
+    Puller_14.zip
+    Puller_15.zip
+    Puller_16.zip
+    Puller_17.zip
+    Puller_18.zip
+    Puller_19.zip
+    Puller_20.zip
+    Puller_21.zip
+  Zipper/Slider/OBJ/ [9]
+    Slider_01.zip
+    Slider_02.zip
+    Slider_03.zip
+    Slider_04.zip
+    Slider_05.zip
+    Slider_06.zip
+    Slider_07.zip
+    Slider_08.zip
+    Slider_09.zip
+  Zipper/Puller/ [21]
+    Puller_01.zpl
+    Puller_02.zpl
+    Puller_03.zpl
+    Puller_04.zpl
+    Puller_05.zpl
+    Puller_06.zpl
+    Puller_07.zpl
+    Puller_08.zpl
+    Puller_09.zpl
+    Puller_10.zpl
+    Puller_11.zpl
+    Puller_12.zpl
+    Puller_13.zpl
+    Puller_14.zpl
+    Puller_15.zpl
+    Puller_16.zpl
+    Puller_17.zpl
+    Puller_18.zpl
+    Puller_19.zpl
+    Puller_20.zpl
+    Puller_21.zpl
+  Zipper/YKK/Puller/ [10]
+    YKK_Puller_3VSDFL.zpl
+    YKK_Puller_COILDA.zpl
+    YKK_Puller_DADR4.zpl
+    YKK_Puller_DADR7.zpl
+    YKK_Puller_DALH.zpl
+    YKK_Puller_DFL.zpl
+    YKK_Puller_DFW.zpl
+    YKK_Puller_DSYG.zpl
+    YKK_Puller_METALDA.zpl
+    YKK_Puller_VISLONDA.zpl
+  Zipper/Slider/ [9]
+    Slider_01.zsd
+    Slider_02.zsd
+    Slider_03.zsd
+    Slider_04.zsd
+    Slider_05.zsd
+    Slider_06.zsd
+    Slider_07.zsd
+    Slider_08.zsd
+    Slider_09.zsd
+  Zipper/YKK/Slider/ [11]
+    YKK_Slider_03CDAREVERSE.zsd
+    YKK_Slider_03CDASTANDARD.zsd
+    YKK_Slider_03CDFREVERSE.zsd
+    YKK_Slider_03CDFSTANDARD.zsd
+    YKK_Slider_03MSTANDARD.zsd
+    YKK_Slider_03VSSTANDARD.zsd
+    YKK_Slider_05CNREVERSE.zsd
+    YKK_Slider_05CNSEMILOCK.zsd
+    YKK_Slider_05CNSTANDARD.zsd
+    YKK_Slider_05MSTANDARD.zsd
+    YKK_Slider_05VSSTANDARD.zsd
+  Zipper/Stopper/Bottom/Closed/ [2]
+    Closed_Bottom_Stopper_01.zsp
+    Closed_Bottom_Stopper_02.zsp
+  Zipper/Stopper/Bottom/Open/ [3]
+    Open_Bottom_Stopper_01.zsp
+    Open_Bottom_Stopper_02.zsp
+    Open_Bottom_Stopper_03.zsp
+  Zipper/Stopper/Top/ [2]
+    Top_Stopper_01.zsp
+    Top_Stopper_02.zsp
+  Zipper/Tape/Conceal_01/ [1]
+    Conceal_01.png
+  Zipper/Tape/Conceal_02/ [1]
+    Conceal_02.png
+  Zipper/Tape/Metal/ [4]
+    Metal_Tape.png
+    Metal_Tape_NRM.png
+    Metal_Teeth.png
+    Metal_Teeth_NRM.png
+  Zipper/Tape/Nylon/ [4]
+    Nylon_Tape.png
+    Nylon_Tape_NRM.png
+    Nylon_Teeth.png
+    Nylon_Teeth_NRM.png
+  Zipper/Tape/Plastic_01/ [4]
+    Plastic_01_Tape.png
+    Plastic_01_Tape_NRM.png
+    Plastic_01_Teeth.png
+    Plastic_01_Teeth_NRM.png
+  Zipper/Tape/Plastic_02/ [4]
+    Plastic_02_Tape.png
+    Plastic_02_Tape_NRM.png
+    Plastic_02_Teeth.png
+    Plastic_02_Teeth_NRM.png

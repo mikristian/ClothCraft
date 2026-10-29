@@ -1,0 +1,21 @@
+.cc-reference-toolbar{position:absolute;z-index:36;top:47px;right:10px;display:flex;align-items:flex-start;gap:5px;font-family:inherit;color:#edf0f2;font-size:11px}
+.cc-reference-toolbar.cc-reference-menu-only{position:absolute;z-index:65;top:0;left:0;right:auto;width:0;height:0;pointer-events:none}
+.cc-reference-menu-only .cc-reference-panel{position:fixed;z-index:2147482000;left:clamp(10px,calc(50vw - 160px),calc(100vw - 330px));top:clamp(48px,17vh,180px);right:auto;pointer-events:auto;width:min(320px,calc(100vw - 20px));max-height:min(610px,78vh);box-shadow:0 20px 60px #0009}
+.cc-reference-toolbar button{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:27px;padding:5px 9px;cursor:pointer;background:#34383c;color:#edf0f2;border:1px solid #697078;border-radius:4px;font:inherit}
+.cc-reference-toolbar button:hover{background:#49545a}
+.cc-reference-toolbar .cc-reference-add{background:#2c424d;border-color:#6994a7}
+.cc-reference-panel{position:absolute;top:35px;right:0;width:min(275px,calc(100vw - 75px));max-height:min(480px,70vh);overflow:auto;box-sizing:border-box;background:#303336;box-shadow:0 11px 30px #0008;border:1px solid #616b71;border-radius:6px;padding:11px;display:grid;gap:10px}
+.cc-reference-panel-head{display:flex;align-items:center;justify-content:space-between;gap:5px}
+.cc-reference-panel-head button{min-height:20px;padding:2px 3px;border:0;background:transparent}
+.cc-reference-panel .cc-reference-file{color:#b7c5ca;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cc-reference-panel label{display:grid;gap:5px;color:#d8e2e5}
+.cc-reference-panel label>span{justify-self:end}
+.cc-reference-panel input[type=range]{accent-color:#70b5ce;width:100%}
+.cc-reference-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.cc-reference-fields input{box-sizing:border-box;width:100%;min-width:0;background:#22272a;border:1px solid #646b70;border-radius:3px;color:#fff;padding:5px;font-size:11px}
+.cc-reference-calibration input{width:100%;box-sizing:border-box;background:#22272a;border:1px solid #646b70;border-radius:3px;color:#fff;padding:5px;font-size:11px}
+.cc-reference-actions{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.cc-reference-toolbar .cc-reference-actions button{font-size:10px;min-height:29px;padding:5px 3px}
+.cc-reference-toolbar .cc-reference-actions button[aria-pressed=true]{background:#3e6573}
+.cc-reference-panel p{font-size:10px;line-height:1.45;margin:0;color:#bfcbd0}
+.cc-reference-panel p.cc-reference-error{color:#ffd1bc}

@@ -8,10 +8,17 @@ import './clo-interface.css'
 // dark-theme rules cannot override the new 2D surface during production builds.
 import './clo-neutral-theme.css'
 import './components/PatternDraftingEnhancements.css'
+import './studioCustomizationTheme.css'
 // Finish with the CLO-style neutral workspaces so older dark drafting styles
 // cannot override the new light canvas after Vite's CSS dependency ordering.
 import './clo-neutral-theme.css'
 import './components/PatternDraftingEnhancements.css'
+// Last, presentation-only overrides for all property editors and tool rails.
+import './components/PropertyEditorMinimalFields.css'
+import './components/ToolbarCleanRails.css'
+// Keep Simulate's sharp, transparent liquid-glass menu skins last so generic
+// menu and theme controls cannot replace the lens with an opaque fog panel.
+import './components/SimulateClearGlassDropdown20261028.css'
 
 // The packaged macOS workspace uses a denser desktop-application layout,
 // without changing the existing browser workspace or its saved project.

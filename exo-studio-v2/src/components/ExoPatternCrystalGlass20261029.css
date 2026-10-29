@@ -1,0 +1,113 @@
+/* True clear optical material for the pattern workspace. Keep this distinct
+   from opaque measurement worksheets, which need readable numerical grids.
+   The crystal switch is independent of global Liquid Glass panel opacity. */
+#exo-pattern-glass-shell[data-pattern-clear-glass="true"] .cc-board .cc-v2-board-orientation{
+  background:linear-gradient(150deg,rgba(255,255,255,.095),transparent 43%,rgba(255,255,255,.025))!important;
+  border:1px solid rgba(255,255,255,.58)!important;
+  -webkit-backdrop-filter:blur(1.5px) saturate(115%)!important;
+  backdrop-filter:blur(1.5px) saturate(115%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.76),inset 0 -1px rgba(255,255,255,.16),0 4px 16px rgba(9,22,36,.12)!important;
+  color:#21384c!important;
+  text-shadow:0 1px rgba(255,255,255,.38)!important;
+}
+#exo-pattern-glass-shell[data-pattern-clear-glass="true"] .cc-board .cc-v2-board-orientation > button{
+  background:transparent!important;
+  background-image:none!important;
+  color:inherit!important;
+  border:0!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+}
+#exo-pattern-glass-shell[data-pattern-clear-glass="true"] .cc-board .cc-v2-board-orientation > button:is(:hover,:focus-visible){
+  background:rgba(255,255,255,.11)!important;
+  box-shadow:inset 0 0 0 1px rgba(250,255,255,.47)!important;
+}
+#exo-pattern-glass-shell[data-pattern-clear-glass="true"] .cc-board .cc-v2-board-orientation > button:is(.active,[aria-pressed="true"]){
+  color:#18354b!important;
+  background:rgba(255,255,255,.065)!important;
+  box-shadow:inset 0 -2px var(--studio-accent,#6cc1e6)!important;
+}
+/* A glass rail consists of transparent individual lenses and a quiet rim.
+   No solid #394650 backing or CSS frosted-color mask is permitted. */
+#exo-pattern-glass-shell[data-pattern-clear-glass="true"] .cc-board .cc-corner-tool-host
+  .clo-corner-toolkit-2d.exo-viewport-inline-tools{
+  background:transparent!important;box-shadow:none!important;
+  --exo-glass-ink:#24435b;
+  --exo-glass-ink-active:#173950;
+  --exo-glass-edge:rgba(255,255,255,.66);
+}
+#exo-pattern-glass-shell[data-pattern-clear-glass="true"] .cc-board .cc-corner-tool-host
+  .clo-corner-toolkit-2d.exo-viewport-inline-tools .clo-corner-tool-group > button{
+  background:linear-gradient(144deg,rgba(255,255,255,.10),rgba(255,255,255,.018) 65%)!important;
+  background-color:transparent!important;
+  border-color:rgba(255,255,255,.68)!important;
+  -webkit-backdrop-filter:blur(1px) saturate(110%)!important;
+  backdrop-filter:blur(1px) saturate(110%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 2px 6px rgba(9,24,37,.08)!important;
+  color:#223e53!important;
+  text-shadow:none!important;
+}
+#exo-pattern-glass-shell[data-pattern-clear-glass="true"] .cc-board .cc-corner-tool-host
+  .clo-corner-toolkit-2d.exo-viewport-inline-tools .clo-corner-tool-group > button:is(.active,[aria-pressed="true"]){
+  background:rgba(255,255,255,.065)!important;
+  border-color:var(--studio-accent,#89bbdc)!important;
+  box-shadow:inset 0 -2px var(--studio-accent,#89bbdc),inset 0 1px rgba(255,255,255,.6)!important;
+}
+#exo-pattern-glass-shell[data-pattern-clear-glass="true"] .cc-board .cc-corner-tool-host
+  .clo-corner-toolkit-2d.exo-viewport-inline-tools .clo-corner-tool-options{
+  background:linear-gradient(152deg,rgba(255,255,255,.095),rgba(255,255,255,.02) 60%)!important;
+  border:1px solid rgba(255,255,255,.7)!important;
+  -webkit-backdrop-filter:blur(2px) saturate(112%)!important;
+  backdrop-filter:blur(2px) saturate(112%)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.65),0 4px 14px rgba(10,25,37,.15)!important;
+}
+#exo-pattern-glass-shell[data-pattern-clear-glass="true"] .cc-board .cc-corner-tool-host
+  .clo-corner-toolkit-2d.exo-viewport-inline-tools .clo-corner-tool-options > button{
+  background:rgba(255,255,255,.045)!important;
+  border-color:rgba(255,255,255,.15)!important;
+  color:#24415a!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+}
+/* Outside the board, keep the right pattern tool palette genuinely see-through
+   without making text labels or controls individually translucent. */
+#exo-pattern-glass-shell[data-pattern-clear-glass="true"] .clo-right-tool-palette{
+  background:linear-gradient(145deg,rgba(255,255,255,.085),rgba(255,255,255,.012) 54%)!important;
+  background-color:transparent!important;
+  border-color:rgba(255,255,255,.32)!important;
+  -webkit-backdrop-filter:blur(2px) saturate(112%)!important;
+  backdrop-filter:blur(2px) saturate(112%)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.3),0 4px 12px rgba(5,8,14,.13)!important;
+}
+#exo-pattern-glass-shell[data-pattern-clear-glass="true"] .clo-right-tool-palette :is(
+  .clo-palette-scroll,.clo-palette-workflows,.clo-reference-dual-bars,
+  .clo-reference-column,.clo-right-tool-grid,.clo-tool-palette-group-divider){
+  background:transparent!important;
+  background-color:transparent!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+}
+/* Compact draggable anchor actions are a single clear lens above the canvas. */
+#exo-pattern-glass-shell[data-pattern-clear-glass="true"] .cc-board .cc-vector-anchor-actions.cc-anchor-liquid-glass{
+  background:linear-gradient(143deg,rgba(255,255,255,.11),rgba(255,255,255,.025) 63%)!important;
+  border-color:rgba(255,255,255,.65)!important;
+  -webkit-backdrop-filter:blur(2px) saturate(110%)!important;
+  backdrop-filter:blur(2px) saturate(110%)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.77),0 5px 13px rgba(10,25,35,.12)!important;
+}
+#exo-pattern-glass-shell[data-pattern-clear-glass="true"] .cc-board .cc-anchor-liquid-glass > button{
+  background:rgba(255,255,255,.055)!important;
+  color:#254158!important;
+  border-color:rgba(255,255,255,.40)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.35)!important;
+}
+/* Keep accessibility's reduced-transparency request authoritative. */
+@media (prefers-reduced-transparency:reduce){
+  #exo-pattern-glass-shell[data-pattern-clear-glass="true"] .cc-board :is(.cc-v2-board-orientation,.cc-vector-anchor-actions.cc-anchor-liquid-glass),
+  #exo-pattern-glass-shell[data-pattern-clear-glass="true"] .cc-board .cc-corner-tool-host .clo-corner-toolkit-2d.exo-viewport-inline-tools .clo-corner-tool-group > button,
+  #exo-pattern-glass-shell[data-pattern-clear-glass="true"] .cc-board .cc-corner-tool-host .clo-corner-toolkit-2d.exo-viewport-inline-tools .clo-corner-tool-options,
+  #exo-pattern-glass-shell[data-pattern-clear-glass="true"] .clo-right-tool-palette{
+    background:#d3dce3!important;
+    -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+    color:#1f3546!important;
+  }
+}

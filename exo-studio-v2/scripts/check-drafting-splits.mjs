@@ -17,6 +17,17 @@ assert.throws(() => draftingSplitFractions(rectangle, 0, { method:'ratio',ratioP
 assert.throws(() => draftingSplitFractions(rectangle, 0, { method:'length',lengthCm:'' }), /finite/)
 assert.throws(() => draftingSplitFractions(rectangle, 0, { method:'length',lengthCm:'five' }), /finite/)
 assert.throws(() => draftingSplitFractions(rectangle, 0, { method:'unknown' }), /Unknown/)
+// A malformed edge must never return a plausible split parameter that could
+// subsequently be written into a manufacturing pattern.
+assert.throws(() => splitParameterAtArcFraction(rectangle, .5, .5), /Invalid split edge/)
+assert.throws(() => splitParameterAtArcFraction(rectangle, 4, .5), /Invalid split edge/)
+assert.throws(() => splitParameterAtArcFraction({ ...rectangle, points:[{x:0,y:0},{x:0,y:0}] }, 0, .5), /positive measurable length/)
+assert.throws(() => splitParameterAtArcFraction({ ...rectangle, points:[{x:NaN,y:0}, ...rectangle.points.slice(1)] }, 0, .5), /coordinates must be finite/)
+assert.throws(() => splitParameterAtArcFraction({ ...rectangle, curves:{0:{cx:Infinity,cy:2}} }, 0, .5), /handle coordinates must be finite/)
+// Coincident endpoints do not imply a degenerate quadratic: a control point
+// away from the endpoints can form a legitimate measurable curved loop.
+const curvedLoop = { points:[{x:0,y:0},{x:0,y:0},{x:0,y:10}], curves:{0:{cx:4,cy:0}} }
+assert.ok(Math.abs(splitParameterAtArcFraction(curvedLoop, 0, .5) - .5) < 1e-6)
 
 const curved = {
   ...rectangle,

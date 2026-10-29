@@ -31,6 +31,15 @@ assert.throws(()=>preciseConstructionEdit(polygon,4,{construction:'intersection'
 assert.throws(()=>preciseConstructionEdit(polygon,4,{construction:'foot',a:0,b:2}),/Reference index/)
 assert.throws(()=>preciseConstructionEdit(polygon,4,{construction:'unsafe',a:1,b:2}),/Unsupported/)
 assert.throws(()=>preciseConstructionEdit({...polygon,locked:true},4,{construction:'line',a:1,b:2,distanceCm:2}),/Unlock/)
+// Malformed CAD coordinates must fail closed rather than returning NaN/Infinity
+// into the editor, grading, or factory-export geometry.
+assert.throws(()=>lineIntersection(a,b,{x:NaN,y:2},d),/finite length/)
+assert.throws(()=>lineIntersection(a,b,{x:0,y:2},{x:Infinity,y:5}),/finite length/)
+assert.throws(()=>projectOntoLine({x:NaN,y:4},a,b),/finite length/)
+assert.throws(()=>pointAlongLine({x:Infinity,y:0},b,2),/finite length/)
+assert.throws(()=>mirrorPointAcrossLine({x:0,y:Infinity},a,b),/finite length/)
+assert.throws(()=>lineIntersection({x:99999,y:0},{x:100000,y:0},{x:0,y:1},{x:1,y:1}),/parallel/)
+assert.equal(JSON.stringify(polygon),old,'Rejected construction must not alter the source')
 console.log(JSON.stringify({
   pass:true,operations:['line','normal','foot','mirror','intersection'],
   analyticPrecisionCm:'1e-10',metadataPreserved:true,

@@ -4,7 +4,7 @@ import WebKit
 
 /// Native AppKit application window. Its interface and tools are bundled inside
 /// the signed app, not opened in Safari, Chrome, or an external browser window.
-final class EXOClothCraftApp: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKDownloadDelegate {
+final class EXOClothCraftApp: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKDownloadDelegate, WKUIDelegate, WKScriptMessageHandler {
     private var window: NSWindow!
     private var webView: WKWebView!
     private var processes: [Process] = []
@@ -38,6 +38,8 @@ final class EXOClothCraftApp: NSObject, NSApplicationDelegate, WKNavigationDeleg
         window.title = "EXO ClothCraft Studio V2"
         window.minSize = NSSize(width: 970, height: 650)
         window.center()
+        NotificationCenter.default.addObserver(self, selector: #selector(didExitStudioFullscreen(_:)),
+                                               name: NSWindow.didExitFullScreenNotification, object: window)
 
         let root = NSView(frame: window.contentView!.bounds)
         root.autoresizingMask = [.width, .height]
@@ -48,9 +50,11 @@ final class EXOClothCraftApp: NSObject, NSApplicationDelegate, WKNavigationDeleg
         let configuration = WKWebViewConfiguration()
         configuration.defaultWebpagePreferences.allowsContentJavaScript = true
         configuration.websiteDataStore = .default()
+        configuration.userContentController.add(self, name: "exoStudioFullscreen")
         webView = WKWebView(frame: .zero, configuration: configuration)
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.navigationDelegate = self
+        webView.uiDelegate = self
         webView.underPageBackgroundColor = NSColor(calibratedWhite: 0.10, alpha: 1)
         if #available(macOS 13.3, *) { webView.isInspectable = true }
         root.addSubview(webView)
@@ -115,8 +119,15 @@ final class EXOClothCraftApp: NSObject, NSApplicationDelegate, WKNavigationDeleg
         let template = clothCraft.appendingPathComponent("target/debug/cloth-template")
         let fitting = clothCraft.appendingPathComponent("target/debug/cloth-fit")
         let native = resources.appendingPathComponent("native_cpp/build-cmake/garment_cad_cli")
-        for required in [node, template, fitting, native,
-                         resources.appendingPathComponent("web/index.html")] {
+        let rustStaticHost = scripts.appendingPathComponent("rust-static-host/target/debug/exo-rust-static-host")
+        // Keep this list in sync with the server's local imports. An earlier
+        // V2 bundle omitted agent-api.mjs; the window opened but its project
+        // service crashed with ERR_MODULE_NOT_FOUND before a garment loaded.
+        for required in [node, template, fitting, native, rustStaticHost,
+                         resources.appendingPathComponent("web/index.html"),
+                         scripts.appendingPathComponent("server.mjs"),
+                         scripts.appendingPathComponent("workspace.mjs"),
+                         scripts.appendingPathComponent("agent-api.mjs")] {
             if !FileManager.default.fileExists(atPath: required.path) {
                 throw NSError(domain: "EXO", code: 2,
                               userInfo: [NSLocalizedDescriptionKey: "Missing bundled resource: \(required.lastPathComponent)"])
@@ -134,14 +145,14 @@ final class EXOClothCraftApp: NSObject, NSApplicationDelegate, WKNavigationDeleg
         }
         logs = try FileHandle(forWritingTo: log)
         try logs?.seekToEnd()
-        let configurations: [(String, [String: String])] = [
-            ("static.mjs", ["EXO_WEB_PORT": "5386"]),
-            ("server.mjs", ["EXO_CLOTHCRAFT_PORT": "5385"]),
+        let configurations: [(URL, [String], [String: String])] = [
+            (rustStaticHost, ["--web-root", resources.appendingPathComponent("web").path], ["EXO_WEB_PORT": "5386"]),
+            (node, [scripts.appendingPathComponent("server.mjs").path], ["EXO_CLOTHCRAFT_PORT": "5385"]),
         ]
-        for (script, extra) in configurations {
+        for (executable, arguments, extra) in configurations {
             let p = Process()
-            p.executableURL = node
-            p.arguments = [scripts.appendingPathComponent(script).path]
+            p.executableURL = executable
+            p.arguments = arguments
             p.currentDirectoryURL = resources
             var environment = ProcessInfo.processInfo.environment
             environment["EXO_CLOTHCRAFT_REPO"] = clothCraft.path
@@ -150,6 +161,7 @@ final class EXOClothCraftApp: NSObject, NSApplicationDelegate, WKNavigationDeleg
             environment["EXO_NATIVE_CLI"] = native.path
             environment["EXO_CLOTHCRAFT_OUTPUT_DIR"] = outputsDir.path
             environment["EXO_CLOTHCRAFT_GPU"] = "1"
+            environment["EXO_CLOTHCRAFT_AVATAR_THOMAS_OBJ"] = resources.appendingPathComponent("collision-avatars/thomas-body.obj").path
             environment["EXO_CLOTHCRAFT_AVATAR_MAKEHUMAN_OBJ"] = resources.appendingPathComponent("collision-avatars/makehuman-body.obj").path
             extra.forEach { environment[$0.key] = $0.value }
             p.environment = environment
@@ -181,6 +193,16 @@ final class EXOClothCraftApp: NSObject, NSApplicationDelegate, WKNavigationDeleg
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         startupLabel.removeFromSuperview()
         window.title = "EXO ClothCraft Studio V2"
+    }
+
+    @available(macOS 12.0, *)
+    func webView(_ webView: WKWebView, requestMediaCapturePermissionFor origin: WKSecurityOrigin,
+                 initiatedByFrame frame: WKFrameInfo, type: WKMediaCaptureType,
+                 decisionHandler: @escaping (WKPermissionDecision) -> Void) {
+        // Camera capture is requested by Camera Fabric Hand after an explicit
+        // user click. Never grant microphone access or other web origins.
+        let localApp = origin.protocol == "http" && origin.host == "127.0.0.1" && origin.port == 5386
+        decisionHandler(localApp && type == .camera ? .grant : .deny)
     }
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
@@ -216,6 +238,27 @@ final class EXOClothCraftApp: NSObject, NSApplicationDelegate, WKNavigationDeleg
         webView?.reload()
     }
 
+    // Only the bundled localhost UI may request native window fullscreen.
+    // The separate 2D editor and saved garment are not changed by this toggle.
+    func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard message.name == "exoStudioFullscreen", message.frameInfo.isMainFrame,
+              message.frameInfo.securityOrigin.host == "127.0.0.1",
+              message.frameInfo.securityOrigin.port == 5386,
+              let action = message.body as? String,
+              action == "enter" || action == "exit" else { return }
+        DispatchQueue.main.async { [weak self] in
+            guard let window = self?.window else { return }
+            let isFullscreen = window.styleMask.contains(.fullScreen)
+            if (action == "enter" && !isFullscreen) || (action == "exit" && isFullscreen) {
+                window.toggleFullScreen(nil)
+            }
+        }
+    }
+
+    @objc private func didExitStudioFullscreen(_ notification: Notification) {
+        webView?.evaluateJavaScript("window.dispatchEvent(new Event('exo-native-3d-fullscreen-exited'))", completionHandler: nil)
+    }
+
     private func installMenu() {
         let main = NSMenu()
         let appItem = NSMenuItem()
@@ -236,6 +279,8 @@ final class EXOClothCraftApp: NSObject, NSApplicationDelegate, WKNavigationDeleg
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
 
     func applicationWillTerminate(_ notification: Notification) {
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName: "exoStudioFullscreen")
+        NotificationCenter.default.removeObserver(self)
         processes.forEach { process in if process.isRunning { process.terminate() } }
         try? logs?.close()
     }

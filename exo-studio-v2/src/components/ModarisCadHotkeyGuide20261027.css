@@ -1,0 +1,25 @@
+.exo-cad-hotkeys{box-sizing:border-box;display:grid;gap:10px;padding:14px;min-width:0;background:#151e28;color:#e6edf4;border:1px solid #354455;border-radius:9px;font:12px/1.45 system-ui,sans-serif}
+.exo-cad-hotkeys__header,.exo-cad-hotkeys__filters,.exo-cad-hotkeys__item{display:flex;align-items:center;gap:9px}
+.exo-cad-hotkeys__header{justify-content:space-between}
+.exo-cad-hotkeys__header>div,.exo-cad-hotkeys__name{display:grid;gap:3px;min-width:0}
+.exo-cad-hotkeys__header strong{font-size:15px}
+.exo-cad-hotkeys p{margin:0;color:#b7c6d4}
+.exo-cad-hotkeys small{color:#9eb1c3}
+.exo-cad-hotkeys button,.exo-cad-hotkeys input,.exo-cad-hotkeys select{font:inherit;border:1px solid #405265;border-radius:5px}
+.exo-cad-hotkeys button{background:#253649;color:#e1ecf3;padding:7px 9px;cursor:pointer}
+.exo-cad-hotkeys button:disabled{opacity:.45;cursor:not-allowed}
+.exo-cad-hotkeys button:focus-visible,.exo-cad-hotkeys input:focus-visible,.exo-cad-hotkeys select:focus-visible{outline:2px solid #8bd4e8;outline-offset:2px}
+.exo-cad-hotkeys__filters input,.exo-cad-hotkeys__filters select{background:#111923;color:#ebf2f7;padding:8px;min-width:0}
+.exo-cad-hotkeys__filters input{flex:1}
+.exo-cad-hotkeys__filters select{max-width:45%}
+.exo-cad-hotkeys__list{display:grid;gap:5px;max-height:385px;overflow:auto}
+.exo-cad-hotkeys__item{padding:8px;background:#1b2a38;border:1px solid #304154;border-radius:5px}
+.exo-cad-hotkeys__item[data-available=false]{opacity:.66}
+.exo-cad-hotkeys__name{flex:1}
+.exo-cad-hotkeys__key{min-width:112px}
+.exo-cad-hotkeys__key[aria-pressed=true]{border-color:#8bd4e8;background:#285061}
+.exo-cad-hotkeys kbd{font:600 11px ui-monospace,SFMono-Regular,monospace}
+.exo-cad-hotkeys__run{min-width:45px}
+.exo-cad-hotkeys footer{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.exo-cad-hotkeys output{color:#8bd4e8}
+@media(max-width:560px){.exo-cad-hotkeys__item{flex-wrap:wrap}.exo-cad-hotkeys__name{flex-basis:100%}.exo-cad-hotkeys__key{flex:1}}

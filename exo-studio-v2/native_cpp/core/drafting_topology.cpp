@@ -83,6 +83,18 @@ Json inspectDraftTopology(const Json& piece,const Json& options){
 }
 bool isDraftEditValid(const Json& piece,const Json& edit,const Json& options){
  if(!piece.is_object()||!piece.contains("points")||!piece["points"].is_array())return false;
+ // Match the JS editor: malformed or orphan edit fields must not pass by
+ // merely revalidating the unchanged cutline.
+ if(edit.is_object()){
+  for(const char* key:{"pointIndex","edgeIndex"}){
+   if(edit.contains(key)){
+    const Json& value=edit[key];
+    if(!value.is_number()||!std::isfinite(value.get<double>())||std::floor(value.get<double>())!=value.get<double>())return false;
+   }
+  }
+  if((edit.contains("point")&&!edit.contains("pointIndex"))||
+     (edit.contains("curve")&&!edit.contains("edgeIndex")))return false;
+ }
  Json updated=piece;Json index=get(edit,"pointIndex");int i=0;
  if(index.is_number()&&std::isfinite(index.get<double>())&&std::floor(index.get<double>())==index.get<double>()){
   if(!integralIndex(index,piece["points"].size(),i))return false;

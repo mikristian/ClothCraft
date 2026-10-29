@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "approvalStatus": "PREVIEW_ONLY_PENDING_USER_APPROVAL",
+  "stageId": "exo-stage01-runway-chamber",
+  "name": "EXO Stage 01 \u00b7 Runway Chamber",
+  "reference": "User-owned CLO Stage_01.zprj was inspected, but reference geometry/textures were not reused",
+  "sceneFile": "EXO-STAGE01-V4-STAGE-RUNTIME-OPTIMIZED-REVIEW.glb",
+  "sourceBlend": "EXO-STAGE01-V4-APPROVAL-CANDIDATE.blend",
+  "modelSha256": "05d11af52cb0a01f12a784cf2cbb4081299d850b265b93a9922a609bc57d1897",
+  "scale": {
+    "units": "metres",
+    "sourceUp": "Blender Z",
+    "exportUp": "glTF / Three.js Y"
+  },
+  "avatarFeetAnchor": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "surfaceDefinitions": [
+    {
+      "name": "Walkable runway",
+      "rectXZ": {
+        "xCenter": 0,
+        "zCenter": 3.435,
+        "width": 2.56,
+        "depth": 7.45
+      },
+      "topY": 0
+    },
+    {
+      "name": "Performance podium",
+      "rectXZ": {
+        "xCenter": 0,
+        "zCenter": -2.75,
+        "width": 7.48,
+        "depth": 4.92
+      },
+      "topY": 0
+    }
+  ],
+  "collisionsEnabled": false,
+  "semanticGroups": [
+    "Architecture",
+    "Runway",
+    "Audience",
+    "ArchitecturalDetails",
+    "PracticalLighting"
+  ],
+  "sceneStats": {
+    "meshGroups": 23,
+    "materials": 12,
+    "images": 7,
+    "colorMappedMaterials": 7
+  },
+  "cameraPositionsForFutureThreeJS": {
+    "roomFront": {
+      "position": [
+        0,
+        3.0,
+        12.55
+      ],
+      "target": [
+        0,
+        2.25,
+        0.3
+      ]
+    },
+    "avatarDetail": {
+      "position": [
+        2.72,
+        2.34,
+        4.25
+      ],
+      "target": [
+        0,
+        1.13,
+        -0.05
+      ]
+    },
+    "editorial": {
+      "position": [
+        3.35,
+        2.86,
+        7.15
+      ],
+      "target": [
+        0,
+        1.51,
+        0.05
+      ]
+    }
+  },
+  "futureIntegrationRequirements": {
+    "same2Dand3DEditor": true,
+    "keepNativeGarmentHistoryAndUndo": true,
+    "preserveRustGarmentAndSavedGeometry": true,
+    "showHideStageCollections": true,
+    "stageMaterialOverrides": true,
+    "optionalStageCollision": true,
+    "editableStudioLightRig": true,
+    "cameraPresetSelection": true
+  },
+  "notes": "Candidate metadata is not imported by the live app. Blender material/light appearance still needs Three.js parity testing after visual approval."
+}

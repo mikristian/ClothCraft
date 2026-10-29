@@ -1,0 +1,38 @@
+{
+  "audit_date": "2026-10-17",
+  "core_files": 162,
+  "categories": {
+    "Buttons": 45,
+    "Buttonholes": 10,
+    "Graphics": 1,
+    "OBJ ZIP archives": 30,
+    "Zipper pullers": 31,
+    "Zipper sliders": 20,
+    "Zipper stoppers": 7,
+    "Zipper tape and teeth textures": 18
+  },
+  "formats": {
+    ".btn": 45,
+    ".bth": 10,
+    ".grp": 1,
+    ".zip": 30,
+    ".zpl": 31,
+    ".zsd": 20,
+    ".zsp": 7,
+    ".png": 18
+  },
+  "ykk_styles": 21,
+  "mesh_container_files": 133,
+  "total_obj_members": 138,
+  "main_library_logical_bytes": 46546294,
+  "installed_allocated_bytes": 46862336,
+  "icloud_dataless_entries": 162,
+  "icloud_downloaded_entries": 0,
+  "icloud_verified_matching_sha256": 0,
+  "installed_root": "/Applications/CLO_Standalone_OnlineAuth.app/Contents/Assets/Materials/Hardware_and_Trims",
+  "icloud_documents_mirror": "/Users/mikylecouto/Documents/clo/Assets/Materials/Hardware_and_Trims",
+  "additional_zipper_preset_files": 10,
+  "preset_names_absent_from_core": [
+    "Transparent.png"
+  ]
+}

@@ -1,12 +1,47 @@
 /** Geometry helpers for the EXO V2 2D pattern board. All coordinates are metres. */
+import {rustPatternSpanIntersection} from './rustGeometryKernel.js'
 export function getBounds(points) {
   if (!points?.length) return null
-  const xs = points.map(p => p[0]), ys = points.map(p => p[1])
-  const minX = Math.min(...xs), maxX = Math.max(...xs)
-  const minY = Math.min(...ys), maxY = Math.max(...ys)
-  if (![minX, maxX, minY, maxY].every(Number.isFinite)) return null
-  return {minX, maxX, minY, maxY, cx:(minX + maxX)/2, cy:(minY + maxY)/2,
-    width:maxX - minX, height:maxY - minY}
+  let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity
+  // Meshes can contain more vertices than the argument-spread limit.
+  for (const p of points) {
+    if (!p || !Number.isFinite(p[0]) || !Number.isFinite(p[1])) return null
+    minX=Math.min(minX,p[0]);maxX=Math.max(maxX,p[0])
+    minY=Math.min(minY,p[1]);maxY=Math.max(maxY,p[1])
+  }
+  const width=maxX-minX,height=maxY-minY
+  if (!Number.isFinite(width) || !Number.isFinite(height)) return null
+  return {minX,maxX,minY,maxY,cx:minX+width/2,cy:minY+height/2,width,height}
+}
+
+/** Only complete, finite triangles can contribute to a filled SVG cut region. */
+export function trianglePath(triangles, coordinates) {
+  return (triangles || []).map(triangle => {
+    if (!Array.isArray(triangle) || triangle.length !== 3) return ''
+    const vertices = triangle.map(index => coordinates?.[index])
+    if (vertices.some(p => !Array.isArray(p) || p.length < 2 ||
+      !Number.isFinite(p[0]) || !Number.isFinite(p[1]))) return ''
+    const [a,b,c] = vertices
+    const area = (b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])
+    if (Math.abs(area) < 1e-12) return ''
+    return `M${a[0]},${a[1]}L${b[0]},${b[1]}L${c[0]},${c[1]}Z`
+  }).join('')
+}
+
+/** Preserve gaps in incomplete boundary data so invisible bridges cannot be clicked. */
+export function boundarySegments(indices, coordinates) {
+  const runs = []
+  let run = []
+  const finish = () => { if (run.length >= 2) runs.push(run); run = [] }
+  for (const index of indices || []) {
+    const point = coordinates?.[index]
+    if (!Array.isArray(point) || point.length < 2 ||
+      !Number.isFinite(point[0]) || !Number.isFinite(point[1])) {
+      finish()
+    } else run.push(point)
+  }
+  finish()
+  return runs
 }
 
 /**
@@ -77,7 +112,9 @@ export function horizontalPatternSpans(boundaries, uv, y) {
     for (let i = 1; i < indices.length; i++) {
       const a = uv[indices[i-1]], b = uv[indices[i]]
       if (!a || !b || ![...a, ...b].every(Number.isFinite)) continue
-      if ((a[1] <= y && y < b[1]) || (b[1] <= y && y < a[1]))
+      const rustX=rustPatternSpanIntersection(a,b,y,true)
+      if(rustX!==null){if(Number.isFinite(rustX))intersections.push(rustX)}
+      else if ((a[1] <= y && y < b[1]) || (b[1] <= y && y < a[1]))
         intersections.push(a[0] + (y - a[1]) * (b[0] - a[0]) / (b[1] - a[1]))
     }
   }
@@ -99,7 +136,9 @@ export function verticalPatternSpans(boundaries, uv, x) {
     for (let i=1;i<indices.length;i++) {
       const a=uv[indices[i-1]], b=uv[indices[i]]
       if (!a || !b || ![...a,...b].every(Number.isFinite)) continue
-      if ((a[0]<=x && x<b[0]) || (b[0]<=x && x<a[0]))
+      const rustY=rustPatternSpanIntersection(a,b,x,false)
+      if(rustY!==null){if(Number.isFinite(rustY))intersections.push(rustY)}
+      else if ((a[0]<=x && x<b[0]) || (b[0]<=x && x<a[0]))
         intersections.push(a[1]+(x-a[0])*(b[1]-a[1])/(b[0]-a[0]))
     }
   }

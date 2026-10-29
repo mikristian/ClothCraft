@@ -1,0 +1,31 @@
+.exo-grade-notch-editor{grid-column:2;grid-row:1/6;position:relative;z-index:12;
+ display:grid;gap:9px;align-content:start;overflow:auto;max-height:calc(91vh - 105px);
+ background:var(--studio-sidebar,#272d31);border:1px solid var(--studio-border,#56616a);
+ border-radius:5px;padding:10px;min-width:0;color:var(--studio-text,#edf1f3);font-size:11px;
+}
+.exo-grade-notch-editor header{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--studio-border,#525a61);padding-bottom:7px}
+.exo-grade-notch-editor header strong{font-size:12px}
+.exo-grade-notch-editor header button{margin-left:auto;padding:1px 7px;border:0;border-radius:4px;color:inherit;background:transparent;font-size:18px;cursor:pointer}
+.exo-grade-notch-editor__fields{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.exo-grade-notch-editor__fields label{display:grid;gap:4px;color:var(--studio-muted,#c6ccd0)}
+.exo-grade-notch-editor :is(select,input,output){min-width:0;box-sizing:border-box;width:100%;padding:6px;background:var(--studio-field,#20262a);color:var(--studio-text,#fff);
+ border:1px solid var(--studio-border,#59636b);border-radius:4px;font:inherit}
+.exo-grade-notch-editor__actions{display:flex;gap:7px;flex-wrap:wrap}
+.exo-grade-notch-editor__actions button{display:inline-flex;align-items:center;gap:6px;
+ padding:7px 8px;background:var(--studio-panel,#34444c);color:var(--studio-text,#fff);
+ border:1px solid var(--studio-border,#59656c);border-radius:4px;cursor:pointer}
+.exo-grade-notch-editor__actions button:disabled{opacity:.45;cursor:not-allowed}
+.exo-grade-notch-editor small{font-size:10px;color:var(--studio-muted,#c6ccd0);line-height:1.45}
+.exo-grade-notch-editor p[role=status]{margin:0;line-height:1.4;color:var(--studio-text,#e8f2f7)}
+@media(max-width:760px){.exo-grade-notch-editor{grid-column:1;grid-row:auto}}
+
+.exo-grade-notch-editor__presets{display:flex;align-items:center;flex-wrap:wrap;gap:4px;border-top:1px solid var(--studio-border,#525a61);padding-top:7px}
+.exo-grade-notch-editor__presets span{font-size:10px;color:var(--studio-muted,#c6ccd0);margin-right:2px}
+.exo-grade-notch-editor__presets button{padding:4px 6px;border:1px solid #526876;background:#293d4b;color:#ecf4fc;border-radius:3px;font-size:10px;cursor:pointer}
+.exo-grade-notch-editor__presets button[aria-pressed=true]{background:#416885;border-color:#9ac7ec}
+.exo-grade-notch-editor__presets button:disabled{opacity:.5}
+.exo-grade-notch-editor__station{display:grid;gap:6px;padding:8px;border:1px solid #445969;border-radius:4px;background:#1b2a33}
+.exo-grade-notch-editor__station strong{font-size:10px}
+.exo-grade-notch-editor__track{height:13px;position:relative;border-top:2px solid #9ebac9;margin:9px 7px 0}
+.exo-grade-notch-editor__track span{position:absolute;top:-8px;width:2px;height:14px;background:#f4c379;box-shadow:0 0 0 2px #28343d;transform:translateX(-50%)}
+.exo-grade-notch-editor__warning{color:#f7c77b!important}

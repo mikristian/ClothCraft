@@ -1,0 +1,48 @@
+{
+  "generatedAt": "2026-10-18T17:01:19.771Z",
+  "roundsRequested": 3,
+  "roundsExecuted": 3,
+  "testsPerRound": 27,
+  "allPassed": true,
+  "results": [
+    {
+      "round": 1,
+      "state": "PASS",
+      "seconds": 0.56,
+      "testsPassed": 27,
+      "suitePasses": [
+        5,
+        15,
+        7
+      ],
+      "exitCode": 0,
+      "error": null
+    },
+    {
+      "round": 2,
+      "state": "PASS",
+      "seconds": 0.37,
+      "testsPassed": 27,
+      "suitePasses": [
+        5,
+        15,
+        7
+      ],
+      "exitCode": 0,
+      "error": null
+    },
+    {
+      "round": 3,
+      "state": "PASS",
+      "seconds": 0.37,
+      "testsPassed": 27,
+      "suitePasses": [
+        5,
+        15,
+        7
+      ],
+      "exitCode": 0,
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+/* Dedicated full-window, live-linked patternmaking space. The original native
+ * board stays mounted: entering/exiting focus never copies or overwrites edits. */
+.cc-pattern-studio-trigger{position:absolute;z-index:100;right:10px;top:10px;pointer-events:auto}
+.cc-pattern-studio-trigger button{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid #a7b8c0;border-radius:6px;background:#28343c;color:#f0f6f7;font-size:11px;font-weight:700;box-shadow:0 4px 14px #0004;cursor:pointer}
+.cc-pattern-studio-trigger button:hover{background:#3c5664}
+.cc-rust-embedded .cc-embedded-root.cc-pattern-studio-focus,.cc-workspace.cc-pattern-studio-focus{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;min-width:0!important;min-height:0!important;z-index:100010!important;background:#24292c!important}
+.cc-rust-embedded .cc-embedded-root.cc-pattern-studio-focus{display:flex;flex-direction:column}
+.cc-rust-embedded .cc-pattern-studio-focus .cc-embedded-main{display:block;flex:1;min-height:0;padding-right:268px;background:#25292d}
+.cc-rust-embedded .cc-pattern-studio-focus .cc-embedded-main .cc-viewport-2d{display:flex!important;width:100%;height:100%}
+.cc-rust-embedded .cc-pattern-studio-focus .cc-embedded-main .cc-viewport-3d{display:none!important}
+.cc-rust-embedded .cc-pattern-studio-focus .cc-embedded-main .cc-camera-hand-panel{display:none}
+.cc-rust-embedded .cc-pattern-studio-focus .cc-pattern-studio-trigger{right:278px}
+.cc-pattern-focus-dock{position:absolute;right:0;top:0;bottom:0;width:268px;z-index:120;display:flex;flex-direction:column;gap:1px;overflow:auto;border-left:1px solid #596066;background:#2c3034;color:#ecedef;box-shadow:-7px 0 22px #0003;font:11px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.cc-pattern-focus-heading{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:9px;padding:16px 12px;background:#25292d;border-bottom:1px solid #4c545a}
+.cc-pattern-focus-heading>div{display:flex;flex:1;flex-direction:column;gap:3px;min-width:0}
+.cc-pattern-focus-heading strong{font-size:12px;letter-spacing:.11em}
+.cc-pattern-focus-heading small{font-size:10px;color:#aab8bd}
+.cc-pattern-focus-heading button{display:grid;place-items:center;min-width:34px;min-height:32px;background:#405057!important;color:#fff!important;border:1px solid #637982!important}
+.cc-pattern-focus-summary{display:flex;gap:8px;justify-content:space-between;padding:12px;border-bottom:1px solid #464d51;color:#c6d0d2;font-size:10px}
+.cc-pattern-focus-section{padding:10px 11px 12px;display:flex;flex-direction:column;gap:6px;border-bottom:1px solid #454b50}
+.cc-pattern-focus-section h3{margin:1px 0 7px;color:#9fc0cd;letter-spacing:.12em;font-size:10px;font-weight:700}
+.cc-pattern-focus-section>button,.cc-pattern-focus-pieces button{display:flex;align-items:center;gap:8px;width:100%;text-align:left;border:1px solid #59636b!important;background:#3a4148!important;color:#e7f0f2!important;border-radius:5px;padding:9px 10px;min-height:32px;font-size:11px;cursor:pointer}
+.cc-pattern-focus-section>button:hover:not(:disabled),.cc-pattern-focus-pieces button:hover,.cc-pattern-focus-pieces button.active{background:#54646e!important;border-color:#9bbdcc!important}
+.cc-pattern-focus-section>button:disabled{opacity:.45;cursor:default}
+.cc-pattern-focus-pieces{display:flex;flex-direction:column;gap:4px;max-height:215px;overflow:auto}
+.cc-pattern-focus-pieces i{width:9px;height:9px;border-radius:3px;flex:none}
+.cc-pattern-focus-warning{margin:auto 11px 16px;padding:10px;border:1px solid #7b7562;border-radius:5px;background:#474439;color:#e1d7bf;font-size:10px;line-height:1.6}
+/* The full EXO version retains its complete XS–XXL point-grade inspector. */
+.cc-exo-shell.cc-pattern-studio-focus .cc-body{grid-template-columns:minmax(0,1fr) minmax(300px,350px)!important;padding-left:244px}
+.cc-exo-shell.cc-pattern-studio-focus .cc-body .cc-exo-rail,.cc-exo-shell.cc-pattern-studio-focus .cc-body .cc-pieces,.cc-exo-shell.cc-pattern-studio-focus .cc-body .cc-viewport-3d{display:none!important}
+.cc-exo-shell.cc-pattern-studio-focus .cc-body .cc-viewport-2d{display:flex!important}
+.cc-exo-shell.cc-pattern-studio-focus .cc-body .cc-inspector{display:block!important;min-width:0;overflow-y:auto}
+.cc-exo-shell.cc-pattern-studio-focus .cc-pattern-focus-dock{left:0;right:auto;top:129px;bottom:31px;width:244px}
+@media(max-width:900px){
+ .cc-rust-embedded .cc-pattern-studio-focus .cc-embedded-main{padding-right:214px}
+ .cc-rust-embedded .cc-pattern-studio-focus .cc-pattern-studio-trigger{right:224px}
+ .cc-rust-embedded .cc-pattern-studio-focus .cc-pattern-focus-dock{width:214px}
+ .cc-exo-shell.cc-pattern-studio-focus .cc-body{padding-left:190px;grid-template-columns:minmax(0,1fr) 280px!important}
+ .cc-exo-shell.cc-pattern-studio-focus .cc-pattern-focus-dock{width:190px}
+}

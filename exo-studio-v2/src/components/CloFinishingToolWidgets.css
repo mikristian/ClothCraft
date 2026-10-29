@@ -1,0 +1,292 @@
+.clo-floating-tool {
+  position:fixed;
+  /* Library hover previews render at 99998/99999. Active tool dialogs must
+     remain draggable above them, while Settings and context menus stay above. */
+  z-index:100050;
+  box-sizing:border-box;
+  width:405px;
+  max-width:calc(100vw - 16px);
+  color:#eeeeef;
+  background:#2d2d2f;
+  border:1px solid #141517;
+  box-shadow:0 8px 22px #0008,0 1px 2px #0008;
+  font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  border-radius:2px;
+}
+.clo-floating-tool[data-clo-floating-widget="steam"] {width:390px;}
+.clo-floating-tool[data-clo-floating-widget="grading"] {width:385px;}
+.clo-floating-tool[data-clo-floating-widget="foam-padding"]{width:420px;max-height:calc(100vh - 78px);overflow:hidden;background:#24272b;border:1px solid #3f4c55;border-radius:11px;box-shadow:0 22px 70px #0008,0 2px 12px #0005;}
+.clo-floating-tool[data-clo-floating-widget="foam-padding"] .clo-floating-tool-header{height:43px;justify-content:flex-start;padding:0 17px;border-bottom:1px solid #414951;border-radius:11px 11px 0 0;background:#30353b;}
+.clo-floating-tool[data-clo-floating-widget="foam-padding"] .clo-floating-tool-header strong{font-size:12px;letter-spacing:.03em;font-weight:650;}
+.clo-floating-tool[data-clo-floating-widget="foam-padding"] .clo-floating-tool-grip{display:none;}
+.clo-floating-tool[data-clo-floating-widget="foam-padding"] .clo-floating-tool-header button{right:11px;top:9px;}
+.clo-floating-tool[data-clo-floating-widget="foam-padding"] .cc-foam-editor{padding:15px;display:grid;gap:14px;}
+.clo-floating-tool .cc-foam-hero{display:flex;align-items:center;gap:10px;min-width:0;}
+.clo-floating-tool .cc-foam-hero-mark{display:grid;place-items:center;width:39px;height:39px;flex:none;border:1px solid #5b8397;border-radius:9px;background:linear-gradient(145deg,#426576,#283e4d);color:#dbf5ff;}
+.clo-floating-tool .cc-foam-hero>div:nth-child(2){display:grid;min-width:0;gap:4px;}
+.clo-floating-tool .cc-foam-hero strong{color:#f2f6f8;font-size:13px;}
+.clo-floating-tool .cc-foam-hero span{font-size:10px;color:#aabcc7;line-height:1.35;}
+.clo-floating-tool .cc-foam-hero .cc-foam-draft-chip{margin-left:auto;border:1px solid #6f8390;border-radius:6px;padding:5px 6px;color:#cbdde6;font-size:9px;letter-spacing:.05em;}
+.clo-floating-tool .cc-foam-upload-area{border:1px dashed #718c9d;border-radius:9px;padding:5px;background:#303b43;}
+.clo-floating-tool [data-native-foam-padding] .cc-foam-import{width:100%;min-height:63px;display:flex;align-items:center;gap:12px;border:0!important;background:transparent!important;text-align:left;padding:9px 12px;}
+.clo-floating-tool .cc-foam-import svg{flex:none;color:#b5e2f6;}
+.clo-floating-tool .cc-foam-import>span:nth-child(2){display:grid;flex:1;gap:5px;}
+.clo-floating-tool .cc-foam-import strong{font-size:12px;color:#eaf5fc;}
+.clo-floating-tool .cc-foam-import small{font-size:10px;color:#a9c0cb;}
+.clo-floating-tool .cc-foam-import>span:last-child{display:grid;place-items:center;font-size:20px;color:#cae7f5;}
+.clo-floating-tool .cc-foam-section-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;color:#aebfc8;font-size:10px;letter-spacing:.09em;font-weight:700;}
+.clo-floating-tool .cc-foam-section-heading>strong{font-size:10px;letter-spacing:0;color:#d8e3e8;font-weight:500;}
+.clo-floating-tool .cc-foam-status-dot{letter-spacing:0;font-size:10px;font-weight:500;color:#a9dbbb;}
+.clo-floating-tool .cc-foam-status-dot:before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:#84cbaa;margin-right:6px;}
+.clo-floating-tool .cc-foam-empty{padding:25px 20px;display:grid;justify-items:center;gap:10px;text-align:center;border-radius:8px;border:1px solid #47515a;background:#2b3036;color:#acc1cd;}
+.clo-floating-tool .cc-foam-empty strong{color:#edf4f7;font-size:12px;}
+.clo-floating-tool .cc-foam-empty span{font-size:11px;max-width:250px;line-height:1.5;}
+.clo-floating-tool .cc-foam-layer-list{display:grid;gap:6px;max-height:170px;overflow-y:auto;}
+.clo-floating-tool [data-native-foam-padding] .cc-foam-layer{display:flex;align-items:center;gap:10px;text-align:left;padding:9px 10px;border:1px solid #4b5760;border-radius:7px;background:#2d343a;}
+.clo-floating-tool [data-native-foam-padding] .cc-foam-layer.is-selected{background:#344752;border-color:#86b7d0;box-shadow:inset 3px 0 #7ac1e5;}
+.clo-floating-tool .cc-foam-layer-icon{width:30px;height:30px;display:grid;place-items:center;flex:none;border-radius:6px;background:#405261;color:#d8effa;}
+.clo-floating-tool .cc-foam-layer-info{display:grid;min-width:0;flex:1;gap:3px;}
+.clo-floating-tool .cc-foam-layer-info strong{font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.clo-floating-tool .cc-foam-layer-info small{font-size:10px;color:#a8c0ce;}
+.clo-floating-tool .cc-foam-selected{display:grid;gap:13px;padding-top:2px;}
+.clo-floating-tool .cc-foam-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+.clo-floating-tool .cc-foam-form label{display:grid;gap:5px;min-width:0;color:#cad5dc;font-size:10px;}
+.clo-floating-tool .cc-foam-form label.cc-foam-full{grid-column:1/-1;}
+.clo-floating-tool .cc-foam-form input,.clo-floating-tool .cc-foam-form select{height:32px;width:100%;min-width:0;border:1px solid #5a6872;border-radius:5px;background:#19242b;color:#eaf1f5;padding:5px 9px;font:inherit;font-size:11px;}
+.clo-floating-tool .cc-foam-form input:disabled{opacity:.4;cursor:not-allowed;}
+.clo-floating-tool .cc-foam-number{display:flex;align-items:center;position:relative;}
+.clo-floating-tool .cc-foam-number input{padding-right:34px;}
+.clo-floating-tool .cc-foam-number small{position:absolute;right:9px;color:#849ca9;font-size:10px;pointer-events:none;}
+.clo-floating-tool .cc-foam-switches{display:grid;gap:1px;padding:5px 11px;background:#2b333a;border:1px solid #45535e;border-radius:7px;}
+.clo-floating-tool .cc-foam-switches label{display:flex;align-items:center;gap:11px;padding:9px 2px;color:#e7eff4;}
+.clo-floating-tool .cc-foam-switches label+label{border-top:1px solid #45515a;}
+.clo-floating-tool .cc-foam-switches input{height:15px;width:15px;accent-color:#79cbe6;flex:none;}
+.clo-floating-tool .cc-foam-switches label>span{display:grid;gap:4px;}
+.clo-floating-tool .cc-foam-switches strong{font-size:11px;font-weight:600;}
+.clo-floating-tool .cc-foam-switches small{font-size:10px;color:#9fb4c1;}
+.clo-floating-tool .cc-foam-actions{display:flex;gap:8px;}
+.clo-floating-tool [data-native-foam-padding] .cc-foam-properties{flex:1;display:flex;gap:8px;justify-content:center;background:#3a5868;border-color:#64879b;color:#eef8ff;font-weight:650;}
+.clo-floating-tool [data-native-foam-padding] .cc-foam-remove{width:38px;display:grid;place-items:center;color:#e9a8a3;background:#45383d;border-color:#6a5157;}
+.clo-floating-tool [data-native-foam-padding] .cc-foam-remove:hover{background:#684047;}
+.clo-floating-tool .cc-foam-message{border:1px solid #486d65;border-radius:5px;background:#2c453f;color:#d5efe6;padding:8px 10px;line-height:1.45;}
+.clo-floating-tool .cc-foam-footnote{display:flex;gap:10px;align-items:flex-start;font-size:10px;line-height:1.45;color:#9dabb4;border-top:1px solid #414951;padding-top:12px;}
+.clo-floating-tool .cc-foam-footnote-icon{display:grid;place-items:center;flex:none;width:15px;height:15px;border:1px solid #899da9;border-radius:50%;font-size:10px;font-weight:700;}
+.clo-floating-tool [data-native-foam-padding]{min-width:0!important;max-width:none!important;max-height:calc(100vh - 117px);overflow-y:auto;scrollbar-color:#687781 #2b2d30;color:#e9edf0;}
+.clo-floating-tool [data-native-foam-padding]>p{color:#bac7cf;line-height:1.5;margin:0 0 3px;font-size:11px;}
+.clo-floating-tool [data-native-foam-padding] button{background:#36454f;color:#ebf4f7;border:1px solid #647582;border-radius:4px;padding:6px 9px;font:inherit;font-size:11px;cursor:pointer;}
+.clo-floating-tool [data-native-foam-padding] button:hover:not(:disabled){background:#466276;color:white;border-color:#9ac4df;}
+.clo-floating-tool [data-native-foam-padding] button:focus-visible,.clo-floating-tool [data-native-foam-padding] input:focus-visible,.clo-floating-tool [data-native-foam-padding] select:focus-visible{outline:2px solid #80cee8;outline-offset:2px;}
+.clo-floating-tool [data-native-foam-padding]>button{width:100%;justify-content:center;font-weight:600;}
+.clo-floating-tool [data-native-foam-padding] fieldset{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px!important;min-width:0;margin:0;border:1px solid #596068;border-radius:6px;background:#2c3035;padding:11px!important;}
+.clo-floating-tool [data-native-foam-padding] legend{padding:0 6px;color:#e8f1f8;}
+.clo-floating-tool [data-native-foam-padding] legend button{font-weight:600;background:#35434c;}
+.clo-floating-tool [data-native-foam-padding] fieldset label{display:grid;gap:4px;min-width:0;font-size:10px;color:#cfd8de;}
+.clo-floating-tool [data-native-foam-padding] fieldset label:has(select),.clo-floating-tool [data-native-foam-padding] fieldset label:has(input[type="checkbox"]){grid-column:1 / -1;}
+.clo-floating-tool [data-native-foam-padding] fieldset label:has(input[type="checkbox"]){display:flex;align-items:center;gap:8px;}
+.clo-floating-tool [data-native-foam-padding] fieldset input:not([type="checkbox"]),.clo-floating-tool [data-native-foam-padding] fieldset select{width:100%;min-width:0;height:29px;padding:5px 7px;border:1px solid #64747d;border-radius:4px;background:#202a31;color:#edf3f6;font:inherit;font-size:11px;}
+.clo-floating-tool [data-native-foam-padding] fieldset input[type="checkbox"]{accent-color:#79cbe6;}
+.clo-floating-tool [data-native-foam-padding] fieldset>button:last-child{grid-column:1 / -1;}
+.clo-floating-tool [data-native-foam-padding]>small{display:block;font-size:10px;color:#aebdc6;line-height:1.45;}
+.clo-floating-tool.is-active {border-color:#494e55;}
+.clo-floating-tool * {box-sizing:border-box;}
+.clo-floating-tool-header {
+  height:34px;
+  background:#212224;
+  border-bottom:1px solid #151617;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  cursor:grab;
+  touch-action:none;
+  user-select:none;
+}
+.clo-floating-tool-header:active {cursor:grabbing;}
+.clo-floating-tool-header button.clo-floating-tool-dock-button{
+ right:34px;color:#a5d2f4;border-radius:3px;
+}
+.clo-floating-tool-header button.clo-floating-tool-dock-button:hover,
+.clo-floating-tool-header button.clo-floating-tool-dock-button:focus-visible{
+ background:#354c5e;color:#eff8ff;outline:1px solid #8cb9da;
+}
+.clo-floating-tool-header [data-exo-widget-grip="true"]{
+ display:grid;place-items:center;flex:none;min-width:24px;min-height:23px;
+ color:#b7d9f2;background:#344a5a;border:1px solid #6995b4;
+ border-radius:4px;cursor:grab;touch-action:none;
+ font-size:20px;font-weight:700;line-height:1;
+}
+.clo-floating-tool-header [data-exo-widget-grip="true"]:hover,
+.clo-floating-tool-header [data-exo-widget-grip="true"]:focus-visible{
+ color:#fff;background:#4184b6;outline:2px solid #63b8fa;outline-offset:-2px;
+}
+/* Generic EXO tools use the same bottom host as Grading Table and Compare
+   Length. Docked panels are actual flow children, not overlapping overlays. */
+.cc-rust-embedded [data-exo-grade-dock-host="true"]>.clo-floating-tool--docked{
+ position:relative!important;left:auto!important;top:auto!important;
+ z-index:1!important;box-shadow:none!important;
+ flex:1 1 310px!important;min-width:240px!important;
+ width:auto!important;max-width:none!important;
+ height:calc(100% - 33px)!important;max-height:calc(100% - 33px)!important;
+ border:1px solid #536578;border-radius:4px;
+ overflow:auto;overscroll-behavior:contain;
+}
+.cc-rust-embedded [data-exo-grade-dock-host="true"]>.clo-floating-tool--docked .clo-floating-tool-header{
+ position:sticky;top:0;z-index:5;height:29px;min-height:29px;
+ cursor:default;touch-action:auto;background:#2b3641;
+}
+.cc-rust-embedded [data-exo-grade-dock-host="true"]>.clo-floating-tool--docked .clo-floating-tool-header strong{
+ font-size:11px;max-width:calc(100% - 88px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.cc-rust-embedded [data-exo-grade-dock-host="true"]>.clo-floating-tool--docked .clo-native-grading{
+ max-height:none!important;overflow:auto;
+}
+.clo-floating-tool-header strong {font-size:13px;font-weight:600;color:#ededee;pointer-events:none;}
+.clo-floating-tool-grip {
+  position:absolute;left:9px;top:7px;color:#6f7378;font-size:17px;letter-spacing:-1px;pointer-events:none;
+}
+.clo-floating-tool-header .clo-floating-tool-grip[data-exo-widget-grip="true"]{
+ display:grid!important;pointer-events:auto!important;left:6px;top:3px;z-index:9;
+}
+.clo-floating-tool-header button {
+  width:23px;height:23px;position:absolute;right:5px;top:5px;padding:3px;
+  display:grid;place-items:center;border:0;background:transparent;color:#94999f;cursor:pointer;
+}
+.clo-floating-tool-header button:hover {background:#404144;color:white;}
+.clo-floating-tool-body {padding:14px 20px 12px;}
+.clo-finishing-inset {
+  border:1px solid #18191a;
+  padding:13px 15px 12px;
+  background:#29292b;
+}
+.clo-sewing-threshold,.clo-steam-row {
+  display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:40px;
+  color:#efeff0;font-size:12px;
+}
+.clo-threshold-name {display:flex;align-items:center;gap:7px;white-space:nowrap;flex:1;}
+.clo-threshold-name input[type=checkbox] {
+  width:14px;height:14px;margin:0;accent-color:#31b9ef;cursor:pointer;
+}
+.clo-finishing-number {display:flex;align-items:center;gap:7px;flex:0 0 auto;}
+.clo-finishing-number input[type=number] {
+  width:75px;height:26px;padding:3px 6px;border:1px solid #1b1d20;border-radius:2px;
+  background:#242527;color:#f4f4f5;font-family:inherit;font-size:12px;font-variant-numeric:tabular-nums;
+  -moz-appearance:textfield;
+}
+.clo-finishing-number input[type=number]::-webkit-inner-spin-button {opacity:.7;}
+.clo-finishing-number input:focus {
+  outline:1px solid #28b5ed;border-color:#28b5ed;box-shadow:0 0 0 1px #28b5ed66;
+}
+.clo-finishing-number input:disabled {color:#7c8085;opacity:.7;}
+.clo-finishing-number>span {width:23px;color:#e0e1e2;font-size:12px;}
+.clo-steam-row {display:grid;grid-template-columns:75px minmax(0,1fr) 105px;gap:8px;min-height:43px;}
+.clo-steam-row+.clo-steam-row {border-top:1px solid #38393d;}
+.clo-steam-label {white-space:nowrap;}
+.clo-steam-slide {display:flex;flex-direction:column;justify-content:center;position:relative;min-width:0;}
+.clo-steam-slide input[type=range] {
+  appearance:none;-webkit-appearance:none;
+  width:100%;height:4px;margin:10px 0;
+  background:linear-gradient(to right,#31b9ef 0 var(--steam-progress,50%),#4b4d50 var(--steam-progress,50%) 100%);
+  cursor:pointer;outline:none;
+  accent-color:#2bbcf4;
+}
+.clo-steam-slide input[type=range]::-webkit-slider-thumb {
+  appearance:none;-webkit-appearance:none;height:15px;width:9px;border-radius:2px;
+  background:#bcc1c6;border:1px solid #22272a;box-shadow:0 0 1px 1px #111;
+}
+.clo-steam-slide input[type=range]::-moz-range-thumb {
+  height:14px;width:8px;border-radius:2px;background:#bcc1c6;border:1px solid #22272a;
+}
+.clo-steam-slide input[type=range]:focus-visible {outline:2px solid #31b9ef;outline-offset:3px;}
+.clo-steam-ticks {
+  display:flex;justify-content:space-between;color:#aaaeb5;font-size:9px;
+  position:absolute;top:22px;left:0;right:0;pointer-events:none;
+}
+.clo-steam-ticks i {font-style:normal;}
+.clo-finishing-seam-status {
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:5px;
+  color:#aeb4ba;font-size:10px;min-height:20px;margin-top:9px;
+}
+.clo-finishing-seam-status strong {font-weight:600;font-size:10px;}
+.clo-finishing-warning {color:#efbe7b;}
+.clo-finishing-ok {color:#72d4f4;}
+.clo-finishing-seam-selector {
+  display:block;width:100%;margin-top:5px;border:1px solid #42474b;background:#25272a;
+  color:#eee;font-size:11px;padding:4px 7px;border-radius:2px;
+}
+.clo-finishing-seam-review{display:grid;gap:8px;margin-top:12px;min-width:0}
+.clo-finishing-seam-overview{display:flex;align-items:center;justify-content:space-between;gap:9px;font-size:11px;color:#ccd4db}
+.clo-finishing-seam-overview strong{color:#f0f2f3;font-weight:650}
+.clo-finishing-seam-pairs{display:grid;gap:2px;max-height:165px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#697780 #282b30}
+.clo-finishing-seam-pairs button{display:grid;grid-template-columns:minmax(50px,.75fr) minmax(90px,1.4fr) minmax(80px,1fr);align-items:center;gap:6px;width:100%;min-width:0;min-height:30px;padding:6px 8px;border:1px solid #424951;border-radius:3px;background:#30343a;color:#e3eaf0;text-align:left;cursor:pointer;font:10px -apple-system,BlinkMacSystemFont,sans-serif}
+.clo-finishing-seam-pairs button:hover,.clo-finishing-seam-pairs button[aria-pressed="true"]{background:#394956;border-color:#6b8fa4}
+.clo-finishing-seam-pairs button[data-sew-length-state="warning"] strong{color:#f5bc80}
+.clo-finishing-seam-pairs button[data-sew-length-state="within-tolerance"] strong{color:#80d5df}
+.clo-finishing-seam-pairs button[data-sew-length-state="unavailable"]{opacity:.7}
+.clo-finishing-seam-pair-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.clo-finishing-seam-pair-values{font-variant-numeric:tabular-nums;white-space:nowrap;font-size:10px;color:#c3d0d9}
+.clo-finishing-seam-pairs strong{font-weight:600;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:10px}
+.clo-finishing-seam-review small{font-size:10px;line-height:1.45;color:#aab7c1}
+.clo-steam-footer {display:flex;align-items:center;justify-content:space-between;gap:7px;margin-top:11px;}
+.clo-steam-footer button {
+  display:grid;place-items:center;width:26px;height:24px;padding:3px;background:#313235;
+  border:1px solid #44464a;color:#b9bec2;border-radius:2px;cursor:pointer;
+}
+.clo-steam-footer button:hover {background:#42454a;color:white;}
+.clo-steam-footer span {font-size:9px;color:#a2a7ac;text-align:right;}
+@media(max-width:600px){
+  .clo-floating-tool,.clo-floating-tool[data-clo-floating-widget="steam"],.clo-floating-tool[data-clo-floating-widget="grading"]{width:min(390px,calc(100vw - 16px));}
+  .clo-floating-tool-body{padding:10px;}
+  .clo-finishing-inset{padding:8px;}
+  .clo-steam-row{grid-template-columns:68px minmax(55px,1fr) 93px;gap:4px;}
+  .clo-finishing-number input[type=number]{width:67px;}
+}
+
+/* Native pattern grading uses the same movable CLO widget chrome as the
+   Sewing Length and Steam dialogs, with restrained rows and numeric fields. */
+.clo-native-grading .clo-floating-tool-body {padding:14px 16px 12px;}
+.clo-native-grading .clo-finishing-inset {padding:9px 12px;}
+.clo-native-grading .clo-grading-row {
+  display:grid;
+  grid-template-columns:115px minmax(0,1fr);
+  align-items:center;
+  min-height:38px;
+  gap:10px;
+  font-size:11px;
+  color:#ededee;
+}
+.clo-native-grading .clo-grading-row+.clo-grading-row {border-top:1px solid #393a3d;}
+.clo-native-grading .clo-grading-row>span {white-space:nowrap;}
+.clo-native-grading .clo-grading-row select,
+.clo-native-grading .clo-grading-row input {
+  height:27px;min-width:0;width:100%;background:#242527;color:#f0f1f2;
+  border:1px solid #46484c;border-radius:2px;padding:3px 7px;font:12px -apple-system,BlinkMacSystemFont,sans-serif;
+}
+.clo-native-grading .clo-grading-row select:focus-visible,
+.clo-native-grading .clo-grading-row input:focus-visible {
+  outline:1px solid #34bdfa;outline-offset:1px;border-color:#34bdfa;
+}
+.clo-native-grading .clo-grading-unit {
+  display:flex;align-items:center;gap:7px;
+}
+.clo-native-grading .clo-grading-unit span {min-width:18px;color:#bcc0c6;font-size:11px;}
+.clo-native-grading .clo-grading-preview {
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:12px 0 8px;font-size:11px;color:#bfc4ca;
+}
+.clo-native-grading .clo-grading-preview strong {
+  color:#56c8f2;font-size:12px;font-variant-numeric:tabular-nums;font-weight:550;white-space:nowrap;
+}
+.clo-native-grading .clo-grading-note {
+  margin:0 0 10px;color:#a9afb5;font-size:10px;line-height:1.45;
+}
+.clo-native-grading .clo-grading-actions {display:flex;justify-content:flex-end;gap:7px;}
+.clo-native-grading .clo-grading-actions button {
+  background:#36383b;color:#e9ecee;border:1px solid #505359;
+  border-radius:2px;min-height:28px;padding:5px 13px;cursor:pointer;font-size:11px;
+}
+.clo-native-grading .clo-grading-actions button:hover:not(:disabled) {background:#474b50;}
+.clo-native-grading .clo-grading-actions .clo-grade-primary {
+  background:#28546b;border-color:#337d9c;color:#e4f9ff;
+}
+.clo-native-grading .clo-grading-actions .clo-grade-primary:hover:not(:disabled) {background:#356985;}
+.clo-native-grading .clo-grading-actions button:disabled {opacity:.4;cursor:not-allowed;}

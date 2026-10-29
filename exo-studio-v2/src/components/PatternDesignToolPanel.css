@@ -1,0 +1,23 @@
+.tool-rail .exo-pattern-toolpanel{grid-column:1/-1;width:100%;position:relative;color:inherit}
+.exo-pattern-toolpanel section{margin:0 0 5px;border-bottom:1px solid #69788640;padding-bottom:5px}
+.exo-pattern-toolpanel h3{font:600 8px/1.4 sans-serif;letter-spacing:.04em;text-transform:uppercase;margin:6px 0 4px;text-align:center;color:#a9becb}
+.exo-pattern-toolpanel section>div{display:grid;grid-template-columns:repeat(2,31px);gap:3px;justify-content:center}
+.tool-rail .exo-pattern-toolpanel button[aria-pressed="true"]{background:#234b60;border-color:#72b8d8;color:#e5f7ff}
+.tool-rail .exo-pattern-toolpanel button:focus-visible{outline:2px solid #8bd0f2;outline-offset:-2px}
+.tool-rail .exo-pattern-toolpanel .exo-pattern-find{width:100%;height:25px;font-size:10px}
+.exo-pattern-search{position:fixed;z-index:160;left:100px;top:100px;width:280px;max-height:70vh;overflow:auto;padding:12px;background:#20272e;border:1px solid #76838d;box-shadow:0 8px 30px #0008;border-radius:4px}
+.exo-pattern-search label{display:block;font-size:12px}.exo-pattern-search input{display:block;width:100%;margin:6px 0 10px;padding:7px;background:#131b20;color:#fff;border:1px solid #718695}
+.desktop-workspace .tool-rail .exo-pattern-search button,.tool-rail .exo-pattern-search button{display:block;width:100%;height:auto;min-height:30px;text-align:left;padding:6px;font-size:11px;white-space:normal}
+.exo-pattern-search p{font-size:12px}
+.exo-pattern-toolpanel .exo-pen-family{position:relative;width:31px;height:31px}
+.exo-pattern-toolpanel .exo-pen-family>button{position:relative;width:31px;height:31px;display:grid;place-items:center;padding:3px}
+.exo-pattern-toolpanel .exo-pen-family-caret{position:absolute;bottom:2px;right:2px;width:0;height:0;border-left:5px solid transparent;border-bottom:5px solid currentColor;opacity:.75;pointer-events:none}
+.exo-pattern-toolpanel .exo-pattern-anchor-mark{font:700 22px/1 system-ui,sans-serif;display:inline-grid;place-items:center;width:19px;height:19px}
+.exo-pattern-toolpanel .exo-pen-flyout{position:fixed;z-index:180;width:242px;padding:5px;display:grid;gap:2px;background:#252d38;border:1px solid #627285;border-radius:8px;box-shadow:0 10px 28px #0008}
+.tool-rail .exo-pattern-toolpanel .exo-pen-flyout>button,.desktop-workspace .tool-rail .exo-pattern-toolpanel .exo-pen-flyout>button{display:grid;grid-template-columns:28px minmax(0,1fr) auto;align-items:center;gap:8px;width:100%;height:38px;min-height:38px;text-align:left;padding:7px 9px 7px 6px;color:#e7eaf0;border:0;border-radius:5px;background:transparent;white-space:nowrap;cursor:pointer}
+.tool-rail .exo-pattern-toolpanel .exo-pen-flyout>button:hover:not(:disabled),.tool-rail .exo-pattern-toolpanel .exo-pen-flyout>button:focus-visible{background:rgba(106,166,255,.18)}
+.exo-pattern-toolpanel .exo-pen-flyout-name{font:500 13px/1.3 system-ui,sans-serif;min-width:0}
+.exo-pattern-toolpanel .exo-pen-flyout>button[aria-checked="true"] .exo-pen-flyout-name::after{content:"";display:inline-block;width:6px;height:6px;margin-left:8px;vertical-align:middle;border-radius:50%;background:#6aa6ff}
+.exo-pattern-toolpanel .exo-pen-flyout kbd{font:11px/1.2 ui-monospace,Menlo,monospace;color:#aab7ca}
+.tool-rail .exo-pattern-toolpanel .exo-pen-units-button{min-width:31px;font:700 10px/1 ui-monospace,Menlo,monospace;color:#cee4ef;border:1px solid #7a8b9b88;border-radius:5px;background:#263744;letter-spacing:-.03em;text-transform:none}
+.tool-rail .exo-pattern-toolpanel .exo-pen-units-button:hover{color:#fff;border-color:#9ad2f6;background:#315671}

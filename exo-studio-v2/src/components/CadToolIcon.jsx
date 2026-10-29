@@ -1,4 +1,16 @@
 import React from 'react'
+import {ChevronLeft,ChevronRight,Copy,ClipboardPaste,MousePointer2,ArrowLeftRight,ArrowUpDown,Move,RotateCw,Eye,Scaling,Trash2,Layers,MoveHorizontal,MoveVertical,SquareDashed,AlignVerticalJustifyCenter,AlignHorizontalJustifyCenter,Slash,Scissors,Table2,Ruler,Target,ArrowUpRight,Ratio,CornerDownRight,GitCompareArrows,Waypoints,Magnet,MoveDiagonal2} from 'lucide-react'
+const GRADE_INDEX_ICONS={
+ 'prev-point':ChevronLeft,'copy-grading':Copy,'paste-grading':ClipboardPaste,'set-grading-tool':MousePointer2,
+ 'paste-x-grading':MoveHorizontal,'paste-y-grading':MoveVertical,'paste-relatively':CornerDownRight,'paste-dd-grading':GitCompareArrows,
+ 'next-point':ChevronRight,'angle':RotateCw,'show-from-base-size':Eye,'grade-proportionally':Scaling,
+ 'clear-grading':Trash2,'stack-point':Layers,'move-point-size':Move,'move-size-along':ArrowUpRight,
+ 'move-size-proportional':Ratio,'move-size-parallel':MoveDiagonal2,'move-size-by-rectangle':SquareDashed,
+ 'align-points-size':Magnet,'align-vertical-size':AlignVerticalJustifyCenter,'align-horizontal-size':AlignHorizontalJustifyCenter,
+ 'align-size-by-line':Waypoints,'grade-notch':Scissors,
+}
+
+
 import toolbarIconManifest from '../assets/toolbar-icons/manifest.json'
 
 // Standalone SVGs are generated from Garment Studio's original vector artwork
@@ -108,7 +120,7 @@ function Artwork({ id }) {
       return <><circle cx="12" cy="5.6" r="3.2" fill="currentColor" fillOpacity=".16" strokeWidth="1.25"/><path d="M12 8.8v12.7l-1.2-3.3 1.2 3.3 1.2-3.3" strokeWidth="1.35"/><path d="M9.7 5.6h4.6" strokeWidth=".85"/><path d="M5 13.5h4M15 13.5h4" strokeDasharray="1.4 1.2" strokeOpacity=".65"/></>
     case 'sew':
       return <SewingMachine/>
-    case 'sew-pair': case 'free-sew':
+    case 'sew-pair': case 'segment-sew':
       return <SewPair/>
     case 'fastener':
       return <><path d="M3.3 4.8h8.1v14.4H3.3ZM12.6 4.8h8.1v14.4h-8.1Z" strokeOpacity=".65"/><circle cx="9.2" cy="12" r="2.6" fill="currentColor" fillOpacity=".2"/><circle cx="9.2" cy="12" r=".8" fill="currentColor" stroke="none"/><path d="M12 12h4.5m-2-2 2 2-2 2" strokeWidth="1.2"/><path d="M17 8.5v7" strokeDasharray="1.3 1.2"/></>
@@ -176,14 +188,121 @@ function Artwork({ id }) {
       return <><MiniShirt/><path d="M9 9q-2 3 0 6m3-7q-2 4 0 9m3-8q-2 3 0 6" strokeWidth="1.1"/></>
     case 'orbit':
       return <><path d="m8 8 4-3 4 3-4 3Z M8 8v7l4 3 4-3V8"/><ellipse cx="12" cy="12" rx="10" ry="5.2" transform="rotate(-25 12 12)" strokeDasharray="3 2"/><path d="m19 7 2 1-1.1 2.5" strokeWidth="1.4"/></>
+    // CLO reference-only operations receive their own original glyphs. These
+    // indicate the operation's identity, not support for an unavailable action.
+    case 'fold-arrangement': case 'fold-garment':
+      return <><path d="M3 5h12l6 7-9 8H3Z" fill="currentColor" fillOpacity=".08"/><path d="M15 5 12 12l9 0M12 12l0 8" strokeDasharray={id==='fold-arrangement'?'2 1':undefined}/><path d="m6 9 3 3-3 3"/></>
+    case 'redrape':
+      return <><MiniShirt/><path d="M3 19a9 9 0 0 0 16 0m0 0-4-.5m4 .5-1-4" strokeWidth="1.5"/><path d="M9 11q3 3 6 0" strokeDasharray="2 1"/></>
+    case 'motion':
+      return <><circle cx="10" cy="5" r="2"/><path d="m9 8-3 6 4 3-2 5m2-9 6 2 4 5m-11-8 6-3"/><path d="m18 3 4 4-4 4" strokeWidth="1.5"/></>
+    case 'pen-3d':
+      return <><path d="m3 9 9-5 9 5v9l-9 4-9-4Z" strokeOpacity=".45"/><path d="m5 17 11-11 3 3-11 11-4 1Z" fill="currentColor" fillOpacity=".18"/><path d="m4 21 4-1"/></>
+    case 'graphic-transform':
+      return <><rect x="6" y="6" width="12" height="12" rx="1"/><path d="m9 15 2-3 2 2 2-3"/><path d="M3 8V3h5m8 0h5v5m0 8v5h-5M8 21H3v-5"/></>
+    case 'button-move':
+      return <><circle cx="10" cy="12" r="6"/><circle cx="8" cy="10" r="1" fill="currentColor"/><circle cx="12" cy="14" r="1" fill="currentColor"/><path d="M17 4h5m-2.5-2.5v5M17 19h5m-2.5-2.5v5"/></>
+    case 'zipper':
+      return <><path d="M6 2v20m12-20v20M9 3v13m6-13v13"/><path d="M9 5h6M9 8h6M9 11h6M9 14h6" strokeDasharray="1.5 1"/><rect x="10" y="15" width="4" height="5" rx="1" fill="currentColor" fillOpacity=".35"/></>
+    case 'piping':
+      return <><path d="M3 5c9-4 9 18 18 14" strokeWidth="4" strokeOpacity=".3"/><path d="M3 5c9-4 9 18 18 14" strokeWidth="1.6"/><path d="M5 3 2 7m19 10-3 4"/></>
+    case 'binding':
+      return <><path d="M3 4h18v16H3Z" strokeOpacity=".35"/><path d="M3 4h5v16H3m13-16h5v16h-5" fill="currentColor" fillOpacity=".2"/><path d="M8 4v16m8-16v16" strokeDasharray="2 2"/></>
+    case 'press': case 'steam':
+      return <><path d="M4 16q8-13 16 0v3H4Z"/><path d="M6 21h12"/><path d="M8 3q-3 3 0 6m5-6q-3 3 0 6m5-6q-3 3 0 6" strokeDasharray={id==='steam'?'2 1':undefined}/></>
+    case 'fullness':
+      return <><path d="M3 5h18v14H3Z"/><path d="M8 6v12m8-12v12" strokeDasharray="2 1"/><path d="m5 12 3-3 3 3m2 0 3 3 3-3"/></>
+    case 'trace':
+      return <><Pattern/><path d="m8 7 9-1 2 10-7 2" strokeDasharray="2 2" strokeWidth="2"/></>
+    case 'seam-allowance':
+      return <><Pattern/><path d="M2 7 5 2l14-1 4 18-5 4H2" strokeDasharray="2 1.5" strokeWidth="1"/></>
+    case 'walk-pattern':
+      return <><path d="M3 19q2-15 15-15"/><path d="M6 19q2-12 12-12" strokeDasharray="2 2"/><path d="m14 3 4 1-1 4M5 15l-2 4 4 1"/></>
+    case 'seam-taping':
+      return <><path d="M3 3h8v18H3Zm10 0h8v18h-8Z" strokeOpacity=".55"/><path d="M11 3h2v18h-2Z" fill="currentColor" fillOpacity=".45"/><path d="M12 4v16" strokeDasharray="1 2"/></>
+    case 'sublayer':
+      return <><path d="m3 7 9-5 9 5-9 5Zm0 5 9 5 9-5M3 17l9 5 9-5"/><path d="M12 12v5" strokeDasharray="1 1"/></>
+    case 'fill-pattern':
+      return <><Pattern/><path d="m8 13 4 4 9-10" strokeWidth="2"/><path d="M6 8h9" strokeDasharray="1 2"/></>
+    // The live CLO 2D rail distinguishes author/edit and segment/free tools.
+    // These source-owned vector symbols preserve those distinctions at 20px.
+    case 'free-sew':
+      return <><path d="M3 4h5l1.2 15H3ZM16 4h5v15h-6.2Z" fill="currentColor" fillOpacity=".08"/><path d="M8.5 7c3-4 4 13 7.4 9" stroke="#55d8e9" strokeDasharray="1.5 1.3" strokeWidth="1.7"/><circle cx="8.5" cy="7" r="1.7" fill="currentColor"/><circle cx="15.9" cy="16" r="1.7" fill="currentColor"/></>
+    case 'base-polygon':
+      return <><path d="M3.5 4h17v16h-17Z" strokeWidth="1.55"/><path d="M7 7h10v10H7Z" strokeWidth="1.15" strokeDasharray="2.5 1.5"/><circle cx="3.5" cy="4" r="1.4" fill="currentColor"/><circle cx="20.5" cy="20" r="1.4" fill="currentColor"/></>
+    case 'pom-edit':
+      return <><MiniShirt/><path d="M7 13h9m-9 0 2-1.6m-2 1.6 2 1.6m7-1.6-2-1.6m2 1.6-2 1.6" strokeWidth="1.15"/><path d="m14.5 19 5-6 2 2-5 6-2.7.7Z" fill="currentColor" fillOpacity=".35" strokeWidth=".9"/></>
+    case 'annotation-add':
+      return <><path d="M4 18 10 3l6 15M6.5 12h7" strokeWidth="1.7"/><path d="M18 13v9m-4.5-4.5h9" strokeWidth="1.7" stroke="#55d8e9"/></>
+    case 'annotation-edit':
+      return <><path d="M3 18 9 3l6 15M5.5 12h7" strokeWidth="1.5"/><path d="m12 20 6-7 3 3-6 6-3 0Z" fill="currentColor" fillOpacity=".3" strokeWidth="1"/></>
+    case 'grading-edit':
+      return <><path d="M3 9 12 3l7 14-10 4Z" strokeOpacity=".4"/><path d="m5 10 8-5 5 11-9 4Z" strokeDasharray="2 1"/><path d="M17 8 21 4l2 2-4 4-2.5.6Z" fill="currentColor" fillOpacity=".3"/></>
+    case 'grading-auto':
+      return <><path d="m2 10 8-6 9 11-8 6Z" strokeDasharray="1.6 1.5"/><path d="m5 10 7-4 5 9-8 4Z"/><path d="M17 3v7m-3.5-3.5h7" strokeWidth="1.5" stroke="#55d8e9"/></>
+    case 'seam-length':
+      return <><path d="M3.5 4V20m8-16v16" strokeWidth="1.25"/><path d="M5 8h6m-6 8h6" strokeDasharray="1 1.3" stroke="#55d8e9"/><path d="M14 4h7m-3.5 0v10m-3-3 3 3 3-3" strokeWidth="1.15"/><circle cx="17.5" cy="17" r="3.3" strokeWidth="1.3"/><path d="m20 19.5 2 2"/></>
+    case 'topstitch-edit':
+      return <><path d="M3 4h16v16H3Z" strokeOpacity=".55"/><path d="M6 7h10v10H6Z" strokeDasharray="1.5 1.3"/><path d="m13 20 6-7 2 2-6 7-2.5.5Z" fill="currentColor" fillOpacity=".3"/></>
+    case 'topstitch-segment':
+      return <><path d="M3 5h18v14H3Z" strokeOpacity=".4"/><path d="M5 12h14" strokeDasharray="1.5 1.4" strokeWidth="1.6" stroke="#55d8e9"/><circle cx="5" cy="12" r="2" fill="currentColor"/><circle cx="19" cy="12" r="2" fill="currentColor"/></>
+    case 'puckering-edit':
+      return <><path d="M2 7q2-4 5 0t5 0t5 0t5 0M2 17q2-4 5 0t5 0t5 0t5 0"/><path d="m11 19 6-7 2 2-6 7-2.5.5Z" fill="currentColor" fillOpacity=".3"/></>
+    case 'puckering-segment':
+      return <><path d="M3 8q2-5 4 0t4 0t4 0t6 0M3 16q2-5 4 0t4 0t4 0t6 0" strokeWidth="1.5"/><circle cx="3" cy="8" r="1.65" fill="currentColor"/><circle cx="21" cy="16" r="1.65" fill="currentColor"/></>
+    // Dedicated 3D reference glyphs identify separate CLO tool semantics.
+    case 'auto-sew':
+      return <><SewPair/><path d="M18 1v8m-4-4h8" stroke="#55d8e9" strokeWidth="1.5"/></>
+    case 'tack':
+      return <><circle cx="12" cy="5.5" r="3.5" fill="currentColor" fillOpacity=".3"/><path d="M12 9v12M9 17l3 4 3-4" strokeWidth="1.5"/><path d="M4 12h5m6 0h5" strokeDasharray="2 1"/></>
+    case 'tack-edit':
+      return <><circle cx="7" cy="5.5" r="2.5" fill="currentColor" fillOpacity=".3"/><path d="M7 8v11M4 15l3 4 3-4"/><path d="m11 18 7-9 3 2-7 10-3 .3Z" fill="currentColor" fillOpacity=".26"/></>
+    case 'arrange-reset-2d':
+      return <><rect x="3" y="7" width="10" height="12" rx="1"/><path d="M13 10h7V4"/><path d="M20 4a9 9 0 1 1-17 3m17-3-5 1" strokeWidth="1.4" stroke="#55d8e9"/></>
+    case 'arrange-reset-3d':
+      return <><path d="m5 6 8-4 7 4v10l-7 4-8-4Z" fill="currentColor" fillOpacity=".09"/><path d="m13 11 7-5M13 11v9M13 11 5 6" strokeWidth="1"/><path d="M3 18a9 9 0 0 0 16 1l-4 1m4-1-1-4" strokeWidth="1.5" stroke="#55d8e9"/></>
+    case 'mesh-hires':
+      return <><MiniShirt/><path d="M8 8v11m4-12v13m4-12v11M6 12h12M6 16h12" strokeWidth=".65" strokeOpacity=".85"/><path d="M19 3v7m-3.5-3.5h7" strokeWidth="1.5" stroke="#55d8e9"/></>
+    case 'avatar-measure':
+      return <><circle cx="9" cy="4" r="2"/><path d="m6 8 2-1h3l2 2 2 6M8 8l-2 7 2 6h5l-1-7"/><path d="M16 4h5m-5 12h5m-2.5-12v12" strokeWidth="1" strokeDasharray="2 1"/></>
+    case 'avatar-measure-edit':
+      return <><circle cx="8" cy="4" r="2"/><path d="M8 8 5 14l2 7h5l1-8-2-5Z"/><path d="m14 19 5-7 3 2-5 7-3 1Z" stroke="#55d8e9" fill="currentColor" fillOpacity=".2"/></>
+    case 'garment-measure':
+      return <><MiniShirt/><path d="M7 11h10M7 10v5m10-5v5M9 12l-2-1 2-1m6 0 2 1-2 1" strokeWidth="1.1" stroke="#55d8e9"/></>
+    case 'garment-measure-edit':
+      return <><MiniShirt/><path d="M6 11h8m-8-2v5m8-5v5" strokeDasharray="2 1"/><path d="m13 19 6-7 3 2-6 7-3 .5Z" stroke="#55d8e9" fill="currentColor" fillOpacity=".2"/></>
+    case 'line-3d':
+      return <><path d="m3 7 9-4 9 4v9l-9 4-9-4Z" strokeOpacity=".45"/><path d="M5 14q8-11 14 0" stroke="#55d8e9" strokeWidth="1.5"/><circle cx="5" cy="14" r="1.5" fill="currentColor"/><circle cx="19" cy="14" r="1.5" fill="currentColor"/></>
+    case 'line-3d-edit':
+      return <><path d="m2 7 8-4 8 4v8l-8 4-8-4Z" strokeOpacity=".45"/><path d="M4 13q7-9 12 0" strokeDasharray="2 1" stroke="#55d8e9"/><path d="m12 20 6-8 3 2-6 8-3 .5Z" fill="currentColor" fillOpacity=".3"/></>
+    case 'pen-3d-edit':
+      return <><path d="m3 7 8-4 8 4v8l-8 4-8-4Z" strokeOpacity=".45"/><circle cx="6" cy="14" r="1.6" fill="currentColor"/><circle cx="16" cy="10" r="1.6" fill="currentColor"/><path d="m10 19 7-8 3 3-7 8-3 .5Z" fill="currentColor" fillOpacity=".3"/></>
+    case 'piping-edit':
+      return <><path d="M3 5c7-4 9 16 17 12" strokeWidth="3" strokeOpacity=".4"/><path d="M3 5c7-4 9 16 17 12" strokeWidth="1.2"/><path d="m12 20 5-7 3 2-5 6-3 1Z" fill="currentColor" fillOpacity=".3"/></>
+    case 'binding-select':
+      return <><path d="M4 3h15v18H4Z" strokeOpacity=".4"/><path d="M6 3v18m11-18v18" strokeDasharray="1 2"/><path d="m2 2 2 13 2-4 2 5 2-1-3-5 5-1Z" fill="currentColor"/></>
     default:
       return <><Cursor/></>
   }
 }
 
 export default function CadToolIcon({ id, size = 18, className = '', strokeWidth = 1.3 }) {
+  const GradeIcon = id?.startsWith('grade24:') ? GRADE_INDEX_ICONS[id.slice(8)] : null
+  if (GradeIcon) return <GradeIcon size={size} strokeWidth={strokeWidth} className={`cad-tool-icon ${className}`} aria-hidden="true" data-icon-id={id}/>
+
   if (toolbarIconIds.has(id) && svgUrlFor(id)) {
-    return <img className={`cad-tool-icon ${className}`} src={svgUrlFor(id)} alt="" width={size} height={size} data-icon-id={id} data-icon-format="svg" aria-hidden="true" draggable="false"/>
+    // Keep the original full-color CAD artwork in the factory Graphite UI.
+    // In a themed editor, CSS switches to the alpha-only mask below so a
+    // single hue inherited from the toolbar can tint *every* original SVG,
+    // even when its file has embedded white/gray strokes. This avoids brittle
+    // CSS filters and never recolors the garment mesh or its PBR materials.
+    const src=svgUrlFor(id)
+    return <>
+      <img className={`cad-tool-icon cad-tool-icon-artwork ${className}`} src={src} alt="" width={size} height={size} data-icon-id={id} data-icon-format="svg" aria-hidden="true" draggable="false"/>
+      <span className={`cad-tool-icon cad-tool-icon-mask ${className}`}
+        style={{width:size,height:size,'--cad-tool-icon-mask':`url("${src}")`}}
+        data-icon-id={id} data-icon-format="mask" aria-hidden="true"/>
+    </>
   }
   return <svg className={`cad-tool-icon ${className}`} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
     <Artwork id={id}/>

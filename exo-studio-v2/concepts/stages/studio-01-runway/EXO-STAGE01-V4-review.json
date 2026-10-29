@@ -1,0 +1,20 @@
+{
+  "scene": "EXO Stage 01 / Runway Chamber",
+  "status": "Awaiting user aesthetic approval",
+  "newSourceBlend": "EXO-STAGE01-V4-APPROVAL-CANDIDATE.blend",
+  "stageOnlyGLB": "EXO-STAGE01-V4-STAGE-ONLY-CANDIDATE.glb",
+  "meshCount": 836,
+  "materialSource": "Packed original authored PBR maps",
+  "avatarInStageGLB": false,
+  "avatarPreview": "Real 1.75 m body mannequin, no faked garment",
+  "normalFeetPosition": [
+    0,
+    0,
+    0
+  ],
+  "approvalImages": [
+    "EXO-STAGE01-V4-gallery.png",
+    "EXO-STAGE01-V4-mannequin.png"
+  ],
+  "integratedIntoApp": false
+}

@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import { normalizeFabricOptics, textileAlbedoMultiplier } from './fabricSurfaceModel.js'
 import { normalizeWashSpec } from './clothWashProcedurals.js'
 import { washPixelColor } from './clothWashImage.js'
+import {rustMeshYarnCoverage} from './rustTextileOpticsKernel.js'
 
 const TWO_PI = Math.PI * 2
 const fract = x => x - Math.floor(x)
@@ -83,6 +84,8 @@ const smoothstep=(left,right,value)=>{
  * topology, and they must never alter physical solver collision holes.
  */
 export function meshYarnCoverage(topology='mesh-grid',u=0,v=0) {
+ const rust=rustMeshYarnCoverage(topology,u,v)
+ if(rust!==null)return rust
  if(topology==='tulle-net'){
   // Bias net: repeating triangular/diamond strands, mostly open.
   const a=Math.abs(Math.sin(TWO_PI*12*(u+v)))

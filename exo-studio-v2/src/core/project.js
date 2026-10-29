@@ -1,4 +1,5 @@
 import { quadraticArcLength, quadraticAtLengthFraction } from './draftingPrecision.js'
+import { rustSignedPolygonArea } from './rustProjectAreaKernel.js'
 
 export function cloneProject(project) {
   return typeof structuredClone === 'function'
@@ -14,6 +15,8 @@ export function touchProject(project) {
 
 export function polygonArea(points = []) {
   if (points.length < 3) return 0
+  const native = rustSignedPolygonArea(points)
+  if (native !== null) return Math.abs(native)
   let area = 0
   for (let i = 0; i < points.length; i += 1) {
     const a = points[i]
@@ -57,6 +60,8 @@ export function samplePieceBoundary(piece, segments = 8) {
 }
 
 function signedPolygonArea(points = []) {
+  const native = rustSignedPolygonArea(points)
+  if (native !== null) return native
   let area = 0
   for (let index = 0; index < points.length; index += 1) {
     const a = points[index]
@@ -164,6 +169,14 @@ export function edgeLength(piece, edgeIndex) {
 export function edgeRangeLength(piece, edgeIndex, startT = 0, endT = 1) {
   const start = Math.max(0, Math.min(1, Number(startT ?? 0)))
   const end = Math.max(0, Math.min(1, Number(endT ?? 1)))
+  const a = piece?.points?.[edgeIndex]
+  const b = piece?.points?.[(edgeIndex + 1) % piece?.points?.length]
+  if (!a || !b) return 0
+  const curve = piece.curves?.[edgeIndex]
+  // Sewing intervals are stored in Bezier parameter space (startT/endT).
+  // Curve speed is generally nonuniform, so parameter fraction is not a
+  // physical arclength fraction. Measure the actual trimmed curve instead.
+  if (curve) return quadraticArcLength(a, {x:curve.cx,y:curve.cy}, b, start, end)
   return edgeLength(piece, edgeIndex) * Math.abs(end - start)
 }
 

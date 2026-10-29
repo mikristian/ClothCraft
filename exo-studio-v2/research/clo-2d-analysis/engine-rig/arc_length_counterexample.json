@@ -1,0 +1,38 @@
+{
+  "source": "src/core/project.js:edgeRangeLength",
+  "method": "Simpson 32768 steps over quadratic derivative",
+  "results": [
+    {
+      "name": "straight",
+      "totalCm": 100,
+      "actualFirstHalfCm": 50,
+      "linearApproxFirstHalfCm": 50,
+      "errorMm": 0,
+      "relativeErrorPct": 0
+    },
+    {
+      "name": "unequal-control",
+      "totalCm": 119.73453500241423,
+      "actualFirstHalfCm": 41.028389827161604,
+      "linearApproxFirstHalfCm": 59.86726750120712,
+      "errorMm": 188.3887767404551,
+      "relativeErrorPct": 15.733871329325044
+    },
+    {
+      "name": "strong-hook",
+      "totalCm": 232.33141402923295,
+      "actualFirstHalfCm": 97.57788290193913,
+      "linearApproxFirstHalfCm": 116.16570701461647,
+      "errorMm": 185.8782411267734,
+      "relativeErrorPct": 8.000564275969387
+    },
+    {
+      "name": "low-curvature",
+      "totalCm": 100.61061298813297,
+      "actualFirstHalfCm": 32.96971037084634,
+      "linearApproxFirstHalfCm": 50.305306494066485,
+      "errorMm": 173.35596123220142,
+      "relativeErrorPct": 17.230385153567127
+    }
+  ]
+}

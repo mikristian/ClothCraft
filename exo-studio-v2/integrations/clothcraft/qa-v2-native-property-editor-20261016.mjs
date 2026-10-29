@@ -11,7 +11,7 @@ import {chromium} from 'playwright-core'
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..')
 const output=mkdtempSync(path.join(root,'integrations/clothcraft/output/qa-native-property-'))
 mkdirSync(path.join(output,'workspace'),{recursive:true})
-const api='http://127.0.0.1:5415',ui='http://127.0.0.1:5416',children=[]
+const api='http://127.0.0.1:5415',ui='http://127.0.0.1:5188',children=[]
 function launch(exe,args,env={}){
  const logFile=path.join(output,args[0]?.includes('server.mjs')?'native-service.log':'ui-service.log')
  const fd=openSync(logFile,'a')
@@ -42,7 +42,7 @@ try{
   EXO_CLOTHCRAFT_SESSION_BIN:path.join(root,'research/oss/clothcraft/target/debug/exo-session'),
   EXO_CLOTHCRAFT_OUTPUT_DIR:output,EXO_CLOTHCRAFT_GPU:'0',
  })
- launch(path.join(root,'node_modules/.bin/vite'),['--host','127.0.0.1','--port','5416','--strictPort'],{
+ launch(path.join(root,'node_modules/.bin/vite'),['--host','127.0.0.1','--port','5188','--strictPort'],{
   VITE_CLOTHCRAFT_BRIDGE_URL:api,
  })
  console.log('QA stage: services ready')
@@ -75,6 +75,8 @@ try{
  await page.waitForFunction(name=>document.querySelector('.clo-pe-header strong')?.textContent===name,snapshot.template.panels[0].name)
  assert.deepEqual(await headings(),[
   'Information','Selected Line','Simulation Properties','Fabric','Bond','Solidify','Arrange','Miscellaneous'])
+ assert.equal(await inspector.getByRole('button',{name:'Arrange',exact:true}).getAttribute('aria-expanded'),'true',
+   'Selected pattern must expose its advanced arrangement and precision controls')
  assert.equal(await identity('name').inputValue(),snapshot.template.panels[0].name)
  assert.equal(await identity('itemNo').inputValue(),'')
  assert.equal(await identity('type').inputValue(),'Pattern Piece')
@@ -83,7 +85,13 @@ try{
  console.log('QA stage: rename pattern')
  await commit('name',renamedPanel)
  await page.waitForFunction(name=>document.querySelector('.clo-pe-header strong')?.textContent===name,renamedPanel)
- assert.equal((await command({op:'snapshot'})).template.panels.find(p=>p.id===panelId).name,renamedPanel)
+ let nativeRename=null
+ for(let attempt=0;attempt<20;attempt++){
+  nativeRename=(await command({op:'snapshot'})).template.panels.find(p=>p.id===panelId).name
+  if(nativeRename===renamedPanel)break
+  await page.waitForTimeout(150)
+ }
+ assert.equal(nativeRename,renamedPanel,'Native pattern rename must reach Rust, not just update the inspector')
  console.log('QA stage: itemNo pattern')
  await commit('itemNo','P-2026-FRONT')
  await page.waitForTimeout(180)
@@ -93,9 +101,10 @@ try{
  const fabricRow=page.locator('.clo-object-list .clo-object-select').filter({hasText:snapshot.template.fabrics[0].name}).first()
  console.log('QA stage: select native fabric')
  await fabricRow.click()
- assert.deepEqual(await headings(),['Information','Material','Physical Property','Miscellaneous'])
+ assert.deepEqual(await headings(),['Information','Material','Physical Property','Fabric Library & Texture','Miscellaneous'])
  assert.equal(await identity('name').inputValue(),snapshot.template.fabrics[0].name)
- assert.equal(await identity('type').inputValue(),'Fabric')
+ assert.equal(await area('Information').locator('[data-property-field="type"]').count(),0,
+   'Fabric assets use a dedicated material schema, not a read-only pattern Type field')
  const fabricName='EXO Native Fabric QA'
  console.log('QA stage: rename native fabric')
  await commit('name',fabricName)

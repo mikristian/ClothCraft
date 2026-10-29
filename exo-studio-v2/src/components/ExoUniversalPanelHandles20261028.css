@@ -1,0 +1,823 @@
+.exo-universal-panel-handles{position:fixed;inset:0;pointer-events:none;z-index:100300}
+.exo-universal-panel-handle{position:fixed;display:flex;flex-direction:column;align-items:center;gap:1px;pointer-events:auto;padding:1px;border-radius:4px;background:#252b32dc;border:1px solid #53616e;box-shadow:0 2px 6px #0003;transform:translate(0,2px);width:22px!important;box-sizing:border-box}
+.exo-universal-panel-handle button{display:grid;place-items:center;min-width:17px;width:17px;min-height:17px;height:17px;padding:0;border:none;background:transparent;color:#e5e9ee;border-radius:3px;cursor:pointer;touch-action:none}
+.exo-universal-panel-handle button:hover,.exo-universal-panel-handle button:focus-visible{background:#4a5969;outline:1px solid #aab6c3}
+.exo-universal-panel-handle__grip{cursor:grab!important}
+.exo-universal-panel-handle__grip:active{cursor:grabbing!important}
+/* The native edge-collapse arrow must never block a universal panel handle
+   after two panels are placed in the same right-side dock. */
+.main-layout.clo-adjustable-panels .exo-universal-panel-handle--inset{z-index:210!important}
+[data-exo-universal-floating="true"]{box-sizing:border-box!important;min-height:0!important;overflow:auto!important;border:1px solid #64717d!important;border-radius:5px!important;box-shadow:0 12px 36px #0008!important}
+.exo-universal-dock-preview{position:fixed;z-index:100299;pointer-events:none;display:grid;place-items:center;border:2px dashed #64bdff;background:#3698e435;color:#dff5ff;text-shadow:0 1px 4px #142332;font:700 12px system-ui;box-sizing:border-box}
+.exo-universal-dock-preview--left{left:0;top:8%;bottom:8%;width:115px}
+.exo-universal-dock-preview--right{right:0;top:8%;bottom:8%;width:115px}
+.exo-universal-dock-preview--top{left:12%;right:12%;top:0;height:68px}
+.exo-universal-dock-preview--bottom{left:12%;right:12%;bottom:0;height:68px}
+
+/* Actual horizontal presentation, not merely a blue drop-zone indicator. */
+.clo-right-tool-palette[data-exo-universal-top="true"]{display:flex!important;flex-flow:row nowrap!important;align-items:center!important;gap:3px!important;min-height:0!important;max-height:64px!important;padding:3px 24px 3px 4px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important}
+.clo-right-tool-palette[data-exo-universal-top="true"] :is(.clo-palette-scroll,.clo-palette-workflows,.clo-reference-dual-bars,.clo-reference-column,.clo-right-tool-grid){display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;gap:2px!important;max-width:none!important;width:max-content!important;height:auto!important;max-height:54px!important;overflow:visible!important}
+.clo-right-tool-palette[data-exo-universal-top="true"] :is(.clo-palette-scroll,.clo-palette-workflows,.clo-reference-dual-bars,.clo-reference-column,.clo-right-tool-grid) button{flex:0 0 28px!important;width:28px!important;min-width:28px!important;max-width:28px!important;height:28px!important;min-height:28px!important;padding:2px!important}
+.clo-right-tool-palette[data-exo-universal-top="true"] .clo-tool-palette-group-divider{display:none!important}
+/* Stable, grid-reserved horizontal bar. Never overlay a WebGL viewport. */
+.main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"],
+.main-layout.clo-adjustable-panels[data-exo-right-tools-placement="bottom"]{grid-template-rows:43px minmax(0,1fr)!important}
+.main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]>.workspaces{grid-column:4!important;grid-row:2!important;min-height:0!important}
+.main-layout.clo-adjustable-panels[data-exo-right-tools-placement="bottom"]{grid-template-rows:minmax(0,1fr) 43px!important}
+.main-layout.clo-adjustable-panels[data-exo-right-tools-placement="bottom"]>.workspaces{grid-column:4!important;grid-row:1!important;min-height:0!important}
+.main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]>.clo-inspector,
+.main-layout.clo-adjustable-panels[data-exo-right-tools-placement="bottom"]>.clo-inspector{grid-column:5!important;grid-row:1 / -1!important}
+.main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]>.asset-browser,
+.main-layout.clo-adjustable-panels[data-exo-right-tools-placement="bottom"]>.asset-browser,
+.main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]>.tool-rail,
+.main-layout.clo-adjustable-panels[data-exo-right-tools-placement="bottom"]>.tool-rail{grid-row:1 / -1!important}
+/* A palette is still React-owned by the inspector, but its drawing is placed
+   above/below the center pane with a reserved row and no viewport overlap. */
+.main-layout.clo-adjustable-panels>.clo-inspector>.clo-right-tool-palette[data-exo-universal-placement="top"],
+.main-layout.clo-adjustable-panels>.clo-inspector>.clo-right-tool-palette[data-exo-universal-placement="bottom"]{
+ position:fixed!important;z-index:180!important;transform:none!important;
+ display:flex!important;flex-flow:row nowrap!important;align-items:center!important;
+ height:41px!important;max-height:41px!important;min-height:41px!important;
+ width:var(--exo-ribbon-width,600px)!important;max-width:var(--exo-ribbon-width,600px)!important;
+ padding:2px 25px 2px 3px!important;overflow-x:auto!important;overflow-y:hidden!important;
+ scrollbar-width:none!important;box-sizing:border-box!important;box-shadow:none!important;
+ background:var(--studio-sidebar,#282b30)!important;border:1px solid var(--studio-border,#515961)!important;border-radius:4px!important;
+}
+.main-layout.clo-adjustable-panels>.clo-inspector>.clo-right-tool-palette[data-exo-universal-placement="top"]{left:var(--exo-ribbon-left,0px)!important;top:var(--exo-ribbon-top,0px)!important}
+.main-layout.clo-adjustable-panels>.clo-inspector>.clo-right-tool-palette[data-exo-universal-placement="bottom"]{left:var(--exo-ribbon-left,0px)!important;top:var(--exo-ribbon-bottom-top,0px)!important}
+.clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) :is(.clo-palette-scroll,.clo-palette-workflows,.clo-reference-dual-bars,.clo-reference-column,.clo-right-tool-grid){display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;min-height:0!important;max-height:35px!important;height:auto!important;width:max-content!important;min-width:0!important;gap:2px!important;overflow:visible!important;position:relative!important}
+.clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) :is(.clo-reference-dual-bars,.clo-reference-column){min-height:0!important;max-height:35px!important}
+.clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .clo-reference-column>button{position:relative!important;top:auto!important;left:auto!important;transform:none!important;flex:0 0 27px!important;width:27px!important;min-width:27px!important;max-width:27px!important;height:27px!important;min-height:27px!important;margin:0!important;padding:1px!important}
+.clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .clo-tool-palette-group-divider,
+.clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .clo-palette-count,
+.clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .clo-reset-fabric-panels{display:none!important}
+/* Structural reordering is applied to the existing grid children only. The
+   browser canvas stays within its own allocated minmax(0,1fr) track. */
+.main-layout.clo-adjustable-panels[data-exo-side-order] {
+ grid-template-columns:25px var(--exo-slot-2,minmax(0,232px)) var(--exo-slot-3,minmax(0,72px)) var(--exo-slot-4,minmax(0,1fr)) var(--exo-slot-5,minmax(0,392px))!important;
+}
+.main-layout.clo-adjustable-panels[data-exo-side-order]>.clo-edge-tabs{grid-column:1!important;grid-row:1/-1!important}
+.main-layout.clo-adjustable-panels[data-exo-side-order]>.asset-browser{grid-column:var(--exo-library-slot,2)!important;grid-row:1/-1!important;min-width:0!important}
+.main-layout.clo-adjustable-panels[data-exo-side-order]>.tool-rail{grid-column:var(--exo-left-slot,3)!important;grid-row:1/-1!important;min-width:0!important}
+.main-layout.clo-adjustable-panels[data-exo-side-order]>.workspaces{grid-column:var(--exo-viewer-slot,4)!important;min-width:0!important}
+.main-layout.clo-adjustable-panels[data-exo-side-order]>.clo-inspector{grid-column:var(--exo-inspector-slot,5)!important;grid-row:1/-1!important;min-width:0!important}
+
+/* Panel-owned controls in normal flow, not viewport-positioned overlays. */
+.exo-universal-panel-handle.exo-universal-panel-handle--inset {
+ position:relative;inset:auto;transform:none;display:inline-flex;flex-direction:row;
+ align-items:center;align-self:flex-start;flex:0 0 auto;order:-1;
+ width:auto!important;max-width:100%;height:18px;min-height:18px;
+ margin:1px 3px;padding:0;gap:1px;border:0;border-radius:2px;
+ background:transparent;box-shadow:none;color:inherit;z-index:auto;
+}
+.exo-universal-panel-handle--inset button {
+ width:16px;min-width:16px;height:16px;min-height:16px;
+ color:inherit;background:transparent;border-radius:2px;
+}
+.exo-universal-panel-handle--inset button:hover {background:#80808026}
+.exo-universal-panel-handle--inset button:focus-visible {outline:2px solid currentColor;outline-offset:0}
+
+/* Two-row ribbon: flatten only toolbar wrappers; preserve every command. */
+.main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"] {grid-template-rows:70px minmax(0,1fr)!important}
+.main-layout.clo-adjustable-panels[data-exo-right-tools-placement="bottom"] {grid-template-rows:minmax(0,1fr) 70px!important}
+.main-layout.clo-adjustable-panels[data-exo-side-order]>.workspaces {grid-column:var(--exo-viewer-slot,4)!important}
+.main-layout.clo-adjustable-panels>.clo-inspector>.clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) {
+ display:grid!important;grid-template-rows:repeat(2,30px)!important;
+ grid-template-columns:repeat(var(--exo-ribbon-columns,30),minmax(0,1fr))!important;grid-auto-flow:column!important;
+ height:68px!important;min-height:68px!important;max-height:68px!important;
+ gap:2px!important;padding:3px!important;overflow:visible!important;
+}
+.clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) :is(.clo-palette-scroll,.clo-palette-workflows,.clo-reference-dual-bars,.clo-reference-column,.clo-right-tool-grid) {display:contents!important}
+.clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) button {
+ width:100%!important;min-width:0!important;max-width:100%!important;
+ height:28px!important;min-height:28px!important;padding:1px!important;position:relative!important;transform:none!important;inset:auto!important;
+}
+.clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) button svg {max-width:100%;width:18px;height:18px}
+/* Responsive, position-independent panel slots: reordering always respects
+   native viewport ownership, even when the inspector is moved to the left. */
+.main-layout.clo-adjustable-panels[data-exo-side-order][data-exo-right-tools-placement="top"]>.workspaces{grid-column:var(--exo-viewer-slot,4)!important;grid-row:2!important}
+.main-layout.clo-adjustable-panels[data-exo-side-order][data-exo-right-tools-placement="bottom"]>.workspaces{grid-column:var(--exo-viewer-slot,4)!important;grid-row:1!important}
+.main-layout.clo-adjustable-panels[data-exo-side-order][data-exo-right-tools-placement="top"]>.clo-inspector,
+.main-layout.clo-adjustable-panels[data-exo-side-order][data-exo-right-tools-placement="bottom"]>.clo-inspector{grid-column:var(--exo-inspector-slot,5)!important}
+/* The edge arrows follow their respective grid panels rather than remaining
+   at hard-coded physical coordinates after interchange. */
+.main-layout.clo-adjustable-panels[data-exo-side-order]>.exo-library-edge-toggle,
+.main-layout.clo-adjustable-panels[data-exo-side-order]>.exo-left-tools-edge-toggle,
+.main-layout.clo-adjustable-panels[data-exo-side-order]>.exo-right-independent-tools-arrow{position:absolute!important}
+/* Keep the hover surface entirely transparent to the viewport before a drag. */
+.exo-universal-panel-handles:empty{pointer-events:none!important}
+.exo-universal-dock-preview{outline:1px solid #73c6ff;outline-offset:-4px;border-radius:3px;background:color-mix(in srgb,#55baff 16%,transparent);backdrop-filter:none!important}
+/* Persistent emergency recovery control outside the canvas and side grids. */
+.exo-universal-layout-actions{position:fixed;top:54px;right:8px;display:flex;gap:3px;pointer-events:auto;z-index:100301}
+.exo-universal-layout-actions button{display:flex;align-items:center;gap:3px;min-height:21px;padding:2px 6px;border:1px solid #5b6a76;border-radius:3px;background:#242c34ed;color:#e6edf1;font:600 10px/1.2 system-ui;cursor:pointer}
+.exo-universal-layout-actions button:disabled{opacity:.4;cursor:default}
+.exo-universal-layout-actions button:not(:disabled):hover{border-color:#8dc7ed;background:#3a4856}
+/* Keep buttons on two rows and clip to the reserved ribbon: never a horizontal scrollbar. */
+.main-layout.clo-adjustable-panels>.clo-inspector>.clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]){grid-template-columns:repeat(var(--exo-ribbon-columns,30),minmax(21px,1fr))!important;overflow-x:hidden!important;overflow-y:hidden!important;scrollbar-width:none!important}
+.main-layout.clo-adjustable-panels>.clo-inspector>.clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) button{width:100%!important;min-width:0!important;max-width:100%!important}
+/* Panel handles belong at the far right of Object Browser and 2D tools.
+   No toolbar-sized reset/undo buttons: context menu is opened on right click. */
+.exo-universal-panel-handle--inset[data-panel-handle="inspector"],
+.exo-universal-panel-handle--inset[data-panel-handle="browser"],
+.exo-universal-panel-handle--inset[data-panel-handle="right"]{order:99!important;margin-left:auto!important;margin-right:3px!important;align-self:flex-end!important}
+.exo-universal-panel-handle--inset[data-panel-handle="left"]{order:-1!important;margin-left:3px!important;margin-right:auto!important}
+.exo-universal-layout-actions{display:none!important}
+.exo-universal-context-menu{position:fixed;z-index:100400;pointer-events:auto;width:172px;display:flex;flex-direction:column;padding:4px;border:1px solid #657280;border-radius:5px;background:#242b32;color:#e9eff5;box-shadow:0 6px 24px #0008}
+.exo-universal-context-menu>button{width:100%;padding:7px 8px;border:0;border-radius:3px;text-align:left;background:transparent;color:inherit;font:11px system-ui;cursor:pointer}
+.exo-universal-context-menu>button:hover:not(:disabled){background:#435c71}
+.exo-universal-context-menu>button:disabled{opacity:.4;cursor:default}
+/* The right 2D bar has no heading of its own. Give the SAME subtle, visible
+   grip treatment as the left 3D bar, aligned to its right outer edge. */
+.main-layout.clo-adjustable-panels>.clo-inspector>.clo-right-tool-palette>.exo-universal-panel-handle--inset[data-panel-handle="right"]{
+ display:flex!important;position:relative!important;inset:auto!important;
+ align-self:flex-end!important;order:-10!important;flex:0 0 19px!important;
+ margin:3px 2px 3px auto!important;min-height:19px!important;
+ width:20px!important;min-width:20px!important;max-width:20px!important;
+ padding:1px!important;border-radius:3px!important;z-index:12!important;
+ background:rgba(110,123,136,.16)!important;color:var(--studio-text,#e7e9ed)!important;
+}
+.main-layout.clo-adjustable-panels>.clo-inspector>.clo-right-tool-palette>.exo-universal-panel-handle--inset[data-panel-handle="right"]>.exo-universal-panel-handle__grip{
+ width:17px!important;min-width:17px!important;height:17px!important;min-height:17px!important;
+ display:grid!important;place-items:center!important;color:inherit!important;cursor:grab!important;
+}
+.main-layout.clo-adjustable-panels>.clo-inspector>.clo-right-tool-palette>.exo-universal-panel-handle--inset[data-panel-handle="right"]:hover{
+ background:rgba(110,147,180,.30)!important;
+}
+/* Shared toolbar-header rule for regular 3D and full 2D workspaces.
+   Put both collapse and drag controls above the title; never displace icons. */
+.main-layout.clo-adjustable-panels>.tool-rail>.exo-universal-tools-heading{
+ display:flex!important;flex-flow:row wrap!important;align-items:center!important;
+ justify-content:flex-start!important;align-content:start!important;
+ position:relative!important;grid-column:1/-1!important;
+ min-height:43px!important;padding:1px 2px 4px!important;
+ gap:0!important;box-sizing:border-box!important;
+}
+.main-layout.clo-adjustable-panels>.tool-rail>.exo-universal-tools-heading>.exo-universal-panel-handle--inset[data-panel-handle="left"]{
+ position:relative!important;order:-2!important;flex:0 0 18px!important;
+ align-self:flex-start!important;display:inline-flex!important;
+ margin:0!important;width:18px!important;height:19px!important;min-height:19px!important;
+ padding:1px!important;border-radius:3px!important;
+ background:rgba(110,123,136,.16)!important;color:var(--studio-text,#e7e9ed)!important;
+}
+.main-layout.clo-adjustable-panels>.tool-rail>.exo-universal-tools-heading>strong{
+ order:2!important;flex:0 0 100%!important;display:block!important;
+ text-align:center!important;margin:2px 0 0!important;font-size:8px!important;
+ letter-spacing:.025em!important;line-height:12px!important;
+}
+/* The existing arrow is still controlled by App.jsx, but physically aligns
+   with the heading's first row instead of covering the 3D TOOLS label. */
+.main-layout.clo-adjustable-panels[data-left-tools-collapsed="false"]>.exo-left-tools-edge-toggle{
+ top:9px!important;z-index:170!important;
+}
+/* The first heading is never hidden in 2D: identical handle/arrow behavior
+   applies to both workspaces, even when the tool grid below changes. */
+.main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.tool-rail>.exo-universal-tools-heading:first-child{display:flex!important}
+/* Shared compact two-line top/bottom dock in both viewer modes.
+   The reserved grid row must match the ribbon, without an empty gray gutter. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]{grid-template-rows:57px minmax(0,1fr)!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="bottom"]{grid-template-rows:minmax(0,1fr) 57px!important}
+.app-shell .main-layout.clo-adjustable-panels>.clo-inspector>.clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]){
+ display:grid!important;grid-auto-flow:column!important;grid-template-rows:repeat(2,25px)!important;
+ grid-template-columns:repeat(var(--exo-ribbon-columns,30),minmax(20px,1fr))!important;
+ height:57px!important;max-height:57px!important;min-height:57px!important;
+ gap:1px!important;padding:2px!important;margin:0!important;border-radius:0!important;
+ background:var(--studio-sidebar,#262729)!important;border:0!important;border-bottom:1px solid var(--studio-border,#41474d)!important;
+ overflow:hidden!important;box-shadow:none!important;
+}
+.app-shell .main-layout.clo-adjustable-panels>.clo-inspector>.clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) button{
+ height:24px!important;min-height:24px!important;max-height:24px!important;
+ width:100%!important;min-width:0!important;padding:1px!important;margin:0!important;
+ border-radius:2px!important;
+}
+.app-shell .main-layout.clo-adjustable-panels>.clo-inspector>.clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) button svg{width:15px!important;height:15px!important}
+.app-shell .main-layout.clo-adjustable-panels>.clo-inspector>.clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"])>.exo-universal-panel-handle--inset[data-panel-handle="right"]{
+ position:sticky!important;left:0!important;top:0!important;order:-100!important;
+ display:flex!important;flex:0 0 18px!important;align-self:start!important;
+ width:18px!important;min-width:18px!important;height:20px!important;min-height:20px!important;
+ margin:0!important;padding:0!important;background:transparent!important;
+}
+/* Override legacy 2D vertical absolute-position slots ONLY while docked.
+   The real vertical toolbar keeps all original rules after undocking. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"],
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="bottom"]{--exo-compact-dock-height:56px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]{grid-template-rows:56px minmax(0,1fr)!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="bottom"]{grid-template-rows:minmax(0,1fr) 56px!important}
+.app-shell .main-layout.clo-adjustable-panels>.clo-inspector>.clo-right-tool-palette[data-exo-universal-placement="top"],
+.app-shell .main-layout.clo-adjustable-panels>.clo-inspector>.clo-right-tool-palette[data-exo-universal-placement="bottom"]{
+ display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;
+ box-sizing:border-box!important;height:56px!important;min-height:56px!important;max-height:56px!important;
+ width:var(--exo-ribbon-width,600px)!important;min-width:0!important;max-width:var(--exo-ribbon-width,600px)!important;
+ gap:3px!important;padding:2px 6px!important;overflow-x:auto!important;overflow-y:hidden!important;
+ background:var(--studio-sidebar,#262729)!important;border:0!important;border-bottom:1px solid var(--studio-border,#41474d)!important;
+ scrollbar-width:thin!important;box-shadow:none!important;visibility:visible!important;
+}
+/* Two independent strips: buttons in each native column form one horizontal row. */
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"])>.clo-palette-scroll{
+ display:block!important;flex:1 1 auto!important;width:auto!important;min-width:0!important;height:52px!important;max-height:52px!important;
+ overflow-x:auto!important;overflow-y:hidden!important;background:transparent!important;
+}
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .clo-reference-dual-bars.clo-observed-bars.exo-two-column-combined-bars{
+ display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;
+ width:max-content!important;min-width:100%!important;max-width:none!important;height:52px!important;min-height:52px!important;max-height:52px!important;
+ gap:1px!important;padding:0!important;margin:0!important;background:transparent!important;
+ grid-template-columns:none!important;
+}
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .clo-reference-dual-bars>.clo-observed-column.clo-right-tool-grid{
+ position:relative!important;display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;justify-content:flex-start!important;
+ flex:0 0 24px!important;width:max-content!important;min-width:0!important;max-width:none!important;
+ height:24px!important;min-height:24px!important;max-height:24px!important;
+ gap:2px!important;padding:0!important;margin:0!important;background:transparent!important;
+ overflow:visible!important;
+}
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .clo-reference-dual-bars>.clo-observed-column.clo-right-tool-grid>button,
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .exo-pattern-studio-embedded-column>button{
+ display:grid!important;place-items:center!important;position:relative!important;inset:auto!important;top:auto!important;left:auto!important;
+ transform:none!important;flex:0 0 24px!important;width:24px!important;min-width:24px!important;max-width:24px!important;
+ height:23px!important;min-height:23px!important;max-height:23px!important;padding:1px!important;margin:0!important;
+ background:transparent!important;border-radius:3px!important;opacity:1!important;
+}
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .exo-pattern-studio-embedded-column{display:contents!important}
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .clo-reference-dual-bars>.clo-observed-column button svg{height:17px!important;width:17px!important}
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"])>.exo-universal-panel-handle--inset[data-panel-handle="right"]{
+ order:99!important;position:relative!important;flex:0 0 20px!important;align-self:center!important;
+ width:20px!important;min-width:20px!important;height:22px!important;min-height:22px!important;
+ margin:0 1px 0 auto!important;z-index:50!important;
+}
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .clo-palette-workflows,
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .clo-tool-palette-group-divider,
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .clo-palette-count,
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .clo-reset-fabric-panels{display:none!important}
+/* FINAL collision-proof rules: specific to docked palette and 2D native mode.
+   PatternStudioExtraColumns' 77px rail and 990px absolute toolbar must not
+   leak into a top/bottom row. */
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.clo-inspector>.clo-right-tool-palette.exo-four-column-pattern-toolbar:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]){
+ flex:0 0 56px!important;width:var(--exo-ribbon-width,600px)!important;min-width:0!important;max-width:var(--exo-ribbon-width,600px)!important;
+ background:var(--studio-sidebar,#262729)!important;overflow-x:auto!important;overflow-y:hidden!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"] .clo-right-tool-palette.exo-four-column-pattern-toolbar:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .clo-reference-dual-bars.clo-observed-bars.exo-two-column-combined-bars{
+ display:flex!important;flex-direction:column!important;grid-template-columns:none!important;
+ width:max-content!important;min-width:100%!important;height:52px!important;min-height:52px!important;max-height:52px!important;
+ gap:1px!important;background:transparent!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"] .clo-right-tool-palette.exo-four-column-pattern-toolbar:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .exo-two-column-combined-bars>.clo-observed-column.clo-right-tool-grid{
+ display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+ align-items:center!important;justify-content:flex-start!important;position:relative!important;
+ flex:0 0 24px!important;width:max-content!important;min-width:0!important;
+ height:24px!important;min-height:24px!important;max-height:24px!important;
+ gap:2px!important;padding:0!important;background:transparent!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"] .clo-right-tool-palette.exo-four-column-pattern-toolbar:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .exo-two-column-combined-bars>.clo-observed-column.clo-right-tool-grid>button,
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"] .clo-right-tool-palette.exo-four-column-pattern-toolbar:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .exo-two-column-combined-bars .exo-pattern-studio-embedded-column>button{
+ position:relative!important;inset:auto!important;top:auto!important;left:auto!important;
+ transform:none!important;flex:0 0 24px!important;width:24px!important;min-width:24px!important;
+ height:23px!important;min-height:23px!important;max-height:23px!important;margin:0!important;
+}
+/* Center Object Browser heading across the full panel width, independently
+   of the right-side grip and existing collapse arrow. */
+.app-shell .main-layout.clo-adjustable-panels .clo-object-browser>.clo-panel-header{
+ position:relative!important;display:flex!important;align-items:center!important;justify-content:center!important;
+ padding-left:36px!important;padding-right:36px!important;text-align:center!important;
+}
+.app-shell .main-layout.clo-adjustable-panels .clo-object-browser>.clo-panel-header>strong{
+ flex:0 1 auto!important;margin:0 auto!important;text-align:center!important;
+}
+.app-shell .main-layout.clo-adjustable-panels .clo-object-browser>.clo-panel-header>.exo-universal-panel-handle--inset{
+ position:absolute!important;right:2px!important;top:50%!important;transform:translateY(-50%)!important;
+ margin:0!important;order:99!important;z-index:12!important;
+}
+/* Full-width title centering must not depend on the width or location of
+   ancillary heading indicators or the floating drag grip. */
+.app-shell .main-layout.clo-adjustable-panels .clo-object-browser>.clo-panel-header>strong{
+ position:absolute!important;left:50%!important;top:50%!important;
+ transform:translate(-50%,-50%)!important;
+ width:max-content!important;max-width:calc(100% - 84px)!important;
+ margin:0!important;text-align:center!important;
+}
+/* Toolbar fills the entire central board, rather than ending at the natural
+   width of its content. Rows are an explicit right-click presentation choice. */
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"])>.clo-palette-scroll{width:100%!important;flex:1 1 0!important;max-width:none!important;overflow-x:auto!important;overflow-y:hidden!important}
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .clo-reference-dual-bars.clo-observed-bars.exo-two-column-combined-bars{width:100%!important;min-width:max-content!important;max-width:none!important}
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .clo-reference-dual-bars>.clo-observed-column.clo-right-tool-grid{width:max-content!important;min-width:100%!important;justify-content:space-evenly!important}
+/* Single-row mode: combine both native columns into one line and reclaim
+   half of the reserved board height, leaving the 3D/2D canvas untouched. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]:has(.clo-right-tool-palette[data-exo-horizontal-rows="1"]){grid-template-rows:31px minmax(0,1fr)!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="bottom"]:has(.clo-right-tool-palette[data-exo-horizontal-rows="1"]){grid-template-rows:minmax(0,1fr) 31px!important}
+.app-shell .main-layout.clo-adjustable-panels>.clo-inspector>.clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"])[data-exo-horizontal-rows="1"]{height:31px!important;min-height:31px!important;max-height:31px!important}
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"])[data-exo-horizontal-rows="1"]>.clo-palette-scroll{height:27px!important;max-height:27px!important}
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"])[data-exo-horizontal-rows="1"] .clo-reference-dual-bars.clo-observed-bars.exo-two-column-combined-bars{height:26px!important;min-height:26px!important;max-height:26px!important;display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;justify-content:space-evenly!important;gap:5px!important}
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"])[data-exo-horizontal-rows="1"] .clo-reference-dual-bars>.clo-observed-column.clo-right-tool-grid{min-width:0!important;flex:0 0 auto!important;width:max-content!important;max-height:26px!important}
+/* When the 2D tools leave the right inspector, reclaim the entire vertical
+   rail. The Object Browser / Property Editor remain their own functional
+   sidebar; only the now-vacant tools track disappears. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]>.clo-inspector,
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="bottom"]>.clo-inspector{
+ min-width:0!important;overflow:visible!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]>.clo-inspector>.clo-inspector-content,
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="bottom"]>.clo-inspector>.clo-inspector-content{
+ flex:1 1 100%!important;width:100%!important;max-width:100%!important;min-width:0!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]>.clo-inspector>.clo-right-tool-palette[data-exo-universal-placement="top"],
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="bottom"]>.clo-inspector>.clo-right-tool-palette[data-exo-universal-placement="bottom"]{
+ position:fixed!important;z-index:180!important;flex:0 0 auto!important;
+ width:var(--exo-ribbon-width,600px)!important;max-width:var(--exo-ribbon-width,600px)!important;
+}
+/* Unified top/bottom docking: make both native icon rows compact and start-
+   aligned, with overflow scrolling if commands exceed actual board width. */
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .clo-reference-dual-bars>.clo-observed-column.clo-right-tool-grid{
+ justify-content:flex-start!important;gap:2px!important;min-width:max-content!important;
+}
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"])[data-exo-horizontal-rows="1"] .clo-reference-dual-bars.clo-observed-bars.exo-two-column-combined-bars{
+ justify-content:flex-start!important;gap:4px!important;
+}
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .clo-reference-dual-bars.clo-observed-bars.exo-two-column-combined-bars{
+ min-width:max-content!important;justify-content:center!important;
+}
+/* An inspector that is closed must not reserve an additional 101px strip
+   only for the already-horizontal toolbar. Keep the 22px reopen hit target. */
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]:is([data-exo-right-tools-placement="top"],[data-exo-right-tools-placement="bottom"]){
+ --effective-inspector-width:24px!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]:is([data-exo-right-tools-placement="top"],[data-exo-right-tools-placement="bottom"])>.clo-inspector{
+ width:24px!important;min-width:0!important;max-width:24px!important;background:transparent!important;border:0!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]:is([data-exo-right-tools-placement="top"],[data-exo-right-tools-placement="bottom"])>.exo-reopen-inspector-arrow{
+ right:1px!important;
+}
+/* Universal panel side placement: slots are owned by the grid, never moved
+   with fixed offsets. Both side panels can share a side as tabbed columns. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-library-side="right"]:not([data-exo-inspector-side="left"])>.asset-browser{grid-column:5!important;grid-row:1/-1!important;z-index:4!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-inspector-side="left"]:not([data-exo-library-side="right"])>.clo-inspector{grid-column:2!important;grid-row:1/-1!important;z-index:4!important}
+/* When two panels are on the same side, use side-by-side columns instead of
+   overlaying them. The secondary panel's width is taken from the canvas. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-library-side="right"][data-exo-inspector-side="right"]>.asset-browser{grid-column:5!important;justify-self:start!important;width:48%!important;max-width:48%!important;z-index:3!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-library-side="right"][data-exo-inspector-side="right"]>.clo-inspector{grid-column:5!important;justify-self:end!important;width:52%!important;max-width:52%!important;z-index:3!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-library-side="left"][data-exo-inspector-side="left"]>.asset-browser{grid-column:2!important;justify-self:start!important;width:48%!important;max-width:48%!important;z-index:3!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-library-side="left"][data-exo-inspector-side="left"]>.clo-inspector{grid-column:2!important;justify-self:end!important;width:52%!important;max-width:52%!important;z-index:3!important}
+/* Collapsed panels keep a 22px reopening rail but never consume their former
+   full width. Users can restore either panel independently. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-library-collapsed="true"]>.asset-browser{visibility:hidden!important;pointer-events:none!important;width:0!important;max-width:0!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-inspector-collapsed="true"]>.clo-inspector>.clo-inspector-content{display:none!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-inspector-collapsed="true"]>.clo-inspector{max-width:24px!important;justify-self:end!important}
+.exo-universal-panel-restore-rail{position:absolute;z-index:185;display:flex;gap:2px;align-items:center;top:4px;pointer-events:auto}
+.exo-universal-panel-restore-rail[data-side="left"]{left:calc(var(--effective-library-width,232px) + 26px)}
+.exo-universal-panel-restore-rail[data-side="right"]{right:4px}
+.exo-universal-panel-restore-rail button{width:20px;height:22px;display:grid;place-items:center;cursor:pointer;color:var(--studio-text,#e7e9ed);background:var(--studio-sidebar,#262729);border:1px solid var(--studio-border,#41474d);border-radius:3px}
+/* Prevent the legacy right-edge toolbar arrow from intercepting the Library
+   grip when the Library is also on the right. Its own native toolbar grip
+   remains usable for docking and vertical restoration. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-library-side="right"]>.exo-right-independent-tools-arrow{
+ top:40px!important;
+}
+/* The full-board horizontal dock is a dedicated header/footer row. The
+   inspector and Library begin below the bar, never underneath its icons. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]>.clo-inspector,
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]>.asset-browser,
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]>.tool-rail{
+ grid-row:2!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="bottom"]>.clo-inspector,
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="bottom"]>.asset-browser,
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="bottom"]>.tool-rail{
+ grid-row:1!important;
+}
+/* The horizontal dock stretches from the side tabs to the board's right edge.
+   All its commands stay tightly packed, with horizontal overflow as needed. */
+.app-shell .main-layout.clo-adjustable-panels>.clo-inspector>.clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]){
+ left:var(--exo-ribbon-left,25px)!important;
+ width:var(--exo-ribbon-width,800px)!important;
+ min-width:var(--exo-ribbon-width,800px)!important;
+ max-width:var(--exo-ribbon-width,800px)!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.clo-inspector>.clo-right-tool-palette.exo-four-column-pattern-toolbar:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]){
+ width:var(--exo-ribbon-width,800px)!important;
+ min-width:var(--exo-ribbon-width,800px)!important;
+ max-width:var(--exo-ribbon-width,800px)!important;
+}
+/* Compute side track widths from actual panel placement and collapse state.
+   No zero-width hidden panel leaves a large unused grid track behind. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-side-order]{
+ --exo-effective-library-track:var(--effective-library-width,232px);
+ --exo-effective-inspector-track:var(--effective-inspector-width,392px);
+}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-library-collapsed="true"]{--exo-effective-library-track:24px}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-inspector-collapsed="true"]{--exo-effective-inspector-track:24px}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-library-side="right"][data-exo-inspector-side="right"]:not([data-exo-library-collapsed="true"]):not([data-exo-inspector-collapsed="true"]){
+ --exo-effective-library-track:0px;
+ --exo-effective-inspector-track:max(280px,var(--effective-inspector-width,392px));
+}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-library-side="left"][data-exo-inspector-side="left"]:not([data-exo-library-collapsed="true"]):not([data-exo-inspector-collapsed="true"]){
+ --exo-effective-inspector-track:0px;
+ --exo-effective-library-track:max(280px,var(--effective-library-width,232px));
+}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-side-order]{
+ grid-template-columns:25px minmax(0,var(--exo-effective-library-track)) minmax(0,var(--exo-tool-width,72px)) minmax(0,1fr) minmax(0,var(--exo-effective-inspector-track))!important;
+}
+/* Neutralize old absolute side sizes after collapse; the shared side's
+   remaining panel receives the full track without taking canvas pixels. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-library-collapsed="true"]>.asset-browser{
+ width:0!important;min-width:0!important;max-width:0!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-inspector-collapsed="true"]>.clo-inspector{
+ width:24px!important;min-width:0!important;max-width:24px!important;
+}
+/* Collapse precedence over all same-side width allocations, including
+   legacy asset-browser min sizes and the 48/52 sharing rules. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-library-collapsed="true"]>.asset-browser{
+ visibility:hidden!important;pointer-events:none!important;
+ width:0px!important;min-width:0px!important;max-width:0px!important;
+ flex:0 0 0px!important;overflow:hidden!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-library-side="right"][data-exo-inspector-side="right"][data-exo-library-collapsed="true"]>.clo-inspector{
+ justify-self:stretch!important;width:100%!important;max-width:100%!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-library-side="left"][data-exo-inspector-side="left"][data-exo-library-collapsed="true"]>.clo-inspector{
+ justify-self:stretch!important;width:100%!important;max-width:100%!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-library-side="right"][data-exo-inspector-side="right"][data-exo-inspector-collapsed="true"]>.asset-browser,
+.app-shell .main-layout.clo-adjustable-panels[data-exo-library-side="left"][data-exo-inspector-side="left"][data-exo-inspector-collapsed="true"]>.asset-browser{
+ justify-self:stretch!important;width:100%!important;max-width:100%!important;
+}
+/* Deactivate stale shared-side placement widths when that panel is collapsed.
+   A named grid item needs display:none to release its layout contribution;
+   visibility:hidden alone leaves its previous measured width intact. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-library-collapsed="true"]>.asset-browser{
+ display:none!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-inspector-collapsed="true"]>.clo-inspector>.clo-inspector-content{
+ display:none!important;
+}
+/* Keep the dock toggle above legacy inspector reopen arrows when panel state
+   changes. These are separate controls and must remain independently usable. */
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette>.exo-universal-panel-handle--inset[data-panel-handle="right"]{
+ position:relative!important;z-index:1000!important;
+}
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette>.exo-universal-panel-handle--inset[data-panel-handle="right"]>button{
+ position:relative!important;z-index:1001!important;
+}
+/* The native inspector reopen arrow occupies the top right corner. In the
+   collapsed inspector state shift the right palette grip down so its dock
+   action remains directly clickable rather than hidden behind that arrow. */
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"] .clo-right-tool-palette:not([data-exo-universal-placement="top"]):not([data-exo-universal-placement="bottom"])>.exo-universal-panel-handle--inset[data-panel-handle="right"]{
+ margin-top:31px!important;
+}
+
+/* 2026-10-28: Native horizontal 2D toolbar readability. Maintain the
+   two-row footprint but distribute available width across real icon cells. */
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]){
+ --exo-horizontal-icon-size:clamp(27px,2.65vw,42px);
+ grid-template-rows:repeat(2,minmax(27px,1fr))!important;
+}
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .clo-reference-dual-bars>.clo-observed-column.clo-right-tool-grid>button,
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .exo-pattern-studio-embedded-column>button{
+ flex:1 0 var(--exo-horizontal-icon-size)!important;
+ width:var(--exo-horizontal-icon-size)!important;
+ min-width:var(--exo-horizontal-icon-size)!important;
+ height:31px!important;min-height:31px!important;max-height:36px!important;
+ padding:3px!important;
+}
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .clo-reference-dual-bars>.clo-observed-column button svg,
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .exo-pattern-studio-embedded-column button svg{
+ width:22px!important;height:22px!important;
+}
+/* The toolbar collapse toggle cannot be hidden by older right-panel
+   docking rules. Keep it accessible when the toolbar moves to a ribbon. */
+.app-shell .main-layout.clo-adjustable-panels>.exo-right-independent-tools-arrow{
+ display:grid!important;visibility:visible!important;pointer-events:auto!important;
+ position:absolute!important;top:33px!important;right:4px!important;
+ z-index:214!important;width:24px!important;height:24px!important;
+ background:var(--studio-sidebar,#292d33)!important;
+ border:1px solid var(--studio-border,#5b6671)!important;
+ color:var(--studio-text,#f2f5f9)!important;
+}
+/* Non-overlapping stable right-side controls. The collapse button's parent
+   remains outside the palette, while this move grip is inside its top rail. */
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:not([data-exo-universal-placement="top"]):not([data-exo-universal-placement="bottom"])>.exo-universal-panel-handle--inset[data-panel-handle="right"]{
+ margin-top:94px!important;
+}
+
+/* Match the left 3D tools' header: move grip and collapse control are in the
+   same compact header row, with separate 21px hit targets. Do not shift the
+   entire toolbar down or reserve a second gray/black toolbar header. */
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:not([data-exo-universal-placement="top"]):not([data-exo-universal-placement="bottom"])>.exo-universal-panel-handle--inset[data-panel-handle="right"] {
+ margin:3px 2px 3px auto!important;position:relative!important;inset:auto!important;
+ width:20px!important;min-width:20px!important;height:19px!important;min-height:19px!important;
+}
+/* Shared 2D/3D collapse controls: independent, always-restorable rails.
+   Do not depend on a button nested inside a hidden tool/panel region. */
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.exo-left-tools-edge-toggle,
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.exo-library-edge-toggle,
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.exo-right-independent-tools-arrow,
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.exo-reopen-inspector-arrow{
+ display:grid!important;visibility:visible!important;pointer-events:auto!important;
+ position:absolute!important;z-index:100150!important;opacity:1!important;
+ width:23px!important;height:25px!important;
+ border:1px solid var(--studio-border,#536373)!important;border-radius:5px!important;
+ color:var(--studio-text,#edf2f7)!important;
+ background:var(--studio-sidebar,#2a323b)!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.exo-library-edge-toggle{
+ left:calc(25px + var(--effective-library-width,232px) - 25px)!important;top:5px!important;right:auto!important;transform:none!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"][data-library-visible="false"]>.exo-library-edge-toggle{
+ left:25px!important;top:36px!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.exo-left-tools-edge-toggle{
+ left:calc(25px + var(--effective-library-width,232px) + var(--exo-tool-width,72px) - 25px)!important;
+ top:5px!important;right:auto!important;transform:none!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"][data-left-tools-collapsed="true"]>.exo-left-tools-edge-toggle{
+ left:calc(25px + var(--effective-library-width,232px) + 3px)!important;top:5px!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.exo-right-independent-tools-arrow{
+ right:calc(var(--effective-inspector-width,392px) - 25px)!important;top:34px!important;left:auto!important;transform:none!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"][data-right-tools-collapsed="true"]>.exo-right-independent-tools-arrow{
+ right:3px!important;top:34px!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"][data-inspector-visible="false"]>.exo-right-independent-tools-arrow{
+ right:3px!important;top:34px!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.exo-reopen-inspector-arrow{
+ right:3px!important;top:5px!important;
+}
+/* 2D top grading ribbon can paint above the empty left-tool grid column.
+   Keep the independent reopen arrow above it, including its hit-testing. */
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.exo-left-tools-edge-toggle,
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.exo-library-edge-toggle,
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.exo-right-independent-tools-arrow,
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.exo-reopen-inspector-arrow{
+ z-index:2147483000!important;
+ isolation:isolate!important;
+}
+/* Reserve a small safe restore hit target immediately above the 2D ribbon.
+   On 2D collapse the old boundary coordinate lands directly on its launcher. */
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"][data-left-tools-collapsed="true"]>.exo-left-tools-edge-toggle{
+ top:36px!important;
+ left:calc(25px + var(--effective-library-width,232px) - 25px)!important;
+ z-index:2147483000!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.workspaces{
+ isolation:isolate!important;
+ z-index:1!important;
+}
+
+/* LAST-MILE HORIZONTAL DOCK: the ribbon is fixed to the reserved grid row,
+   above the panes, not under the application's top navigation.  Preserve
+   either full-board or center-workspace width provided by the measured JS
+   variables. The top row cannot be clipped by inspector or workspace. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]>.clo-inspector>.clo-right-tool-palette[data-exo-universal-placement="top"] {
+ position:fixed!important;top:var(--exo-ribbon-top,0px)!important;
+ left:var(--exo-ribbon-left,25px)!important;
+ width:var(--exo-ribbon-width,800px)!important;
+ min-width:var(--exo-ribbon-width,800px)!important;
+ max-width:var(--exo-ribbon-width,800px)!important;
+ z-index:100220!important;visibility:visible!important;opacity:1!important;
+ transform:none!important;overflow-x:auto!important;overflow-y:hidden!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="bottom"]>.clo-inspector>.clo-right-tool-palette[data-exo-universal-placement="bottom"] {
+ top:var(--exo-ribbon-bottom-top,0px)!important;
+ left:var(--exo-ribbon-left,25px)!important;
+ z-index:100220!important;visibility:visible!important;opacity:1!important;
+ transform:none!important;
+}
+/* Shared compact top docking. Keep the library and inspector in their own
+   columns/rows; a top ribbon is never allowed to cover panel contents. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]>.asset-browser,
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]>.tool-rail,
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]>.clo-inspector{grid-row:2!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-left-tools-placement="top"]>.asset-browser,
+.app-shell .main-layout.clo-adjustable-panels[data-exo-left-tools-placement="top"]>.clo-inspector{grid-row:2!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-left-tools-placement="top"]>.tool-rail{
+ position:fixed!important;top:var(--exo-left-ribbon-top,55px)!important;left:var(--exo-left-ribbon-left,25px)!important;
+ width:var(--exo-left-ribbon-width,600px)!important;min-width:0!important;max-width:var(--exo-left-ribbon-width,600px)!important;
+ height:56px!important;min-height:56px!important;max-height:56px!important;z-index:100215!important;
+ display:flex!important;flex-flow:row nowrap!important;align-items:center!important;overflow-x:auto!important;overflow-y:hidden!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-left-tools-placement="top"]{grid-template-rows:56px minmax(0,1fr)!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-left-tools-placement="top"]>.workspaces{grid-row:2!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-left-tools-placement="top"]>.tool-rail>.exo-universal-tools-heading{flex:0 0 48px!important;min-height:28px!important;max-height:50px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-left-tools-placement="top"]>.tool-rail :is(button,button svg){max-height:23px!important}
+/* Compact horizontal buttons, applied only to docked palettes. */
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .clo-reference-dual-bars>.clo-observed-column.clo-right-tool-grid>button,
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .exo-pattern-studio-embedded-column>button{
+ flex:0 0 21px!important;width:21px!important;min-width:21px!important;max-width:21px!important;height:21px!important;min-height:21px!important;max-height:21px!important;padding:1px!important;
+}
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) button svg{width:14px!important;height:14px!important}
+/* Fix top horizontal rails obscuring Library/Object Browser: reserve the top
+   track in those panels instead of letting a fixed overlay sit over headers. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]>.asset-browser,
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]>.clo-inspector,
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]>.tool-rail{grid-row:2!important}
+/* When 3D toolbar is horizontal, keep its 3D title and drag grip visible. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-left-tools-placement="top"]>.tool-rail>.exo-universal-tools-heading>.exo-universal-panel-handle--inset[data-panel-handle="left"]{display:flex!important;visibility:visible!important;position:relative!important}
+/* Reserve independent horizontal lanes above/below ALL ordinary panel content.
+   Both width scopes are contained within those lanes, never overlapping the
+   Library/Object Browser; 2D and 3D tools retain their independent mounts. */
+.app-shell .main-layout.clo-adjustable-panels:is([data-exo-right-tools-placement="top"],[data-exo-left-tools-placement="top"]){grid-template-rows:56px minmax(0,1fr)!important}
+.app-shell .main-layout.clo-adjustable-panels:is([data-exo-right-tools-placement="bottom"],[data-exo-left-tools-placement="bottom"]):not(:is([data-exo-right-tools-placement="top"],[data-exo-left-tools-placement="top"])){grid-template-rows:minmax(0,1fr) 56px!important}
+.app-shell .main-layout.clo-adjustable-panels:is([data-exo-right-tools-placement="top"],[data-exo-left-tools-placement="top"])>:is(.asset-browser,.clo-inspector,.workspaces){grid-row:2!important}
+.app-shell .main-layout.clo-adjustable-panels:is([data-exo-right-tools-placement="bottom"],[data-exo-left-tools-placement="bottom"]):not(:is([data-exo-right-tools-placement="top"],[data-exo-left-tools-placement="top"]))>:is(.asset-browser,.clo-inspector,.workspaces){grid-row:1!important}
+/* The top dock always lives IN the reserved lane, not the old overlay slot. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"]>.clo-inspector>.clo-right-tool-palette[data-exo-universal-placement="top"]{top:var(--exo-ribbon-top,0px)!important;height:56px!important;max-height:56px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="bottom"]>.clo-inspector>.clo-right-tool-palette[data-exo-universal-placement="bottom"]{top:var(--exo-ribbon-bottom-top,0px)!important;height:56px!important;max-height:56px!important}
+/* No clipping of the two stacked rows; horizontal overflow remains scrollable. */
+.app-shell .main-layout.clo-adjustable-panels .clo-right-tool-palette:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"])>.clo-palette-scroll{overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:thin!important}
+/* Regression lock: this selector outranks legacy 2D/3D grid row declarations.
+   Top and bottom docks get actual RESERVED grid tracks, not overlays. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-side-order]:is([data-exo-right-tools-placement="top"],[data-exo-left-tools-placement="top"]):not(:is([data-exo-right-tools-placement="bottom"],[data-exo-left-tools-placement="bottom"])){
+ grid-template-rows:56px minmax(0,1fr)!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-side-order]:is([data-exo-right-tools-placement="bottom"],[data-exo-left-tools-placement="bottom"]):not(:is([data-exo-right-tools-placement="top"],[data-exo-left-tools-placement="top"])){grid-template-rows:minmax(0,1fr) 56px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-side-order]:is([data-exo-right-tools-placement="top"],[data-exo-left-tools-placement="top"]):is([data-exo-right-tools-placement="bottom"],[data-exo-left-tools-placement="bottom"]){grid-template-rows:56px minmax(0,1fr) 56px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-side-order]:is([data-exo-right-tools-placement="top"],[data-exo-left-tools-placement="top"])>:is(.asset-browser,.clo-inspector,.workspaces){grid-row:2!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-side-order]:is([data-exo-right-tools-placement="bottom"],[data-exo-left-tools-placement="bottom"]):not(:is([data-exo-right-tools-placement="top"],[data-exo-left-tools-placement="top"]))>:is(.asset-browser,.clo-inspector,.workspaces){grid-row:1!important}
+/* The app's grid-template-rows inherited a single explicit 924px track.
+   `minmax(0,1fr)` in the wrong track let that legacy fixed row consume the
+   entire container. Override with two explicitly bounded tracks. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-side-order]:is([data-exo-right-tools-placement="top"],[data-exo-left-tools-placement="top"]):not(:is([data-exo-right-tools-placement="bottom"],[data-exo-left-tools-placement="bottom"])){grid-template-rows:minmax(56px,56px) minmax(0,1fr)!important}
+/* 3D bottom dock matches the existing 3D top geometry and the 2D bottom
+   ribbon: it must leave normal rail flow when docked below the canvas. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-left-tools-placement="bottom"]>.tool-rail{
+ position:fixed!important;top:var(--exo-left-ribbon-bottom-top,calc(100% - 56px))!important;
+ left:var(--exo-left-ribbon-left,25px)!important;
+ width:var(--exo-left-ribbon-width,600px)!important;min-width:0!important;max-width:var(--exo-left-ribbon-width,600px)!important;
+ height:56px!important;min-height:56px!important;max-height:56px!important;z-index:100215!important;
+ display:flex!important;flex-flow:row nowrap!important;align-items:center!important;overflow-x:auto!important;overflow-y:hidden!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-left-tools-placement="bottom"]>.tool-rail>.exo-universal-tools-heading{flex:0 0 48px!important;min-height:28px!important;max-height:50px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-left-tools-placement="bottom"]>.tool-rail :is(button,button svg){max-height:23px!important}
+
+/* One collapse contract for app visibility and layout-menu collapse. Keep a
+   small reopen rail, never the previous full inspector-width empty column. */
+.app-shell .main-layout.clo-adjustable-panels:is([data-inspector-visible="false"],[data-exo-inspector-collapsed="true"]):is([data-exo-right-tools-placement="top"],[data-exo-right-tools-placement="bottom"]) {
+ --exo-effective-inspector-track:24px!important;
+}
+.app-shell .main-layout.clo-adjustable-panels:is([data-inspector-visible="false"],[data-exo-inspector-collapsed="true"]):is([data-exo-right-tools-placement="top"],[data-exo-right-tools-placement="bottom"])>.clo-inspector {
+ width:24px!important;min-width:0!important;max-width:24px!important;justify-self:stretch!important;
+}
+.app-shell .main-layout.clo-adjustable-panels:is([data-library-visible="false"],[data-exo-library-collapsed="true"]) {
+ --exo-effective-library-track:0px!important;
+}
+.exo-universal-panel-handle--inset select {
+ width:82px;min-width:0;height:20px;font:10px system-ui;
+ border:1px solid var(--studio-border,#65717c);border-radius:3px;
+ background:var(--studio-panel,#30353b);color:var(--studio-text,#eef1f4);
+}
+
+/* Viewport-owned dock scope: side panels keep their full height in center mode. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-side-order][data-exo-ribbon-scope="workspace"] > :is(.asset-browser,.clo-inspector) {grid-row:1/-1!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-side-order]:is([data-exo-left-tools-placement="top"],[data-exo-left-tools-placement="bottom"],[data-left-tools-collapsed="true"]) {--exo-tool-width:0px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-side-order]:is([data-inspector-visible="false"],[data-exo-inspector-collapsed="true"]):is([data-exo-right-tools-placement="top"],[data-exo-right-tools-placement="bottom"],[data-right-tools-collapsed="true"]):not([data-exo-library-side="right"]) {--effective-inspector-width:0px!important;--exo-effective-inspector-track:0px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-side-order]:is([data-inspector-visible="false"],[data-exo-inspector-collapsed="true"]):is([data-exo-right-tools-placement="top"],[data-exo-right-tools-placement="bottom"],[data-right-tools-collapsed="true"])>.clo-inspector {width:0!important;min-width:0!important;max-width:0!important;border:0!important;overflow:visible!important}
+.app-shell .main-layout.clo-adjustable-panels>.exo-reopen-inspector-arrow {display:grid!important;visibility:visible!important;position:absolute!important;right:0!important;left:auto!important;top:120px!important;transform:none!important;width:22px!important;height:28px!important;z-index:2147483001!important;pointer-events:auto!important;opacity:1!important;border-radius:5px 0 0 5px!important}
+.app-shell .main-layout.clo-adjustable-panels .exo-universal-panel-restore-rail {top:120px!important;right:0!important;z-index:2147483001!important;pointer-events:auto!important}
+/* Rotate the actual nested tool groups, not just their outer container. */
+.app-shell .main-layout.clo-adjustable-panels>.tool-rail:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) {display:flex!important;flex-flow:row wrap!important;align-content:flex-start!important;align-items:center!important;gap:3px!important;padding:3px!important;overflow:visible!important}
+.app-shell .main-layout.clo-adjustable-panels>.tool-rail:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) :is(.clo-left-3d-double-bars,.clo-left-3d-column,.exo-grade-workbench-actions,.exo-2d-workspace-shortcuts,.exo-pattern-toolpanel,.exo-pattern-toolpanel>section,.exo-pattern-toolpanel>section>div) {display:contents!important;transform:none!important}
+.app-shell .main-layout.clo-adjustable-panels>.tool-rail:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .exo-pattern-toolpanel h3 {display:none!important}
+.app-shell .main-layout.clo-adjustable-panels>.tool-rail:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"])>.exo-universal-tools-heading {flex:0 0 auto!important;width:auto!important;max-width:none!important;height:24px!important;min-height:24px!important;margin:0!important}
+.app-shell .main-layout.clo-adjustable-panels>.tool-rail:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) button {flex:0 0 24px!important;width:24px!important;min-width:24px!important;height:24px!important;min-height:24px!important;max-height:24px!important;padding:2px!important;margin:0!important}
+.exo-universal-panel-handle--inset select {width:94px!important}
+
+.app-shell .main-layout.clo-adjustable-panels.clo-adjustable-panels[data-exo-side-order][data-exo-ribbon-scope="workspace"] > :is(.asset-browser,.clo-inspector) {grid-row:1/-1!important}
+.app-shell .main-layout.clo-adjustable-panels.clo-adjustable-panels[data-pattern-workspace="true"]>.exo-reopen-inspector-arrow {right:0!important;top:120px!important}
+.app-shell .main-layout.clo-adjustable-panels>.tool-rail:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .exo-universal-panel-handle--inset {width:auto!important;min-width:0!important;max-width:none!important;height:24px!important;display:flex!important;flex-flow:row nowrap!important}
+.app-shell .main-layout.clo-adjustable-panels>.tool-rail:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) :is(.exo-universal-tools-heading>strong,.exo-pattern-toolpanel h3) {display:none!important}
+.app-shell .main-layout.clo-adjustable-panels>.tool-rail:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) :is(button,.exo-pattern-toolpanel button) {position:relative!important;inset:auto!important;transform:none!important;float:none!important;align-self:center!important;font-size:0!important;overflow:hidden!important;line-height:1!important;flex-shrink:0!important}
+.app-shell .main-layout.clo-adjustable-panels>.tool-rail:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) :is(.exo-grade-size-label,.exo-pattern-find,.exo-accu-launch,.exo-universal-panel-handle--inset button) {font-size:10px!important}
+.app-shell .main-layout.clo-adjustable-panels>.tool-rail:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) .exo-accu-launch span {display:none!important}
+.app-shell .main-layout.clo-adjustable-panels>.tool-rail:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) :is(.exo-accu-wrapper,.exo-pattern-toolpanel) {margin:0!important;padding:0!important;min-height:0!important;max-height:none!important}
+.app-shell .main-layout.clo-adjustable-panels.clo-adjustable-panels[data-exo-side-order][data-exo-right-tools-placement="top"][data-exo-left-tools-placement="top"] {grid-template-rows:112px minmax(0,1fr)!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-right-tools-placement="top"][data-exo-left-tools-placement="top"]>.tool-rail[data-exo-universal-placement="top"] {top:calc(var(--exo-left-ribbon-top) + 56px)!important}
+
+.app-shell .main-layout.clo-adjustable-panels>.tool-rail:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"])>.exo-universal-tools-heading>.exo-universal-panel-handle--inset[data-panel-handle="left"] {flex:0 0 auto!important;width:auto!important;min-width:152px!important;max-width:none!important}
+.exo-universal-dock-preview--choice{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ z-index:100350!important;pointer-events:none!important;
+ box-sizing:border-box!important;overflow:hidden!important;
+ border:2px dashed #58baff!important;border-radius:5px!important;
+ outline:1px solid #98daff!important;outline-offset:-5px!important;
+ background:rgba(30,130,235,.28)!important;color:#fff!important;
+ box-shadow:inset 0 0 15px rgba(74,173,255,.18),0 2px 12px rgba(22,105,215,.19)!important;
+ text-shadow:0 1px 4px #123954!important;
+ font:700 12px/1.1 Inter,system-ui,sans-serif!important;
+ letter-spacing:.02em!important;
+}
+.exo-universal-dock-preview--choice.exo-universal-dock-preview--selected{
+ border:2px solid #b0e8ff!important;
+ background:rgba(29,136,244,.64)!important;
+ box-shadow:inset 0 0 0 2px rgba(9,72,154,.40),0 0 16px rgba(34,160,255,.62)!important;
+}
+/* The 2D toolbar is independent from Object Browser: collapsing the latter
+   cannot zero the inspector GRID TRACK while the vertical 2D tool rail is
+   still visible. Earlier --exo-slot-5 + collapsed inspector overrides placed
+   the entire 77px toolbar OFF SCREEN, making its grip impossible to drag. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-side-order][data-inspector-visible="false"][data-right-tools-collapsed="false"][data-exo-right-tools-placement="right"]:not([data-exo-library-side="right"]){
+ --effective-inspector-width:77px!important;
+ --exo-effective-inspector-track:77px!important;
+ --exo-slot-5:minmax(0,77px)!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-side-order][data-inspector-visible="false"][data-right-tools-collapsed="false"][data-exo-right-tools-placement="right"]>.clo-inspector{
+ grid-column:var(--exo-inspector-slot,5)!important;
+ width:77px!important;min-width:77px!important;max-width:77px!important;
+ visibility:visible!important;pointer-events:auto!important;
+}
+.app-shell .main-layout.clo-adjustable-panels>.tool-rail:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) select {flex:0 0 94px!important;min-width:94px!important;max-width:94px!important}
+.app-shell .main-layout.clo-adjustable-panels>.tool-rail:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]) :is(.exo-accu-wrapper,.exo-pen-family,.clo-3d-webcam-slot) {position:relative!important;inset:auto!important;width:24px!important;min-width:24px!important;max-width:24px!important;height:24px!important;min-height:24px!important;max-height:24px!important;margin:0!important;padding:0!important;flex:0 0 24px!important}
+.app-shell .main-layout.clo-adjustable-panels>.tool-rail:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"])>.exo-universal-tools-heading {padding:0!important;box-sizing:border-box!important;flex-wrap:nowrap!important}
+/* Preserve edge restore arrows while eliminating unoccupied black side rails.
+   The arrows are anchored to the main layout, not inside the collapsed panel. */
+.app-shell .main-layout.clo-adjustable-panels[data-exo-side-order][data-left-tools-collapsed="true"] {--exo-tool-width:0px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-side-order][data-right-tools-collapsed="true"]:is([data-exo-right-tools-placement="top"],[data-exo-right-tools-placement="bottom"]):not([data-exo-library-side="right"]) {--effective-inspector-width:0px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-side-order][data-inspector-visible="false"]:not([data-exo-library-side="right"]){--effective-inspector-width:0px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.exo-reopen-inspector-arrow,
+.app-shell .main-layout.clo-adjustable-panels[data-exo-inspector-collapsed="true"] .exo-universal-panel-restore-rail{
+ display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+ position:absolute!important;right:0!important;left:auto!important;top:120px!important;
+ width:24px!important;min-width:24px!important;max-width:24px!important;height:28px!important;
+ z-index:2147483001!important;box-shadow:none!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.exo-reopen-inspector-arrow{background:var(--studio-sidebar,#292d33)!important;color:var(--studio-text,#eef4fa)!important;border:1px solid var(--studio-border,#68717d)!important;border-radius:5px 0 0 5px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-exo-inspector-collapsed="true"] .exo-universal-panel-restore-rail{display:flex!important;width:auto!important;min-width:24px!important;max-width:none!important}
+
+/* 2026-10-28: Independent right-hand collapse state.
+   The native 2D toolbar is React-owned by .clo-inspector, not by the Object
+   Browser. Collapsing only the inspector (either App arrow or universal
+   right-click menu) must preserve the 2D toolbar's dedicated narrow track.
+   Earlier data-exo-side-order selectors forced the ENTIRE track to zero and
+   legacy visibility rules hid the toolbar even while rightToolsCollapsed=false.
+   Keep separate states for inspector and toolbar; do not allocate dead space. */
+.app-shell .main-layout.clo-adjustable-panels[data-right-tools-collapsed="false"]:is(
+ [data-inspector-visible="false"],[data-exo-inspector-collapsed="true"]
+){
+ --effective-inspector-width:77px!important;
+ --exo-effective-inspector-track:77px!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-right-tools-collapsed="false"]:is(
+ [data-inspector-visible="false"],[data-exo-inspector-collapsed="true"]
+)>.clo-inspector{
+ display:flex!important;visibility:visible!important;pointer-events:auto!important;
+ box-sizing:border-box!important;flex-direction:row!important;
+ width:77px!important;min-width:77px!important;max-width:77px!important;
+ justify-self:stretch!important;overflow:visible!important;
+ border:0!important;background:transparent!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-right-tools-collapsed="false"]:is(
+ [data-inspector-visible="false"],[data-exo-inspector-collapsed="true"]
+)>.clo-inspector>.clo-right-tool-palette:not([data-exo-universal-placement="top"]):not([data-exo-universal-placement="bottom"]){
+ display:flex!important;visibility:visible!important;pointer-events:auto!important;
+ flex:0 0 77px!important;width:77px!important;min-width:77px!important;max-width:77px!important;
+}
+/* The property editor hides independently; the 2D tool strip remains. */
+.app-shell .main-layout.clo-adjustable-panels:is(
+ [data-inspector-visible="false"],[data-exo-inspector-collapsed="true"]
+)>.clo-inspector>.clo-inspector-content{
+ display:none!important;pointer-events:none!important;
+}
+/* Both collapsed: give the canvas all available width. Each restore arrow
+   remains a main-layout child, not a button inside the hidden inspector. */
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"][data-right-tools-collapsed="true"],
+.app-shell .main-layout.clo-adjustable-panels[data-exo-inspector-collapsed="true"][data-right-tools-collapsed="true"]{
+ --effective-inspector-width:0px!important;
+ --exo-effective-inspector-track:0px!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"][data-right-tools-collapsed="true"]>.clo-inspector,
+.app-shell .main-layout.clo-adjustable-panels[data-exo-inspector-collapsed="true"][data-right-tools-collapsed="true"]>.clo-inspector{
+ width:0!important;min-width:0!important;max-width:0!important;
+ visibility:hidden!important;pointer-events:none!important;overflow:hidden!important;
+}
+/* The toolbar's arrow must address the toolbar, not overlap the independent
+   Object Browser / Property Editor reopen arrow. */
+.app-shell .main-layout.clo-adjustable-panels[data-right-tools-collapsed="false"][data-inspector-visible="false"]>.exo-right-independent-tools-arrow,
+.app-shell .main-layout.clo-adjustable-panels[data-right-tools-collapsed="false"][data-exo-inspector-collapsed="true"]>.exo-right-independent-tools-arrow{
+ right:53px!important;top:5px!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-right-tools-collapsed="true"]>.exo-right-independent-tools-arrow{
+ right:4px!important;top:35px!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.exo-reopen-inspector-arrow{
+ right:4px!important;top:119px!important;
+}
+/* Horizontal 3D controls stay within one compact native toolbar lane. */
+.app-shell .main-layout.clo-adjustable-panels>.tool-rail:is([data-exo-universal-placement="top"],[data-exo-universal-placement="bottom"]){
+ display:flex!important;flex-flow:row nowrap!important;align-items:center!important;
+ overflow-x:auto!important;overflow-y:hidden!important;min-height:56px!important;max-height:56px!important;
+ white-space:nowrap!important;scrollbar-width:thin!important;
+}
+
+/* Last-wins independent restore hit targets. Native/legacy toolbar rules
+   previously placed both controls at the top-right corner. */
+.app-shell .main-layout.clo-adjustable-panels.clo-adjustable-panels[data-pattern-workspace][data-right-tools-collapsed="true"]>.exo-right-independent-tools-arrow{
+ left:auto!important;right:4px!important;top:35px!important;
+ width:23px!important;height:24px!important;z-index:2147483002!important;
+ display:grid!important;visibility:visible!important;pointer-events:auto!important;
+}
+.app-shell .main-layout.clo-adjustable-panels.clo-adjustable-panels[data-pattern-workspace][data-inspector-visible="false"]>.exo-reopen-inspector-arrow{
+ left:auto!important;right:4px!important;top:119px!important;
+ width:23px!important;height:27px!important;z-index:2147483003!important;
+ display:grid!important;visibility:visible!important;pointer-events:auto!important;
+}
+.app-shell .main-layout.clo-adjustable-panels.clo-adjustable-panels[data-pattern-workspace][data-right-tools-collapsed="false"]:is([data-inspector-visible="false"],[data-exo-inspector-collapsed="true"])>.exo-right-independent-tools-arrow{
+ left:auto!important;right:53px!important;top:5px!important;
+}

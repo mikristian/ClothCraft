@@ -5,6 +5,7 @@ import { XMLParser, XMLValidator } from 'fast-xml-parser'
 
 const MAX_XML=4*1024*1024
 const MAX_NODES=6000
+const MAX_INCREMENTS=6000
 const asList=value=>value==null?[]:Array.isArray(value)?value:[value]
 const ATTR_PREFIX='@_'
 
@@ -27,7 +28,9 @@ export function parseSeamlyConstructionReference(xml,{filename=''}={}) {
   let total=0
   const toolTypes={}
   const usedIncrements=new Set()
-  const increments=asList(root.increments?.increment).map(item=>({
+  const incrementRows=asList(root.increments?.increment)
+  if(incrementRows.length>MAX_INCREMENTS) throw new Error('Seamly construction contains too many increments')
+  const increments=incrementRows.map(item=>({
     name:String(item['@_name']||'').slice(0,128),
     formula:String(item['@_formula']||'').slice(0,4096),
     description:String(item['@_description']||'').slice(0,2048),

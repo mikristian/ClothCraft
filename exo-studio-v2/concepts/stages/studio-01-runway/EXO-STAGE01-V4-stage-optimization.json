@@ -1,0 +1,15 @@
+{
+  "sourceBlend": "EXO-STAGE01-V4-APPROVAL-CANDIDATE.blend",
+  "export": "EXO-STAGE01-V4-STAGE-RUNTIME-OPTIMIZED-REVIEW.glb",
+  "preMergeStageObjects": 836,
+  "joinedStageMeshes": 23,
+  "stageFamilies": [
+    "ArchitecturalDetails",
+    "Architecture",
+    "Audience",
+    "PracticalLighting",
+    "Runway"
+  ],
+  "withoutActor": true,
+  "previewOnly": true
+}

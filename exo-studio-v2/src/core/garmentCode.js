@@ -1,24 +1,13 @@
 import { cloneProject, uniqueId } from './project.js'
+import { arrangePatternProject } from './patternBodyArrangement.js'
+import { rustRelativeControl, rustAbsoluteControl } from './rustInterchangeMathKernel.js'
 
 function relControl(a, b, control) {
-  const dx = b.x - a.x
-  const dy = b.y - a.y
-  const len2 = dx * dx + dy * dy || 1
-  const px = control.cx - a.x
-  const py = control.cy - a.y
-  return [
-    (px * dx + py * dy) / len2,
-    (dx * py - dy * px) / len2,
-  ]
+  return rustRelativeControl(a,b,control)
 }
 
 function absControl(a, b, relative) {
-  const dx = b.x - a.x
-  const dy = b.y - a.y
-  return {
-    cx: a.x + Number(relative?.[0] || 0) * dx - Number(relative?.[1] || 0) * dy,
-    cy: a.y + Number(relative?.[0] || 0) * dy + Number(relative?.[1] || 0) * dx,
-  }
+  return rustAbsoluteControl(a,b,relative)
 }
 
 function reverseRelativeControl(control) {
@@ -306,7 +295,7 @@ export function garmentCodeToProject(spec, baseProject = {}) {
     }
   }
 
-  return project
+  return arrangePatternProject(project)
 }
 
 export function garmentCodeRoundTripSummary(project) {

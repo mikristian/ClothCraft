@@ -1,0 +1,398 @@
+/* Both EXO viewports use the same compact, CLO-style upper-left utility rail.
+   A family opens to the right as a single horizontal strip of icon buttons.
+   These rules are deliberately scoped over the older generic canvas flyouts
+   and the former two-column/vertical-menu viewport styles. */
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools {
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  grid-template-columns:none;
+  gap:2px;
+  width:max-content;
+  padding:0;
+  overflow:visible;
+  border:0;
+  border-radius:2px;
+  background:transparent;
+  box-shadow:none;
+  backdrop-filter:none;
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group {
+  display:block;
+  position:relative;
+  flex:0 0 auto;
+}
+.exo-viewport-inline-tools.clo-corner-toolkit-3d .clo-corner-tool-group:nth-child(3) {margin-top:7px}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group > button {
+  position:relative;
+  display:grid;
+  place-items:center;
+  width:30px;
+  min-width:30px;
+  height:30px;
+  margin:0;
+  padding:3px;
+  border:1px solid #93979b;
+  border-radius:2px;
+  background:linear-gradient(#d0d1d2,#bfc1c3);
+  color:#454a50;
+  box-shadow:inset 0 1px 0 #ffffff8c,0 1px 3px #0005;
+  cursor:pointer;
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group > button .cad-tool-icon {
+  display:block;
+  width:20px;
+  height:20px;
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group > button:not(:disabled):hover,
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group > button:focus-visible {
+  background:linear-gradient(#e1e2e3,#d1d4d6);
+  border-color:#657782;
+  color:#202f39;
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group > button.active {
+  background:linear-gradient(#cbecf6,#b4d9eb);
+  border-color:#638a9c;
+  color:#247fa6;
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group > button:disabled {
+  cursor:not-allowed;
+  opacity:.43;
+}
+.exo-viewport-inline-tools .clo-corner-flyout-caret {
+  position:absolute;
+  display:block;
+  right:2px;
+  bottom:2px;
+  width:0;
+  height:0;
+  border-left:4px solid transparent;
+  border-bottom:4px solid #59636c;
+  opacity:.9;
+  pointer-events:none;
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-options {
+  display:none;
+  position:absolute;
+  top:-3px;
+  left:calc(100% - 1px);
+  z-index:100;
+  flex-direction:row;
+  flex-wrap:nowrap;
+  align-items:center;
+  gap:2px;
+  width:max-content;
+  max-width:min(350px,calc(100vw - 75px));
+  min-width:0;
+  padding:3px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  border:1px solid #91969b;
+  border-radius:3px;
+  background:linear-gradient(#d5d6d7,#bfc1c3);
+  box-shadow:0 3px 12px #0007;
+  scrollbar-width:thin;
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group:not([data-dismissed="true"]):hover > .clo-corner-tool-options,
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group:not([data-dismissed="true"]):focus-within > .clo-corner-tool-options,
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group[data-touch-open="true"] > .clo-corner-tool-options {
+  display:flex;
+  flex-direction:row;
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group[data-dismissed="true"] > .clo-corner-tool-options {display:none}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-options > button {
+  display:grid;
+  place-items:center;
+  flex:0 0 30px;
+  width:30px;
+  min-width:30px;
+  height:30px;
+  padding:3px;
+  border:1px solid #aaaeb2;
+  border-radius:2px;
+  background:linear-gradient(#d7d9db,#bfc3c6);
+  color:#424b52;
+  white-space:nowrap;
+  cursor:pointer;
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-options > button:hover:not(:disabled),
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-options > button:focus-visible:not(:disabled) {
+  color:#1b303c;
+  background:linear-gradient(#edf2f5,#d4e6ef);
+  border-color:#8599a5;
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-options > button.active {
+  color:#247fa6;
+  background:linear-gradient(#c7e8f5,#afcfdf);
+  border-color:#638a9c;
+}
+.exo-viewport-inline-tools .clo-corner-tool-options > button:disabled {opacity:.37;cursor:not-allowed}
+.exo-viewport-inline-tools .clo-corner-tool-options > button .cad-tool-icon {width:19px;height:19px}
+.exo-viewport-inline-tools .clo-corner-tool-options > button .clo-corner-option-label {display:none}
+.exo-viewport-inline-tools .cc-pen-anchor-symbol{font-size:24px;font-weight:750;line-height:1;display:grid;place-items:center;width:20px;height:20px}
+/* Illustrator-style Pen family: a deliberate press-and-hold reveals a readable
+   vertical list. The other CLO tool families keep their horizontal hover rows. */
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools [data-tool-family="vector-pen"]:not([data-touch-open="true"]) > .clo-corner-tool-options {
+  display:none!important;
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools [data-tool-family="vector-pen"] > .clo-corner-tool-options {
+  flex-direction:column;
+  align-items:stretch;
+  width:232px;
+  max-width:min(232px,calc(100vw - 75px));
+  overflow:visible;
+  gap:2px;
+  padding:5px;
+  border:1px solid rgba(135,154,168,.6);
+  border-radius:8px;
+  background:#26303b;
+  box-shadow:0 10px 28px rgba(0,0,0,.45);
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools [data-tool-family="vector-pen"] > .clo-corner-tool-options > button {
+  display:grid;
+  grid-template-columns:27px minmax(0,1fr) auto;
+  gap:8px;
+  align-items:center;
+  justify-content:flex-start;
+  flex:0 0 38px;
+  width:100%;
+  height:38px;
+  text-align:left;
+  padding:6px 8px;
+  border:0;
+  border-radius:5px;
+  background:transparent;
+  color:#e7eaf0;
+}
+.exo-viewport-inline-tools [data-tool-family="vector-pen"] .clo-corner-tool-options > button .clo-corner-option-label {
+  display:inline;
+  white-space:nowrap;
+  font:500 13px/1.25 system-ui,sans-serif;
+}
+.exo-viewport-inline-tools [data-tool-family="vector-pen"] .clo-corner-tool-options > button kbd{
+  font:11px/1.2 ui-monospace,Menlo,monospace;
+  color:#aab7ca;
+}
+.exo-viewport-inline-tools [data-tool-family="vector-pen"] .clo-corner-tool-options > button[aria-checked="true"] .clo-corner-option-label::after{
+  content:"";display:inline-block;width:6px;height:6px;margin-left:7px;
+  vertical-align:middle;border-radius:50%;background:#6aa6ff;
+}
+.exo-viewport-inline-tools .cad-tool-icon-artwork {display:none!important}
+.exo-viewport-inline-tools .cad-tool-icon-mask {
+  display:inline-block!important;
+  flex-shrink:0;
+  background-color:currentColor;
+  -webkit-mask-image:var(--cad-tool-icon-mask);
+  mask-image:var(--cad-tool-icon-mask);
+  -webkit-mask-position:center;
+  mask-position:center;
+  -webkit-mask-repeat:no-repeat;
+  mask-repeat:no-repeat;
+  -webkit-mask-size:contain;
+  mask-size:contain;
+}
+.exo-viewport-inline-tools :is(button:focus-visible) {outline:2px solid #318caf;outline-offset:1px}
+
+/* EXO floating optical glass. Both native and legacy viewport controls use
+   this one skin. Keep the rail itself transparent: applying backdrop-filter
+   to a parent would establish a backdrop root and prevent the individual
+   buttons from sampling the actual 2D/3D canvas below them. */
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools {
+  --exo-glass-ink:#206f93;
+  --exo-glass-ink-active:#46daf9;
+  --exo-glass-muted:#d1dce5;
+  --exo-glass-edge:rgba(250,253,255,.43);
+  --exo-glass-active:color-mix(in srgb,var(--studio-accent,#c9cbcf) 30%,#b5e6fa 70%);
+  background:transparent;
+  border-color:transparent;
+  box-shadow:none;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+}
+/* Native wrapper originally imposed an opaque grey block behind every tool. */
+.cc-corner-tool-host .clo-corner-toolkit.exo-viewport-inline-tools {
+  padding:3px;
+  border-radius:12px;
+  border:1px solid rgba(253,255,255,.22);
+  background:linear-gradient(150deg,rgba(255,255,255,.095),rgba(255,255,255,.008) 48%,rgba(5,10,16,.012));
+  box-shadow:0 7px 23px rgba(7,15,23,.17),inset 0 1px rgba(255,255,255,.18);
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group > button {
+  border-radius:9px;
+  border:1px solid var(--exo-glass-edge);
+  /* The square itself is clear optical glass. The colored SVG sits on top
+     as a separate layer, so no opaque grey plate obscures the live canvas. */
+  background:linear-gradient(152deg,rgba(250,254,255,.21) 0%,rgba(230,245,255,.075) 32%,rgba(65,112,148,.025) 74%,rgba(10,26,39,.055) 100%),rgba(216,239,255,.09);
+  color:var(--exo-glass-ink);
+  -webkit-backdrop-filter:blur(17px) saturate(170%);
+  backdrop-filter:blur(17px) saturate(170%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 -1px 0 rgba(6,14,22,.21),0 2px 7px rgba(8,15,23,.31),0 0 0 .5px rgba(13,24,35,.16);
+  text-shadow:0 1px 1px rgba(0,0,0,.45);
+  transition:background-color .16s ease,border-color .16s ease,box-shadow .16s ease,transform .16s cubic-bezier(.2,.8,.25,1),color .16s ease;
+}
+/* Each SVG glyph can take a distinctive color independent of the glass tile.
+   A subtle outline keeps symbols readable over the light drafting canvas. */
+.exo-viewport-inline-tools .clo-corner-tool-group > button .cad-tool-icon-mask,
+.exo-viewport-inline-tools .clo-corner-tool-options > button .cad-tool-icon-mask {
+  color:inherit;
+  filter:drop-shadow(0 1px 1px rgba(3,23,39,.95)) drop-shadow(0 0 1px rgba(4,31,48,.8));
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group > button::before {
+  content:"";
+  position:absolute;
+  inset:1px;
+  border-radius:inherit;
+  background:radial-gradient(ellipse 95% 53% at 29% 0%,rgba(255,255,255,.3),transparent 80%),linear-gradient(118deg,rgba(255,255,255,.13),transparent 48%);
+  pointer-events:none;
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group > button:not(:disabled):hover,
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group > button:focus-visible {
+  transform:translateY(-1px);
+  border-color:rgba(255,255,255,.78);
+  background:linear-gradient(140deg,rgba(255,255,255,.33),rgba(207,229,244,.12) 45%,rgba(42,75,92,.05)),rgba(215,244,255,.14);
+  color:#147a9f;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.56),inset 0 -1px 0 rgba(10,25,38,.14),0 4px 15px rgba(5,17,30,.35),0 0 0 1px rgba(224,239,247,.17);
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group > button.active,
+.cc-rust-embedded .cc-corner-tool-host .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group > button.active {
+  border-color:rgba(206,238,255,.79);
+  background:linear-gradient(150deg,rgba(237,251,255,.35),rgba(134,190,217,.13) 43%,rgba(22,52,71,.055)),rgba(170,234,255,.14);
+  color:var(--exo-glass-ink-active);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -1px rgba(4,28,43,.23),0 2px 10px rgba(5,17,30,.32),0 0 0 1px rgba(179,222,247,.20);
+}
+.exo-viewport-inline-tools .clo-corner-flyout-caret,
+.cc-corner-tool-host .clo-corner-flyout-caret {
+  border-bottom-color:rgba(245,250,253,.85);
+  filter:drop-shadow(0 1px 1px rgba(5,12,21,.35));
+}
+/* One thicker optical sheet for the horizontal flyout, not nested glass
+   backdrops per option. This keeps refraction real and text/icons crisp. */
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-options,
+.cc-corner-tool-host .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-options {
+  top:-3px;
+  left:calc(100% - 1px);
+  gap:3px;
+  padding:4px;
+  border:1px solid rgba(247,252,255,.52);
+  border-radius:11px;
+  background:linear-gradient(135deg,rgba(252,254,255,.25),rgba(153,180,197,.10) 32%,rgba(13,24,34,.08) 85%),rgba(39,57,72,.28);
+  color:var(--exo-glass-ink);
+  -webkit-backdrop-filter:blur(24px) saturate(175%);
+  backdrop-filter:blur(24px) saturate(175%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.39),inset 1px 0 0 rgba(255,255,255,.16),0 9px 28px rgba(6,14,24,.35),0 0 0 1px rgba(6,18,28,.12);
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-options > button,
+.cc-corner-tool-host .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-options > button {
+  width:30px;
+  min-width:30px;
+  flex:0 0 30px;
+  height:30px;
+  padding:3px;
+  border-radius:7px;
+  border:1px solid rgba(245,252,255,.13);
+  background:linear-gradient(145deg,rgba(255,255,255,.115),rgba(255,255,255,.01) 70%),rgba(211,236,255,.07);
+  color:var(--exo-glass-ink);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16);
+  transition:background-color .14s,border-color .14s,color .14s;
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-options > button:hover:not(:disabled),
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-options > button:focus-visible:not(:disabled) {
+  color:#fff;
+  border-color:rgba(238,252,255,.58);
+  background:linear-gradient(145deg,rgba(237,250,255,.29),rgba(97,150,183,.09)),rgba(194,233,255,.11);
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-options > button.active,
+.cc-rust-embedded .cc-corner-tool-host .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-options > button.active {
+  color:var(--exo-glass-ink-active);
+  border-color:rgba(206,239,255,.62);
+  background:linear-gradient(145deg,rgba(212,245,255,.27),rgba(65,132,164,.10)),rgba(172,224,253,.16);
+}
+
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
+  :is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools :is(.clo-corner-tool-group > button,.clo-corner-tool-options) {background:#394650!important;}
+}
+@media (prefers-reduced-transparency:reduce) {
+  :is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools :is(.clo-corner-tool-group > button,.clo-corner-tool-options,.clo-corner-tool-options > button) {
+    background:#34414b!important;
+    -webkit-backdrop-filter:none;
+    backdrop-filter:none;
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  :is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools :is(.clo-corner-tool-group > button,.clo-corner-tool-options > button) {transition:none;transform:none;}
+}
+
+/* Clear crystal icons: no frosting, backdrop blur or milky overlay on the
+   individual tiles. Bright blue/cyan artwork is independent of the surface. */
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools {
+  --exo-glass-ink:#74dcff;
+  --exo-glass-ink-active:#9ff0ff;
+  --exo-glass-edge:rgba(224,246,255,.35);
+  border-color:rgba(243,253,255,.20);
+  background:transparent;
+}
+.cc-corner-tool-host .clo-corner-toolkit.exo-viewport-inline-tools {
+  background:transparent;
+  box-shadow:none;
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group > button,
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-options > button {
+  background:rgba(210,236,255,.035);
+  border-color:rgba(246,253,255,.31);
+  color:var(--exo-glass-ink);
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+  text-shadow:none;
+  box-shadow:inset 0 1px rgba(255,255,255,.18),0 1px 3px rgba(2,13,23,.22);
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group > button::before {
+  content:none;
+  background:none;
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group > button:not(:disabled):hover,
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group > button:focus-visible,
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-options > button:not(:disabled):hover,
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-options > button:focus-visible {
+  transform:none;
+  background:rgba(220,247,255,.10);
+  border-color:rgba(224,251,255,.72);
+  color:#baf4ff;
+  box-shadow:inset 0 1px rgba(255,255,255,.32),0 0 0 1px rgba(170,233,255,.14);
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group > button.active,
+.cc-rust-embedded .cc-corner-tool-host .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-group > button.active,
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-options > button.active {
+  background:rgba(52,183,237,.10);
+  color:var(--exo-glass-ink-active);
+  border-color:rgba(153,230,255,.82);
+  box-shadow:inset 0 0 0 1px rgba(113,218,250,.22),0 0 10px rgba(39,157,208,.15);
+}
+:is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-options {
+  background:rgba(22,39,57,.26);
+  border-color:rgba(234,253,255,.37);
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.18),0 6px 18px rgba(4,14,27,.22);
+}
+.exo-viewport-inline-tools .clo-corner-tool-group > button .cad-tool-icon-mask,
+.exo-viewport-inline-tools .clo-corner-tool-options > button .cad-tool-icon-mask {
+  filter:drop-shadow(0 1px 1px #061b27) drop-shadow(0 0 1px rgba(0,5,12,.8));
+}
+@media(prefers-reduced-transparency:reduce){
+  :is(.pattern-editor-shell,.viewport-shell,.cc-corner-tool-host) .clo-corner-toolkit.exo-viewport-inline-tools :is(.clo-corner-tool-group > button,.clo-corner-tool-options,.clo-corner-tool-options > button){-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+}
+
+/* 3D collapse is a real final row below Fabric Hand and shares the tool skin. */
+.exo-viewport-inline-tools.clo-corner-toolkit-3d .cc-collapse-3d-host {margin-top:6px}
+.exo-viewport-inline-tools.clo-corner-toolkit-3d .cc-collapse-3d-host > button svg {width:19px;height:19px}
+/* Once 2D fills the canvas, only a narrow, keyboard-accessible edge tab remains. */
+.workspaces > .exo-restore-3d-edge {
+  position:absolute;left:0;top:50%;transform:translateY(-50%);z-index:84;
+  width:19px;height:58px;min-width:19px;padding:0;display:grid;place-items:center;
+  color:#d8ebf2;background:rgba(41,51,58,.93);border:1px solid rgba(177,202,216,.65);
+  border-left:0;border-radius:0 7px 7px 0;box-shadow:2px 4px 12px rgba(0,0,0,.2);
+  cursor:pointer;transition:width .13s ease,background .13s ease;
+}
+.workspaces > .exo-restore-3d-edge:hover,.workspaces > .exo-restore-3d-edge:focus-visible {
+  width:25px;background:#405765;color:#fff;outline:2px solid #9bd3ea;outline-offset:1px;
+}

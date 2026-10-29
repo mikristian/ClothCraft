@@ -1,0 +1,9 @@
+.exo-accu-constraint{margin:8px 10px;padding:10px;border:1px solid #547084;border-radius:5px;background:#1f303e;color:#e4f0f8;font-size:11px;display:flex;flex-direction:column;gap:8px}
+.exo-accu-constraint>strong{color:#b8e3fa;font-size:12px}
+.exo-accu-constraint p{margin:0;line-height:1.5;color:#b7ccdb}
+.exo-accu-constraint fieldset{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;border:0;padding:0;margin:0;min-width:0}
+.exo-accu-constraint label{display:flex;flex-direction:column;gap:4px;color:#b4d1e3;font-size:10px;min-width:0}
+.exo-accu-constraint select{width:100%;height:30px;min-width:0;border:1px solid #688092;border-radius:3px;color:#e4f0f8;background:#15222c;padding:3px 5px;font-size:11px}
+.exo-accu-constraint button{grid-column:1/-1;padding:8px 10px;min-height:32px;background:#356c89;border:1px solid #8ba9be;border-radius:4px;color:white;cursor:pointer;font-size:11px}
+.exo-accu-constraint button:disabled,.exo-accu-constraint fieldset:disabled{opacity:.5;cursor:not-allowed}
+.exo-accu-constraint .exo-accu-constraint-error{color:#ffb6b6}

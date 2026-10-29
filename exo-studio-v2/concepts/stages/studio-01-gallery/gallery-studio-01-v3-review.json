@@ -1,0 +1,36 @@
+{
+  "status": "awaiting-user-visual-review",
+  "approvedForIntegration": false,
+  "blend": "concepts/stages/studio-01-gallery/gallery-studio-01-v3-REVIEW.blend",
+  "stageOnlyDraftGlb": "concepts/stages/studio-01-gallery/gallery-studio-01-v2-STAGE-ONLY-DRAFT.glb",
+  "reviewBoard": "concepts/stages/studio-01-gallery/gallery-studio-01-v3-review-board.jpg",
+  "threeViews": [
+    "concepts/stages/studio-01-gallery/gallery-studio-01-v3-hero.png",
+    "concepts/stages/studio-01-gallery/gallery-studio-01-v3-front.png",
+    "concepts/stages/studio-01-gallery/gallery-studio-01-v3-side.png"
+  ],
+  "emptyViews": [
+    "concepts/stages/studio-01-gallery/gallery-studio-01-v3-EMPTY-hero.png",
+    "concepts/stages/studio-01-gallery/gallery-studio-01-v3-EMPTY-front.png"
+  ],
+  "stageFeetAnchor": {
+    "blender": [
+      0,
+      0,
+      0
+    ],
+    "glb": [
+      0,
+      0,
+      0
+    ],
+    "topHeightMetres": 0
+  },
+  "stageMeshesInGlb": 41,
+  "previewActorInGlb": false,
+  "undoQA": {
+    "nativeDeleteUndoRedo": "pass",
+    "canvasPleatUndo": "pass"
+  },
+  "note": "Stand-alone concept; no EXO app stage installed, no new stage preset registered."
+}

@@ -11,7 +11,7 @@ This is the starting point for the **EXO Sample 3D** technical knowledge base. T
 | Improve cloth physics | [Simulation research](EXO_SIMULATION_RESEARCH.md) | [Validation plan](EXO_VALIDATION_TEST_PLAN.md), [Backend API](BACKEND_API.md) |
 | Make garments / production data | [Production pipeline](EXO_PRODUCTION_PIPELINE.md) | [Feature atlas](EXO_FEATURE_ATLAS.md), [Production gap audit](CLO_EXPORT_PRODUCTION_PARITY_2026-10-15.md) |
 | Prepare a contribution | [Contribution playbook](EXO_CONTRIBUTION_GUIDE.md) | [CONTRIBUTING](../CONTRIBUTING.md), [Security](../SECURITY.md) |
-| Find media or demo provenance | [Media gallery](EXO_MEDIA_GALLERY.md) | [Full V16 film](../media/exo-sample-3d-v16-showcase.mp4) |
+| Find media or demo provenance | [Media gallery](EXO_MEDIA_GALLERY.md) | [Current ClothCraft Studio V2 photos](../README.md#clothcraft-studio-v2--real-ui-gallery) |
 | Evaluate release readiness | [Public-release status](EXO_RELEASE_STATUS.md) | [Licensing](LICENSING.md), [GitHub setup](GITHUB_SETUP.md) |
 
 ## Core technical reference manuals

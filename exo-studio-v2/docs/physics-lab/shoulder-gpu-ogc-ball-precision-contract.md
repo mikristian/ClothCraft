@@ -1,0 +1,15 @@
+# CPU-only OGC ball precision contract
+
+The independent, dependency-free Rust test is in `research/oss/clothcraft/tests/gpu_ogc_ball_precision.rs` and has an identical portable copy at `integrations/clothcraft/rust-patches/gpu_ogc_ball_precision.rs`. Run with `rustc --edition=2021 --test <path> -o <temporary executable>`, then execute the resulting test binary. It does not run a GPU kernel or change a solver.
+
+## Numerical example
+
+At a 4.26 µm contact separation with OGC relaxation `0.45`, the unrounded f64 trust radius is **1.917 µm**. The existing fixed deduction `16 × f32::EPSILON × max(max(abs(local_center)), 1)` equals **1.9073486328125 µm** even for a local center of `[0.2, -0.1, 0.04]` metres. Thus the resulting f32 ball has only about **9.65 nm** of usable radius, despite its actual center being close to the local coordinate origin. Separations at or below approximately 4.23855 µm produce zero radius with that deduction. This example establishes a possible numerical deadlock mechanism, not that dense contacts of this scale actually occurred in a GPU trace.
+
+The experiment computes the **actual** packing distance between an f64 center relative to the translated origin and its three-component f32 encoding. For a finite synthetic arithmetic model, it also subtracts `sqrt(3) × gamma_3 × (norm(f32_center)+radius)` with unit roundoff `u = f32::EPSILON / 2` and `gamma_3 = 3u/(1-3u)`, then rounds the nonnegative remainder downward to f32. This deliberately budgets three f32 roundings per coordinate in the tested vector construction. It checks that f32 `encoded_center + (f32_direction * packed_radius)`, decoded to f64, lies within the original f64 sphere for nine directions (axes, diagonals and mixed components) and three world translations. The tests preserve a positive radius exceeding 1 µm in the 4.26 µm example.
+
+## Contract and limits
+
+**Demonstrated invariant:** for the explicitly enumerated bounded directions, centers, translations, and arithmetic expression under ordinary IEEE f32 semantics, the rounded candidate stays within the f64 OGC sphere. The tests verify the proposed bound by computation and its usable radius against the fixed 1 m floor.
+
+**Not established:** a universal forward-error guarantee for the GPU's actual `candidate = old + alpha * direction`, `length`, division and projection onto a ball; GPU compiler reassociation, contraction/FTZ; all possible directions or subnormal data; high contact counts; true collision-free motion; and GPU/CPU VBD convergence parity. In particular a safety deduction for the WGSL projection must account for its actual operation graph and potential normalization error, and safe radius packing alone does not address singular GPU Hessians or refresh scheduling. Until those conditions are proved and checked, this numerical test is a proposal and **must not replace** the production trust-ball bound by itself. A final GPU implementation should use an analytically justified bound for the exact WGSL operations and fail closed or fall back to f64 when the ball is not representable.

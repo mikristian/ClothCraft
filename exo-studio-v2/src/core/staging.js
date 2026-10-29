@@ -1,4 +1,7 @@
 import * as THREE from 'three'
+import { initialPosition } from './physics.js'
+import { resolvePatternArrangement } from './patternBodyArrangement.js'
+import {rustStagingCylinder,rustStagingBlend} from './rustStagingKernel.js'
 
 /**
  * Body-adjacent, gently curved initial 3D pattern arrangement. The source
@@ -8,14 +11,24 @@ import * as THREE from 'three'
 export function stagedPanelPositions(simPiece, avatar = {}) {
   const flats = simPiece.flatVertices || []
   if (!flats.length) return []
-  const arrangement = simPiece.piece.arrangement3d || {}
+  const arrangement = resolvePatternArrangement(simPiece.piece)
+  if (flats.some(point => !point || !Number.isFinite(point.x) || !Number.isFinite(point.y)))
+    throw new RangeError('Invalid staging pattern coordinates')
+  const heightCm = Number(avatar.heightCm ?? 180)
+  if (!Number.isFinite(heightCm) || heightCm <= 0)
+    throw new RangeError('Invalid avatar height for staging')
+  for (const key of ['x', 'y', 'z', 'stagingOffsetX', 'stagingOffsetY', 'stagingOffsetZ', 'stagingRotationX', 'stagingRotationY', 'stagingRotationZ', 'sewingClearanceM']) {
+    if (arrangement[key] != null && !Number.isFinite(Number(arrangement[key])))
+      throw new RangeError(`Invalid staging arrangement ${key}`)
+  }
   const wrap = arrangement.wrap || 'flat'
-  const scale = THREE.MathUtils.clamp(Number(avatar.heightCm || 180) / 180, 0.6, 1.5)
-  let minX = Infinity, maxX = -Infinity, minY = Infinity
+  const scale = THREE.MathUtils.clamp(heightCm / 180, 0.6, 1.5)
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity
   for (const point of flats) {
     if (point.x < minX) minX = point.x
     if (point.x > maxX) maxX = point.x
     if (point.y < minY) minY = point.y
+    if (point.y > maxY) maxY = point.y
   }
   const centerX = (minX + maxX) * 0.5
   const flip = arrangement.flip ? -1 : 1
@@ -43,11 +56,17 @@ export function stagedPanelPositions(simPiece, avatar = {}) {
     let z = zOffset
 
     if (bodyFront || bodyBack) {
-      // A shallow torso arc places the center close to the chest and turns
-      // the side edges toward the flanks, without shrinking 2D cut dimensions.
-      const arc = 0.105 * Math.pow(Math.min(1, Math.abs(localX) / panelHalfWidth), 1.6)
+      // Preserve the drafted arc length while forming a true cylindrical
+      // surface. Each panel bends toward the body's flanks and remains an
+      // independent sheet ready for edge sewing.
+      const halfAngle = 1.10
+      const radius = Math.max(.02, panelHalfWidth / halfAngle)
+      const angle = THREE.MathUtils.clamp(localX / radius, -halfAngle, halfAngle)
       const direction = bodyFront ? 1 : -1
-      z = direction * (0.235 * scale - arc) + (zOffset - direction * 0.245)
+      const accelerated=rustStagingCylinder(localX,panelHalfWidth,scale,xOffset,zOffset,direction)
+      x = accelerated ? accelerated[0] : xOffset + Math.sin(angle) * radius
+      z = accelerated ? accelerated[1] : direction * ((.18 * scale) + radius * (Math.cos(angle) - Math.cos(halfAngle)))
+        + (zOffset - direction * 0.245)
     }
     else if (isArm) {
       // The sleeve cap starts next to the shoulder, while the sleeve itself
@@ -58,10 +77,15 @@ export function stagedPanelPositions(simPiece, avatar = {}) {
       // changes its preview surface, not the sewing constraints or pattern.
       z = 0.045 * scale + zOffset - 0.065 * Math.pow(Math.min(1, Math.abs(localX) / panelHalfWidth), 1.5)
     } else if (isLeg) {
-      x = side * 0.21 * scale + (xOffset - side * 0.15) + localX
-      const direction = wrap.endsWith('-front') ? 1 : -1
-      z = direction * (0.245 * scale - 0.055 * Math.pow(Math.min(1, Math.abs(localX) / panelHalfWidth), 1.5))
-        + (zOffset - direction * 0.14)
+      // Share the actual solver's anatomy-aware leg/pelvis mapping. This keeps
+      // front and back cut edges in the same neighborhood through the crotch
+      // transition instead of displaying four unrelated flat rectangles.
+      const bent = initialPosition({ ...simPiece.piece, arrangement3d: arrangement },
+        point, { minX, maxX, minY, maxY }, avatar)
+      x = bent.x
+      y = bent.y
+      z = bent.z + (wrap.endsWith('-front') ? 1 : -1) *
+        THREE.MathUtils.clamp(Number(arrangement.sewingClearanceM ?? .035), 0, .12)
     } else if (hood) {
       x = side * 0.33 * scale + xOffset + localX
       y = (1.59 * scale) + localY - 0.10
@@ -103,15 +127,24 @@ export function stagedPanelPositions(simPiece, avatar = {}) {
 
 export function setStagedGeometry(geometry, positions, fittedPositions = null, fitBlend = 0) {
   const attribute = geometry.getAttribute('position')
-  if (!attribute || attribute.count !== positions.length) return false
+  if (!attribute || !Array.isArray(positions) || attribute.count !== positions.length ||
+      (fittedPositions != null && (!Array.isArray(fittedPositions) || fittedPositions.length !== positions.length)) ||
+      !Number.isFinite(fitBlend)) return false
   const t = THREE.MathUtils.clamp(fitBlend, 0, 1)
-  for (let i = 0; i < positions.length; i += 1) {
-    const staged = positions[i]
+  const valid = point => point && [point.x, point.y, point.z].every(Number.isFinite)
+  if (positions.some(point => !valid(point)) || (t > 0 && fittedPositions?.some(point => !valid(point))))
+    return false
+  // Compute the full frame before touching a GPU attribute. Even finite
+  // endpoints can overflow while interpolating unusually large coordinates.
+  const next = positions.map((staged, i) => {
     const fitted = fittedPositions?.[i] || staged
-    attribute.setXYZ(i,
-      THREE.MathUtils.lerp(staged.x, fitted.x, t),
-      THREE.MathUtils.lerp(staged.y, fitted.y, t),
-      THREE.MathUtils.lerp(staged.z, fitted.z, t))
+    return ['x', 'y', 'z'].map(axis =>
+      rustStagingBlend(staged[axis], fitted[axis], t) ?? THREE.MathUtils.lerp(staged[axis], fitted[axis], t))
+  })
+  const coordinateLimit = attribute.array instanceof Float32Array ? 3.4028234663852886e38 : Number.MAX_VALUE
+  if (next.some(point => point.some(value => !Number.isFinite(value) || Math.abs(value) > coordinateLimit))) return false
+  for (let i = 0; i < positions.length; i += 1) {
+    attribute.setXYZ(i, ...next[i])
   }
   attribute.needsUpdate = true
   geometry.computeVertexNormals()

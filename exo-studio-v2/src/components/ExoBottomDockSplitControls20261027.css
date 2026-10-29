@@ -1,0 +1,125 @@
+/* In-page pane resizers: no floating overlay, only draggable separators between
+   actual 2D dock widgets. */
+[data-exo-grade-dock-host="true"][data-exo-grade-dock-occupied="true"]{
+ display:grid!important;grid-template-rows:27px minmax(0,1fr);
+ grid-template-columns:repeat(var(--exo-dock-panel-count,1),minmax(0,1fr));
+ gap:3px;padding:0 4px 3px;align-items:stretch;
+}
+[data-exo-grade-dock-host="true"]>.exo-bottom-dock-rail{
+ grid-column:1/-1;grid-row:1;min-width:0;display:flex;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked,
+[data-exo-grade-dock-host="true"]>.clo-floating-tool--docked{
+ grid-row:2;grid-column:auto!important;align-self:stretch;
+ min-width:0!important;max-width:100%!important;
+ width:100%!important;height:100%!important;max-height:100%!important;
+ flex:none!important;box-sizing:border-box;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked[data-minimized="true"]{
+ height:30px!important;width:100%!important;
+}
+.exo-bottom-split-divider{
+ position:absolute;top:30px;bottom:5px;width:16px;transform:translateX(-50%);
+ display:grid;place-items:center;z-index:101;cursor:col-resize;touch-action:none;
+ background:transparent;border:0;outline:0;color:#a5c5d9;
+}
+.exo-bottom-split-divider::before{
+ content:'';position:absolute;top:0;bottom:0;left:7px;width:2px;
+ background:#667b8d;box-shadow:0 0 1px #101b22;
+}
+.exo-bottom-split-divider>span{
+ position:relative;display:grid;place-items:center;width:14px;height:35px;
+ border:1px solid #7a9db9;border-radius:7px;background:#3a566d;
+ color:#e8f5ff;font-size:19px;line-height:1;
+}
+.exo-bottom-split-divider:hover::before,
+.exo-bottom-split-divider:focus-visible::before{background:#69bcff;width:4px;left:6px}
+.exo-bottom-split-divider:hover>span,
+.exo-bottom-split-divider:focus-visible>span{
+ background:#2585c5;border-color:#b5e9ff;box-shadow:0 0 12px #61bbffbb;
+}
+.exo-bottom-dock-height-grip{
+ position:absolute;left:50%;top:-9px;transform:translateX(-50%);
+ z-index:120;height:17px;min-width:120px;max-width:180px;
+ display:grid;place-items:center;cursor:ns-resize;touch-action:none;
+ border:1px solid #8eacc5;border-radius:6px;
+ background:linear-gradient(180deg,#46657a,#293e52);color:#e3f5ff;
+ box-shadow:0 1px 6px #040b1490;
+}
+.exo-bottom-dock-height-grip span{letter-spacing:2px;font-size:12px;line-height:1}
+.exo-bottom-dock-height-grip:hover,.exo-bottom-dock-height-grip:focus-visible{
+ outline:2px solid #6ebfff;outline-offset:1px;
+ background:#287cb4;box-shadow:0 0 13px #278ff0a3;
+}
+.exo-bottom-dock-live-insert{
+ grid-row:2;min-width:0;min-height:0;
+ display:grid;place-items:center;overflow:hidden;padding:4px;
+ color:#e4f4ff;background:#37688788;border:2px dashed #69baff;
+ border-radius:4px;box-shadow:inset 0 0 13px #75c3ff55;
+ font:600 10px Inter,system-ui,sans-serif;text-align:center;pointer-events:none;
+}
+.exo-bottom-dock-live-insert span{overflow:hidden;text-overflow:ellipsis;max-width:100%}
+[data-exo-grade-dock-host="true"]:has(>.exo-bottom-dock-live-insert)::before,
+[data-exo-grade-dock-host="true"]:has(>.exo-bottom-dock-live-insert)::after{display:none!important}
+
+/* Adaptive edge placement keeps the same live portal and saved column widths. */
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"] {order:-1;border-top:0;border-bottom:1px solid var(--studio-border,#50565e)}
+[data-exo-dock-edge="top"] .exo-bottom-dock-height-grip {top:auto;bottom:-8px}
+.exo-dock-layout-controls {position:absolute;right:34px;top:2px;display:flex;gap:4px;z-index:10;background:var(--studio-panel,#292e34)}
+.exo-dock-layout-controls button {font:10px system-ui;min-height:23px;padding:2px 7px;border:1px solid var(--studio-border,#58626b);border-radius:3px;background:transparent;color:var(--studio-text,#e6edf3);cursor:pointer}
+[data-exo-grade-dock-host] .exo-bottom-dock-instruction {display:none}
+[data-exo-grade-dock-host] .exo-bottom-dock-rail {padding-right:255px;overflow-x:auto}
+[data-exo-grade-dock-host] .exo-grade-bottom-widget--docked .optitex-grade-inline-tools,
+[data-exo-grade-dock-host] .exo-grade-bottom-widget--docked .optitex-compare-controls {flex-wrap:wrap;overflow:visible;max-height:none}
+[data-exo-grade-dock-host] .clo-floating-tool--docked {container-type:inline-size}
+[data-exo-grade-dock-host] .clo-floating-tool--docked .clo-floating-tool-body {padding:6px;min-width:0}
+[data-exo-grade-dock-host] .clo-floating-tool--docked .exo-quick-grade {padding:3px 6px;gap:4px;overflow:auto}
+[data-exo-grade-dock-host] .clo-floating-tool--docked .exo-quick-grade__grid {display:flex;flex-wrap:wrap;gap:3px;grid-template-rows:none}
+[data-exo-grade-dock-host] .clo-floating-tool--docked .exo-quick-grade__grid button {flex:0 0 28px;min-height:26px;justify-content:center;padding:3px}
+[data-exo-grade-dock-host] .clo-floating-tool--docked .exo-quick-grade__grid button span {display:none}
+[data-exo-grade-dock-host] .clo-floating-tool--docked .exo-quick-grade__settings {flex-wrap:wrap;min-height:26px}
+[data-exo-grade-dock-host] .clo-floating-tool--docked .exo-quick-grade>small {white-space:normal;min-height:0}
+@container (min-width:750px) {
+ [data-exo-grade-dock-host] .clo-floating-tool--docked .exo-quick-grade {flex-direction:row;align-items:center;flex-wrap:wrap}
+ [data-exo-grade-dock-host] .clo-floating-tool--docked .exo-quick-grade__grid {flex:1;flex-wrap:nowrap}
+ [data-exo-grade-dock-host] .clo-floating-tool--docked .exo-quick-grade>small {flex-basis:100%}
+}
+
+[data-exo-dock-edge="top"][data-exo-grade-dock-drag-hover="true"]::before {top:100%;bottom:auto}
+/* Compact edge controls, resize without nested scrollbars. */
+.exo-dock-layout-controls{position:absolute;top:2px;right:6px;display:flex;gap:3px;z-index:11}
+.exo-dock-layout-controls button{height:20px;min-height:20px;padding:1px 5px;font:9px system-ui;border-radius:3px}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"] .exo-bottom-dock-height-grip{top:auto;bottom:-9px}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="bottom"] .exo-bottom-dock-height-grip{top:-9px;bottom:auto}
+
+/* V8: when the TOP dock contains only the Grading Toolbar, it becomes an
+   actual one-row ribbon. Remove the redundant tab rail rather than stacking
+   a second title above the 12 native actions. Other widgets restore the
+   regular resizable 2-row dock with the same blue insertion preview. */
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"][data-exo-grade-dock-occupied="true"]:has(>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"]):not(:has(>.exo-grade-bottom-widget--docked)):not(:has(>.clo-floating-tool--docked:not([data-clo-floating-widget="grading-quick-toolbar"]))):not(:has(>.exo-bottom-dock-live-insert)){
+ grid-template-rows:0 minmax(0,1fr)!important;
+ height:var(--exo-bottom-dock-height,36px)!important;
+ min-height:36px!important;
+ padding:0 3px 1px!important;
+ gap:0!important;
+ background:#152635!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]:has(>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"]):not(:has(>.exo-grade-bottom-widget--docked)):not(:has(>.clo-floating-tool--docked:not([data-clo-floating-widget="grading-quick-toolbar"])))>.exo-bottom-dock-rail:not(.exo-grade-top-command-rail),
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]:has(>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"]):not(:has(>.exo-grade-bottom-widget--docked)):not(:has(>.clo-floating-tool--docked:not([data-clo-floating-widget="grading-quick-toolbar"])))>.exo-dock-layout-controls{
+ display:none!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]:has(>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"])>.exo-bottom-dock-height-grip{
+ min-width:42px!important;max-width:42px!important;height:8px!important;
+ bottom:-5px!important;opacity:.15;transition:opacity .12s;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]:has(>.clo-floating-tool--docked[data-clo-floating-widget="grading-quick-toolbar"])>.exo-bottom-dock-height-grip:is(:hover,:focus-visible){opacity:1}
+/* Keep the top resize affordance on its own 23px command rail. It must never
+   float over a grading icon or obstruct a click. */
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.exo-bottom-dock-height-grip{
+ position:absolute!important;top:2px!important;bottom:auto!important;
+ left:auto!important;right:159px!important;transform:none!important;
+ width:50px!important;min-width:50px!important;max-width:50px!important;
+ height:17px!important;min-height:17px!important;z-index:12!important;
+ border-radius:4px!important;background:#29475a!important;
+ border:1px solid #55788e!important;box-shadow:none!important;
+}

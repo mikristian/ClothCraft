@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict'
+import {chromium} from 'playwright-core'
+const ui='http://127.0.0.1:5386/'
+const browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',args:['--disable-gpu','--no-first-run']})
+const page=await browser.newPage({viewport:{width:1550,height:960}})
+const errors=[];page.on('pageerror',error=>errors.push(error.message))
+try{
+ await page.goto(ui+'?desktop=1&engine=clothcraft&testSession=custom-workspace',{waitUntil:'domcontentloaded'})
+ await page.getByRole('button',{name:'Open Studio Settings'}).click()
+ await page.getByTestId('settings-tab-customWorkspace').click()
+ await page.getByTestId('custom-workspace-builder').waitFor()
+ assert.equal(await page.getByRole('button',{name:'Modaris-inspired'}).count(),1)
+ await page.getByRole('button',{name:'Modaris-inspired'}).click()
+ const theme=await page.locator('.app-shell').getAttribute('data-studio-theme')
+ assert(theme,'Should have studio theme')
+ const create=page.getByRole('button',{name:'+ Widget button'})
+ await create.click()
+ const widgetName=page.getByRole('textbox',{name:'Workspace widget title'})
+ await widgetName.fill('Favorite grading tool')
+ await page.getByRole('button',{name:/Grade Notch/}).last().click()
+ await page.getByRole('button',{name:'Save entire workspace'}).click()
+ assert.equal(await page.getByText('Saved My Workspace to your Workspace Library.').count(),1)
+ await page.getByRole('button',{name:'Close settings'}).click()
+ const widgets=await page.locator('[data-custom-workspace-widget]').count()
+ assert(widgets>=1,`Expected visible real workspace widgets, got ${widgets}`)
+ const controls=await page.locator('[data-custom-workspace-widget] button').count()
+ assert(controls>0,'Widget must expose usable buttons')
+ const viewport=page.locator('.cc-viewport-2d').first()
+ const viewportRect=await viewport.boundingBox()
+ assert(viewportRect&&viewportRect.width>350&&viewportRect.height>250,`2D canvas viewport must remain visible: ${JSON.stringify(viewportRect)}`)
+ assert.deepEqual(errors,[])
+ console.log(JSON.stringify({passed:true,theme,widgets,controls,viewport:viewportRect,errors}))
+}catch(error){console.error(JSON.stringify({passed:false,error:error.stack,errors}));process.exitCode=1}finally{await browser.close()}

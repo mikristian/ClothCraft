@@ -10,14 +10,15 @@ export function evaluatePpfFitAcceptance({ contact, sewing, requiresIpcCcd = fal
   const completeTrajectoryEvidence = Number.isInteger(frames) && frames >= 2 &&
     Array.isArray(contact?.perFrame) && contact.perFrame.length === frames &&
     contact.perFrame.every((item, i) => item?.frame === i &&
-      Number.isFinite(item.avatarTriangleIntersectionPairs) &&
-      Number.isFinite(item.clothSelfIntersectionPairs) &&
-      Number.isFinite(item.maxPrincipalStretch) &&
-      Number.isFinite(item.strainLimitViolatingFaces)) &&
+      Number.isInteger(item.avatarTriangleIntersectionPairs) && item.avatarTriangleIntersectionPairs >= 0 &&
+      Number.isInteger(item.clothSelfIntersectionPairs) && item.clothSelfIntersectionPairs >= 0 &&
+      Number.isFinite(item.maxPrincipalStretch) && item.maxPrincipalStretch >= 0 &&
+      Number.isInteger(item.strainLimitViolatingFaces) && item.strainLimitViolatingFaces >= 0) &&
     sewing?.framesAnalyzed === frames && Number.isInteger(sewing?.stitchedPairs) && sewing.stitchedPairs > 0 &&
     Array.isArray(sewing?.samples) && sewing.samples.length === frames &&
     sewing.samples.every((item, i) => item?.frame === i &&
-      Number.isFinite(item.meanCm) && Number.isFinite(item.maxCm)) &&
+      Number.isFinite(item.meanCm) && item.meanCm >= 0 &&
+      Number.isFinite(item.maxCm) && item.maxCm >= item.meanCm) &&
     Math.abs(sewing.samples[frames - 1].meanCm - sewing.finalMeanGapCm) <= 0.001 &&
     Math.abs(sewing.samples[frames - 1].maxCm - sewing.finalMaxGapCm) <= 0.001
   const collisionPass = contact?.allFramesAvatarIntersectionFree === true &&
@@ -25,9 +26,11 @@ export function evaluatePpfFitAcceptance({ contact, sewing, requiresIpcCcd = fal
     Array.isArray(contact.perFrame) && contact.perFrame.every(item =>
       item.avatarTriangleIntersectionPairs === 0 && item.clothSelfIntersectionPairs === 0)
   const strainPass = contact?.allFramesWithinStrainLimit === true &&
-    Array.isArray(contact.perFrame) && contact.perFrame.every(item => item.strainLimitViolatingFaces === 0)
+    Array.isArray(contact?.perFrame) && contact.perFrame.every(item =>
+      item.strainLimitViolatingFaces === 0 && item.maxPrincipalStretch <= 1.05 + 1e-6)
   const seamPass = Number.isFinite(sewing?.finalMeanGapCm) &&
     Number.isFinite(sewing?.finalMaxGapCm) &&
+    sewing.finalMeanGapCm >= 0 && sewing.finalMaxGapCm >= sewing.finalMeanGapCm &&
     sewing.finalMeanGapCm <= 0.2 && sewing.finalMaxGapCm <= 1.0
   const ipcCcdPass = !requiresIpcCcd || (
     ipcCcd?.allTestedStepsCollisionFree === true &&

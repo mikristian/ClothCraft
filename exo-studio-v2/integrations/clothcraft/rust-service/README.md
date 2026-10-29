@@ -1,0 +1,9 @@
+# EXO Rust manufacturing metadata validator
+
+This isolated Rust CLI ports the validation logic from `workspace.mjs` `set-property` for panel item numbers, fabric manufacturing fields, Pantone references, and face-specific fabric appearance. It is one bounded step toward moving the remaining application services to Rust.
+
+Run `cargo run --manifest-path integrations/clothcraft/rust-service/Cargo.toml --offline --quiet` from the repository root. Send one JSON request per line on stdin, e.g. `{"target":"fabric","field":"pantoneCode","value":"19-4052 TCX"}`. Each request produces a JSON result line, `{"ok":true}` or `{"ok":false,"error":"..."}`. Keep the process open across requests. `cargo test --manifest-path integrations/clothcraft/rust-service/Cargo.toml --offline` validates representative behavior.
+
+Integrated through `validator-client.mjs` in the existing `workspace.mjs` `set-property` handler. It lazily starts **one persistent subprocess** when the compiled binary exists, reuses it for all metadata validation requests, and falls back to the original JavaScript checks if the binary is absent or fails. Set `EXO_METADATA_VALIDATOR_BIN` to override the executable path. The native binary must be built before the bridge process starts to ensure it is used on the first metadata edit. Successful property-edit responses include `data.metadataValidation` with `rust` or `javascript`; workspace `/health` native session status includes `metadataValidatorRust`. Run `node --test integrations/clothcraft/rust-service/validator-client.test.mjs` to compare JS/Rust behavior across supported cases and exercise the missing-binary fallback.
+
+The CLI does not mutate a garment or own persistence. The caller retains revision checks, target ID lookup, metadata writes and rollback. The server HTTP transport, MCP proxy, user session lifecycle, sewing commands and solver integration remain for subsequent migrations.

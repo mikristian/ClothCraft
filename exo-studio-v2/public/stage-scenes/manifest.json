@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 3,
+  "stages": [
+    {
+      "id": "EXO01",
+      "file": "/stage-scenes/EXO01.glb",
+      "poster": "/stage-posters/EXO01.png",
+      "bytes": 3863656,
+      "meshes": 23,
+      "materials": 12,
+      "status": "ready",
+      "source": "concepts/stages/studio-01-runway/EXO-STAGE01-V4-APPROVAL-CANDIDATE.blend",
+      "provenance": "User-approved original EXO Blender Stage 01"
+    },
+    {
+      "id": "R02",
+      "file": "/stage-scenes/R02.glb",
+      "poster": "/stage-posters/R02.png",
+      "bytes": 1306176,
+      "meshes": 96,
+      "materials": 9,
+      "status": "ready",
+      "source": "Recovered exported EXO Blender stage from recent curated studio pass",
+      "provenance": "Existing EXO-created room geometry, recovered from recent stage pass"
+    },
+    {
+      "id": "R03",
+      "file": "/stage-scenes/R03.glb",
+      "poster": "/stage-posters/R03.png",
+      "bytes": 1160792,
+      "meshes": 130,
+      "materials": 11,
+      "status": "ready",
+      "source": "Recovered exported EXO Blender stage from recent curated studio pass",
+      "provenance": "Existing EXO-created room geometry, recovered from recent stage pass"
+    },
+    {
+      "id": "S01",
+      "file": "/stage-scenes/S01.glb",
+      "poster": "/stage-posters/S01.png",
+      "bytes": 1406120,
+      "meshes": 350,
+      "materials": 17,
+      "status": "ready",
+      "source": "Recovered exported EXO Blender stage from recent curated studio pass",
+      "provenance": "Existing EXO-created room geometry, recovered from recent stage pass"
+    },
+    {
+      "id": "S10",
+      "file": "/stage-scenes/S10.glb",
+      "poster": "/stage-posters/S10.png",
+      "bytes": 1154132,
+      "meshes": 65,
+      "materials": 10,
+      "status": "ready",
+      "source": "Recovered exported EXO Blender stage from recent curated studio pass",
+      "provenance": "Existing EXO-created room geometry, recovered from recent stage pass"
+    }
+  ]
+}

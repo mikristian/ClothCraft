@@ -1,0 +1,83 @@
+.exo-toolbar-builder{background:#20242b!important;border-color:#414b55!important}
+.exo-builder-heading{display:flex;justify-content:space-between;align-items:start;gap:12px}.exo-builder-heading p{font-size:11px;margin:5px 0 14px}.exo-builder-heading>button,.exo-builder-delete{border:1px solid #526170;border-radius:4px;padding:7px 10px;color:#ecf4fd;background:#283847;white-space:nowrap}
+.exo-builder-tabs{display:flex;gap:4px;overflow-x:auto;padding:5px 0 12px}.exo-builder-tabs button{flex:none;border:1px solid #394957;background:#171e26;color:#cbd8e5;border-radius:4px;padding:6px 10px}.exo-builder-tabs button[aria-selected=true]{background:#304558;color:white;border-color:#8cbada}.exo-builder-tabs>span{font-size:11px;color:#9faeba}
+.exo-builder-fields{display:flex;flex-wrap:wrap;align-items:end;gap:9px;padding-bottom:12px}.exo-builder-fields label,.exo-builder-library label{display:flex;flex-direction:column;gap:5px;font-size:10px;color:#becddb}.exo-builder-fields label:first-child{flex:1;min-width:130px}.exo-builder-fields select{min-width:86px!important}.exo-builder-fields .exo-builder-visibility{display:flex;flex-direction:row;align-items:center;gap:5px;padding:6px}
+.exo-builder-surface{display:grid;grid-template-columns:minmax(125px,180px) minmax(0,1fr);gap:15px;padding:14px;border:1px solid #3e4d5b;background:#151b23;border-radius:6px}.exo-builder-preview-wrap{display:flex;align-items:center;flex-direction:column;gap:10px}.exo-builder-preview-wrap>strong{font-size:10px;letter-spacing:.05em;color:#c7d5e3}.exo-builder-preview-wrap>small{font-size:10px;text-align:center;color:#9eb1bf}.exo-builder-preview{display:grid;align-content:start;justify-content:center;gap:0;min-height:146px;min-width:66px;max-width:100%;background:#0b0e13;border:1px solid #394754;padding:5px;border-radius:3px}.exo-builder-preview>button{display:grid;place-items:center;width:34px;height:34px;padding:0;border:1px solid transparent;border-radius:2px;background:#111720;color:#d1dce9;cursor:grab}.exo-builder-preview>button:hover{border-color:#79b0d2;background:#293c4e}.exo-builder-drop{font-size:9px;text-align:center;color:#a5b7c6;border:1px dashed #44566b;padding:9px 4px;max-width:100%;min-width:34px}.exo-builder-library{min-width:0}.exo-builder-library label input{width:100%}.exo-builder-tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(116px,1fr));gap:4px;max-height:250px;overflow:auto;margin-top:9px}.exo-builder-tool-grid button{display:flex;align-items:center;gap:6px;text-align:left;padding:7px 5px;color:#d9e5ef;background:#222d38;border:1px solid #3f4f5f;border-radius:3px;min-width:0;cursor:grab}.exo-builder-tool-grid button:disabled{opacity:.38}.exo-builder-tool-grid button span{font-size:10px;flex:1;overflow:hidden;text-overflow:ellipsis}.exo-builder-tool-grid button b{font-size:14px;color:#a6cde7}.exo-builder-delete{font-size:10px;margin-top:auto;background:#30252b;border-color:#67454d}
+@media(max-width:660px){.exo-builder-surface{grid-template-columns:1fr}.exo-builder-heading{flex-wrap:wrap}}
+
+/* Visual editor matches the original 36px double-column CAD tool rail. */
+.exo-builder-preview{grid-auto-flow:row;min-height:0;align-content:start;justify-content:start;background:#0b0e13;padding:3px;gap:0;border-radius:2px}
+.exo-builder-preview--horizontal{grid-auto-flow:column;grid-auto-columns:36px;grid-auto-rows:36px;width:max-content;max-width:100%;overflow:auto}
+.exo-builder-preview>button.exo-builder-empty-slot,.exo-builder-preview>button.exo-builder-filled-slot{width:36px;height:36px;min-height:36px;display:grid;place-items:center;padding:0;border:1px solid #293441;border-radius:0;background:#101720;color:#d6e1ec}
+.exo-builder-preview>button.exo-builder-empty-slot{background:#0c1118;border:1px dashed #35414d;color:#405163;font-size:15px;cursor:default}
+.exo-builder-preview>button.exo-builder-empty-slot:hover,.exo-builder-preview>button.exo-builder-empty-slot:has(+button:hover){border-color:#74aed2;background:#1b2b3a;color:#8cc2e6}
+.exo-builder-preview>button.exo-builder-filled-slot:hover{background:#2d3c4a;border-color:#76aed0}
+.exo-builder-preview-wrap{align-items:flex-start;overflow-x:auto}
+.exo-builder-visibility{white-space:nowrap}
+/* Expanded index: the gallery flows naturally with the settings page instead of scrolling in a 250px trap. */
+.exo-toolbar-builder .exo-builder-tool-grid{max-height:none!important;overflow:visible!important;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:6px}
+.exo-toolbar-builder .exo-builder-surface{grid-template-columns:minmax(130px,190px) minmax(0,1fr);align-items:start}
+.exo-toolbar-builder .exo-builder-library{width:100%;min-width:0}
+.exo-toolbar-builder .exo-builder-library-heading,.exo-builder-saved-heading{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.exo-builder-library-heading{font-size:10px;color:#d8e3ef}.exo-builder-library-heading span{color:#9eb0c0}
+.exo-builder-tool-filters{display:grid;grid-template-columns:minmax(120px,1fr) minmax(125px,180px);gap:8px;margin:10px 0}
+.exo-builder-tool-filters>*{width:100%;min-width:0!important}
+.exo-builder-actions{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 12px}
+.exo-builder-actions button,.exo-builder-saved button{background:#293847;color:#d7e5f1;border:1px solid #4a6172;border-radius:4px;padding:6px 9px;font-size:11px}
+.exo-builder-saved{margin-top:18px;padding-top:15px;border-top:1px solid #3d4c5a}
+.exo-builder-saved-heading h4{margin:0 0 4px!important}.exo-builder-saved-heading small{color:#99adbf;font-size:10px}
+.exo-builder-saved-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin-top:11px}
+.exo-builder-saved-grid article{display:flex;flex-direction:column;gap:8px;justify-content:space-between;padding:11px;background:#121c27;border:1px solid #3e5267;border-radius:5px}
+.exo-builder-saved-grid article strong{display:block;font-size:12px;color:#e3edf7;overflow-wrap:anywhere}
+.exo-builder-saved-grid article small{display:block;margin-top:4px;color:#91a8bb;font-size:10px}
+.exo-builder-saved-actions{display:flex;justify-content:space-between;gap:8px}
+.exo-builder-saved-grid p{font-size:11px!important}
+.exo-builder-feedback{font-size:11px;color:#b8d6ed!important;margin:10px 0 0!important}
+@media(max-width:660px){.exo-toolbar-builder .exo-builder-surface{grid-template-columns:1fr}.exo-builder-tool-filters{grid-template-columns:1fr}}
+
+/* Accessible iOS/macOS-style tactile switch for custom toolbar visibility. */
+.exo-toolbar-builder .exo-apple-switch{display:inline-flex!important;flex-direction:row!important;align-items:center!important;gap:10px!important;cursor:pointer;min-height:34px}
+.exo-toolbar-builder .exo-apple-switch input{position:absolute;opacity:0;width:1px;height:1px}
+.exo-toolbar-builder .exo-apple-switch i{position:relative;display:block;width:43px;height:26px;flex:0 0 43px;border-radius:30px;background:#63686e;box-shadow:inset 0 0 0 1px #ffffff24;transition:background .18s ease}
+.exo-toolbar-builder .exo-apple-switch i::after{content:'';position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 4px #0005;transition:transform .18s ease}
+.exo-toolbar-builder .exo-apple-switch input:checked+i{background:#34c759}
+.exo-toolbar-builder .exo-apple-switch input:checked+i::after{transform:translateX(17px)}
+.exo-toolbar-builder .exo-apple-switch input:focus-visible+i{outline:2px solid #9dcbff;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.exo-toolbar-builder .exo-apple-switch i,.exo-toolbar-builder .exo-apple-switch i::after{transition:none}}
+.exo-saved-toolbar-visual{display:flex;align-items:center;gap:5px;flex-wrap:wrap;min-height:50px;padding:9px;border-radius:12px;background:var(--saved-toolbar-color);border:1px solid #ffffff55}
+.exo-saved-toolbar-visual--glass{background:color-mix(in srgb,var(--saved-toolbar-color) 33%,transparent);backdrop-filter:blur(15px) saturate(160%);-webkit-backdrop-filter:blur(15px) saturate(160%);box-shadow:inset 0 1px #ffffff80,0 3px 12px #0003}
+.exo-saved-toolbar-visual>span{display:flex;align-items:center;gap:6px;padding:6px;border-radius:8px;color:#fff;background:#172b3c66}
+.exo-saved-toolbar-visual b{font-size:10px;white-space:nowrap}
+.exo-saved-toggle{display:flex!important;justify-content:space-between;align-items:center}
+.exo-saved-toolbar-editor{display:flex;gap:12px;flex-wrap:wrap;padding-top:8px;border-top:1px solid #ffffff22}
+.exo-saved-toolbar-editor label{display:flex;flex-direction:column;gap:5px;font-size:11px}
+.exo-saved-toolbar-editor select{min-height:31px}
+.exo-saved-toolbar-editor input[type=color]{width:68px;height:33px;background:transparent;border:0}
+
+/* Real icon-color editors: live native tool inventories use the same 34px
+   tactile cell and column language as the workspace, without firing commands. */
+.exo-builder-library-heading{display:flex;align-items:center;flex-wrap:wrap;gap:7px}
+.exo-builder-library-heading>span{flex:1}
+.exo-expand-tools{padding:6px 10px;min-height:29px;border:1px solid var(--studio-border,#546675);border-radius:6px;background:var(--studio-sidebar,#243240);color:var(--studio-text,#e1eaf3);font-size:11px;cursor:pointer;margin-top:7px}
+.exo-builder-native-grid{display:grid;grid-template-columns:repeat(auto-fill,34px);gap:2px;max-height:315px;overflow:auto;align-content:start;justify-content:start;border:1px solid var(--studio-border,#536275);border-radius:7px;background:color-mix(in srgb,var(--studio-sidebar,#252b35) 85%,#000);padding:9px}
+.exo-builder-native-grid>button{width:34px;height:34px;display:grid;place-items:center;padding:0;border:1px solid transparent;border-radius:4px;color:var(--studio-icon,#d5e4f1);background:color-mix(in srgb,var(--studio-panel,#252b35) 80%,#000);cursor:pointer}
+.exo-builder-native-grid>button:hover,.exo-builder-native-grid>button[aria-pressed="true"]{border-color:var(--studio-accent,#b1d7fa);background:var(--studio-control-hover,#334355)}
+.exo-builder-native-grid .cad-tool-icon-mask,.exo-builder-preview .cad-tool-icon-mask,.exo-saved-toolbar-visual .cad-tool-icon-mask{color:inherit!important;background-color:currentColor!important}
+.studio-settings-overlay .exo-toolbar-builder{background:var(--studio-panel,#272d35)!important;border-color:var(--studio-border,#536275)!important;color:var(--studio-text,#e8eef6)}
+.studio-settings-overlay .exo-builder-surface,.studio-settings-overlay .exo-builder-saved-grid article{background:var(--studio-sidebar,#2c3138);border-color:var(--studio-border,#536275)}
+.exo-builder-live-library{padding:13px;margin:13px 0;border:1px solid var(--studio-border,#536275);border-radius:9px;background:color-mix(in srgb,var(--studio-panel,#2b333c) 80%,var(--studio-sidebar,#24303b))}
+.exo-builder-live-library>h4{margin:0 0 7px!important;color:var(--studio-text,#e7edf4);font-size:12px}
+.exo-builder-live-library>p{font-size:11px;line-height:1.4;margin:0 0 10px;color:var(--studio-muted,#aebdcc)}
+.exo-builder-live-switch{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.exo-builder-live-switch>button{padding:6px 9px;border:1px solid var(--studio-border,#536275);border-radius:6px;background:var(--studio-sidebar,#27303c);color:var(--studio-text,#e8eff5);font-size:11px}
+.exo-builder-live-switch>button[aria-pressed="true"]{border-color:var(--studio-accent,#b5dbfa);background:var(--studio-control-active,#405467)}
+.exo-icon-editor{width:100%;display:flex;flex-direction:column;align-items:stretch;gap:8px;margin-top:10px;padding:10px;border:1px solid var(--studio-border,#556477);border-radius:8px;background:var(--studio-panel,#2c3540);color:var(--studio-text,#e8eff4)}
+.exo-icon-editor>strong{font-size:11px;overflow-wrap:anywhere}
+.exo-icon-color-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.exo-icon-color-actions label{display:flex;align-items:center;gap:5px}
+.exo-icon-color-actions button,.exo-icon-editor>button{padding:5px 7px;border-radius:5px;color:var(--studio-text,#e8eef5);background:var(--studio-sidebar,#293541);border:1px solid var(--studio-border,#536275);font-size:10px}
+.exo-icon-editor input[type=color]{width:38px;height:31px;border:1px solid var(--studio-border,#536275);border-radius:6px;cursor:pointer;background:transparent}
+.exo-native-icon-swatches{display:flex;gap:5px;flex-wrap:wrap}
+.exo-native-icon-swatches>button{width:22px;height:22px;padding:0;border:1px solid #777;border-radius:5px;cursor:pointer}
+.exo-saved-toolbar-visual .exo-saved-tool-button{display:flex;align-items:center;gap:4px;padding:6px;border-radius:7px;border:1px solid #ffffff33;background:#14232c66;cursor:pointer}
+.exo-saved-toolbar-visual .exo-saved-tool-button:hover{border-color:#ffffffb0}

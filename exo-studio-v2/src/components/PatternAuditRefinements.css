@@ -1,0 +1,11 @@
+/* CLO7 reference: flat, compact drafting chrome; geometry remains in SVG. */
+.cc-board .cc-pattern-window-title{position:absolute;inset:0 0 auto;height:24px;display:flex;align-items:center;justify-content:center;background:#292929;color:#d7d7d7;font:600 11px Arial,sans-serif;border-bottom:1px solid #454545;z-index:14;pointer-events:none}
+.cc-board .clo-corner-tool-group{border-radius:0!important;box-shadow:none!important;backdrop-filter:none!important}
+.cc-board .clo-corner-tool-group>button{border-radius:1px!important;box-shadow:none!important}
+.cc-board .cc-v2-board-orientation{top:29px!important;border-radius:2px!important;box-shadow:none!important;backdrop-filter:none!important;background:rgba(229,229,229,.93)!important;padding:2px 4px!important;gap:2px!important}
+.cc-board .cc-v2-board-orientation button{border-radius:1px!important;min-width:23px!important;font-size:9px!important;padding:3px!important}
+.cc-board .cc-native-free-curve-guide{max-width:260px;font:10px/1.35 Arial,sans-serif;border-radius:2px;box-shadow:none}
+.cc-board .cc-native-free-curve-guide strong{font-size:10px}
+
+.cc-board .cc-corner-tool-host{top:29px!important}
+.cc-board .cc-corner-tool-host .clo-corner-toolkit{border-radius:1px;box-shadow:none;background:#303030}

@@ -1,20 +1,13 @@
 import { polygonArea, seamAllowanceBoundary } from './project.js'
+import { rustMarkerPlacements, rustMarkerRotatePoint, rustMarkerNormalizedRotation } from './rustMarkerKernel.js'
+import {inspectMarkerManufacturingConstraints20261028} from './markerManufacturingConstraints20261028.js'
 
 function rotatePoint(point, rotationDeg) {
-  const radians = rotationDeg * Math.PI / 180
-  const cosine = Math.cos(radians)
-  const sine = Math.sin(radians)
-  return {
-    x: point.x * cosine - point.y * sine,
-    y: point.x * sine + point.y * cosine,
-  }
+  return rustMarkerRotatePoint(point,rotationDeg)
 }
 
 function normalizedRotation(value) {
-  let rotation = Number(value || 0) % 360
-  if (rotation > 180) rotation -= 360
-  if (rotation <= -180) rotation += 360
-  return rotation
+  return rustMarkerNormalizedRotation(value)
 }
 
 function pieceBounds(piece, rotationDeg = 0) {
@@ -118,20 +111,35 @@ function bestPlacement(entry, placements, fabricWidth, gap) {
 }
 
 export function buildMarker(project, fabricWidth = 150, gap = 1.5, options = {}) {
+  // A preview must never silently change a factory order or accept an
+  // impossible roll width. Keep the preview separate from cut authorization.
+  if (!Number.isFinite(fabricWidth) || fabricWidth <= 0 || fabricWidth > 1000)
+    throw Error('INVALID_FABRIC_WIDTH')
+  if (!Number.isFinite(gap) || gap < 0 || gap > 50)
+    throw Error('INVALID_MARKER_SPACING')
+  if (!project || !Array.isArray(project.pieces)) throw Error('INVALID_MARKER_PIECES')
   const fabricId = options?.fabricId ?? null
+  if (options?.strictProductionDemand) {
+    const fabricIds=fabricId?[fabricId]:[...new Set(project.pieces.map(p=>p.fabricId||'main'))]
+    const issues=fabricIds.flatMap(id=>inspectMarkerManufacturingConstraints20261028(project,{fabricId:id,nap:options.nap===true,
+      repeatRegistrationValidatedElsewhere:options.repeatRegistrationValidatedElsewhere===true}))
+    if(issues.length)throw Error(`MARKER_CONSTRAINT_REFUSED:${issues.map(i=>i.code).join(',')}`)
+  }
   const entries = []
   for (const piece of project.pieces || []) {
     const pieceFabricId = piece.fabricId || 'main'
     if (fabricId && pieceFabricId !== fabricId) continue
-    const options = orientations(piece, fabricWidth)
-    if (!options.length) continue
-    const quantity = Math.max(1, Math.min(99, Math.round(Number(piece.cutQuantity || 1))))
+    if (options?.strictProductionDemand && (!Number.isSafeInteger(piece.cutQuantity) || piece.cutQuantity < 1 || piece.cutQuantity > 99))
+      throw Error(`MISSING_OR_INVALID_CUT_QUANTITY:${piece.id || 'unknown'}`)
+    const allowedOrientations = orientations(piece, fabricWidth)
+    if (!allowedOrientations.length) continue
+    const quantity = options?.strictProductionDemand ? piece.cutQuantity : Math.max(1, Math.min(99, Math.round(Number(piece.cutQuantity || 1))))
     for (let instance = 0; instance < quantity; instance += 1) {
       entries.push({
         piece,
         instance,
         area: polygonArea(seamAllowanceBoundary(piece, 12)),
-        options,
+        options: allowedOrientations,
       })
     }
   }
@@ -147,8 +155,9 @@ export function buildMarker(project, fabricWidth = 150, gap = 1.5, options = {})
   const placements = []
   let unusedPieces = 0
   const unplaced = []
-  for (const entry of entries) {
-    const best = bestPlacement(entry, placements, fabricWidth, gap)
+  const rustPlacements = rustMarkerPlacements(entries, fabricWidth, gap)
+  for (const [index, entry] of entries.entries()) {
+    const best = rustPlacements ? rustPlacements[index] : bestPlacement(entry, placements, fabricWidth, gap)
     if (!best) {
       unusedPieces += 1
       const minimumWidth = entry.options.length ? Math.min(...entry.options.map((option) => option.width)) : null
@@ -198,7 +207,7 @@ export function buildFabricMarkers(project, defaultFabricWidth = 150, gap = 1.5)
   const fabricIds = [...new Set((project.pieces || []).map((piece) => piece.fabricId || 'main'))]
   const widthOverrides = project.markerSettings?.fabricWidthsCm || {}
   return Object.fromEntries(fabricIds.map((fabricId) => {
-    const width = Number(widthOverrides[fabricId] ?? defaultFabricWidth)
+    const width = widthOverrides[fabricId] ?? defaultFabricWidth
     return [fabricId, buildMarker(project, width, gap, { fabricId })]
   }))
 }

@@ -5,6 +5,7 @@
 const OPTICAL_KEYS = new Set([
   'name','surfaceFamily','texture','color','opacity','displacementMm','roughness','metalness','sheen','sheenRoughness',
   'normalStrength','fiberAnisotropy','fiberAngleDeg',
+  'reflectionIntensity',
   'clearcoat','clearcoatRoughness','colorVariation','weaveScaleCm','wash',
 ])
 
@@ -14,6 +15,13 @@ export function physicsInputFingerprint(project) {
   delete next.revision
   delete next.updatedAt
   delete next.render
+  // Foam/trapunto objects are construction previews attached to existing
+  // cloth faces. Moving or resizing one must never restart the garment solver.
+  next.pieces=(project.pieces||[]).map(piece=>{
+    const physical={...piece}
+    delete physical.foamPads
+    return physical
+  })
   next.fabrics=Object.fromEntries(Object.entries(project.fabrics || {}).map(([id,fabric]) => {
     const physical={...fabric}
     for (const key of OPTICAL_KEYS) delete physical[key]

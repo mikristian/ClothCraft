@@ -1,0 +1,91 @@
+{
+  "source": "http://127.0.0.1:5386",
+  "privateBackend": "http://127.0.0.1:5688",
+  "viewport": [
+    1600,
+    900
+  ],
+  "capturedAt": "2026-10-20T02:47:06.352Z",
+  "screenshots": [
+    {
+      "file": "clothcraft-v2-20261019-01-overview.jpg",
+      "bytes": 170945,
+      "description": "Real default Graphite ClothCraft UI with 2D and 3D workspaces",
+      "title": "EXO ClothCraft Studio — Native Rust Garment Workspace",
+      "boardCount": 1,
+      "canvasCount": 1,
+      "text": "◈\nEXO Sample 3D\nFile\nEdit\n3D Garment\n2D Pattern\nSewing\nMaterials\nEditor\nAvatar\nAnimation\nRender\nDisplay\nPreferences\nSettings\nHelp\nPATTERN\nSEARCH\nAI\nSIM\nSAVE\nPattern\nSewing\nFabric\nAvatar\nFit\nProduction\nRender\nLAYOUT\nPattern Focus · 2D\n2D Pattern + 3D\nSewing + Fit\nMaterials + Rendering\nRender Studio\nSave my layout\nRestore my layout\n3D + 2D\n3D over 2D\n3D only\n2D only\nClothCraft RUST\nSTEP\nRESET PANELS\nShare\nD\nLIBRARY\nHISTORY\nSHARING\nLibrary\nLOCAL\nGarment\nTops\nBottoms\nDrafts & Blocks\nAvatar\nHanger\nFa"
+    },
+    {
+      "file": "clothcraft-v2-20261019-02-pattern-drafting.jpg",
+      "bytes": 38969,
+      "description": "Close-up of real two-dimensional pattern cutlines and surface fill",
+      "detail": true,
+      "title": "EXO ClothCraft Studio — Native Rust Garment Workspace",
+      "boardCount": 1,
+      "canvasCount": 1,
+      "text": "◈\nEXO Sample 3D\nFile\nEdit\n3D Garment\n2D Pattern\nSewing\nMaterials\nEditor\nAvatar\nAnimation\nRender\nDisplay\nPreferences\nSettings\nHelp\nPATTERN\nSEARCH\nAI\nSIM\nSAVE\nPattern\nSewing\nFabric\nAvatar\nFit\nProduction\nRender\nLAYOUT\nPattern Focus · 2D\n2D Pattern + 3D\nSewing + Fit\nMaterials + Rendering\nRender Studio\nSave my layout\nRestore my layout\n3D + 2D\n3D over 2D\n3D only\n2D only\nClothCraft RUST\nSTEP\nRESET PANELS\nShare\nD\nLIBRARY\nHISTORY\nSHARING\nLibrary\nLOCAL\nGarment\nTops\nBottoms\nDrafts & Blocks\nAvatar\nHanger\nFa"
+    },
+    {
+      "file": "clothcraft-v2-20261019-03-sewing.jpg",
+      "bytes": 171844,
+      "description": "Real sewing workspace and pattern editing controls",
+      "title": "EXO ClothCraft Studio — Native Rust Garment Workspace",
+      "boardCount": 1,
+      "canvasCount": 1,
+      "text": "◈\nEXO Sample 3D\nFile\nEdit\n3D Garment\n2D Pattern\nSewing\nMaterials\nEditor\nAvatar\nAnimation\nRender\nDisplay\nPreferences\nSettings\nHelp\nPATTERN\nSEARCH\nAI\nSIM\nSAVE\nPattern\nSewing\nFabric\nAvatar\nFit\nProduction\nRender\nLAYOUT\nPattern Focus · 2D\n2D Pattern + 3D\nSewing + Fit\nMaterials + Rendering\nRender Studio\nSave my layout\nRestore my layout\n3D + 2D\n3D over 2D\n3D only\n2D only\nClothCraft RUST\nSTEP\nRESET PANELS\nShare\nD\nLIBRARY\nHISTORY\nSHARING\nLibrary\nLOCAL\nGarment\nTops\nBottoms\nDrafts & Blocks\nAvatar\nHanger\nFa"
+    },
+    {
+      "file": "clothcraft-v2-20261019-04-fabrics.jpg",
+      "bytes": 176841,
+      "description": "Actual fabric swatch library and linked garment editor",
+      "title": "EXO ClothCraft Studio — Native Rust Garment Workspace",
+      "boardCount": 1,
+      "canvasCount": 1,
+      "text": "◈\nEXO Sample 3D\nFile\nEdit\n3D Garment\n2D Pattern\nSewing\nMaterials\nEditor\nAvatar\nAnimation\nRender\nDisplay\nPreferences\nSettings\nHelp\nPATTERN\nSEARCH\nAI\nSIM\nSAVE\nPattern\nSewing\nFabric\nAvatar\nFit\nProduction\nRender\nLAYOUT\nPattern Focus · 2D\n2D Pattern + 3D\nSewing + Fit\nMaterials + Rendering\nRender Studio\nSave my layout\nRestore my layout\n3D + 2D\n3D over 2D\n3D only\n2D only\nClothCraft RUST\nSTEP\nRESET PANELS\nShare\nD\nLIBRARY\nHISTORY\nSHARING\nLibrary\nLOCAL\nGarment\nTops\nBottoms\nDrafts & Blocks\nAvatar\nHanger\nFa"
+    },
+    {
+      "file": "clothcraft-v2-20261019-06-garments.jpg",
+      "bytes": 172736,
+      "description": "Actual garment starter catalog",
+      "title": "EXO ClothCraft Studio — Native Rust Garment Workspace",
+      "boardCount": 1,
+      "canvasCount": 1,
+      "text": "◈\nEXO Sample 3D\nFile\nEdit\n3D Garment\n2D Pattern\nSewing\nMaterials\nEditor\nAvatar\nAnimation\nRender\nDisplay\nPreferences\nSettings\nHelp\nPATTERN\nSEARCH\nAI\nSIM\nSAVE\nPattern\nSewing\nFabric\nAvatar\nFit\nProduction\nRender\nLAYOUT\nPattern Focus · 2D\n2D Pattern + 3D\nSewing + Fit\nMaterials + Rendering\nRender Studio\nSave my layout\nRestore my layout\n3D + 2D\n3D over 2D\n3D only\n2D only\nClothCraft RUST\nSTEP\nRESET PANELS\nShare\nD\nLIBRARY\nHISTORY\nSHARING\nLibrary\nLOCAL\nGarment\nTops\nBottoms\nDrafts & Blocks\nAvatar\nHanger\nFa"
+    },
+    {
+      "file": "clothcraft-v2-20261019-07-3d-viewport.jpg",
+      "bytes": 44178,
+      "description": "Close-up of real neutral fitting avatar and native T-shirt in live 3D viewport",
+      "detail": true,
+      "title": "EXO ClothCraft Studio — Native Rust Garment Workspace",
+      "boardCount": 1,
+      "canvasCount": 1,
+      "text": "◈\nEXO Sample 3D\nFile\nEdit\n3D Garment\n2D Pattern\nSewing\nMaterials\nEditor\nAvatar\nAnimation\nRender\nDisplay\nPreferences\nSettings\nHelp\nPATTERN\nSEARCH\nAI\nSIM\nSAVE\nPattern\nSewing\nFabric\nAvatar\nFit\nProduction\nRender\nLAYOUT\nPattern Focus · 2D\n2D Pattern + 3D\nSewing + Fit\nMaterials + Rendering\nRender Studio\nSave my layout\nRestore my layout\n3D + 2D\n3D over 2D\n3D only\n2D only\nClothCraft RUST\nSTEP\nRESET PANELS\nShare\nD\nLIBRARY\nHISTORY\nSHARING\nLibrary\nLOCAL\nGarment\nTops\nBottoms\nDrafts & Blocks\nAvatar\nHanger\nFa"
+    },
+    {
+      "file": "clothcraft-v2-20261019-09-hardware.jpg",
+      "bytes": 176051,
+      "description": "Real hardware and trims library tree",
+      "title": "EXO ClothCraft Studio — Native Rust Garment Workspace",
+      "boardCount": 1,
+      "canvasCount": 1,
+      "text": "◈\nEXO Sample 3D\nFile\nEdit\n3D Garment\n2D Pattern\nSewing\nMaterials\nEditor\nAvatar\nAnimation\nRender\nDisplay\nPreferences\nSettings\nHelp\nPATTERN\nSEARCH\nAI\nSIM\nSAVE\nPattern\nSewing\nFabric\nAvatar\nFit\nProduction\nRender\nLAYOUT\nPattern Focus · 2D\n2D Pattern + 3D\nSewing + Fit\nMaterials + Rendering\nRender Studio\nSave my layout\nRestore my layout\n3D + 2D\n3D over 2D\n3D only\n2D only\nClothCraft RUST\nSTEP\nRESET PANELS\nShare\nD\nLIBRARY\nHISTORY\nSHARING\nLibrary\nLOCAL\nGarment\nTops\nBottoms\nDrafts & Blocks\nAvatar\nHanger\nFa"
+    },
+    {
+      "file": "clothcraft-v2-20261019-08-theme-settings.jpg",
+      "bytes": 162199,
+      "description": "Real settings panel with current theme controls",
+      "title": "EXO ClothCraft Studio — Native Rust Garment Workspace",
+      "boardCount": 1,
+      "canvasCount": 1,
+      "text": "◈\nEXO Sample 3D\nFile\nEdit\n3D Garment\n2D Pattern\nSewing\nMaterials\nEditor\nAvatar\nAnimation\nRender\nDisplay\nPreferences\nSettings\nHelp\nPATTERN\nSEARCH\nAI\nSIM\nSAVE\nPattern\nSewing\nFabric\nAvatar\nFit\nProduction\nRender\nLAYOUT\nPattern Focus · 2D\n2D Pattern + 3D\nSewing + Fit\nMaterials + Rendering\nRender Studio\nSave my layout\nRestore my layout\n3D + 2D\n3D over 2D\n3D only\n2D only\nClothCraft RUST\nSTEP\nRESET PANELS\nShare\nD\nLIBRARY\nHISTORY\nSHARING\nLibrary\nLOCAL\nGarment\nTops\nBottoms\nDrafts & Blocks\nAvatar\nHanger\nFa"
+    }
+  ],
+  "routeCount": 1,
+  "productionRequests": 0,
+  "routeMethods": [
+    "POST"
+  ],
+  "pageErrors": []
+}

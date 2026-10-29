@@ -1,0 +1,15 @@
+[package]
+name = "exo-seam-interval-kernel"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Deterministic metric seam interval validation for EXO 2D sewing"
+
+[lib]
+crate-type = ["rlib", "cdylib"]
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "abort"

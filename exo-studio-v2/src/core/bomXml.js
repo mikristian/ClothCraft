@@ -1,9 +1,13 @@
+import { initializeRustBomKernel, rustBomXml } from './rustBomKernel.js'
 import { pieceArea } from './project.js'
 import { buildFabricCostRun } from './productionCost.js'
 
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' })[ch])
 const attr = (key, value) => ` ${key}="${esc(value)}"`
-const element = (name, attributes, contents = '') => `<${name}${Object.entries(attributes).map(([key, value]) => attr(key, value)).join('')}>${contents}</${name}>`
+const element = (name, attributes, children = []) => ({ name, attributes, children })
+const serialize = ({ name, attributes, children }) => `<${name}${Object.entries(attributes).map(([key, value]) => attr(key, value)).join('')}>${children.map(serialize).join('')}</${name}>`
+// Warm asynchronously; the public export stays synchronous, including on failure.
+if (typeof window !== 'undefined') void initializeRustBomKernel()
 const dec = (value, places = 3) => Number.isFinite(Number(value)) ? Number(value).toFixed(places) : ''
 const count = (value) => Math.max(1, Math.round(Number(value ?? 1)))
 
@@ -28,8 +32,8 @@ export function projectToBomXml(project) {
     }, cutPieces.map((piece) => element('Pattern', {
       id: piece.id, name: piece.name || piece.id, cutQuantity: count(piece.cutQuantity),
       seamAllowanceCm: dec(piece.seamAllowance ?? 0, 2),
-    })).join(''))
-  }).join('')
+    })))
+  })
 
   const trims = []
   for (const item of project.fasteners || []) trims.push(element('Trim', { type: item.type || 'fastener', id: item.id || '', quantityPerGarment: 1, specification: item.name || '' }))
@@ -50,10 +54,11 @@ export function projectToBomXml(project) {
     pricePerMeter: row.pricePerMeter == null ? '' : dec(row.pricePerMeter, 2),
     currency: row.currency, amount: row.extendedCost == null ? '' : dec(row.extendedCost, 2),
     status: row.status,
-  })).join('')
-  return `<?xml version="1.0" encoding="UTF-8"?>\n${element('GarmentStudioBOM', {
+  }))
+  const root = element('GarmentStudioBOM', {
     schemaVersion: '1.0', projectId: project.id || '', projectName: project.name || '',
     revision: project.revision ?? 1, baseSize: project.grading?.baseSize || 'M',
     patternUnits: 'cm', usageBasis: 'one finished garment',
-  }, element('Fabrics', {}, fabrics) + element('TrimsAndConstruction', {}, trims.join('')) + element('FabricCostEstimates', { currency: costRun.currency, basis: 'per garment, excludes trims and labor' }, fabricCosts))}\n`
+  }, [element('Fabrics', {}, fabrics), element('TrimsAndConstruction', {}, trims), element('FabricCostEstimates', { currency: costRun.currency, basis: 'per garment, excludes trims and labor' }, fabricCosts)])
+  return rustBomXml(root) ?? `<?xml version="1.0" encoding="UTF-8"?>\n${serialize(root)}\n`
 }

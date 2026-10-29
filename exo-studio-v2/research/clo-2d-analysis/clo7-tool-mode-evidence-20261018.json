@@ -1,0 +1,55 @@
+{
+  "application": "CLO Standalone OnlineAuth Academic 7.0.242",
+  "captured_at_utc": "2026-10-18T15:29:19Z",
+  "ax_authorized": true,
+  "screen_recording_authorized": true,
+  "tool_activations": [
+    "CLO native menu activated Edit Pattern: AX result 0",
+    "CLO native menu activated Edit Curvature: AX result 0",
+    "CLO native menu activated Edit Curve Point: AX result 0",
+    "CLO native menu activated Add Point/Split Line: AX result 0",
+    "CLO native menu activated Transform Point/Segment: AX result 0",
+    "Restore default selection mode: CLO native menu activated Transform Pattern: AX result 0"
+  ],
+  "warnings": [],
+  "screenshot_comparisons": [
+    {
+      "mode": "Edit Pattern",
+      "screenshot": "research/clo-2d-analysis/clo-20261018-mode-1.png",
+      "bytes": 233954,
+      "delta_toolbar_pixels_vs_first": 0,
+      "delta_2d_canvas_pixels_vs_first": 0
+    },
+    {
+      "mode": "Edit Curvature",
+      "screenshot": "research/clo-2d-analysis/clo-20261018-mode-2.png",
+      "bytes": 233679,
+      "delta_toolbar_pixels_vs_first": 156,
+      "delta_2d_canvas_pixels_vs_first": 0
+    },
+    {
+      "mode": "Edit Curve Point",
+      "screenshot": "research/clo-2d-analysis/clo-20261018-mode-3.png",
+      "bytes": 233768,
+      "delta_toolbar_pixels_vs_first": 156,
+      "delta_2d_canvas_pixels_vs_first": 0
+    },
+    {
+      "mode": "Add Point/Split Line",
+      "screenshot": "research/clo-2d-analysis/clo-20261018-mode-4.png",
+      "bytes": 233828,
+      "delta_toolbar_pixels_vs_first": 223,
+      "delta_2d_canvas_pixels_vs_first": 0
+    },
+    {
+      "mode": "Transform Point/Segment",
+      "screenshot": "research/clo-2d-analysis/clo-20261018-mode-5.png",
+      "bytes": 233864,
+      "delta_toolbar_pixels_vs_first": 174,
+      "delta_2d_canvas_pixels_vs_first": 0
+    }
+  ],
+  "geometry_visible_in_current_screenshots": false,
+  "original_and_fixture_same_sha256": true,
+  "fixture_sha256": "eb24014f28e46cd513ea603a3c441ceeda9dc62bc301d6457848ffe906b87a83"
+}

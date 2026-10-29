@@ -1,0 +1,30 @@
+{
+  "originalFile": "/Users/mikylecouto/Documents/clo/Assets/Stage/Stage_01.zprj",
+  "extraction": "Temporary analysis only",
+  "meshVertices": 316318,
+  "meshFaces": 159786,
+  "materials": 10,
+  "bboxMinMeters": [
+    -5.557045936584473,
+    -10.018970489501953,
+    -0.47851112484931946
+  ],
+  "bboxMaxMeters": [
+    5.567216873168945,
+    6.105738639831543,
+    6.607605457305908
+  ],
+  "sourceMaterialNames": [
+    "Material94889",
+    "Material94893",
+    "Material94897",
+    "Material94901",
+    "Material94903",
+    "Material94907",
+    "Material94911",
+    "Material94913",
+    "Material94917",
+    "Material94919"
+  ],
+  "originalSourceModified": false
+}

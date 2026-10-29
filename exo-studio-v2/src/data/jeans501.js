@@ -201,7 +201,11 @@ export function create501JeansTemplate({ waist = 32, inseam = 32 } = {}) {
     topstitches: [stitch('coin-pocket-rim', 0, 0.7)],
   }))
   pieces.push(part('button-fly-facing', 'Button Fly Placket',
-    [P(0, 25.2), P(5.2, 25.2), P(6.0, 1.5), P(4.8, 0), P(0, 0)], {
+    // Keep a fixed placket cut and fixed buttonhole stations across waist sizes.
+    // Generic waist grading inverts the lower corner at W28 and changes the
+    // fold/hardware clearance of this separately cut accessory.
+    [P(0, 25.2), P(5.2, 25.2), P(6.0, 1.5), P(4.8, 0), P(0, 0)]
+      .map(point => ({ ...point, gradeRule: { enabled: true, dxPerSize: 0, dyPerSize: 0 } })), {
     layout2d: { x: 342, y: 100 }, active3d: false,
     buttonholes: [6.3, 11.0, 15.7, 20.4].map((y, i) => ({
       id: `fly-bh-${i}`, x: 2.1, y, lengthCm: 1.8, orientationDeg: 0 }))
@@ -211,8 +215,13 @@ export function create501JeansTemplate({ waist = 32, inseam = 32 } = {}) {
     layout2d: { x: 355, y: 100 }, active3d: false,
   }))
   // Traditional five-loop placement (two front, two side and one centre back).
+  // Belt-loop cut strips have fixed production dimensions across waist sizes.
+  // Explicit per-point rules exempt these narrow trims from the generic
+  // width increment, which would otherwise invert W28/W30 strip outlines.
   for (let n = 0; n < 5; n += 1) pieces.push(part(`belt-loop-${n + 1}`, `Belt Loop ${n + 1}`,
-    [P(0, 9.4), P(1.4, 9.4), P(1.4, 0), P(0, 0)], {
+    [P(0, 9.4), P(1.4, 9.4), P(1.4, 0), P(0, 0)].map(point => ({
+      ...point, gradeRule: { enabled: true, dxPerSize: 0, dyPerSize: 0 },
+    })), {
       layout2d: { x: 392 + n * 4, y: 35 }, active3d: false,
       seamAllowance: 0.7,
     }))

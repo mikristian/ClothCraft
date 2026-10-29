@@ -1,6 +1,7 @@
 // An openly implementable photo-to-PBR approximation. The normal channel
 // derives from lightness variation; it cannot measure true yarn geometry,
 // directional BRDFs or mechanical textile behavior like a fabric scanner.
+import {rustEstimateFabricPbrPixels} from './rustPbrPixelsKernel.js'
 const clamp = (value, low, high) => Math.max(low, Math.min(high, value))
 const linear = channel => {
   const c = channel / 255
@@ -11,6 +12,8 @@ export function estimateFabricPbrPixels(imageData, {normalStrength = 2} = {}) {
   const {width, height, data} = imageData
   if (!Number.isInteger(width) || !Number.isInteger(height) || width < 2 || height < 2 ||
       !data || data.length < width * height * 4) throw new Error('Invalid fabric image pixels')
+  const native=rustEstimateFabricPbrPixels(imageData,normalStrength)
+  if(native)return native
   const luminance = new Float32Array(width * height)
   for (let i = 0; i < width * height; i++) {
     const offset = i * 4

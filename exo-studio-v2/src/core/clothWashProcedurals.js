@@ -3,10 +3,11 @@
  * RGB values use normalized linear or display-domain channels consistently with
  * the caller; this module does not perform color-space conversion.
  */
+import {rustWashSmooth} from './rustCoreMathKernel.js'
 const TAU = 2 * Math.PI
 const clamp = (x, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, x))
 const finite = (x, fallback) => Number.isFinite(Number(x)) ? Number(x) : fallback
-const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t) }
+const smooth = (a, b, x) => rustWashSmooth(a,b,x)
 const hash = (a, b, seed) => { const n = Math.sin(a * 127.1 + b * 311.7 + seed * 74.7) * 43758.5453123; return n - Math.floor(n) }
 
 export const WASH_EFFECTS = Object.freeze({

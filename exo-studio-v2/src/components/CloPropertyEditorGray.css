@@ -1,0 +1,329 @@
+/* Neutral CLO-inspired property system used by every EXO V2 inspector.
+   Presentation only: authoring, Rust revisions and control events stay in
+   the existing individual property components. */
+.app-shell .clo-inspector {
+  --pe-canvas:#303133;
+  --pe-head:#353638;
+  --pe-raised:#3b3c3f;
+  --pe-hover:#48494c;
+  --pe-control:#292a2c;
+  --pe-line:#494a4d;
+  --pe-hairline:#414245;
+  --pe-text:#e2e3e4;
+  --pe-muted:#afb1b4;
+  --pe-dim:#8f9296;
+  --pe-focus:#bfc2c6;
+  color:var(--pe-text);
+  background:var(--pe-canvas);
+}
+.app-shell .clo-inspector .clo-property-panel,
+.app-shell .clo-inspector .clo-pe-list {
+  background:var(--pe-canvas);
+  color:var(--pe-text);
+  scrollbar-color:#66676a var(--pe-canvas);
+}
+.app-shell .clo-inspector .clo-pe-header {
+  min-height:40px;
+  padding:3px 10px;
+  background:#363739;
+  border-bottom:1px solid #525356;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:1px;
+}
+.app-shell .clo-inspector .clo-pe-header>span {
+  font-size:12px;font-weight:650;letter-spacing:0;color:#e1e2e4;
+}
+.app-shell .clo-inspector .clo-pe-header>strong {
+  font-size:9px;font-weight:450;color:#aeb0b3;
+  max-width:95%;min-width:0;overflow:hidden;white-space:nowrap;
+  text-overflow:ellipsis;margin:0;
+}
+.app-shell .clo-inspector .clo-pe-section {
+  border:0;border-bottom:1px solid var(--pe-hairline);
+}
+.app-shell .clo-inspector .clo-pe-trigger {
+  min-height:32px;padding:7px 11px;gap:8px;
+  border:0;border-radius:0;box-shadow:none;
+  background:var(--pe-head);color:#44c7e9;
+}
+.app-shell .clo-inspector .clo-pe-trigger svg {
+  width:13px;height:13px;color:#acafb3;
+}
+.app-shell .clo-inspector .clo-pe-trigger span {
+  font-size:11px;line-height:1.25;font-weight:610;letter-spacing:0;
+}
+.app-shell .clo-inspector .clo-pe-trigger:hover {
+  background:var(--pe-hover);color:#f2f2f3;
+}
+.app-shell .clo-inspector .clo-pe-section.expanded>.clo-pe-trigger {
+  background:#3d3e40;color:#52d4f1;
+  box-shadow:none;
+}
+.app-shell .clo-inspector .clo-pe-trigger:focus-visible,
+.app-shell .clo-inspector .clo-pe-subtrigger:focus-visible {
+  outline:1px solid var(--pe-focus);outline-offset:-1px;
+}
+.app-shell .clo-inspector .clo-pe-content {
+  padding:8px 12px 11px;background:var(--pe-canvas);color:var(--pe-text);
+}
+.app-shell .clo-inspector .clo-pe-readout {
+  min-height:31px;padding:7px 0;gap:9px;line-height:1.35;
+  border-bottom:1px solid var(--pe-hairline);
+}
+.app-shell .clo-inspector .clo-pe-readout>span,
+.app-shell .clo-inspector .clo-pe-edit-field>label,
+.app-shell .clo-inspector .clo-pe-line-target label {
+  color:var(--pe-muted);font-size:10px;
+}
+.app-shell .clo-inspector .clo-pe-readout>strong {
+  font-size:10px;color:var(--pe-text);font-weight:550;
+}
+.app-shell .clo-inspector .clo-pe-note {
+  font-size:10px;color:#a6a8ab;line-height:1.48;
+}
+.app-shell .clo-inspector .clo-pe-typed-fields {
+  border-color:var(--pe-hairline);gap:1px;
+}
+.app-shell .clo-inspector .clo-pe-edit-field {
+  grid-template-columns:minmax(84px,1fr) minmax(118px,1.35fr);
+  gap:7px;padding:5px 0;align-items:center;
+}
+.app-shell .clo-inspector .clo-pe-edit-field>input,
+.app-shell .clo-inspector .clo-pe-edit-field>select,
+.app-shell .clo-inspector .clo-pe-edit-input input,
+.app-shell .clo-inspector .clo-pe-line-target input,
+.app-shell .clo-inspector .clo-pe-native-seam-picker select,
+.app-shell .clo-inspector .clo-pe-unit-selection select,
+.app-shell .clo-inspector .clo-pe-zipper-seam select {
+  min-height:27px;border:1px solid #5a5b5e;border-radius:3px;
+  background:var(--pe-control);color:var(--pe-text);
+  box-shadow:none;padding:4px 7px;font-size:10px;
+  font-variant-numeric:tabular-nums;
+}
+.app-shell .clo-inspector :is(input,select,textarea):focus-visible {
+  outline:1px solid var(--pe-focus);outline-offset:0;border-color:#a0a3a7;
+}
+.app-shell .clo-inspector :is(input,select,button):disabled {
+  opacity:.48;cursor:not-allowed;
+}
+.app-shell .clo-inspector input[type=checkbox],
+.app-shell .clo-inspector input[type=range],
+.app-shell .clo-inspector input[type=radio] {
+  accent-color:#b7b9bd;
+}
+.app-shell .clo-inspector input[type=range],
+.app-shell .clo-inspector .cc-fabric-adjust input[type=range] {
+  -webkit-appearance:none;appearance:none;
+  border:0;border-radius:0;box-shadow:none;
+  background:transparent;height:17px;padding:0;
+  cursor:ew-resize;color-scheme:dark;
+}
+.app-shell .clo-inspector input[type=range]::-webkit-slider-runnable-track {
+  -webkit-appearance:none;height:3px;border:0;border-radius:1px;
+  background:#77797c;
+}
+.app-shell .clo-inspector input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance:none;appearance:none;
+  width:9px;height:16px;margin-top:-7px;border:1px solid #151617;
+  border-radius:2px;background:linear-gradient(90deg,#9b9da0,#d2d4d6 52%,#85878a);
+  box-shadow:0 1px 2px #0009;
+}
+.app-shell .clo-inspector input[type=range]::-moz-range-track {
+  height:3px;background:#77797c;border:0;border-radius:1px;
+}
+.app-shell .clo-inspector input[type=range]::-moz-range-thumb {
+  width:9px;height:16px;border:1px solid #151617;border-radius:2px;
+  background:#bdbfc2;
+}
+.app-shell .clo-inspector .clo-pe-edit-field>input.clo-pe-edit-slider,
+.app-shell .clo-inspector .clo-pe-zipper-slider input[type=range] {
+  width:100%;height:16px;min-height:16px;background:transparent;border:0;
+  padding:0;cursor:ew-resize;
+}
+.app-shell .clo-inspector .clo-pe-edit-field .clo-pe-edit-input>span {
+  color:#a9aaad;font-size:9px;
+}
+.app-shell .clo-inspector .clo-pe-identity input[readonly] {
+  background:#323335;color:#a8aaad;border-color:#4e4f51;border-style:solid;
+}
+.app-shell .clo-inspector .clo-pe-unit-selection {
+  background:#333436;border-bottom:1px solid var(--pe-line);
+  color:#bcbec1;font-size:10px;padding:6px 11px;
+}
+.app-shell .clo-inspector .clo-pe-native-seam-picker {
+  background:#323335;border-bottom:1px solid var(--pe-line);color:#bcbec1;
+}
+.app-shell .clo-inspector .clo-pe-line-settings,
+.app-shell .clo-inspector .clo-pe-existing-properties,
+.app-shell .clo-inspector .clo-pe-typed-fields,
+.app-shell .clo-inspector .clo-pe-material-faces {
+  border-color:var(--pe-hairline);
+}
+.app-shell .clo-inspector .clo-pe-line-subheading,
+.app-shell .clo-inspector .clo-pe-subtrigger {
+  color:#d3d4d6;font-size:10px;font-weight:650;letter-spacing:.035em;
+}
+.app-shell .clo-inspector .clo-pe-subtrigger {
+  border-color:var(--pe-hairline);
+}
+.app-shell .clo-inspector .clo-pe-subtrigger:hover {
+  background:var(--pe-raised);color:#fff;
+}
+.app-shell .clo-inspector .clo-pe-material-faces button {
+  background:#343537;color:#b1b3b6;border-right:1px solid #48494c;
+}
+.app-shell .clo-inspector .clo-pe-material-faces button[aria-selected=true] {
+  background:#545558;color:#fff;border-bottom:2px solid #bcbfc2;
+}
+.app-shell .clo-inspector .clo-pe-actions button,
+.app-shell .clo-inspector .clo-pe-action,
+.app-shell .clo-inspector .clo-pe-line-target button {
+  border:1px solid #636467;border-radius:3px;
+  min-height:29px;background:#444548;color:#e6e7e8;
+  font-size:10px;font-weight:570;box-shadow:none;
+}
+.app-shell .clo-inspector .clo-pe-actions button:hover,
+.app-shell .clo-inspector .clo-pe-action:hover,
+.app-shell .clo-inspector .clo-pe-line-target button:hover {
+  background:#57585b;color:#fff;
+}
+.app-shell .clo-inspector .clo-pe-empty {color:#b7b8ba;background:#313234;}
+.app-shell .clo-inspector .clo-pe-field-error {color:#e7afaa;}
+.app-shell .clo-inspector .clo-pe-zipper-slider,
+.app-shell .clo-inspector .clo-pe-zipper-seam {color:#b9bbbe;}
+.app-shell .clo-inspector .clo-pe-zipper-closure-bar {
+  background:#555659;
+}
+.app-shell .clo-inspector .clo-pe-zipper-closure-bar>span {
+  background:#adafb2;
+}
+.app-shell .clo-inspector .clo-pe-material-mode {
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  min-height:31px;padding:0 5px;color:#cdd0d2;font-size:11px;
+}
+.app-shell .clo-inspector .clo-pe-material-mode strong {
+  display:flex;justify-content:space-between;align-items:center;
+  width:52%;min-height:27px;padding:2px 9px;box-sizing:border-box;
+  background:#292a2c;border:1px solid #525356;font-weight:550;
+  color:#e6e7e8;border-radius:3px;
+}
+.app-shell .clo-inspector .clo-pe-gray-row,
+.app-shell .clo-inspector .clo-pe-gray-row:nth-of-type(even) {
+  background:var(--pe-canvas);border-bottom-color:var(--pe-hairline);
+}
+.app-shell .clo-inspector .clo-pe-gray-row>label{color:#d1d2d4;}
+.app-shell .clo-inspector .clo-pe-material-faces {gap:1px;}
+.app-shell .clo-inspector .clo-pe-material-faces {
+  display:flex;justify-content:flex-start;
+}
+.app-shell .clo-inspector .clo-pe-material-faces button {
+  min-width:52px;padding-inline:10px;
+}
+.app-shell .clo-inspector .clo-pe-material-faces button[aria-selected=true] {
+  border-bottom-color:#c3c5c8;
+}
+/* Library hardware styles are project-backed, not a second visual system. */
+.app-shell .clo-inspector .exo-hardware-properties {
+  gap:0;padding:3px 0 8px;
+}
+.app-shell .clo-inspector .exo-hardware-property-field {
+  border-bottom:1px solid var(--pe-hairline);
+  grid-template-columns:minmax(91px,1fr) minmax(115px,1.25fr);
+  gap:5px 9px;min-height:35px;padding:7px 2px;
+}
+.app-shell .clo-inspector .exo-hardware-property-field>label{
+  color:var(--pe-muted);font-size:10px;
+}
+.app-shell .clo-inspector .exo-hardware-property-number span,
+.app-shell .clo-inspector .exo-hardware-color-edit,
+.app-shell .clo-inspector .exo-hardware-property-readout {color:#afb1b4;}
+.app-shell .clo-inspector .exo-hardware-property-field input[type=number],
+.app-shell .clo-inspector .exo-hardware-property-field input[type=text],
+.app-shell .clo-inspector .exo-hardware-property-field input[type=color] {
+  min-height:27px;border:1px solid #5a5b5e;border-radius:3px;
+  background:var(--pe-control);color:var(--pe-text);
+}
+.app-shell .clo-inspector .exo-hardware-property-field input[type=range] {
+  accent-color:#b7b9bd;
+}
+@media(max-width:1220px){
+  .app-shell .clo-inspector .clo-pe-edit-field {grid-template-columns:minmax(76px,.95fr) minmax(105px,1.3fr);gap:5px}
+  .app-shell .clo-inspector .clo-pe-content {padding-inline:9px}
+}
+
+/* Fabric inspector: CLO-inspired material rows. Map buttons only expose actions
+   that actually mutate an assigned project image or show its real preview. */
+.app-shell .clo-inspector .clo-pe-texture-repeat-controls{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;
+  padding:5px 2px 8px;border-bottom:1px solid var(--pe-hairline)
+}
+.app-shell .clo-inspector .clo-pe-fabric-mode-select{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(110px,56%);
+  align-items:center;gap:7px;min-height:31px;padding:3px 3px;
+  border-bottom:1px solid var(--pe-hairline);font-size:10px;color:#cbccce;
+}
+.app-shell .clo-inspector .clo-pe-fabric-mode-select select{
+  width:100%;min-width:0;min-height:24px;padding:2px 22px 2px 7px;
+  border:1px solid #515255;border-radius:1px;background:#292a2c;
+  color:#e4e5e6;font-size:11px;opacity:1;cursor:default;
+}
+.app-shell .clo-inspector .clo-pe-texture-repeat-controls label{
+  display:flex;flex-direction:column;min-width:0;gap:4px;
+  font-size:10px;color:#c3c5c7;line-height:1.3
+}
+.app-shell .clo-inspector .clo-pe-texture-repeat-controls input[type=number]{
+  display:block;box-sizing:border-box;width:100%;min-width:0;
+  min-height:27px;padding:4px 6px;background:#2b2c2e;
+  border:1px solid #55575a;border-radius:2px;color:#e2e4e6;
+  font-size:11px;font-variant-numeric:tabular-nums
+}
+.app-shell .clo-inspector .clo-pe-texture-repeat-controls input:focus{
+  border-color:#79bbdb;outline:1px solid #79bbdb66
+}
+.app-shell .clo-inspector .clo-pe-fabric-map-row {
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  min-height:30px;border-bottom:1px solid var(--pe-hairline);padding:3px 0;
+}
+.app-shell .clo-inspector .clo-pe-fabric-map-label {
+  display:flex;align-items:center;gap:6px;min-width:0;
+  flex:1;border:0;padding:3px 1px;background:transparent;text-align:left;
+  font-size:10px;color:#d1d2d4;cursor:pointer;
+}
+.app-shell .clo-inspector .clo-pe-fabric-map-label>span {flex:1;min-width:0;}
+.app-shell .clo-inspector .clo-pe-fabric-map-thumb {
+  width:24px;height:22px;object-fit:cover;border:1px solid #656569;flex:0 0 24px;
+}
+.app-shell .clo-inspector .clo-pe-fabric-map-label svg {color:#bbbcbf;flex:none;}
+.app-shell .clo-inspector .clo-pe-fabric-map-actions {
+  display:flex;align-items:center;gap:3px;flex-shrink:0;
+}
+.app-shell .clo-inspector .clo-pe-fabric-map-actions button {
+  display:grid;place-items:center;width:21px;height:21px;padding:0;
+  border:1px solid #555659;border-radius:2px;background:#37383a;
+  color:#aeb0b3;font-size:13px;
+}
+.app-shell .clo-inspector .clo-pe-fabric-map-actions button:not(:disabled) {cursor:pointer;}
+.app-shell .clo-inspector .clo-pe-fabric-map-actions button:not(:disabled):hover {
+  color:#fff;background:#4c4d50;
+}
+.app-shell .clo-inspector .clo-pe-fabric-map-preview {
+  padding:10px 7px;display:flex;flex-direction:column;align-items:stretch;
+  gap:7px;border-bottom:1px solid var(--pe-hairline);background:#292a2b;
+}
+.app-shell .clo-inspector .clo-pe-fabric-map-preview[hidden] {display:none!important;}
+.app-shell .clo-inspector .clo-pe-fabric-map-preview img {
+  display:block;max-height:180px;max-width:100%;object-fit:contain;align-self:center;
+  background:#212123;border:1px solid #525356;
+}
+.app-shell .clo-inspector .clo-pe-fabric-map-preview span {
+  color:#bcbec1;font-size:10px;line-height:1.4;
+}
+.app-shell .clo-inspector .clo-pe-physical-preset {
+  display:grid;grid-template-columns:minmax(84px,1fr) minmax(118px,1.35fr);
+  gap:7px;align-items:center;border-bottom:1px solid var(--pe-hairline);
+  min-height:34px;font-size:10px;color:var(--pe-muted);
+}
+.app-shell .clo-inspector .clo-pe-physical-preset strong {
+  display:block;padding:6px 8px;background:var(--pe-control);
+  border:1px solid #555659;border-radius:3px;color:var(--pe-text);font-weight:500;
+}

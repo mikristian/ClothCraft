@@ -1,0 +1,15 @@
+[package]
+name = "exo-strain-kernel"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Physical principal extension and per-vertex strain display in Rust/WASM"
+
+[lib]
+crate-type = ["rlib", "cdylib"]
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "abort"

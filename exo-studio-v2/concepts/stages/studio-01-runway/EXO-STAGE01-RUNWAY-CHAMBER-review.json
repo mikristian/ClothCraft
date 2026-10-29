@@ -1,0 +1,24 @@
+{
+  "stageId": "EXO-STAGE01-RUNWAY-CHAMBER-V1-REVIEW",
+  "reference": "CLO Stage_01.zprj (inspected, unchanged)",
+  "studioFootprintMeters": [
+    11.1,
+    15.2
+  ],
+  "heightMeters": 6.5,
+  "avatarOrigin": [
+    0,
+    0,
+    0
+  ],
+  "walkableSurfaceMeters": 0,
+  "stageObjects": 837,
+  "referenceActorExcludedFromGlb": true,
+  "integratedIntoApp": false,
+  "cameraViews": [
+    "hero",
+    "front",
+    "overview",
+    "side"
+  ]
+}

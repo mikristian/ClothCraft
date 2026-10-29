@@ -1,0 +1,36 @@
+.tp-annotation { --tp-accent: #cfc6ff; color: #ededf1; background: #1a1b20; border: 1px solid #3d3e46; border-radius: 14px; overflow: hidden; font: 13px/1.45 Inter, system-ui, sans-serif; }
+.tp-annotation * { box-sizing: border-box; }
+.tp-annotation button, .tp-annotation textarea { font: inherit; }
+.tp-annotation button { cursor: pointer; color: #ececf0; border: 1px solid #51515c; background: #303138; border-radius: 7px; padding: 8px 11px; }
+.tp-annotation button:hover:not(:disabled) { background: #43434f; }
+.tp-annotation button:disabled { opacity: .45; cursor: not-allowed; }
+.tp-annotation button:focus-visible, .tp-annotation textarea:focus-visible, .tp-annotation svg [tabindex]:focus-visible { outline: 2px solid var(--tp-accent); outline-offset: 3px; }
+.tp-annotation-toolbar { padding: 13px 16px; display: flex; gap: 12px; justify-content: space-between; align-items: center; border-bottom: 1px solid #3d3e46; flex-wrap: wrap; }
+.tp-annotation-modes { display: flex; gap: 6px; flex-wrap: wrap; }
+.tp-annotation-modes button[aria-pressed='true'] { background: #51456c; border-color: #a99ae5; }
+.tp-annotation-file { display: none; }
+.tp-annotation-error { color: #ffb1ba; padding: 0 16px; margin: 12px 0; }
+.tp-annotation-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(210px, 265px); min-height: 300px; }
+.tp-annotation-stage { padding: clamp(12px, 3vw, 25px); background: #272830; min-width: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.tp-annotation-stage svg { display: block; max-width: 100%; max-height: 72vh; width: auto; height: auto; aspect-ratio: auto; background: #f7f7f6; border: 1px solid #b4b4bb; box-shadow: 0 6px 22px #0004; touch-action: none; }
+.tp-annotation-stage svg image { pointer-events: none; }
+.tp-annotation-stage svg .tp-annotation-pin { cursor: grab; }
+.tp-annotation-stage svg .tp-annotation-pin:active { cursor: grabbing; }
+.tp-annotation-shape circle[role='button'] { cursor: move; }
+.tp-annotation-tip { max-width: 650px; color: #c1c0cb; text-align: center; font-size: 11px; margin: 12px 0 0; }
+.tp-annotation-sidebar { padding: 18px 14px; border-left: 1px solid #3f4049; min-width: 0; }
+.tp-annotation-sidebar h3 { font-size: 13px; font-weight: 700; margin: 0 0 12px; display: flex; justify-content: space-between; }
+.tp-annotation-sidebar h3 span { color: #c2b7f9; }
+.tp-annotation-list { display: flex; flex-direction: column; gap: 6px; max-height: 300px; overflow: auto; }
+.tp-annotation-list > button { display: flex; align-items: center; gap: 9px; width: 100%; text-align: left; padding: 9px; }
+.tp-annotation-list > button.is-active { background: #423956; border-color: #a697e0; }
+.tp-annotation-list strong { border-radius: 50%; color: white; background: #6651a8; font-size: 11px; width: 24px; height: 24px; flex: none; display: grid; place-items: center; }
+.tp-annotation-list span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.tp-annotation-list small { color: #aaa8b5; }
+.tp-annotation-list p { color: #b8b6c4; margin: 5px 0; }
+.tp-annotation-inspector { margin-top: 22px; padding-top: 16px; border-top: 1px solid #484953; display: flex; flex-direction: column; gap: 9px; }
+.tp-annotation-inspector label { color: #dddae8; font-weight: 600; }
+.tp-annotation-inspector textarea { width: 100%; min-width: 0; resize: vertical; color: #f6f6f7; background: #25262d; border: 1px solid #585864; border-radius: 7px; padding: 10px; }
+.tp-annotation-inspector-actions { display: flex; justify-content: flex-end; }
+.tp-annotation-inspector-actions button { color: #ffd4d4; }
+@media (max-width: 800px) { .tp-annotation-layout { grid-template-columns: 1fr; } .tp-annotation-sidebar { border-left: 0; border-top: 1px solid #3f4049; } .tp-annotation-stage svg { max-height: 60vh; } }

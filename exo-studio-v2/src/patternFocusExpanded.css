@@ -1,0 +1,410 @@
+/* Legacy EXO pattern/size grading studio. Native ClothCraft has a separate
+ * focused layout in ClothCraftPatternStudio.css. In both views authoritative
+ * geometry remains in the original editor; no cross-window project copies. */
+.app-shell.pattern-focus-expanded{position:fixed;inset:0;height:100dvh;width:100vw;overflow:hidden;z-index:5000}
+.app-shell.pattern-focus-expanded .main-layout.clo-adjustable-panels,.app-shell.pattern-focus-expanded .desktop-workspace .main-layout.clo-adjustable-panels{display:grid;grid-template-columns:26px minmax(0,1fr) minmax(320px,390px)!important;grid-template-rows:minmax(0,1fr);min-height:0;min-width:0;overflow:hidden}
+.app-shell.pattern-focus-expanded .main-layout>.asset-browser,.app-shell.pattern-focus-expanded .main-layout>.tool-rail{display:none!important}
+.app-shell.pattern-focus-expanded .main-layout>.clo-edge-tabs{grid-column:1;min-width:0}
+.app-shell.pattern-focus-expanded .main-layout>.workspaces{grid-column:2;min-width:0;min-height:0;display:grid;grid-template-columns:minmax(0,1fr)!important}
+.app-shell.pattern-focus-expanded .main-layout>.clo-inspector{grid-column:3;min-width:0;display:flex!important;visibility:visible!important;pointer-events:auto!important;overflow-y:auto}
+.app-shell.pattern-focus-expanded .main-layout>.workspaces>.viewport-shell{display:none!important}
+.app-shell.pattern-focus-expanded .main-layout>.workspaces>.pattern-editor-shell{display:flex!important;min-width:0;min-height:0}
+.app-shell.pattern-focus-expanded .main-layout>.workspaces>.clo-viewport-resizer{display:none!important}
+.app-shell.pattern-focus-expanded .clo-window-mode-select{border-color:#98b4c0;color:#eef4f6}
+@media(max-width:1050px){.app-shell.pattern-focus-expanded .main-layout.clo-adjustable-panels{grid-template-columns:24px minmax(0,1fr) 290px!important}}
+/* Reversible edge controls and automatic pattern/grading workspace. */
+.main-layout.clo-adjustable-panels{position:relative}
+.main-layout.clo-adjustable-panels .exo-panel-edge-toggle{position:absolute;top:6px;z-index:35;width:19px;height:24px;display:grid;place-items:center;border:1px solid var(--studio-divider,#555);border-radius:5px;background:var(--studio-sidebar,#303139);color:var(--studio-text,#eee);cursor:pointer}
+.exo-library-edge-toggle{left:calc(25px + var(--effective-library-width,232px) - 10px)}
+.exo-left-tools-edge-toggle{left:calc(25px + var(--effective-library-width,232px) + 62px)}
+.exo-inspector-edge-toggle{right:calc(var(--effective-inspector-width,392px) - 10px)}
+.exo-right-tools-edge-toggle{right:5px}
+.exo-object-browser-toggle{width:100%;display:flex;align-items:center;justify-content:flex-start;gap:5px;min-height:25px;padding:2px 8px;font-size:10px;letter-spacing:.09em;color:var(--studio-text,#eee);border-bottom:1px solid var(--studio-divider,#555)}
+.main-layout.clo-adjustable-panels[data-left-tools-collapsed="true"]{grid-template-columns:25px minmax(0,var(--effective-library-width,232px)) 23px minmax(0,1fr) minmax(0,var(--effective-inspector-width,392px))}
+.main-layout[data-left-tools-collapsed="true"]>.tool-rail>*{display:none!important}
+.main-layout[data-left-tools-collapsed="true"] .exo-left-tools-edge-toggle{left:calc(25px + var(--effective-library-width,232px) + 3px)}
+.main-layout[data-pattern-workspace="true"] .tool-rail>.clo-rail-section:first-child{padding-top:28px}
+.main-layout[data-pattern-workspace="true"] .exo-2d-workspace-shortcuts{display:flex;flex-direction:column;gap:4px}
+@media(max-width:1250px){.main-layout.clo-adjustable-panels[data-left-tools-collapsed="true"]{grid-template-columns:23px minmax(0,min(var(--effective-library-width,232px),165px)) 23px minmax(0,1fr) minmax(0,min(var(--effective-inspector-width,392px),330px))}}
+/* Full 2D remains inside the familiar black EXO chrome: shared pattern tools and object browser stay visible. */
+.app-shell.pattern-focus-expanded .main-layout.clo-adjustable-panels,.app-shell.pattern-focus-expanded .desktop-workspace .main-layout.clo-adjustable-panels{grid-template-columns:25px minmax(0,var(--effective-library-width,232px)) 72px minmax(0,1fr) minmax(320px,var(--effective-inspector-width,392px))!important}
+.app-shell.pattern-focus-expanded .main-layout>.asset-browser,.app-shell.pattern-focus-expanded .main-layout>.tool-rail{display:flex!important;visibility:visible!important}
+.app-shell.pattern-focus-expanded .main-layout>.asset-browser[hidden]{visibility:hidden!important;pointer-events:none!important}
+.app-shell.pattern-focus-expanded .main-layout>.asset-browser{grid-column:2;min-width:0;background:#222326}
+.app-shell.pattern-focus-expanded .main-layout>.tool-rail{grid-column:3;min-width:0;background:#242426}
+.app-shell.pattern-focus-expanded .main-layout>.workspaces{grid-column:4}
+.app-shell.pattern-focus-expanded .main-layout>.clo-inspector{grid-column:5;background:#262628}
+.app-shell.pattern-focus-expanded .main-layout[data-left-tools-collapsed="true"]{grid-template-columns:25px minmax(0,var(--effective-library-width,232px)) 23px minmax(0,1fr) minmax(320px,var(--effective-inspector-width,392px))!important}
+.app-shell.pattern-focus-expanded .main-layout[data-left-tools-collapsed="true"]>.tool-rail>*{display:none!important}
+/* Small flush arrows at the ends of the existing dark/liquid-glass horizontal panel headers. */
+.main-layout.clo-adjustable-panels .exo-panel-edge-toggle{top:3px;width:17px;height:19px;border:0;border-radius:3px;background:transparent;color:var(--studio-icon,#aaa);box-shadow:none;padding:0}
+.main-layout.clo-adjustable-panels .exo-panel-edge-toggle:hover{background:rgba(255,255,255,.10);color:#fff}
+.main-layout.clo-adjustable-panels .exo-library-edge-toggle{left:calc(25px + var(--effective-library-width,232px) - 21px)}
+.main-layout.clo-adjustable-panels .exo-left-tools-edge-toggle{left:calc(25px + var(--effective-library-width,232px) + 50px)}
+.main-layout.clo-adjustable-panels .exo-inspector-edge-toggle{right:calc(var(--effective-inspector-width,392px) - 20px)}
+.main-layout.clo-adjustable-panels .exo-right-tools-edge-toggle{right:8px}
+.main-layout.clo-adjustable-panels .exo-object-browser-toggle{justify-content:flex-end;min-height:23px;padding:2px 8px;border:0;background:transparent;color:#c6c6c6;font-size:10px}
+.main-layout.clo-adjustable-panels .exo-grade-workbench-actions{display:flex;flex-direction:column;gap:3px;border-bottom:1px solid #414144;padding-bottom:6px}
+.main-layout.clo-adjustable-panels .exo-grade-workbench-actions button{background:#252528;color:#d4d4d4;border-radius:4px}
+.main-layout.clo-adjustable-panels .exo-grade-workbench-actions button:hover:not(:disabled){background:#38383c;color:#fff}
+@media(max-width:1050px){.app-shell.pattern-focus-expanded .main-layout.clo-adjustable-panels{grid-template-columns:23px 150px 64px minmax(0,1fr) 290px!important}}
+/* Final layout alignment: arrow controls sit on the horizontal top strips.
+   Keep the glass control minimal while retaining a 24px pointer target. */
+.main-layout.clo-adjustable-panels>.exo-panel-edge-toggle{top:3px;width:23px;height:23px;border:none;box-shadow:none;border-radius:3px;background:transparent;color:var(--studio-text,#d6d6d6);padding:0;z-index:65}
+.main-layout.clo-adjustable-panels>.exo-panel-edge-toggle svg{width:13px;height:13px}
+.main-layout.clo-adjustable-panels>.exo-library-edge-toggle{left:calc(25px + var(--effective-library-width,232px) - 25px)}
+.main-layout.clo-adjustable-panels>.exo-left-tools-edge-toggle{left:calc(25px + var(--effective-library-width,232px) + 46px)}
+.main-layout.clo-adjustable-panels>.exo-inspector-edge-toggle{right:calc(var(--effective-inspector-width,392px) - 24px)}
+.main-layout.clo-adjustable-panels>.exo-right-tools-edge-toggle{right:1px;top:3px}
+.main-layout.clo-adjustable-panels .exo-object-browser-toggle{position:absolute;top:0;right:0;z-index:6;width:25px;height:25px;min-height:25px;display:grid;place-items:center;padding:0;border:none;background:transparent;color:#d8d8d8}
+.main-layout.clo-adjustable-panels .exo-object-browser-toggle>svg{width:13px;height:13px}
+.main-layout.clo-adjustable-panels .exo-object-browser-toggle:hover{background:#383838}
+.main-layout.clo-adjustable-panels .clo-inspector-content{position:relative}
+.main-layout.clo-adjustable-panels .clo-object-browser>.clo-panel-header{padding-right:27px}
+.main-layout.clo-adjustable-panels[data-left-tools-collapsed="true"]>.exo-left-tools-edge-toggle{left:calc(25px + var(--effective-library-width,232px) + 1px)}
+@media(max-width:1250px){
+ .main-layout.clo-adjustable-panels>.exo-library-edge-toggle{left:calc(23px + min(var(--effective-library-width,232px),165px) - 25px)}
+ .main-layout.clo-adjustable-panels>.exo-left-tools-edge-toggle{left:calc(23px + min(var(--effective-library-width,232px),165px) + 40px)}
+ .main-layout.clo-adjustable-panels>.exo-inspector-edge-toggle{right:calc(min(var(--effective-inspector-width,392px),330px) - 24px)}
+}
+/* Separate the inspector's toolbar control from the Object Browser header.
+   The former belongs on the outer inspector edge, the latter in its own top row. */
+.main-layout.clo-adjustable-panels .exo-right-tools-edge-toggle{top:31px!important;right:2px!important;z-index:45}
+.main-layout.clo-adjustable-panels .exo-object-browser-toggle{top:0!important;right:0!important;z-index:10}
+/* The single reversible grading arrow belongs to the end of the top glass bar. */
+.app-shell .clo-header-secondary-tools{position:relative;padding-right:31px}
+.app-shell .clo-header-secondary-tools>.exo-glass-grading-toggle{position:absolute;right:3px;top:50%;transform:translateY(-50%);z-index:95;width:23px;height:23px;min-width:23px;display:grid;place-items:center;padding:0;border:0;border-radius:4px;color:var(--studio-text,#dedee0);background:transparent;box-shadow:none;cursor:pointer}
+.app-shell .clo-header-secondary-tools>.exo-glass-grading-toggle:hover,.app-shell .clo-header-secondary-tools>.exo-glass-grading-toggle:focus-visible{background:rgba(255,255,255,.12);outline:1px solid rgba(255,255,255,.25)}
+.app-shell .clo-header-secondary-tools>.exo-glass-grading-toggle[aria-pressed="true"]{color:#fff;background:rgba(255,255,255,.09)}
+/* Grading studio switch sits at the far-left end of the 2D pane's horizontal
+   header, rather than the application-wide toolbar or a floating dark square. */
+.workspaces.cc-rust-embedded>.exo-pattern-studio-header-arrow{position:absolute;top:3px;left:4px;z-index:85;display:grid;place-items:center;width:23px;height:23px;min-width:23px;padding:0;border:0;border-radius:3px;box-shadow:none;background:transparent;color:#44525b;cursor:pointer}
+.workspaces.cc-rust-embedded>.exo-pattern-studio-header-arrow:hover,.workspaces.cc-rust-embedded>.exo-pattern-studio-header-arrow:focus-visible{background:rgba(48,63,76,.12);color:#1d2d36;outline:1px solid rgba(55,73,87,.24)}
+.workspaces.cc-rust-embedded>.exo-pattern-studio-header-arrow[aria-pressed="true"]{color:#283e4d}
+/* Keep a strip for the toggle inside the real native 2D viewport heading. */
+.workspaces.cc-rust-embedded>.cc-embedded-root .cc-viewport-2d>h2{padding-left:29px}
+/* Collapsed panes must keep their arrows accessible even with a zero-width pane. */
+.main-layout.clo-adjustable-panels[data-library-visible="false"]>.exo-library-edge-toggle{left:26px!important}
+.main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.exo-inspector-edge-toggle{right:3px!important}
+.main-layout.clo-adjustable-panels[data-left-tools-collapsed="true"]>.exo-left-tools-edge-toggle{left:calc(25px + var(--effective-library-width,232px) + 1px)!important}
+/* Final reversible panel geometry. Each collapsed column is a 24px tab, not
+   the previous full-width black placeholder. Five explicit grid tracks persist
+   so neighboring tools do not fall into an empty or incorrect column. */
+.main-layout.clo-adjustable-panels,.desktop-workspace .main-layout.clo-adjustable-panels{--exo-left-tab:24px;--exo-tool-width:72px;--exo-right-tab:24px;grid-template-columns:25px minmax(0,var(--effective-library-width,232px)) var(--exo-tool-width) minmax(0,1fr) minmax(0,var(--effective-inspector-width,392px))!important}
+.main-layout.clo-adjustable-panels[data-library-visible="false"]{--effective-library-width:24px!important}
+.main-layout.clo-adjustable-panels[data-inspector-visible="false"]{--effective-inspector-width:24px!important}
+.main-layout.clo-adjustable-panels[data-left-tools-collapsed="true"]{--exo-tool-width:24px}
+.main-layout.clo-adjustable-panels[data-left-tools-collapsed="true"]>.tool-rail{overflow:hidden;visibility:hidden;pointer-events:none}
+.main-layout.clo-adjustable-panels[data-library-visible="false"]>.asset-browser,
+.main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.clo-inspector{visibility:hidden!important;pointer-events:none!important}
+.main-layout.clo-adjustable-panels>.exo-library-edge-toggle{left:calc(25px + var(--effective-library-width,232px) - 24px)!important}
+.main-layout.clo-adjustable-panels>.exo-left-tools-edge-toggle{left:calc(25px + var(--effective-library-width,232px) + var(--exo-tool-width) - 24px)!important}
+.main-layout.clo-adjustable-panels>.exo-inspector-edge-toggle{right:calc(var(--effective-inspector-width,392px) - 24px)!important}
+.main-layout.clo-adjustable-panels>.exo-right-tools-edge-toggle{right:3px!important;top:31px!important}
+.main-layout.clo-adjustable-panels>.exo-panel-edge-toggle{width:23px;height:23px;visibility:visible!important;pointer-events:auto!important;background:rgba(36,37,40,.45);border-radius:3px;z-index:120}
+.main-layout.clo-adjustable-panels>.exo-panel-edge-toggle:hover{background:rgba(90,95,103,.55)}
+.main-layout.clo-adjustable-panels[data-right-tools-collapsed="true"] .clo-right-tool-palette{display:none!important}
+.main-layout.clo-adjustable-panels[data-right-tools-collapsed="true"] .clo-inspector-content{flex:1;min-width:0}
+@media(max-width:1250px){.main-layout.clo-adjustable-panels,.desktop-workspace .main-layout.clo-adjustable-panels{--exo-tool-width:64px;grid-template-columns:23px minmax(0,var(--effective-library-width,232px)) var(--exo-tool-width) minmax(0,1fr) minmax(0,var(--effective-inspector-width,392px))!important}.main-layout.clo-adjustable-panels[data-left-tools-collapsed="true"]{--exo-tool-width:24px}.main-layout.clo-adjustable-panels>.exo-library-edge-toggle{left:calc(23px + var(--effective-library-width,232px) - 24px)!important}.main-layout.clo-adjustable-panels>.exo-left-tools-edge-toggle{left:calc(23px + var(--effective-library-width,232px) + var(--exo-tool-width) - 24px)!important}}
+/* Industrial grading compact left rail: tools stay usable without masking 2D. */
+.main-layout[data-pattern-workspace="true"] .exo-grade-workbench-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px;padding:4px 2px}
+.main-layout[data-pattern-workspace="true"] .exo-grade-workbench-actions>button{display:grid;place-items:center;min-width:0;min-height:26px;padding:3px;border:1px solid transparent;border-radius:3px;background:transparent;color:var(--studio-text,#ddd);cursor:pointer}
+.main-layout[data-pattern-workspace="true"] .exo-grade-workbench-actions>button.active,.main-layout[data-pattern-workspace="true"] .exo-grade-workbench-actions>button[aria-pressed="true"]{background:rgba(125,156,175,.24);border-color:rgba(159,188,204,.5)}
+.main-layout[data-pattern-workspace="true"] .exo-2d-workspace-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px;padding:3px 2px;max-height:142px;overflow-y:auto}
+.main-layout[data-pattern-workspace="true"] .exo-2d-workspace-shortcuts>button{min-width:0;min-height:23px;display:grid;place-items:center;border:0;border-radius:3px;background:transparent;color:var(--studio-text,#ddd);cursor:pointer}
+.main-layout[data-pattern-workspace="true"] .exo-2d-workspace-shortcuts>button.active{background:rgba(125,156,175,.25)}
+.main-layout[data-pattern-workspace="true"] .exo-grade-size-label{font-size:8px;font-weight:750;letter-spacing:-.03em}
+.main-layout[data-pattern-workspace="true"] .exo-grade-left-qa{font-size:8px;line-height:1.3;padding:5px 3px;color:var(--studio-text,#ddd)}
+.main-layout[data-pattern-workspace="true"]>.tool-rail{overflow-y:auto;overflow-x:hidden;scrollbar-width:thin}
+.main-layout[data-pattern-workspace="true"] .clo-left-secondary-bars{overflow:visible;max-height:none}
+/* Scope to the two-column outer rail; inner grids must occupy BOTH parent
+   tracks or their second column overflows across adjacent click targets. */
+.main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.tool-rail>.exo-grade-workbench-actions,
+.main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.tool-rail>.exo-2d-workspace-shortcuts,
+.main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.tool-rail>.exo-grade-left-qa,
+.main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.tool-rail>.clo-left-secondary-bars{grid-column:1 / -1;width:100%;min-width:0;box-sizing:border-box}
+.main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.tool-rail>.exo-grade-workbench-actions>button,
+.main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.tool-rail>.exo-2d-workspace-shortcuts>button{width:100%;max-width:100%;height:29px}
+/* Real native vector freehand / Bézier / cut-and-sewn dart controls. */
+.main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.tool-rail>.exo-2d-vector-dart-tools{grid-column:1 / -1;width:100%;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px;padding:3px 2px;box-sizing:border-box}
+.main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.tool-rail>.exo-2d-vector-dart-tools>button{display:grid;place-items:center;width:100%;height:29px;min-width:0;border:1px solid rgba(135,154,168,.25);border-radius:3px;background:rgba(109,128,147,.06);color:var(--studio-text,#ddd);cursor:pointer}
+.main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.tool-rail>.exo-2d-vector-dart-tools>button:hover{background:rgba(135,154,168,.28)}
+
+/* Keep the full-view size run below the primary tools, each in its own row.
+   Two-column rail grids must not put XX(L) into a neighbouring tool label. */
+.app-shell .main-layout[data-pattern-workspace="true"]>.tool-rail>.exo-grade-nest-toggle,
+.app-shell .main-layout[data-pattern-workspace="true"]>.tool-rail>.exo-2d-workspace-shortcuts{
+  position:relative;grid-column:1/-1;box-sizing:border-box;width:100%;min-width:0;max-width:100%;margin:0;
+  padding:6px 4px;border-top:1px solid rgba(232,245,255,.20);background:transparent;overflow:visible;
+}
+.app-shell .main-layout[data-pattern-workspace="true"]>.tool-rail>.exo-grade-nest-toggle{display:block}
+.app-shell .main-layout[data-pattern-workspace="true"]>.tool-rail>.exo-grade-nest-toggle>button{display:grid;gap:2px;place-items:center;width:100%;min-height:41px;padding:4px 1px;border:1px solid rgba(243,253,255,.36);border-radius:9px;background:color-mix(in srgb,var(--exo-2d-toolbar-glass,#c0edff) 9%,transparent);color:var(--exo-2d-toolbar-ink,#dcefff);font-size:9px;font-weight:750;line-height:1.25;white-space:normal;cursor:pointer}
+.app-shell .main-layout[data-pattern-workspace="true"]>.tool-rail>.exo-grade-nest-toggle>button span{font-size:9px;opacity:.8}
+.app-shell .main-layout[data-pattern-workspace="true"]>.tool-rail>.exo-grade-nest-toggle>button[aria-pressed="true"]{background:color-mix(in srgb,var(--exo-2d-toolbar-glass,#c0edff) 19%,transparent);box-shadow:inset 0 1px #ffffff50,0 0 12px #ffffff12}
+.app-shell .main-layout[data-pattern-workspace="true"]>.tool-rail>.exo-2d-workspace-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;max-height:none;overflow:visible}
+.app-shell .main-layout[data-pattern-workspace="true"]>.tool-rail>.exo-2d-workspace-shortcuts>button{min-width:0;width:100%;height:32px;min-height:32px;padding:0;white-space:nowrap;line-height:1;border:1px solid rgba(235,249,255,.24);border-radius:8px;background:color-mix(in srgb,var(--exo-2d-toolbar-glass,#c0edff) 7%,transparent);color:var(--exo-2d-toolbar-ink,#dcefff);font-size:10px}
+.app-shell .main-layout[data-pattern-workspace="true"]>.tool-rail>.exo-2d-workspace-shortcuts>button.active{background:color-mix(in srgb,var(--exo-2d-toolbar-glass,#c0edff) 24%,transparent);border-color:color-mix(in srgb,var(--exo-2d-toolbar-ink,#dcefff) 58%,transparent)}
+.app-shell .main-layout[data-pattern-workspace="true"]>.tool-rail>.exo-2d-workspace-shortcuts .exo-grade-size-label{font-size:10px;letter-spacing:0;font-weight:750}
+/* Native full-width 2D: make the existing right rail four equally sized icon
+   columns. Pattern Studio (new 1–2) precedes the original reference A/B (3–4). */
+.main-layout.clo-adjustable-panels[data-pattern-workspace="true"] .clo-inspector:has(.exo-four-column-pattern-toolbar){min-width:0}
+.main-layout.clo-adjustable-panels[data-pattern-workspace="true"] .clo-right-tool-palette.exo-four-column-pattern-toolbar .clo-reference-dual-bars.clo-observed-bars{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.main-layout.clo-adjustable-panels[data-pattern-workspace="true"] .clo-right-tool-palette.exo-four-column-pattern-toolbar .clo-tool-palette-group-divider{font-size:8px}
+.main-layout.clo-adjustable-panels[data-pattern-workspace="true"] .clo-right-tool-palette.exo-four-column-pattern-toolbar .clo-reference-column:nth-child(2){border-right:2px solid #5f6974}
+/* Keep the Object Browser's arrow independent of the Pattern Studio/2D icons.
+   No toggle here changes inspector visibility or the palette mounting. */
+.main-layout[data-pattern-workspace="true"] .exo-independent-object-browser-toggle{display:flex!important;align-items:center;justify-content:space-between!important;width:100%;min-height:26px;padding:3px 9px;background:#282d34;border-bottom:1px solid #576575;color:#dce8f4;cursor:pointer}
+.main-layout[data-pattern-workspace="true"] .exo-independent-object-browser-toggle:before{content:'OBJECT BROWSER';font-size:9px;font-weight:700;letter-spacing:.07em}
+.main-layout[data-pattern-workspace="true"] .exo-independent-object-browser-toggle:hover{background:#364554}
+/* Four-column widths are owned by PatternStudioExtraColumns.css; override the
+   obsolete width-only grid declaration from this older design stylesheet. */
+.main-layout[data-pattern-workspace="true"] .clo-right-tool-palette.exo-four-column-pattern-toolbar .clo-reference-dual-bars.clo-observed-bars{display:flex!important;grid-template-columns:none!important}
+/* Original Object Browser retained as its own independent pane. The toolbar
+   collapse controls affect only their individual icon groups. */
+.main-layout[data-pattern-workspace="true"] .clo-inspector-content{display:flex!important;flex-direction:column!important;min-width:0!important;min-height:0!important}
+.main-layout[data-pattern-workspace="true"] .clo-inspector-content>.exo-independent-object-browser-toggle{flex:0 0 28px!important;min-height:28px!important;width:100%!important}
+.main-layout[data-pattern-workspace="true"] .clo-inspector-content>.clo-object-browser{display:flex;flex-direction:column;flex:0 0 clamp(255px,37vh,370px);min-height:210px}
+/* 2026-10-27: restore full original Object Browser, not a surrogate or small
+   folded header. The browser and its content occupy a real right-hand pane. */
+.app-shell .main-layout[data-pattern-workspace="true"]>.clo-inspector{
+  display:flex!important;flex-direction:row!important;visibility:visible!important;
+  min-width:390px!important;overflow:hidden!important;
+}
+.app-shell .main-layout[data-pattern-workspace="true"]>.clo-inspector>.clo-inspector-content{
+  display:flex!important;flex-direction:column!important;flex:1 1 0!important;
+  width:auto!important;min-width:245px!important;overflow:hidden!important;
+}
+.app-shell .main-layout[data-pattern-workspace="true"]>.clo-inspector .clo-object-browser{
+  display:flex!important;flex-direction:column!important;position:relative!important;
+  flex:0 0 min(var(--object-browser-height,390px),62%)!important;
+  min-height:215px!important;width:100%!important;min-width:0!important;
+  overflow:hidden!important;
+}
+.app-shell .main-layout[data-pattern-workspace="true"]>.clo-inspector .clo-object-browser .clo-object-tabs,
+.app-shell .main-layout[data-pattern-workspace="true"]>.clo-inspector .clo-object-browser .clo-object-list{
+  min-width:0!important;width:100%!important;
+}
+/* The restoration does not reconfigure either toolbar's collapse state. */
+/* Restore the exact normal-workspace Object Browser width in full 2D.
+   The four-column tool rail receives its OWN grid track rather than eating
+   the Object Browser's inspector width. Collapsing the rail reclaims space. */
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]{--exo-native-2d-rail-width:148px;grid-template-columns:25px minmax(0,var(--effective-library-width,232px)) var(--exo-tool-width,72px) minmax(0,1fr) minmax(0,calc(var(--effective-inspector-width,392px) + var(--exo-native-2d-rail-width)))!important}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]:has(.exo-four-column-bar-rows[data-pattern-collapsed="true"]:not([data-2d-collapsed="true"])){--exo-native-2d-rail-width:76px}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]:has(.exo-four-column-bar-rows[data-2d-collapsed="true"]:not([data-pattern-collapsed="true"])){--exo-native-2d-rail-width:76px}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]:has(.exo-four-column-bar-rows[data-pattern-collapsed="true"][data-2d-collapsed="true"]){--exo-native-2d-rail-width:0px}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.clo-inspector{min-width:0!important;width:auto!important;max-width:none!important}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.clo-inspector>.clo-inspector-content{flex:1 1 0!important;min-width:0!important;width:auto!important;max-width:none!important}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.clo-inspector>.clo-right-tool-palette.exo-four-column-pattern-toolbar{flex:0 0 var(--exo-native-2d-rail-width)!important;width:var(--exo-native-2d-rail-width)!important;max-width:var(--exo-native-2d-rail-width)!important;min-width:0!important;overflow:hidden!important}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.clo-inspector .clo-object-browser{flex:0 0 min(var(--object-browser-height,390px),62%)!important;width:100%!important;min-width:0!important}
+
+/* One compact native two-column rail. Object Browser must have the SAME
+   392px inspector track as regular workspace, not +148px. */
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]{grid-template-columns:25px minmax(0,var(--effective-library-width,232px)) var(--exo-tool-width,72px) minmax(0,1fr) minmax(0,var(--effective-inspector-width,392px))!important}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.clo-inspector>.clo-right-tool-palette.exo-four-column-pattern-toolbar{flex:0 0 77px!important;width:77px!important;min-width:77px!important;max-width:77px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"]>.clo-inspector>.clo-inspector-content{flex:1 1 0!important;min-width:0!important}
+/* Right inspector has no master-collapse arrow: Object Browser and 2D toolbar
+   own separate controls; the left library and tool rail remain independent. */
+.main-layout.clo-adjustable-panels>.exo-inspector-edge-toggle,
+.main-layout.clo-adjustable-panels .exo-right-tools-edge-toggle{display:none!important}
+/* A collapsed left tool rail occupies zero layout space; its small arrow stays
+   outside the hidden rail, not inside the Library. */
+.main-layout.clo-adjustable-panels[data-left-tools-collapsed="true"]{--exo-tool-width:0px!important}
+.main-layout.clo-adjustable-panels[data-left-tools-collapsed="true"]>.tool-rail{display:none!important}
+.main-layout.clo-adjustable-panels[data-left-tools-collapsed="true"]>.exo-left-tools-edge-toggle{left:calc(25px + var(--effective-library-width,232px) - 1px)!important;transform:translateX(-50%);z-index:130}
+.main-layout.clo-adjustable-panels[data-left-tools-collapsed="true"]>.workspaces{min-width:0}
+/* Strip redundant folder/section labels from the top of native 2D workspace;
+   commands remain accessible through their original functional toolbar icons. */
+.main-layout[data-pattern-workspace="true"]>.tool-rail>.clo-rail-section:first-child{display:none!important}
+/* Independent right-side edge arrows model the known-good left library/tool
+   pair. Keep the ORIGINAL Object Browser header untouched. */
+.app-shell .main-layout.clo-adjustable-panels>.exo-right-independent-inspector-arrow,
+.app-shell .main-layout.clo-adjustable-panels>.exo-right-independent-tools-arrow{display:grid!important;visibility:visible!important;pointer-events:auto!important;z-index:160!important}
+.app-shell .main-layout.clo-adjustable-panels>.exo-right-independent-inspector-arrow{right:calc(var(--effective-inspector-width,392px) - 22px)!important;top:3px!important}
+.app-shell .main-layout.clo-adjustable-panels>.exo-right-independent-tools-arrow{right:calc(var(--effective-inspector-width,392px) - 3px)!important;top:30px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]{--effective-inspector-width:24px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.clo-inspector{visibility:hidden!important;pointer-events:none!important}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.exo-right-independent-inspector-arrow{right:2px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.exo-right-independent-tools-arrow{right:3px!important;top:30px!important}
+/* The full right inspector (Object Browser + Property Editor) is atomic. */
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.clo-inspector>.clo-inspector-content{display:none!important}
+/* Default header is the same exact black neutral CLO header used outside 2D;
+   remove the custom full-width gray replacement/header duplication. */
+.app-shell .main-layout[data-pattern-workspace="true"] .clo-object-browser>.clo-panel-header{background:#1c1d1f!important;color:#ededee!important;background-image:none!important}
+.app-shell .main-layout[data-pattern-workspace="true"] .exo-independent-object-browser-toggle{display:none!important}
+/* When the 2D tools hide, preserve the original regular-workspace width of
+   Object Browser and Property Editor (rather than stretching either pane). */
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"][data-right-tools-collapsed="true"]>.clo-inspector>.clo-inspector-content{flex:0 0 calc(100% - 78px)!important;max-width:calc(100% - 78px)!important}
+/* Original object-browser header exactly matches the standard inspector. */
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"] .clo-object-browser>.clo-panel-header{height:30px!important;min-height:30px!important;justify-content:center!important;position:relative!important;padding:0 27px 0 0!important;font-size:12px!important;border-bottom:1px solid #121315!important}
+/* Correct physical locations: external arrow owns ONLY toolbar, internal arrow
+   at Object Browser header owns ONLY Object Browser + Property Editor. */
+.app-shell .main-layout.clo-adjustable-panels>.exo-right-independent-tools-arrow{right:calc(var(--effective-inspector-width,392px) - 22px)!important;top:3px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.exo-right-independent-tools-arrow{right:calc(var(--inspector-width,392px) - 22px)!important;top:3px!important}
+.app-shell .main-layout.clo-adjustable-panels>.exo-reopen-inspector-arrow{position:absolute;right:2px;top:3px;z-index:175;display:grid;place-items:center;width:22px;height:23px;border:0;border-radius:3px;background:#1c1d1f;color:#d6d6d6;cursor:pointer}
+.app-shell .main-layout.clo-adjustable-panels .clo-inspector-content>.exo-object-inspector-header-arrow{position:absolute!important;right:2px!important;top:3px!important;width:23px!important;height:23px!important;z-index:160!important;display:grid!important;place-items:center!important;cursor:pointer!important;border:0!important;border-radius:3px!important;background:transparent!important;color:#dedee0!important}
+.app-shell .main-layout.clo-adjustable-panels .clo-inspector-content>.exo-object-inspector-header-arrow:hover{background:#333!important}
+.app-shell .main-layout.clo-adjustable-panels .clo-inspector-content>.exo-object-inspector-header-arrow:focus-visible{outline:2px solid #a0c8e9!important}
+/* A collapsed Object Browser must not inherit the entire right inspector's
+   disappearance. Keep 2D toolbar's full 77px independent and on screen. */
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]{--effective-inspector-width:101px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.clo-inspector{visibility:visible!important;pointer-events:auto!important}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.clo-inspector>.clo-inspector-content{display:none!important}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.exo-reopen-inspector-arrow{right:1px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.exo-right-independent-tools-arrow{right:calc(101px - 22px)!important}
+/* The left 2D rail is a fixed grid track, even while its contents are hidden.
+   Do NOT remove the grid item: auto-placement can shift the native workspace
+   out of column four and make it appear to collapse with the rail. */
+.app-shell .main-layout.clo-adjustable-panels[data-left-tools-collapsed="true"]{--exo-tool-width:0px!important;grid-template-columns:25px minmax(0,var(--effective-library-width,232px)) 0px minmax(0,1fr) minmax(0,var(--effective-inspector-width,392px))!important}
+.app-shell .main-layout.clo-adjustable-panels[data-left-tools-collapsed="true"]>.tool-rail{display:block!important;visibility:hidden!important;width:0!important;min-width:0!important;overflow:hidden!important;pointer-events:none!important;grid-column:3!important}
+.app-shell .main-layout.clo-adjustable-panels[data-left-tools-collapsed="true"]>.workspaces{grid-column:4!important;min-width:0!important;visibility:visible!important;display:block!important}
+.app-shell .main-layout.clo-adjustable-panels[data-left-tools-collapsed="true"]>.clo-inspector{grid-column:5!important}
+/* Match the library arrow: place the inspector control to the LEFT of the
+   actual Object Browser title, preserving the original centered heading. */
+.app-shell .main-layout.clo-adjustable-panels .clo-inspector-content>.exo-object-inspector-header-arrow{left:3px!important;right:auto!important;top:3px!important}
+.app-shell .main-layout.clo-adjustable-panels .clo-object-browser>.clo-panel-header{padding-left:28px!important;padding-right:0!important}
+
+/* The inspector's reopen hit target must never span the canvas or right tool rail.
+   Only clicking the visible 22px arrow can expand the Object Browser. */
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.exo-reopen-inspector-arrow{
+ position:absolute!important;left:auto!important;right:1px!important;top:3px!important;
+ width:22px!important;min-width:22px!important;max-width:22px!important;
+ height:23px!important;min-height:23px!important;max-height:23px!important;
+ transform:none!important;overflow:hidden!important;pointer-events:auto!important;
+}
+
+/* 2026-10-28 universal zero-waste collapse correction.
+   The grid must give every CLOSED panel exactly zero pixels; 2D and split
+   workspaces share this contract. Keep invisible rail grid items mounted to
+   prevent CSS auto-placement of the garment board into the wrong column. */
+.app-shell .main-layout.clo-adjustable-panels,
+.app-shell.pattern-focus-expanded .main-layout.clo-adjustable-panels,
+.desktop-workspace .main-layout.clo-adjustable-panels{
+ --exo-collapsed-library:0px;
+ --exo-collapsed-inspector:0px;
+ grid-template-columns:var(--exo-edge-width,25px) minmax(0,var(--effective-library-width,232px)) var(--exo-tool-width,72px) minmax(0,1fr) minmax(0,var(--effective-inspector-width,392px))!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-library-visible="false"]{--effective-library-width:0px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-left-tools-collapsed="true"]{--exo-tool-width:0px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"][data-right-tools-collapsed="true"]{--effective-inspector-width:0px!important}
+/* If the Object Browser closes while the independent toolbar is open, reserve
+   only the toolbar's actual width—not the former inspector or its gray gap. */
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"][data-right-tools-collapsed="false"]{--effective-inspector-width:77px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.clo-inspector{
+ min-width:0!important;width:100%!important;max-width:100%!important;
+ background:transparent!important;border:0!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"][data-right-tools-collapsed="true"]>.clo-inspector{
+ visibility:hidden!important;pointer-events:none!important;overflow:hidden!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.clo-inspector>.clo-inspector-content{display:none!important}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.exo-right-independent-tools-arrow{right:2px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.exo-reopen-inspector-arrow{right:2px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-left-tools-collapsed="true"]>.tool-rail{
+ display:block!important;grid-column:3!important;width:0!important;min-width:0!important;
+ overflow:hidden!important;visibility:hidden!important;pointer-events:none!important;
+}
+.app-shell .main-layout.clo-adjustable-panels>.workspaces{grid-column:4!important;min-width:0!important}
+.app-shell .main-layout.clo-adjustable-panels>.clo-inspector{grid-column:5!important}
+@media(max-width:1250px){.app-shell .main-layout.clo-adjustable-panels{--exo-edge-width:23px}}
+/* Previous 2D-only inspector shrink left a 78px dead gray block after the
+   toolbar was hidden. Remove its override; remaining content fills its track. */
+.app-shell .main-layout.clo-adjustable-panels[data-pattern-workspace="true"][data-right-tools-collapsed="true"]>.clo-inspector>.clo-inspector-content{
+ flex:1 1 0!important;max-width:100%!important;
+}
+
+/* Right-side controls must remain independently visible, even with a 0px
+   inspector track. They live in the main-layout overlay, not the hidden pane. */
+.app-shell .main-layout.clo-adjustable-panels>.exo-right-independent-tools-arrow{
+ position:absolute!important;left:auto!important;right:3px!important;top:32px!important;
+ width:23px!important;height:23px!important;min-width:23px!important;min-height:23px!important;
+ display:grid!important;place-items:center!important;visibility:visible!important;
+ pointer-events:auto!important;z-index:210!important;
+ border:1px solid var(--studio-border,#56616b)!important;border-radius:4px!important;
+ background:var(--studio-sidebar,#252629)!important;color:var(--studio-text,#eef2f7)!important;
+}
+.app-shell .main-layout.clo-adjustable-panels>.exo-reopen-inspector-arrow{
+ position:absolute!important;left:auto!important;right:3px!important;top:3px!important;
+ width:23px!important;height:23px!important;min-width:23px!important;min-height:23px!important;
+ display:grid!important;place-items:center!important;visibility:visible!important;
+ pointer-events:auto!important;z-index:211!important;
+ border:1px solid var(--studio-border,#56616b)!important;border-radius:4px!important;
+ background:var(--studio-sidebar,#252629)!important;color:var(--studio-text,#eef2f7)!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-right-tools-collapsed="true"]>.exo-right-independent-tools-arrow{right:3px!important;top:32px!important}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.exo-reopen-inspector-arrow{right:3px!important;top:3px!important}
+/* Open inspector width is independent from the toolbar. Closing the entire
+   inspector while the tools remain visible retains ONLY the narrow tool rail. */
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"][data-right-tools-collapsed="true"]>.clo-inspector{width:0!important;min-width:0!important}
+/* In a collapsed right toolbar, give all remaining inspector width back to
+   Object Browser / Property Editor rather than maintaining a 77px placeholder. */
+.app-shell .main-layout.clo-adjustable-panels[data-right-tools-collapsed="true"]>.clo-inspector>.clo-inspector-content{flex:1 1 auto!important;width:100%!important;max-width:100%!important}
+
+/* Restore toolbar collapse control: remove obsolete `exo-right-tools-edge-toggle`
+   class because earlier CSS globally hides that class. Keep controls in two
+   separate fixed-width overlay slots, away from the right toolbar drag grip. */
+.app-shell .main-layout.clo-adjustable-panels>.exo-right-independent-tools-arrow{
+ display:grid!important;visibility:visible!important;pointer-events:auto!important;
+ position:absolute!important;left:auto!important;right:4px!important;top:34px!important;
+ z-index:220!important;width:24px!important;height:24px!important;
+ border:1px solid var(--studio-border,#5b6671)!important;
+ background:var(--studio-sidebar,#25282c)!important;
+}
+.app-shell .main-layout.clo-adjustable-panels>.exo-reopen-inspector-arrow{
+ top:4px!important;right:4px!important;z-index:221!important;
+}
+/* Definitive independent 2D toolbar control: two non-overlapping hit targets.
+   The Object Browser restore is at y=4; toolbar toggle is at y=70, below
+   both the inspector restore and drag handle (which stays inside its rail). */
+.app-shell .main-layout.clo-adjustable-panels>.exo-right-independent-tools-arrow{
+ top:72px!important;right:4px!important;z-index:260!important;
+ width:24px!important;height:24px!important;display:grid!important;
+ visibility:visible!important;pointer-events:auto!important;
+ background:var(--studio-sidebar,#25282c)!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-inspector-visible="false"]>.exo-reopen-inspector-arrow{
+ top:4px!important;right:4px!important;
+}
+
+/* UI correction: use the proven left 3D header pattern on both tool rails.
+   Right toolbar collapse lives at the top edge of the toolbar, aligned with
+   the separate drag handle, not floating over the actual icons. The toolbar
+   collapses from its own button, independent of the Object Browser. */
+.app-shell .main-layout.clo-adjustable-panels[data-right-tools-collapsed="false"]>.exo-right-independent-tools-arrow {
+ top:5px!important;right:29px!important;width:21px!important;height:21px!important;
+ border:0!important;background:transparent!important;z-index:360!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-right-tools-collapsed="true"]>.exo-right-independent-tools-arrow {
+ top:5px!important;right:5px!important;width:21px!important;height:21px!important;
+ border:1px solid var(--studio-border,#56616b)!important;background:var(--studio-sidebar,#25282c)!important;z-index:360!important;
+}
+/* Closed left rail has no drag handle. Its arrow must be independently
+   usable without overlapping the Library's own collapse control. */
+.app-shell .main-layout.clo-adjustable-panels[data-left-tools-collapsed="true"]>.exo-left-tools-edge-toggle {
+ top:5px!important;left:calc(var(--exo-edge-width,25px) + var(--effective-library-width,232px) + 8px)!important;
+ transform:none!important;z-index:360!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-left-tools-collapsed="false"]>.exo-left-tools-edge-toggle {
+ top:5px!important;left:calc(var(--exo-edge-width,25px) + var(--effective-library-width,232px) + var(--exo-tool-width,72px) - 23px)!important;
+ transform:none!important;z-index:360!important;
+}
+
+/* Explicit collision-free tool controls: the 2D toolbar collapse arrow
+   belongs at the LEFT edge of the 2D tool rail (not the far-right edge).
+   The right move-grip stays at the opposite edge. */
+.app-shell .main-layout.clo-adjustable-panels[data-right-tools-collapsed="false"]>.exo-right-independent-tools-arrow{
+ right:calc(var(--effective-inspector-width,392px) - 24px)!important;
+ top:5px!important;left:auto!important;z-index:401!important;
+ width:21px!important;height:21px!important;display:grid!important;
+ visibility:visible!important;pointer-events:auto!important;
+}
+.app-shell .main-layout.clo-adjustable-panels[data-right-tools-collapsed="true"]>.exo-right-independent-tools-arrow{
+ right:5px!important;top:5px!important;left:auto!important;
+ z-index:401!important;display:grid!important;visibility:visible!important;pointer-events:auto!important;
+}
+/* Library collapsed toggle occupies only the left edge tab and NEVER the
+   library heading's drag handle on the top right. */
+.app-shell .main-layout.clo-adjustable-panels[data-library-visible="false"]>.exo-library-edge-toggle{
+ left:calc(var(--exo-edge-width,25px) + 2px)!important;
+ top:33px!important;transform:none!important;
+ width:20px!important;height:22px!important;z-index:402!important;
+}

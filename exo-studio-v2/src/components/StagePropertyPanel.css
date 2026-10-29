@@ -1,0 +1,17 @@
+.stage-property-panel{color:var(--text-primary,#ddd);font-size:12px;padding:12px 14px;background:transparent}
+.stage-property-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.stage-property-head strong{font-size:13px;font-weight:600}.stage-property-head span{font-size:9px;letter-spacing:.09em;opacity:.5}
+.stage-property-group{margin:0;padding:0}.stage-property-group-title{width:100%;border:0;background:transparent;color:inherit;padding:10px 0;display:flex;justify-content:space-between;cursor:pointer;text-align:left;font-weight:600}
+.stage-property-group-title span{opacity:.5}.stage-property-fields{padding:0 0 8px}
+.stage-property-field{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:32px;color:inherit}
+.stage-property-field>span{opacity:.7}.stage-property-field input[type=number]{width:76px;text-align:right;background:transparent;border:1px solid transparent;border-radius:5px;color:inherit;padding:5px}
+.stage-property-field input[type=number]:hover,.stage-property-field input[type=number]:focus{border-color:currentColor;outline:none}
+.stage-property-field input[type=color]{width:34px;height:24px;background:transparent;border:0;cursor:pointer}
+.stage-property-field input[type=checkbox]{accent-color:var(--accent,#999)}
+.stage-property-actions{display:flex;gap:8px;margin-top:12px}.stage-property-actions button{flex:1;background:transparent;color:inherit;border:1px solid currentColor;border-radius:6px;padding:8px;opacity:.75;cursor:pointer}
+.stage-property-actions button:hover{opacity:1}
+.stage-property-vector{display:flex;gap:3px;min-width:0}.stage-property-vector label{display:flex;align-items:center;gap:2px;min-width:0}.stage-property-vector small{opacity:.45;font-size:9px}.stage-property-vector input[type=number]{width:52px;min-width:0;padding:4px 2px}
+.stage-property-field select{background:transparent;color:inherit;border:1px solid transparent;border-radius:5px;padding:5px;max-width:130px}
+.stage-property-field select:focus,.stage-property-field select:hover{border-color:currentColor}
+.stage-property-light{margin:8px 0 10px}.stage-property-light-heading{font-size:10px;opacity:.65;font-weight:600;margin:10px 0 5px}
+.stage-property-reset-lighting{margin-top:6px;padding:7px 10px;border:1px solid #7777;border-radius:6px;background:transparent;color:inherit;cursor:pointer}

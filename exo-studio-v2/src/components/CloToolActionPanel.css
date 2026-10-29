@@ -8,14 +8,24 @@
 .exo-clo-tool-card header span{color:#87bad3;font-size:10px;font-weight:700;letter-spacing:.06em;}
 .exo-clo-tool-card header button{background:none;border:0;color:#b8d2df;cursor:pointer;padding:5px;}
 .exo-clo-tool-name{display:block;font-size:17px;margin-top:13px;}
+.exo-clo-tool-identification{display:flex;align-items:center;gap:11px;margin-top:10px}
+.exo-clo-tool-identification .exo-clo-tool-name{margin:0;line-height:1.25}
+.exo-clo-tool-icon{display:grid;place-items:center;flex:0 0 42px;height:42px;border-radius:5px;border:1px solid #536779;background:#263945;color:#c9e4f3}
 .exo-clo-tool-state{margin:10px 0 8px;display:flex;gap:7px;align-items:center;color:#8acbcb;font-size:11px;font-weight:700;}
 .exo-clo-tool-card p{font-size:12px;color:#beced7;line-height:1.48;margin:9px 0 14px;}
 .exo-clo-tool-card button.exo-clo-tool-run,
-.exo-clo-tool-card button.exo-clo-tool-workspace{
+.exo-clo-tool-card button.exo-clo-tool-workspace,
+.exo-clo-tool-card button.exo-clo-tool-alternative{
  display:flex;align-items:center;justify-content:center;gap:7px;
  width:100%;padding:9px 12px;border-radius:4px;cursor:pointer;font-size:11px;
 }
 .exo-clo-tool-card button.exo-clo-tool-run{background:#376f88;border:1px solid #58a0bc;color:white;margin-bottom:9px;}
 .exo-clo-tool-card button.exo-clo-tool-workspace{background:#283b48;border:1px solid #435f72;color:#e0eff6;}
+.exo-clo-tool-card button.exo-clo-tool-alternative{background:#2d4b50;border:1px solid #567879;color:#def6ec;margin-bottom:9px;text-align:left;justify-content:flex-start}
+.exo-clo-tool-alternative span{flex:1;min-width:0}
+.exo-clo-tool-card button:focus-visible{outline:2px solid #9bdcf7;outline-offset:2px}
 .exo-clo-tool-boundary{display:block;margin-top:11px;color:#9eb2c1;font-size:10px;line-height:1.4;}
 @media(max-width:1100px){.exo-clo-tool-card,.exo-clo-tool-card[data-dimension="2d"]{left:50%;right:auto;transform:translateX(-50%);top:120px;}}
+.exo-clo-hover-tooltip{position:fixed;z-index:530;min-width:160px;max-width:224px;padding:8px 10px;display:flex;flex-direction:column;gap:3px;pointer-events:none;border:1px solid #668399;border-radius:5px;background:#17222c;color:#f0f8fd;box-shadow:0 8px 28px #000a}
+.exo-clo-hover-tooltip strong{font-size:12px;line-height:1.25}
+.exo-clo-hover-tooltip span{font-size:10px;line-height:1.35;color:#abc1d0}

@@ -23,4 +23,4 @@ for(const q of ['sew','3D','fabric','workspace','pattern','render']) {
   assert.deepEqual(searchWorkspaceCommands(nativeCommands,q,10),
     searchWorkspaceCommands(sourceCommands,q,10))
 }
-console.log('Native CLO menu constant matches JS: 14 menus, 72 indexed commands, six search fixtures')
+console.log(`Native CLO menu constant matches JS: ${CLO_MENUS.length} menus, ${sourceCommands.length} indexed commands, six search fixtures`)

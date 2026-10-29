@@ -1,0 +1,75 @@
+{
+  "schema": "exo.physics-cpu-gpu-parity.v1",
+  "cpuFile": "/Users/mikylecouto/Chat On Steroids Workspace/exo-clothcraft-v2/docs/physics-lab/same-source-cpu-arm64.json",
+  "gpuFile": "/Users/mikylecouto/Chat On Steroids Workspace/exo-clothcraft-v2/docs/physics-lab/same-source-gpu-arm64.json",
+  "binarySha256": "97865bd21e75fdeff15aab3e4d8d8c665f7d24e93332219cda9d57e2e21f75ed",
+  "preconditions": {
+    "sameBinary": true,
+    "sameAvatar": true,
+    "sameSourceFingerprint": true,
+    "requestedCpu": true,
+    "requestedGpu": true,
+    "backendReportedCorrectly": true,
+    "matchedSteps": true,
+    "sameInitialSeamGap": true,
+    "sameInitialMesh": true
+  },
+  "scope": "Same-source same-arm64-executable CPU f64 versus Metal f32/CPU-OGC, early separated-panel assembly only",
+  "acceptance": "BLOCKED_PHYSICAL_DIVERGENCE",
+  "reason": "Materially different seam closure or extension despite matching initial 2D geometry. Wall-time ratio is observational and cannot be published as an equivalent-quality physics acceleration.",
+  "numericalScreen": {
+    "seamDifferenceMm": 5,
+    "p95ExtensionDifferencePercentagePoints": 5
+  },
+  "userFitCertified": false,
+  "independentPenetrationVerified": false,
+  "equilibriumEstablished": false,
+  "initialSeamGapMm": 530,
+  "cpuClosedMm": 198.51937429383355,
+  "gpuClosedMm": 18.16266649868703,
+  "finalSeamGapDifferenceMm": 180.35670779514658,
+  "steps": [
+    {
+      "step": 1,
+      "time_s": 0.016666666666666666,
+      "cpu_seam_gap_mm": 447.4944147470859,
+      "gpu_seam_gap_mm": 524.6099531827559,
+      "absolute_seam_difference_mm": 77.11553843567003,
+      "cpu_extension_p95_percent": 18.513921329172977,
+      "gpu_extension_p95_percent": 1.8724156811805504,
+      "cpu_contact_updates": 17,
+      "gpu_contact_updates": 2,
+      "cpu_step_ms": 327.506667,
+      "gpu_step_ms": 57.02625,
+      "observed_wall_ratio": 5.743086157690537
+    },
+    {
+      "step": 2,
+      "time_s": 0.03333333333333333,
+      "cpu_seam_gap_mm": 373.4677221155022,
+      "gpu_seam_gap_mm": 518.2430446598596,
+      "absolute_seam_difference_mm": 144.77532254435738,
+      "cpu_extension_p95_percent": 69.5471622878332,
+      "gpu_extension_p95_percent": 3.46794827414445,
+      "cpu_contact_updates": 18,
+      "gpu_contact_updates": 2,
+      "cpu_step_ms": 407.001375,
+      "gpu_step_ms": 35.671458,
+      "observed_wall_ratio": 11.409720763306058
+    },
+    {
+      "step": 3,
+      "time_s": 0.05,
+      "cpu_seam_gap_mm": 331.48062570616645,
+      "gpu_seam_gap_mm": 511.83733350131297,
+      "absolute_seam_difference_mm": 180.35670779514658,
+      "cpu_extension_p95_percent": 111.65097857681809,
+      "gpu_extension_p95_percent": 4.129003279935928,
+      "cpu_contact_updates": 18,
+      "gpu_contact_updates": 2,
+      "cpu_step_ms": 509.04099999999994,
+      "gpu_step_ms": 40.344542,
+      "observed_wall_ratio": 12.61734486910274
+    }
+  ]
+}

@@ -1,0 +1,4871 @@
+{
+  "schema": "exo-accumark-function-engineering-index.v2",
+  "items": [
+    {
+      "id": "accu.workspace.setup",
+      "label": "Workspace, grid, unit and style setup",
+      "domain": "workspace",
+      "purpose": "Configure machine-independent editing defaults and readable visual guides.",
+      "official_source_ids": [
+        "S003",
+        "S023",
+        "S037",
+        "S058",
+        "S059",
+        "S060",
+        "S090"
+      ],
+      "tutorial_video_ids": [
+        "CGw99q3AUjI",
+        "1yxYERC83f0"
+      ],
+      "inputs": [
+        "projectId",
+        "unit scale and length units",
+        "snap grid, origin and axis",
+        "colors",
+        "default folder"
+      ],
+      "engineering_algorithm": [
+        "Store workspace preferences separately from pattern geometry",
+        "Render global/local axes and selection state",
+        "Normalize all persisted lengths to explicit physical units"
+      ],
+      "outputs": [
+        "Workspace preferences",
+        "grid and snap configuration",
+        "active file/context"
+      ],
+      "safety_invariants": [
+        "Changing units must preserve physical lengths",
+        "Grid visuals do not change cut geometry",
+        "Reversible per-project settings"
+      ],
+      "acceptance_tests": [
+        "Unit conversion round trip",
+        "snap tolerance under zoom changes",
+        "settings do not mutate geometry"
+      ],
+      "ux_interaction": "Settings inspector with live canvas preview and clear defaults",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/draftingSnapping.js",
+        "src/core/draftingPrecision.js"
+      ],
+      "priority": "P1",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "CGw99q3AUjI",
+          "title": "1 Gerber Accumark intro and names",
+          "url": "https://www.youtube.com/watch?v=CGw99q3AUjI",
+          "contact_sheet": "contact_sheets/CGw99q3AUjI.jpg",
+          "frames": 118,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "1yxYERC83f0",
+          "title": "2  1680 Gerber Accumark  setting colors and grid",
+          "url": "https://www.youtube.com/watch?v=1yxYERC83f0",
+          "contact_sheet": "contact_sheets/1yxYERC83f0.jpg",
+          "frames": 174,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S003",
+          "url": "https://gerber-help.lectra.com/AccuMark_3D/Pattern_Design_2D/Getting_Started_with_2D.htm",
+          "title": "Getting Started with 2D"
+        },
+        {
+          "source_id": "S023",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Preferences_General.htm",
+          "title": "Preferences: General Tab"
+        },
+        {
+          "source_id": "S037",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Overview.htm",
+          "title": "Overview"
+        },
+        {
+          "source_id": "S058",
+          "url": "https://gerber-help.lectra.com/AccuMark/Easy_Marking/Component_Title_Bar.htm",
+          "title": "Title Bar"
+        },
+        {
+          "source_id": "S059",
+          "url": "https://gerber-help.lectra.com/AccuMark/Easy_Marking/Component_Quick_Access_Toolbar.htm",
+          "title": "Quick Access Toolbar"
+        },
+        {
+          "source_id": "S060",
+          "url": "https://gerber-help.lectra.com/AccuMark/Easy_Marking/Component_Ribbon.htm",
+          "title": "Ribbon Interface"
+        },
+        {
+          "source_id": "S090",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Color_Management.htm",
+          "title": "Color Management Profiles"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/draftingSnapping.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/draftingPrecision.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [
+        {
+          "id": "CGw99q3AUjI-f6",
+          "video_id": "CGw99q3AUjI",
+          "frame_index": 6,
+          "time_seconds_approx": 59,
+          "timestamp_approx": "00:59",
+          "category": "workspace",
+          "observation": "Dense upper ribbons and narrow right inspector beside teal pattern canvas",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/CGw99q3AUjI_frame0006.png",
+          "sprite_path": "storyboards/CGw99q3AUjI/sprite-000.jpg",
+          "video_url": "https://www.youtube.com/watch?v=CGw99q3AUjI&t=59s"
+        },
+        {
+          "id": "CGw99q3AUjI-f37",
+          "video_id": "CGw99q3AUjI",
+          "frame_index": 37,
+          "time_seconds_approx": 365,
+          "timestamp_approx": "06:05",
+          "category": "workspace",
+          "observation": "Multiple pale pattern silhouettes arranged on teal editor canvas",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/CGw99q3AUjI_frame0037.png",
+          "sprite_path": "storyboards/CGw99q3AUjI/sprite-001.jpg",
+          "video_url": "https://www.youtube.com/watch?v=CGw99q3AUjI&t=365s"
+        },
+        {
+          "id": "CGw99q3AUjI-f86",
+          "video_id": "CGw99q3AUjI",
+          "frame_index": 86,
+          "time_seconds_approx": 849,
+          "timestamp_approx": "14:09",
+          "category": "workspace",
+          "observation": "Modal dialog over pattern workspace; text too small to read",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/CGw99q3AUjI_frame0086.png",
+          "sprite_path": "storyboards/CGw99q3AUjI/sprite-003.jpg",
+          "video_url": "https://www.youtube.com/watch?v=CGw99q3AUjI&t=849s"
+        },
+        {
+          "id": "1yxYERC83f0-f55",
+          "video_id": "1yxYERC83f0",
+          "frame_index": 55,
+          "time_seconds_approx": 273,
+          "timestamp_approx": "04:33",
+          "category": "workspace",
+          "observation": "White preferences-style dialog over pattern editor",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/1yxYERC83f0_frame0055.png",
+          "sprite_path": "storyboards/1yxYERC83f0/sprite-002.jpg",
+          "video_url": "https://www.youtube.com/watch?v=1yxYERC83f0&t=273s"
+        },
+        {
+          "id": "1yxYERC83f0-f91",
+          "video_id": "1yxYERC83f0",
+          "frame_index": 91,
+          "time_seconds_approx": 452,
+          "timestamp_approx": "07:32",
+          "category": "workspace",
+          "observation": "White configuration dialog over pattern editor",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/1yxYERC83f0_frame0091.png",
+          "sprite_path": "storyboards/1yxYERC83f0/sprite-003.jpg",
+          "video_url": "https://www.youtube.com/watch?v=1yxYERC83f0&t=452s"
+        },
+        {
+          "id": "1yxYERC83f0-f137",
+          "video_id": "1yxYERC83f0",
+          "frame_index": 137,
+          "time_seconds_approx": 680,
+          "timestamp_approx": "11:20",
+          "category": "workspace",
+          "observation": "Pattern panels appear yellow after configuration screens",
+          "confidence": "medium",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/1yxYERC83f0_frame0137.png",
+          "sprite_path": "storyboards/1yxYERC83f0/sprite-005.jpg",
+          "video_url": "https://www.youtube.com/watch?v=1yxYERC83f0&t=680s"
+        },
+        {
+          "id": "1yxYERC83f0-f146",
+          "video_id": "1yxYERC83f0",
+          "frame_index": 146,
+          "time_seconds_approx": 725,
+          "timestamp_approx": "12:05",
+          "category": "workspace",
+          "observation": "Magenta-colored pattern pieces on editor canvas",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/1yxYERC83f0_frame0146.png",
+          "sprite_path": "storyboards/1yxYERC83f0/sprite-005.jpg",
+          "video_url": "https://www.youtube.com/watch?v=1yxYERC83f0&t=725s"
+        },
+        {
+          "id": "1yxYERC83f0-f173",
+          "video_id": "1yxYERC83f0",
+          "frame_index": 173,
+          "time_seconds_approx": 859,
+          "timestamp_approx": "14:19",
+          "category": "workspace",
+          "observation": "Purple-colored pattern pieces on editor canvas",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/1yxYERC83f0_frame0173.png",
+          "sprite_path": "storyboards/1yxYERC83f0/sprite-006.jpg",
+          "video_url": "https://www.youtube.com/watch?v=1yxYERC83f0&t=859s"
+        }
+      ],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.storage.model",
+      "label": "Storage areas, models, pieces and saves",
+      "domain": "workspace",
+      "purpose": "Maintain searchable versioned models, pieces, groups and revisions.",
+      "official_source_ids": [
+        "S002",
+        "S010",
+        "S030",
+        "S038",
+        "S043",
+        "S044",
+        "S045",
+        "S068",
+        "S069",
+        "S070",
+        "S071",
+        "S072",
+        "S073",
+        "S075",
+        "S076",
+        "S077",
+        "S078",
+        "S080",
+        "S081",
+        "S082",
+        "S083",
+        "S084",
+        "S096"
+      ],
+      "tutorial_video_ids": [
+        "raelyWVfzm4",
+        "SakE-CQs7RQ",
+        "VS19OOT985Q",
+        "QFUnU7P1ZNE"
+      ],
+      "inputs": [
+        "storage area",
+        "model ID/revision",
+        "piece IDs",
+        "model options",
+        "filename filter"
+      ],
+      "engineering_algorithm": [
+        "Resolve stable IDs and references",
+        "Group pieces under model",
+        "Perform save/rename/copy atomically",
+        "Keep a read-only preview and revision history"
+      ],
+      "outputs": [
+        "Model record",
+        "piece inventory",
+        "storage location",
+        "revision/hash"
+      ],
+      "safety_invariants": [
+        "No orphaned piece references",
+        "No silent overwrite or duplicate ID",
+        "Undo history records changes"
+      ],
+      "acceptance_tests": [
+        "Rename model and reopen",
+        "copy model preserving piece IDs",
+        "load missing piece",
+        "duplicate name conflict"
+      ],
+      "ux_interaction": "Model explorer, thumbnail preview, searchable library and save status",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/projectFileLibrary.js",
+        "src/core/projectLibraryPreview.js",
+        "src/core/projectRestore.js"
+      ],
+      "priority": "P1",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "raelyWVfzm4",
+          "title": "3 1680 Gerber Accumark new storage area with pieces",
+          "url": "https://www.youtube.com/watch?v=raelyWVfzm4",
+          "contact_sheet": "contact_sheets/raelyWVfzm4.jpg",
+          "frames": 95,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "SakE-CQs7RQ",
+          "title": "3b   new storage area with pieces  Gerber Accumark",
+          "url": "https://www.youtube.com/watch?v=SakE-CQs7RQ",
+          "contact_sheet": "contact_sheets/SakE-CQs7RQ.jpg",
+          "frames": 95,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "VS19OOT985Q",
+          "title": "4 Gerber Accumark new storage area with pieces and rename",
+          "url": "https://www.youtube.com/watch?v=VS19OOT985Q",
+          "contact_sheet": "contact_sheets/VS19OOT985Q.jpg",
+          "frames": 120,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "QFUnU7P1ZNE",
+          "title": "Organizing & Saving  Pieces & Models",
+          "url": "https://www.youtube.com/watch?v=QFUnU7P1ZNE",
+          "contact_sheet": "contact_sheets/QFUnU7P1ZNE.jpg",
+          "frames": 127,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S002",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Welcome.htm",
+          "title": "Welcome"
+        },
+        {
+          "source_id": "S010",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Group_Create_Edit_Tab_Grade.htm",
+          "title": "Create/Edit Group"
+        },
+        {
+          "source_id": "S030",
+          "url": "https://gerber-help.lectra.com/AccuMark_3D/Model_Editor.htm",
+          "title": "Model Editor"
+        },
+        {
+          "source_id": "S038",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Tab_File.htm",
+          "title": "File Menu"
+        },
+        {
+          "source_id": "S043",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/storage_areas.htm",
+          "title": "storage areas"
+        },
+        {
+          "source_id": "S044",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/data_items.htm",
+          "title": "data items"
+        },
+        {
+          "source_id": "S045",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/File_Menu.htm",
+          "title": "File Menu"
+        },
+        {
+          "source_id": "S068",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Pane_Navigation.htm",
+          "title": "Navigation Pane"
+        },
+        {
+          "source_id": "S069",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Pane_Details.htm",
+          "title": "Details Pane"
+        },
+        {
+          "source_id": "S070",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Pane_Preview.htm",
+          "title": "Preview Pane"
+        },
+        {
+          "source_id": "S071",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/AccuMark_Explorer_Options.htm",
+          "title": "AccuMark Explorer, Utilities"
+        },
+        {
+          "source_id": "S072",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/To_use_the_Find_Utility.htm",
+          "title": "To use the Find Utility"
+        },
+        {
+          "source_id": "S073",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/File_New_Tab_File.htm",
+          "title": "New"
+        },
+        {
+          "source_id": "S075",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/File_Open_Tab_File.htm",
+          "title": "Open"
+        },
+        {
+          "source_id": "S076",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/File_Close_Model_Tab_File.htm",
+          "title": "Close Model"
+        },
+        {
+          "source_id": "S077",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/File_Save_Tab_File.htm",
+          "title": "Save"
+        },
+        {
+          "source_id": "S078",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/File_Save_As_Tab_File.htm",
+          "title": "Save As"
+        },
+        {
+          "source_id": "S080",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/File_Open_Work_Session_Tab_File.htm",
+          "title": "Open Work Session"
+        },
+        {
+          "source_id": "S081",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/File_Save_As_Work_Sessoin_Tab_File.htm",
+          "title": "Save As Work Session"
+        },
+        {
+          "source_id": "S082",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/File_Copy_Model_Tab_File.htm",
+          "title": "Copy Model"
+        },
+        {
+          "source_id": "S083",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/File_Model_Notes_Tab_File.htm",
+          "title": "Model Notes"
+        },
+        {
+          "source_id": "S084",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/File_Create_Edit_Model_Tab_File.htm",
+          "title": "Create/Edit Model"
+        },
+        {
+          "source_id": "S096",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/New.htm",
+          "title": "New"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/projectFileLibrary.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/projectLibraryPreview.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/projectRestore.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [
+        {
+          "id": "raelyWVfzm4-f10",
+          "video_id": "raelyWVfzm4",
+          "frame_index": 10,
+          "time_seconds_approx": 49,
+          "timestamp_approx": "00:49",
+          "category": "storage",
+          "observation": "Manager window with navigation tree, tabular file list and preview",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/raelyWVfzm4_frame0010.png",
+          "sprite_path": "storyboards/raelyWVfzm4/sprite-000.jpg",
+          "video_url": "https://www.youtube.com/watch?v=raelyWVfzm4&t=49s"
+        },
+        {
+          "id": "raelyWVfzm4-f40",
+          "video_id": "raelyWVfzm4",
+          "frame_index": 40,
+          "time_seconds_approx": 196,
+          "timestamp_approx": "03:16",
+          "category": "storage",
+          "observation": "Manager file columns and folders remain visible",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/raelyWVfzm4_frame0040.png",
+          "sprite_path": "storyboards/raelyWVfzm4/sprite-001.jpg",
+          "video_url": "https://www.youtube.com/watch?v=raelyWVfzm4&t=196s"
+        },
+        {
+          "id": "raelyWVfzm4-f59",
+          "video_id": "raelyWVfzm4",
+          "frame_index": 59,
+          "time_seconds_approx": 289,
+          "timestamp_approx": "04:49",
+          "category": "storage",
+          "observation": "Context menu above manager data list",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/raelyWVfzm4_frame0059.png",
+          "sprite_path": "storyboards/raelyWVfzm4/sprite-002.jpg",
+          "video_url": "https://www.youtube.com/watch?v=raelyWVfzm4&t=289s"
+        }
+      ],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.selection.prompts",
+      "label": "Selection, tool activation and operator prompts",
+      "domain": "workspace",
+      "purpose": "Provide predictable command activation, context-sensitive inputs and selection feedback.",
+      "official_source_ids": [
+        "S058",
+        "S059",
+        "S060",
+        "S061",
+        "S063",
+        "S064",
+        "S066",
+        "S068",
+        "S069",
+        "S070",
+        "S104"
+      ],
+      "tutorial_video_ids": [
+        "CGw99q3AUjI",
+        "1yxYERC83f0"
+      ],
+      "inputs": [
+        "tool ID",
+        "selected piece/point/edge",
+        "active canvas",
+        "modifier flags"
+      ],
+      "engineering_algorithm": [
+        "Validate selection type",
+        "Show required next selection/argument",
+        "Resolve entities by stable IDs",
+        "Preview pending operation"
+      ],
+      "outputs": [
+        "Tool session",
+        "selections",
+        "prompt",
+        "pending transaction"
+      ],
+      "safety_invariants": [
+        "Escape cancels without mutation",
+        "Missing prerequisite disables Apply",
+        "Selection survives zoom/pan"
+      ],
+      "acceptance_tests": [
+        "No selection",
+        "switched piece mid-tool",
+        "cancel/undo",
+        "stale reference"
+      ],
+      "ux_interaction": "Searchable command palette and brief interaction prompts",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/exoExtraToolCatalog.js"
+      ],
+      "priority": "P0",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "CGw99q3AUjI",
+          "title": "1 Gerber Accumark intro and names",
+          "url": "https://www.youtube.com/watch?v=CGw99q3AUjI",
+          "contact_sheet": "contact_sheets/CGw99q3AUjI.jpg",
+          "frames": 118,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "1yxYERC83f0",
+          "title": "2  1680 Gerber Accumark  setting colors and grid",
+          "url": "https://www.youtube.com/watch?v=1yxYERC83f0",
+          "contact_sheet": "contact_sheets/1yxYERC83f0.jpg",
+          "frames": 174,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S058",
+          "url": "https://gerber-help.lectra.com/AccuMark/Easy_Marking/Component_Title_Bar.htm",
+          "title": "Title Bar"
+        },
+        {
+          "source_id": "S059",
+          "url": "https://gerber-help.lectra.com/AccuMark/Easy_Marking/Component_Quick_Access_Toolbar.htm",
+          "title": "Quick Access Toolbar"
+        },
+        {
+          "source_id": "S060",
+          "url": "https://gerber-help.lectra.com/AccuMark/Easy_Marking/Component_Ribbon.htm",
+          "title": "Ribbon Interface"
+        },
+        {
+          "source_id": "S061",
+          "url": "https://gerber-help.lectra.com/AccuMark/Easy_Marking/Component_Piece_Display_Area.htm",
+          "title": "Piece Display Area - Matrix Menu"
+        },
+        {
+          "source_id": "S063",
+          "url": "https://gerber-help.lectra.com/AccuMark/Easy_Marking/Component_Scroll_Bar.htm",
+          "title": "Scroll Bar"
+        },
+        {
+          "source_id": "S064",
+          "url": "https://gerber-help.lectra.com/AccuMark/Easy_Marking/Component_Prompt_Bar.htm",
+          "title": "Prompt Bar"
+        },
+        {
+          "source_id": "S066",
+          "url": "https://gerber-help.lectra.com/AccuMark/Easy_Marking/Component_Thumbnail.htm",
+          "title": "Thumbnail"
+        },
+        {
+          "source_id": "S068",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Pane_Navigation.htm",
+          "title": "Navigation Pane"
+        },
+        {
+          "source_id": "S069",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Pane_Details.htm",
+          "title": "Details Pane"
+        },
+        {
+          "source_id": "S070",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Pane_Preview.htm",
+          "title": "Preview Pane"
+        },
+        {
+          "source_id": "S104",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Options.htm",
+          "title": "Options"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/exoExtraToolCatalog.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [
+        {
+          "id": "CGw99q3AUjI-f6",
+          "video_id": "CGw99q3AUjI",
+          "frame_index": 6,
+          "time_seconds_approx": 59,
+          "timestamp_approx": "00:59",
+          "category": "workspace",
+          "observation": "Dense upper ribbons and narrow right inspector beside teal pattern canvas",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/CGw99q3AUjI_frame0006.png",
+          "sprite_path": "storyboards/CGw99q3AUjI/sprite-000.jpg",
+          "video_url": "https://www.youtube.com/watch?v=CGw99q3AUjI&t=59s"
+        },
+        {
+          "id": "CGw99q3AUjI-f37",
+          "video_id": "CGw99q3AUjI",
+          "frame_index": 37,
+          "time_seconds_approx": 365,
+          "timestamp_approx": "06:05",
+          "category": "workspace",
+          "observation": "Multiple pale pattern silhouettes arranged on teal editor canvas",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/CGw99q3AUjI_frame0037.png",
+          "sprite_path": "storyboards/CGw99q3AUjI/sprite-001.jpg",
+          "video_url": "https://www.youtube.com/watch?v=CGw99q3AUjI&t=365s"
+        },
+        {
+          "id": "CGw99q3AUjI-f86",
+          "video_id": "CGw99q3AUjI",
+          "frame_index": 86,
+          "time_seconds_approx": 849,
+          "timestamp_approx": "14:09",
+          "category": "workspace",
+          "observation": "Modal dialog over pattern workspace; text too small to read",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/CGw99q3AUjI_frame0086.png",
+          "sprite_path": "storyboards/CGw99q3AUjI/sprite-003.jpg",
+          "video_url": "https://www.youtube.com/watch?v=CGw99q3AUjI&t=849s"
+        },
+        {
+          "id": "1yxYERC83f0-f55",
+          "video_id": "1yxYERC83f0",
+          "frame_index": 55,
+          "time_seconds_approx": 273,
+          "timestamp_approx": "04:33",
+          "category": "workspace",
+          "observation": "White preferences-style dialog over pattern editor",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/1yxYERC83f0_frame0055.png",
+          "sprite_path": "storyboards/1yxYERC83f0/sprite-002.jpg",
+          "video_url": "https://www.youtube.com/watch?v=1yxYERC83f0&t=273s"
+        },
+        {
+          "id": "1yxYERC83f0-f91",
+          "video_id": "1yxYERC83f0",
+          "frame_index": 91,
+          "time_seconds_approx": 452,
+          "timestamp_approx": "07:32",
+          "category": "workspace",
+          "observation": "White configuration dialog over pattern editor",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/1yxYERC83f0_frame0091.png",
+          "sprite_path": "storyboards/1yxYERC83f0/sprite-003.jpg",
+          "video_url": "https://www.youtube.com/watch?v=1yxYERC83f0&t=452s"
+        },
+        {
+          "id": "1yxYERC83f0-f137",
+          "video_id": "1yxYERC83f0",
+          "frame_index": 137,
+          "time_seconds_approx": 680,
+          "timestamp_approx": "11:20",
+          "category": "workspace",
+          "observation": "Pattern panels appear yellow after configuration screens",
+          "confidence": "medium",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/1yxYERC83f0_frame0137.png",
+          "sprite_path": "storyboards/1yxYERC83f0/sprite-005.jpg",
+          "video_url": "https://www.youtube.com/watch?v=1yxYERC83f0&t=680s"
+        },
+        {
+          "id": "1yxYERC83f0-f146",
+          "video_id": "1yxYERC83f0",
+          "frame_index": 146,
+          "time_seconds_approx": 725,
+          "timestamp_approx": "12:05",
+          "category": "workspace",
+          "observation": "Magenta-colored pattern pieces on editor canvas",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/1yxYERC83f0_frame0146.png",
+          "sprite_path": "storyboards/1yxYERC83f0/sprite-005.jpg",
+          "video_url": "https://www.youtube.com/watch?v=1yxYERC83f0&t=725s"
+        },
+        {
+          "id": "1yxYERC83f0-f173",
+          "video_id": "1yxYERC83f0",
+          "frame_index": 173,
+          "time_seconds_approx": 859,
+          "timestamp_approx": "14:19",
+          "category": "workspace",
+          "observation": "Purple-colored pattern pieces on editor canvas",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/1yxYERC83f0_frame0173.png",
+          "sprite_path": "storyboards/1yxYERC83f0/sprite-006.jpg",
+          "video_url": "https://www.youtube.com/watch?v=1yxYERC83f0&t=859s"
+        }
+      ],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.draft.line",
+      "label": "Draw and edit constrained lines and points",
+      "domain": "drafting",
+      "purpose": "Construct numerically precise straight segments, internal marks and anchors.",
+      "official_source_ids": [
+        "S017",
+        "S020",
+        "S021",
+        "S054",
+        "S055"
+      ],
+      "tutorial_video_ids": [
+        "Fdm5xc3n34o"
+      ],
+      "inputs": [
+        "piece ID",
+        "point start/end",
+        "explicit lengths/angles",
+        "coordinate frame and constraint flags"
+      ],
+      "engineering_algorithm": [
+        "Snap anchor in piece-local coordinates",
+        "Solve distance, polar angle and intersections",
+        "Add stable point/line IDs"
+      ],
+      "outputs": [
+        "Updated editable piece",
+        "construction lines",
+        "measured values"
+      ],
+      "safety_invariants": [
+        "Finite coordinates and valid edge topology",
+        "Maintain construction vs cut-line identity",
+        "No zero-length cut edges"
+      ],
+      "acceptance_tests": [
+        "Length-angle exact input",
+        "parallel/intersection degeneracy",
+        "undo",
+        "repeated endpoints"
+      ],
+      "ux_interaction": "Canvas pen plus numeric floating inspector, live constraints",
+      "math": "p2=p1+length*(cos(theta), sin(theta)); intersection checks determinant != 0",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/draftingConstructions.js",
+        "src/core/draftingPrecision.js",
+        "src/core/draftingSnapping.js"
+      ],
+      "priority": "P0",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "Fdm5xc3n34o",
+          "title": "Basic T From Measurements part 1 using Gerber Accumark version 10 software Beginner level",
+          "url": "https://www.youtube.com/watch?v=Fdm5xc3n34o",
+          "contact_sheet": "contact_sheets/Fdm5xc3n34o.jpg",
+          "frames": 73,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S017",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Specify_Length.htm",
+          "title": "Specify Length"
+        },
+        {
+          "source_id": "S020",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Group_Line_Tab_Create_Digitized.htm",
+          "title": "Create a Digitized Line"
+        },
+        {
+          "source_id": "S021",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Group_Line_Tab_Create_2Pt.htm",
+          "title": "Two Point Line"
+        },
+        {
+          "source_id": "S054",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Specify_Distance.htm",
+          "title": "Specify Distance"
+        },
+        {
+          "source_id": "S055",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Piece_Intersection.htm",
+          "title": "Intersection"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/draftingConstructions.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/draftingPrecision.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/draftingSnapping.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.draft.curve",
+      "label": "Curve shaping and smoothing",
+      "domain": "drafting",
+      "purpose": "Edit curved pattern seams while preserving topology and geometric continuity.",
+      "official_source_ids": [
+        "S017",
+        "S020",
+        "S021",
+        "S057"
+      ],
+      "tutorial_video_ids": [
+        "imVNQNqIw3c",
+        "uXRUzYwGuL0",
+        "Jv-TH5X_nIo"
+      ],
+      "inputs": [
+        "piece and edge ID",
+        "curve controls/tangent constraints",
+        "point edits"
+      ],
+      "engineering_algorithm": [
+        "Manipulate handles in piece coordinate frame",
+        "Recompute arc length and seam endpoints",
+        "Validate curvature and foldback"
+      ],
+      "outputs": [
+        "Updated curve definition",
+        "new stitch/cut length",
+        "shape/continuity diagnostics"
+      ],
+      "safety_invariants": [
+        "No self-intersection",
+        "Finite controls",
+        "Preserve endpoint anchors",
+        "Cut contour stays closed"
+      ],
+      "acceptance_tests": [
+        "Near-cusp controls",
+        "highly concave line",
+        "mirrored curve",
+        "every graded size"
+      ],
+      "ux_interaction": "Direct-manipulation handles plus curve numeric inspector",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/draftingPrecision.js",
+        "src/core/patternCurveDrafting.js",
+        "src/core/draftingTopology.js"
+      ],
+      "priority": "P0",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "imVNQNqIw3c",
+          "title": "blouse 2 clean and refine smooth",
+          "url": "https://www.youtube.com/watch?v=imVNQNqIw3c",
+          "contact_sheet": "contact_sheets/imVNQNqIw3c.jpg",
+          "frames": 173,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "uXRUzYwGuL0",
+          "title": "blouse 5 sleeve balance cap ease",
+          "url": "https://www.youtube.com/watch?v=uXRUzYwGuL0",
+          "contact_sheet": "contact_sheets/uXRUzYwGuL0.jpg",
+          "frames": 392,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "Jv-TH5X_nIo",
+          "title": "Gerber Accumark Truing, Walking Princess Seams, Smoothing Lines, Adding Notch, Select Specific Piece",
+          "url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo",
+          "contact_sheet": "contact_sheets/Jv-TH5X_nIo.jpg",
+          "frames": 331,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S017",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Specify_Length.htm",
+          "title": "Specify Length"
+        },
+        {
+          "source_id": "S020",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Group_Line_Tab_Create_Digitized.htm",
+          "title": "Create a Digitized Line"
+        },
+        {
+          "source_id": "S021",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Group_Line_Tab_Create_2Pt.htm",
+          "title": "Two Point Line"
+        },
+        {
+          "source_id": "S057",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Smooth_Grade.htm",
+          "title": "Smooth Grade"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/draftingPrecision.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/patternCurveDrafting.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/draftingTopology.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [
+        {
+          "id": "Jv-TH5X_nIo-f52",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 52,
+          "time_seconds_approx": 518,
+          "timestamp_approx": "08:38",
+          "category": "sewing",
+          "observation": "Enlarged pattern pieces with overlaid measurements or annotation",
+          "confidence": "medium",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0052.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-002.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=518s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f69",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 69,
+          "time_seconds_approx": 687,
+          "timestamp_approx": "11:27",
+          "category": "sewing",
+          "observation": "Close-up of adjacent pattern regions and small annotations",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0069.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-002.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=687s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f104",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 104,
+          "time_seconds_approx": 1036,
+          "timestamp_approx": "17:16",
+          "category": "sewing",
+          "observation": "Two adjacent curved pattern-piece edges shown enlarged",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0104.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-004.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=1036s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f208",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 208,
+          "time_seconds_approx": 2071,
+          "timestamp_approx": "34:31",
+          "category": "sewing",
+          "observation": "Curved pattern regions positioned for comparison",
+          "confidence": "medium",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0208.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-008.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=2071s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f243",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 243,
+          "time_seconds_approx": 2420,
+          "timestamp_approx": "40:20",
+          "category": "sewing",
+          "observation": "Close-up of fine annotation text, unreadable as a tool label",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0243.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-009.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=2420s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f313",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 313,
+          "time_seconds_approx": 3117,
+          "timestamp_approx": "51:57",
+          "category": "sewing",
+          "observation": "Multiple shaped garment panels visible on teal editor",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0313.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-012.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=3117s"
+        }
+      ],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.draft.trace",
+      "label": "Trace and digitize patterns",
+      "domain": "digitizing",
+      "purpose": "Turn photographed, scanned or digitized contours into editable semantic pieces.",
+      "official_source_ids": [
+        "S018",
+        "S020",
+        "S086",
+        "S087",
+        "S100",
+        "S107",
+        "S108"
+      ],
+      "tutorial_video_ids": [
+        "UoxE9J3o8dc",
+        "wklGWLf1m_w"
+      ],
+      "inputs": [
+        "raster/points",
+        "calibration length",
+        "coordinate orientation",
+        "traced perimeter",
+        "marking semantics"
+      ],
+      "engineering_algorithm": [
+        "Calibrate physical scale",
+        "Trace contour and fit curves",
+        "Separate internals, grain, drill and notch",
+        "Flag ambiguous open boundaries"
+      ],
+      "outputs": [
+        "Piece geometry with source provenance",
+        "calibration report",
+        "confidence/ambiguity list"
+      ],
+      "safety_invariants": [
+        "Source snapshot preserved",
+        "Scale anchored physically",
+        "Every CUT contour explicit",
+        "Unsupported marks reported"
+      ],
+      "acceptance_tests": [
+        "No calibration",
+        "occluded trace",
+        "duplicated point",
+        "nonuniform raster scaling",
+        "rotated original"
+      ],
+      "ux_interaction": "Capture/import wizard with editable traced preview",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/dxf.js",
+        "src/core/draftingTopology.js"
+      ],
+      "priority": "P1",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "UoxE9J3o8dc",
+          "title": "Digitizing",
+          "url": "https://www.youtube.com/watch?v=UoxE9J3o8dc",
+          "contact_sheet": "contact_sheets/UoxE9J3o8dc.jpg",
+          "frames": 149,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "wklGWLf1m_w",
+          "title": "NScan - the world's fastest way to Digitize Patterns. (Replace camera and digitizing table)",
+          "url": "https://www.youtube.com/watch?v=wklGWLf1m_w",
+          "contact_sheet": "contact_sheets/wklGWLf1m_w.jpg",
+          "frames": 68,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S018",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Group_Piece_Trace_Create_Tab.htm",
+          "title": "Trace Piece"
+        },
+        {
+          "source_id": "S020",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Group_Line_Tab_Create_Digitized.htm",
+          "title": "Create a Digitized Line"
+        },
+        {
+          "source_id": "S086",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/File_Piece_From_AccuScan_Tab_File.htm",
+          "title": "Piece from AccuScan"
+        },
+        {
+          "source_id": "S087",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/File_Toggle_Scanner_Bitmap_Tab_File.htm",
+          "title": "Toggle Scanner Bitmap"
+        },
+        {
+          "source_id": "S100",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Import.htm",
+          "title": "Import Plot and Digitized Data"
+        },
+        {
+          "source_id": "S107",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Function_Dig_Process_Opt.htm",
+          "title": "Digitizing Processing Options"
+        },
+        {
+          "source_id": "S108",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Edit_digitized_data.htm",
+          "title": "To edit digitized data"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/dxf.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/draftingTopology.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [
+        {
+          "id": "UoxE9J3o8dc-f16",
+          "video_id": "UoxE9J3o8dc",
+          "frame_index": 16,
+          "time_seconds_approx": 158,
+          "timestamp_approx": "02:38",
+          "category": "digitizing",
+          "observation": "Physical digitizing button puck held by operator",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/UoxE9J3o8dc_frame0016.png",
+          "sprite_path": "storyboards/UoxE9J3o8dc/sprite-000.jpg",
+          "video_url": "https://www.youtube.com/watch?v=UoxE9J3o8dc&t=158s"
+        },
+        {
+          "id": "UoxE9J3o8dc-f31",
+          "video_id": "UoxE9J3o8dc",
+          "frame_index": 31,
+          "time_seconds_approx": 306,
+          "timestamp_approx": "05:06",
+          "category": "digitizing",
+          "observation": "Pattern tracing board with paper and digitizing tool",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/UoxE9J3o8dc_frame0031.png",
+          "sprite_path": "storyboards/UoxE9J3o8dc/sprite-001.jpg",
+          "video_url": "https://www.youtube.com/watch?v=UoxE9J3o8dc&t=306s"
+        },
+        {
+          "id": "UoxE9J3o8dc-f47",
+          "video_id": "UoxE9J3o8dc",
+          "frame_index": 47,
+          "time_seconds_approx": 464,
+          "timestamp_approx": "07:44",
+          "category": "digitizing",
+          "observation": "Physical drawing and curved pattern lines on board",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/UoxE9J3o8dc_frame0047.png",
+          "sprite_path": "storyboards/UoxE9J3o8dc/sprite-001.jpg",
+          "video_url": "https://www.youtube.com/watch?v=UoxE9J3o8dc&t=464s"
+        },
+        {
+          "id": "UoxE9J3o8dc-f62",
+          "video_id": "UoxE9J3o8dc",
+          "frame_index": 62,
+          "time_seconds_approx": 612,
+          "timestamp_approx": "10:12",
+          "category": "digitizing",
+          "observation": "Operator traces paper pattern with puck",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/UoxE9J3o8dc_frame0062.png",
+          "sprite_path": "storyboards/UoxE9J3o8dc/sprite-002.jpg",
+          "video_url": "https://www.youtube.com/watch?v=UoxE9J3o8dc&t=612s"
+        },
+        {
+          "id": "UoxE9J3o8dc-f109",
+          "video_id": "UoxE9J3o8dc",
+          "frame_index": 109,
+          "time_seconds_approx": 1077,
+          "timestamp_approx": "17:57",
+          "category": "digitizing",
+          "observation": "Digital outlines on teal software canvas",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/UoxE9J3o8dc_frame0109.png",
+          "sprite_path": "storyboards/UoxE9J3o8dc/sprite-004.jpg",
+          "video_url": "https://www.youtube.com/watch?v=UoxE9J3o8dc&t=1077s"
+        },
+        {
+          "id": "UoxE9J3o8dc-f117",
+          "video_id": "UoxE9J3o8dc",
+          "frame_index": 117,
+          "time_seconds_approx": 1156,
+          "timestamp_approx": "19:16",
+          "category": "digitizing",
+          "observation": "Pattern data list in a file manager",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/UoxE9J3o8dc_frame0117.png",
+          "sprite_path": "storyboards/UoxE9J3o8dc/sprite-004.jpg",
+          "video_url": "https://www.youtube.com/watch?v=UoxE9J3o8dc&t=1156s"
+        }
+      ],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.draft.split",
+      "label": "Split, trace and separate pieces",
+      "domain": "drafting",
+      "purpose": "Cut editable piece geometry along authored construction lines, preserving shared edge references.",
+      "official_source_ids": [
+        "S018",
+        "S019",
+        "S020",
+        "S022"
+      ],
+      "tutorial_video_ids": [
+        "BfCSz62HMwY",
+        "t_nNwGdIxvU"
+      ],
+      "inputs": [
+        "piece ID",
+        "split stations / path",
+        "seam ownership",
+        "grainline and internals"
+      ],
+      "engineering_algorithm": [
+        "Intersect split curve with perimeter",
+        "Partition contour and shared nodes",
+        "Reassign notches and marks",
+        "Set resulting piece IDs"
+      ],
+      "outputs": [
+        "New daughter pieces",
+        "adjacency/seam pairing",
+        "transaction log"
+      ],
+      "safety_invariants": [
+        "Area conserved within tolerance",
+        "No disconnected/open pieces",
+        "Shared cut endpoints match",
+        "No lost construction metadata"
+      ],
+      "acceptance_tests": [
+        "Split through notch",
+        "tangent intersection",
+        "split curved edge",
+        "malformed closed path"
+      ],
+      "ux_interaction": "Preview daughter pieces and named piece assignments before Apply",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/draftingSplit.js",
+        "src/core/draftingTopology.js"
+      ],
+      "priority": "P1",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "BfCSz62HMwY",
+          "title": "Draped Fit Pattern Separating Pieces: Preliminary",
+          "url": "https://www.youtube.com/watch?v=BfCSz62HMwY",
+          "contact_sheet": "contact_sheets/BfCSz62HMwY.jpg",
+          "frames": 376,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "t_nNwGdIxvU",
+          "title": "Draped Fit Pattern Separating Pieces part 2",
+          "url": "https://www.youtube.com/watch?v=t_nNwGdIxvU",
+          "contact_sheet": "contact_sheets/t_nNwGdIxvU.jpg",
+          "frames": 590,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S018",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Group_Piece_Trace_Create_Tab.htm",
+          "title": "Trace Piece"
+        },
+        {
+          "source_id": "S019",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Actions_Piece_Split.htm",
+          "title": "Split Piece"
+        },
+        {
+          "source_id": "S020",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Group_Line_Tab_Create_Digitized.htm",
+          "title": "Create a Digitized Line"
+        },
+        {
+          "source_id": "S022",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_piece_utility.htm",
+          "title": "Piece Utility"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/draftingSplit.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/draftingTopology.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.draft.dart",
+      "label": "Rotate, merge and annotate darts",
+      "domain": "drafting",
+      "purpose": "Redistribute dart intake around a pivot while maintaining intended sewn volume and external silhouette.",
+      "official_source_ids": [
+        "S017",
+        "S019",
+        "S020",
+        "S022"
+      ],
+      "tutorial_video_ids": [
+        "S2Z0yuExeJ0",
+        "Nbutv2zYYJk",
+        "CVzAHbw4Ytc",
+        "knxEjANWQag",
+        "jNtNsociabU"
+      ],
+      "inputs": [
+        "dart tip",
+        "two dart legs",
+        "rotation/pivot angle",
+        "opening/closing edges",
+        "seam and grain constraints"
+      ],
+      "engineering_algorithm": [
+        "Rotate impacted points about a pivot",
+        "Close original dart gap and open replacement",
+        "Reconstruct seam path and labels"
+      ],
+      "outputs": [
+        "New dart geometry",
+        "annotations",
+        "changed seam lengths"
+      ],
+      "safety_invariants": [
+        "No inverted contour",
+        "Dart leg identities preserved",
+        "Rotations use positive defined angles",
+        "Check seam after truing"
+      ],
+      "acceptance_tests": [
+        "Full closure",
+        "narrow fold",
+        "intersecting pivot",
+        "repeated rotation/undo"
+      ],
+      "ux_interaction": "Dart edit with before/after overlays and rotate handles",
+      "math": "R(theta)(p-c)+c around apex/pivot c; angular intake conserved unless explicitly changed",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/experimentalDartGeometry20261023.js",
+        "src/core/draftingConstructions.js"
+      ],
+      "priority": "P1",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "S2Z0yuExeJ0",
+          "title": "5   1680 Gerber Accumark  Rotate dart 1 annotate",
+          "url": "https://www.youtube.com/watch?v=S2Z0yuExeJ0",
+          "contact_sheet": "contact_sheets/S2Z0yuExeJ0.jpg",
+          "frames": 110,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "Nbutv2zYYJk",
+          "title": "Review dart rotation using gerber accumark software",
+          "url": "https://www.youtube.com/watch?v=Nbutv2zYYJk",
+          "contact_sheet": "contact_sheets/Nbutv2zYYJk.jpg",
+          "frames": 115,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "CVzAHbw4Ytc",
+          "title": "6 Gerber Accumark Rotate Dart 1 Annotate",
+          "url": "https://www.youtube.com/watch?v=CVzAHbw4Ytc",
+          "contact_sheet": "contact_sheets/CVzAHbw4Ytc.jpg",
+          "frames": 110,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "knxEjANWQag",
+          "title": "7 Gerber Accumark  more darts  combined",
+          "url": "https://www.youtube.com/watch?v=knxEjANWQag",
+          "contact_sheet": "contact_sheets/knxEjANWQag.jpg",
+          "frames": 116,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "jNtNsociabU",
+          "title": "9  1680 Gerber Accumark  manual curved dart Rotation",
+          "url": "https://www.youtube.com/watch?v=jNtNsociabU",
+          "contact_sheet": "contact_sheets/jNtNsociabU.jpg",
+          "frames": 117,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S017",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Specify_Length.htm",
+          "title": "Specify Length"
+        },
+        {
+          "source_id": "S019",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Actions_Piece_Split.htm",
+          "title": "Split Piece"
+        },
+        {
+          "source_id": "S020",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Group_Line_Tab_Create_Digitized.htm",
+          "title": "Create a Digitized Line"
+        },
+        {
+          "source_id": "S022",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_piece_utility.htm",
+          "title": "Piece Utility"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/experimentalDartGeometry20261023.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/draftingConstructions.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [
+        {
+          "id": "S2Z0yuExeJ0-f23",
+          "video_id": "S2Z0yuExeJ0",
+          "frame_index": 23,
+          "time_seconds_approx": 227,
+          "timestamp_approx": "03:47",
+          "category": "drafting",
+          "observation": "Several magenta pattern panels in editor",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/S2Z0yuExeJ0_frame0023.png",
+          "sprite_path": "storyboards/S2Z0yuExeJ0/sprite-000.jpg",
+          "video_url": "https://www.youtube.com/watch?v=S2Z0yuExeJ0&t=227s"
+        },
+        {
+          "id": "S2Z0yuExeJ0-f40",
+          "video_id": "S2Z0yuExeJ0",
+          "frame_index": 40,
+          "time_seconds_approx": 395,
+          "timestamp_approx": "06:35",
+          "category": "drafting",
+          "observation": "Pattern-edit dialog; fields too small to read",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/S2Z0yuExeJ0_frame0040.png",
+          "sprite_path": "storyboards/S2Z0yuExeJ0/sprite-001.jpg",
+          "video_url": "https://www.youtube.com/watch?v=S2Z0yuExeJ0&t=395s"
+        },
+        {
+          "id": "S2Z0yuExeJ0-f69",
+          "video_id": "S2Z0yuExeJ0",
+          "frame_index": 69,
+          "time_seconds_approx": 681,
+          "timestamp_approx": "11:21",
+          "category": "drafting",
+          "observation": "Pattern-edit dialog; rotation parameters not legible",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/S2Z0yuExeJ0_frame0069.png",
+          "sprite_path": "storyboards/S2Z0yuExeJ0/sprite-002.jpg",
+          "video_url": "https://www.youtube.com/watch?v=S2Z0yuExeJ0&t=681s"
+        }
+      ],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.draft.fullness",
+      "label": "Slash/spread, pleats and added fullness",
+      "domain": "drafting",
+      "purpose": "Increase garment ease/volume by opening controlled sections and updating annotations.",
+      "official_source_ids": [
+        "S019",
+        "S022"
+      ],
+      "tutorial_video_ids": [
+        "OPJgbvqOp7k",
+        "iI8E3-mio8s",
+        "btM9RlDfRw0"
+      ],
+      "inputs": [
+        "split paths",
+        "pivot(s)",
+        "gap / spread angle",
+        "fold lines",
+        "grain and seam anchors"
+      ],
+      "engineering_algorithm": [
+        "Partition geometry",
+        "Apply piece-wise rigid transforms",
+        "Rebuild seam/hem curves",
+        "Create fold and matching mark metadata"
+      ],
+      "outputs": [
+        "Updated pattern pieces",
+        "fullness annotations",
+        "geometric delta"
+      ],
+      "safety_invariants": [
+        "No overlapping disconnected contours",
+        "Seam sequence consistent",
+        "Reference grain remains explicit"
+      ],
+      "acceptance_tests": [
+        "Zero spread",
+        "excessive spread",
+        "mirrored pleat",
+        "hem change",
+        "undo"
+      ],
+      "ux_interaction": "Slash preview with numeric gap and rotation controls",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/draftingSplit.js",
+        "src/core/draftingConstructions.js"
+      ],
+      "priority": "P1",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "OPJgbvqOp7k",
+          "title": "T Shirt Added Fullness",
+          "url": "https://www.youtube.com/watch?v=OPJgbvqOp7k",
+          "contact_sheet": "contact_sheets/OPJgbvqOp7k.jpg",
+          "frames": 333,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "iI8E3-mio8s",
+          "title": "Pleated Skirt with Added Fullness and Flare",
+          "url": "https://www.youtube.com/watch?v=iI8E3-mio8s",
+          "contact_sheet": "contact_sheets/iI8E3-mio8s.jpg",
+          "frames": 109,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "btM9RlDfRw0",
+          "title": "Kimono Pattern Theory, Balancing for Proper Fit & Drape Dolman Sleeve  Added Fullness Shawl Collar",
+          "url": "https://www.youtube.com/watch?v=btM9RlDfRw0",
+          "contact_sheet": "contact_sheets/btM9RlDfRw0.jpg",
+          "frames": 243,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S019",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Actions_Piece_Split.htm",
+          "title": "Split Piece"
+        },
+        {
+          "source_id": "S022",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_piece_utility.htm",
+          "title": "Piece Utility"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/draftingSplit.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/draftingConstructions.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.draft.alter",
+      "label": "Pattern alterations, length and fit balancing",
+      "domain": "drafting",
+      "purpose": "Apply localized size/shape changes without corrupting unrelated edges.",
+      "official_source_ids": [
+        "S017",
+        "S054",
+        "S055"
+      ],
+      "tutorial_video_ids": [
+        "UJKdj-yjkT0",
+        "gHDtHWym1z0",
+        "UREhDAGLZqo"
+      ],
+      "inputs": [
+        "target piece and anchors",
+        "alteration axis",
+        "distance/angle",
+        "protected edges",
+        "target measurements"
+      ],
+      "engineering_algorithm": [
+        "Establish edit region and move/rotate vertices",
+        "Reconnect perimeter and internals",
+        "Re-measure sewn edges"
+      ],
+      "outputs": [
+        "Changed piece",
+        "alteration record",
+        "measured before/after"
+      ],
+      "safety_invariants": [
+        "Do not silently alter unaffected edge IDs",
+        "Both mirrored sides handled intentionally",
+        "No perimeter inversion"
+      ],
+      "acceptance_tests": [
+        "Back-yoke shortening",
+        "asymmetric fit change",
+        "repeated edits and undo"
+      ],
+      "ux_interaction": "Before/after ghosted pattern and measurements",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/draftingPrecision.js",
+        "src/core/draftingConstructions.js"
+      ],
+      "priority": "P1",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "UJKdj-yjkT0",
+          "title": "Alteration",
+          "url": "https://www.youtube.com/watch?v=UJKdj-yjkT0",
+          "contact_sheet": "contact_sheets/UJKdj-yjkT0.jpg",
+          "frames": 242,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "gHDtHWym1z0",
+          "title": "Alterations   Shortening the back across shoulders  Back yoke   Smoothing princess curve",
+          "url": "https://www.youtube.com/watch?v=gHDtHWym1z0",
+          "contact_sheet": "contact_sheets/gHDtHWym1z0.jpg",
+          "frames": 104,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "UREhDAGLZqo",
+          "title": "Jacket using Gerber Accumark v16  1 Alterations",
+          "url": "https://www.youtube.com/watch?v=UREhDAGLZqo",
+          "contact_sheet": "contact_sheets/UREhDAGLZqo.jpg",
+          "frames": 361,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S017",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Specify_Length.htm",
+          "title": "Specify Length"
+        },
+        {
+          "source_id": "S054",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Specify_Distance.htm",
+          "title": "Specify Distance"
+        },
+        {
+          "source_id": "S055",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Piece_Intersection.htm",
+          "title": "Intersection"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/draftingPrecision.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/draftingConstructions.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [
+        {
+          "id": "UREhDAGLZqo-f57",
+          "video_id": "UREhDAGLZqo",
+          "frame_index": 57,
+          "time_seconds_approx": 567,
+          "timestamp_approx": "09:27",
+          "category": "v16",
+          "observation": "Jacket pattern region enlarged in editor",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/UREhDAGLZqo_frame0057.png",
+          "sprite_path": "storyboards/UREhDAGLZqo/sprite-006.jpg",
+          "video_url": "https://www.youtube.com/watch?v=UREhDAGLZqo&t=567s"
+        },
+        {
+          "id": "UREhDAGLZqo-f76",
+          "video_id": "UREhDAGLZqo",
+          "frame_index": 76,
+          "time_seconds_approx": 756,
+          "timestamp_approx": "12:36",
+          "category": "v16",
+          "observation": "Jacket pattern text and internal marks",
+          "confidence": "medium",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/UREhDAGLZqo_frame0076.png",
+          "sprite_path": "storyboards/UREhDAGLZqo/sprite-008.jpg",
+          "video_url": "https://www.youtube.com/watch?v=UREhDAGLZqo&t=756s"
+        },
+        {
+          "id": "UREhDAGLZqo-f227",
+          "video_id": "UREhDAGLZqo",
+          "frame_index": 227,
+          "time_seconds_approx": 2259,
+          "timestamp_approx": "37:39",
+          "category": "v16",
+          "observation": "Translucent overlapping pattern shapes",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/UREhDAGLZqo_frame0227.png",
+          "sprite_path": "storyboards/UREhDAGLZqo/sprite-025.jpg",
+          "video_url": "https://www.youtube.com/watch?v=UREhDAGLZqo&t=2259s"
+        }
+      ],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.seam.allowance",
+      "label": "Variable seam allowance offset",
+      "domain": "sewing",
+      "purpose": "Construct cutting line from sewing line with edge-specific seam allowance and join rules.",
+      "official_source_ids": [
+        "S024",
+        "S022"
+      ],
+      "tutorial_video_ids": [
+        "NNF2-yDD1qs"
+      ],
+      "inputs": [
+        "piece stitch boundary",
+        "edge-specific widths in cm",
+        "corner join/miter rule",
+        "end treatments"
+      ],
+      "engineering_algorithm": [
+        "Offset each stitch segment normal to sewing contour",
+        "Reconcile joins",
+        "Emit CUT geometry as separate layer"
+      ],
+      "outputs": [
+        "Physical CUT polygon",
+        "seam width metadata",
+        "offset quality report"
+      ],
+      "safety_invariants": [
+        "Valid winding and no self-intersections",
+        "No negative/nonfinite widths",
+        "Sharp-corner miter capped",
+        "Check graded sizes"
+      ],
+      "acceptance_tests": [
+        "Acute angle",
+        "concave curve",
+        "zero allowance",
+        "hem discontinuity",
+        "full size run"
+      ],
+      "ux_interaction": "Edge selection and width inspector; preview stitch vs cut",
+      "math": "CUT(s)=STITCH(s)+allowance(s)*unitNormal(s), subject to join/offset constraints",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/project.js",
+        "src/core/patternAllowancePreview.js",
+        "src/core/industrialCutlineQA.js"
+      ],
+      "priority": "P0",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "NNF2-yDD1qs",
+          "title": "Seam Allowance : Adding, subtracting in Gerber Accumark",
+          "url": "https://www.youtube.com/watch?v=NNF2-yDD1qs",
+          "contact_sheet": "contact_sheets/NNF2-yDD1qs.jpg",
+          "frames": 150,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S024",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/DialogBox_Edit_Seam_Properties.htm",
+          "title": "Edit Seam Properties"
+        },
+        {
+          "source_id": "S022",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_piece_utility.htm",
+          "title": "Piece Utility"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/project.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/patternAllowancePreview.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/industrialCutlineQA.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [
+        {
+          "id": "NNF2-yDD1qs-f16",
+          "video_id": "NNF2-yDD1qs",
+          "frame_index": 16,
+          "time_seconds_approx": 159,
+          "timestamp_approx": "02:39",
+          "category": "sewing",
+          "observation": "Several pale pattern pieces on editor canvas",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/NNF2-yDD1qs_frame0016.png",
+          "sprite_path": "storyboards/NNF2-yDD1qs/sprite-000.jpg",
+          "video_url": "https://www.youtube.com/watch?v=NNF2-yDD1qs&t=159s"
+        },
+        {
+          "id": "NNF2-yDD1qs-f86",
+          "video_id": "NNF2-yDD1qs",
+          "frame_index": 86,
+          "time_seconds_approx": 854,
+          "timestamp_approx": "14:14",
+          "category": "sewing",
+          "observation": "Zoomed sloped pattern boundary, offset not measurable",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/NNF2-yDD1qs_frame0086.png",
+          "sprite_path": "storyboards/NNF2-yDD1qs/sprite-003.jpg",
+          "video_url": "https://www.youtube.com/watch?v=NNF2-yDD1qs&t=854s"
+        },
+        {
+          "id": "NNF2-yDD1qs-f102",
+          "video_id": "NNF2-yDD1qs",
+          "frame_index": 102,
+          "time_seconds_approx": 1013,
+          "timestamp_approx": "16:53",
+          "category": "sewing",
+          "observation": "Zoomed corner and edge; text unreadable",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/NNF2-yDD1qs_frame0102.png",
+          "sprite_path": "storyboards/NNF2-yDD1qs/sprite-004.jpg",
+          "video_url": "https://www.youtube.com/watch?v=NNF2-yDD1qs&t=1013s"
+        },
+        {
+          "id": "NNF2-yDD1qs-f125",
+          "video_id": "NNF2-yDD1qs",
+          "frame_index": 125,
+          "time_seconds_approx": 1241,
+          "timestamp_approx": "20:41",
+          "category": "sewing",
+          "observation": "Several panels shown in wider workspace",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/NNF2-yDD1qs_frame0125.png",
+          "sprite_path": "storyboards/NNF2-yDD1qs/sprite-005.jpg",
+          "video_url": "https://www.youtube.com/watch?v=NNF2-yDD1qs&t=1241s"
+        }
+      ],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.seam.walk",
+      "label": "Walk, true and measure sewing seams",
+      "domain": "sewing",
+      "purpose": "Align two sew-edge paths to inspect length mismatch, shape balance and notch stations.",
+      "official_source_ids": [
+        "S024",
+        "S025",
+        "S051"
+      ],
+      "tutorial_video_ids": [
+        "Jv-TH5X_nIo",
+        "8YLLRnFukfM"
+      ],
+      "inputs": [
+        "seam pair",
+        "edge ranges",
+        "direction/mirror",
+        "sample count",
+        "allowed easing"
+      ],
+      "engineering_algorithm": [
+        "Sample both stitch paths by arc length",
+        "Normalize/compare orientations",
+        "Report length and shape residuals",
+        "Optionally propose trueing edit"
+      ],
+      "outputs": [
+        "Seam walk comparison",
+        "length/ease discrepancy",
+        "issue markers by size"
+      ],
+      "safety_invariants": [
+        "Exact source sew-edges preserved until approved edit",
+        "Constraint failures scoped per size/pair",
+        "Detect invalid seams"
+      ],
+      "acceptance_tests": [
+        "Different curve lengths",
+        "reverse orientation",
+        "missing edge",
+        "each size",
+        "asymmetric left/right"
+      ],
+      "ux_interaction": "Linked dual-edge overlay with synchronized walk slider",
+      "math": "lengthError=abs(LA-LB); shapeError=distance between arc-normalized samples",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/project.js",
+        "src/core/industrialPatternQA.js",
+        "src/core/gradedSeamJunctionQA.js"
+      ],
+      "priority": "P0",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "Jv-TH5X_nIo",
+          "title": "Gerber Accumark Truing, Walking Princess Seams, Smoothing Lines, Adding Notch, Select Specific Piece",
+          "url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo",
+          "contact_sheet": "contact_sheets/Jv-TH5X_nIo.jpg",
+          "frames": 331,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "8YLLRnFukfM",
+          "title": "Skirts 1  true and balance requirements and comprehension using Gerber Accumark pattern software v10",
+          "url": "https://www.youtube.com/watch?v=8YLLRnFukfM",
+          "contact_sheet": "contact_sheets/8YLLRnFukfM.jpg",
+          "frames": 295,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S024",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/DialogBox_Edit_Seam_Properties.htm",
+          "title": "Edit Seam Properties"
+        },
+        {
+          "source_id": "S025",
+          "url": "https://help.gerbertechnology.com/AccuMark/PDS/Function_Walk_Pieces.htm",
+          "title": "Walk Pieces"
+        },
+        {
+          "source_id": "S051",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Piece_Match_Line.htm",
+          "title": "Match Line"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/project.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/industrialPatternQA.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/gradedSeamJunctionQA.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [
+        {
+          "id": "Jv-TH5X_nIo-f52",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 52,
+          "time_seconds_approx": 518,
+          "timestamp_approx": "08:38",
+          "category": "sewing",
+          "observation": "Enlarged pattern pieces with overlaid measurements or annotation",
+          "confidence": "medium",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0052.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-002.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=518s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f69",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 69,
+          "time_seconds_approx": 687,
+          "timestamp_approx": "11:27",
+          "category": "sewing",
+          "observation": "Close-up of adjacent pattern regions and small annotations",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0069.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-002.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=687s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f104",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 104,
+          "time_seconds_approx": 1036,
+          "timestamp_approx": "17:16",
+          "category": "sewing",
+          "observation": "Two adjacent curved pattern-piece edges shown enlarged",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0104.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-004.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=1036s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f208",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 208,
+          "time_seconds_approx": 2071,
+          "timestamp_approx": "34:31",
+          "category": "sewing",
+          "observation": "Curved pattern regions positioned for comparison",
+          "confidence": "medium",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0208.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-008.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=2071s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f243",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 243,
+          "time_seconds_approx": 2420,
+          "timestamp_approx": "40:20",
+          "category": "sewing",
+          "observation": "Close-up of fine annotation text, unreadable as a tool label",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0243.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-009.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=2420s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f313",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 313,
+          "time_seconds_approx": 3117,
+          "timestamp_approx": "51:57",
+          "category": "sewing",
+          "observation": "Multiple shaped garment panels visible on teal editor",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0313.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-012.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=3117s"
+        }
+      ],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.seam.notch",
+      "label": "Insert, pair and grade sewing notches",
+      "domain": "sewing",
+      "purpose": "Attach single/double notches to a physical seam station and retain marks across grading and DXF.",
+      "official_source_ids": [
+        "S024",
+        "S025"
+      ],
+      "tutorial_video_ids": [
+        "Jv-TH5X_nIo"
+      ],
+      "inputs": [
+        "piece ID",
+        "stitch or cut edge",
+        "normalized station t",
+        "depthCm",
+        "single/double type",
+        "seam pair"
+      ],
+      "engineering_algorithm": [
+        "Bind station to stable edge identity",
+        "Derive CUT placement across seam allowance",
+        "Propagate to each size",
+        "Validate pair alignment"
+      ],
+      "outputs": [
+        "Notch records",
+        "physical DXF geometry",
+        "all-size issue inventory"
+      ],
+      "safety_invariants": [
+        "No clipping of double-notch endpoints",
+        "depth fits allowance",
+        "Each notch maps to exact size/piece/edge",
+        "Paired distances consistent"
+      ],
+      "acceptance_tests": [
+        "t=0/1 double notch",
+        "notches on curves",
+        "lost edge after split",
+        "mirrored notch",
+        "missing inventory"
+      ],
+      "ux_interaction": "Place point on edge with contextual type and depth inspector",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/industrialNotchQA.js",
+        "src/core/industrialDoubleNotchPreflight20261023.js",
+        "src/core/patternSewingNotches.js"
+      ],
+      "priority": "P0",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "Jv-TH5X_nIo",
+          "title": "Gerber Accumark Truing, Walking Princess Seams, Smoothing Lines, Adding Notch, Select Specific Piece",
+          "url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo",
+          "contact_sheet": "contact_sheets/Jv-TH5X_nIo.jpg",
+          "frames": 331,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S024",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/DialogBox_Edit_Seam_Properties.htm",
+          "title": "Edit Seam Properties"
+        },
+        {
+          "source_id": "S025",
+          "url": "https://help.gerbertechnology.com/AccuMark/PDS/Function_Walk_Pieces.htm",
+          "title": "Walk Pieces"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/industrialNotchQA.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/industrialDoubleNotchPreflight20261023.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/patternSewingNotches.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [
+        {
+          "id": "Jv-TH5X_nIo-f52",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 52,
+          "time_seconds_approx": 518,
+          "timestamp_approx": "08:38",
+          "category": "sewing",
+          "observation": "Enlarged pattern pieces with overlaid measurements or annotation",
+          "confidence": "medium",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0052.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-002.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=518s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f69",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 69,
+          "time_seconds_approx": 687,
+          "timestamp_approx": "11:27",
+          "category": "sewing",
+          "observation": "Close-up of adjacent pattern regions and small annotations",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0069.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-002.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=687s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f104",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 104,
+          "time_seconds_approx": 1036,
+          "timestamp_approx": "17:16",
+          "category": "sewing",
+          "observation": "Two adjacent curved pattern-piece edges shown enlarged",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0104.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-004.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=1036s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f208",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 208,
+          "time_seconds_approx": 2071,
+          "timestamp_approx": "34:31",
+          "category": "sewing",
+          "observation": "Curved pattern regions positioned for comparison",
+          "confidence": "medium",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0208.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-008.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=2071s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f243",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 243,
+          "time_seconds_approx": 2420,
+          "timestamp_approx": "40:20",
+          "category": "sewing",
+          "observation": "Close-up of fine annotation text, unreadable as a tool label",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0243.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-009.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=2420s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f313",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 313,
+          "time_seconds_approx": 3117,
+          "timestamp_approx": "51:57",
+          "category": "sewing",
+          "observation": "Multiple shaped garment panels visible on teal editor",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0313.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-012.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=3117s"
+        }
+      ],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.grading.size_line",
+      "label": "Configure grade method and size line",
+      "domain": "grading",
+      "purpose": "Define size ordering, base size and incremental versus cumulative grade mode.",
+      "official_source_ids": [
+        "S004",
+        "S012",
+        "S015",
+        "S016"
+      ],
+      "tutorial_video_ids": [
+        "UJKdj-yjkT0",
+        "8YLLRnFukfM"
+      ],
+      "inputs": [
+        "ordered size names",
+        "base size",
+        "grading coordinate axes",
+        "method",
+        "physical units"
+      ],
+      "engineering_algorithm": [
+        "Validate unique ordered sizes",
+        "Interpret per-break and base-relative displacement tables",
+        "Convert modes without drift"
+      ],
+      "outputs": [
+        "Size-run configuration",
+        "rule mode",
+        "migration/consistency report"
+      ],
+      "safety_invariants": [
+        "Every rule same declared size set",
+        "Distinguish incremental vs cumulative",
+        "Confirm piece coordinate frame and grain reference"
+      ],
+      "acceptance_tests": [
+        "Nonuniform break increments",
+        "missing base",
+        "duplicate sizes",
+        "reversed order",
+        "mode conversion round trip"
+      ],
+      "ux_interaction": "Size line editor with explicit base and per-break model",
+      "math": "cumulativeDelta(s)=sum of adjacent break deltas from base to s, with sign",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/grading.js",
+        "src/core/industrialGradeRules.js"
+      ],
+      "priority": "P0",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "UJKdj-yjkT0",
+          "title": "Alteration",
+          "url": "https://www.youtube.com/watch?v=UJKdj-yjkT0",
+          "contact_sheet": "contact_sheets/UJKdj-yjkT0.jpg",
+          "frames": 242,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "8YLLRnFukfM",
+          "title": "Skirts 1  true and balance requirements and comprehension using Gerber Accumark pattern software v10",
+          "url": "https://www.youtube.com/watch?v=8YLLRnFukfM",
+          "contact_sheet": "contact_sheets/8YLLRnFukfM.jpg",
+          "frames": 295,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S004",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Grade_Options.htm",
+          "title": "Grade Options"
+        },
+        {
+          "source_id": "S012",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Modify_Size_Line.htm",
+          "title": "Modify Size Line"
+        },
+        {
+          "source_id": "S015",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Grade%20Rules.htm",
+          "title": "Grade Rules"
+        },
+        {
+          "source_id": "S016",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Rule%20Number.htm",
+          "title": "Rule Number"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/grading.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/industrialGradeRules.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.grading.rule_table",
+      "label": "Author and assign named grade rule tables",
+      "domain": "grading",
+      "purpose": "Store reusable per-point grading rules with stable IDs and explicit size-set provenance.",
+      "official_source_ids": [
+        "S009",
+        "S010",
+        "S015",
+        "S016",
+        "S112"
+      ],
+      "tutorial_video_ids": [
+        "CGw99q3AUjI"
+      ],
+      "inputs": [
+        "named rule table",
+        "version",
+        "units",
+        "size set",
+        "point rule IDs",
+        "base size"
+      ],
+      "engineering_algorithm": [
+        "Create/update rule steps",
+        "Link points to rule IDs",
+        "Detect missing rules and stale table versions",
+        "Preview resulting size nest"
+      ],
+      "outputs": [
+        "Versioned rule library",
+        "dependency graph",
+        "applied rule assignments"
+      ],
+      "safety_invariants": [
+        "No silent zero growth when rule missing",
+        "Stable IDs and revisions",
+        "Prevent replacing incompatible table without report"
+      ],
+      "acceptance_tests": [
+        "Missing referenced rule",
+        "table edit affecting multiple pieces",
+        "mixed units",
+        "external CSV import"
+      ],
+      "ux_interaction": "Spreadsheet-like grade rule table with point highlighting",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/industrialGradeRules.js",
+        "src/core/gradeRuleCsv.js",
+        "src/core/grading.js"
+      ],
+      "priority": "P0",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "CGw99q3AUjI",
+          "title": "1 Gerber Accumark intro and names",
+          "url": "https://www.youtube.com/watch?v=CGw99q3AUjI",
+          "contact_sheet": "contact_sheets/CGw99q3AUjI.jpg",
+          "frames": 118,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S009",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Function_Grade_Rule_Editor.htm",
+          "title": "Grade Rule Editor"
+        },
+        {
+          "source_id": "S010",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Group_Create_Edit_Tab_Grade.htm",
+          "title": "Create/Edit Group"
+        },
+        {
+          "source_id": "S015",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Grade%20Rules.htm",
+          "title": "Grade Rules"
+        },
+        {
+          "source_id": "S016",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Rule%20Number.htm",
+          "title": "Rule Number"
+        },
+        {
+          "source_id": "S112",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Rule_Editor.htm",
+          "title": "Marking Rule Editor"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/industrialGradeRules.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/gradeRuleCsv.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/grading.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [
+        {
+          "id": "CGw99q3AUjI-f6",
+          "video_id": "CGw99q3AUjI",
+          "frame_index": 6,
+          "time_seconds_approx": 59,
+          "timestamp_approx": "00:59",
+          "category": "workspace",
+          "observation": "Dense upper ribbons and narrow right inspector beside teal pattern canvas",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/CGw99q3AUjI_frame0006.png",
+          "sprite_path": "storyboards/CGw99q3AUjI/sprite-000.jpg",
+          "video_url": "https://www.youtube.com/watch?v=CGw99q3AUjI&t=59s"
+        },
+        {
+          "id": "CGw99q3AUjI-f37",
+          "video_id": "CGw99q3AUjI",
+          "frame_index": 37,
+          "time_seconds_approx": 365,
+          "timestamp_approx": "06:05",
+          "category": "workspace",
+          "observation": "Multiple pale pattern silhouettes arranged on teal editor canvas",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/CGw99q3AUjI_frame0037.png",
+          "sprite_path": "storyboards/CGw99q3AUjI/sprite-001.jpg",
+          "video_url": "https://www.youtube.com/watch?v=CGw99q3AUjI&t=365s"
+        },
+        {
+          "id": "CGw99q3AUjI-f86",
+          "video_id": "CGw99q3AUjI",
+          "frame_index": 86,
+          "time_seconds_approx": 849,
+          "timestamp_approx": "14:09",
+          "category": "workspace",
+          "observation": "Modal dialog over pattern workspace; text too small to read",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/CGw99q3AUjI_frame0086.png",
+          "sprite_path": "storyboards/CGw99q3AUjI/sprite-003.jpg",
+          "video_url": "https://www.youtube.com/watch?v=CGw99q3AUjI&t=849s"
+        }
+      ],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.grading.delta",
+      "label": "Create/edit X/Y point deltas",
+      "domain": "grading",
+      "purpose": "Apply precise independent X/Y growth for each size break to a pattern grade point.",
+      "official_source_ids": [
+        "S005",
+        "S006"
+      ],
+      "tutorial_video_ids": [
+        "8YLLRnFukfM"
+      ],
+      "inputs": [
+        "piece and point ID",
+        "size run",
+        "x/y per-break deltas",
+        "corner update mode",
+        "grainline axes"
+      ],
+      "engineering_algorithm": [
+        "Store explicit grade deltas",
+        "Convert to canonical representation",
+        "Evaluate original base geometry for every size"
+      ],
+      "outputs": [
+        "Point grade rule",
+        "all-size point coordinates",
+        "edit audit history"
+      ],
+      "safety_invariants": [
+        "Numeric finite values",
+        "Preserve base point",
+        "Corner endpoint choice explicit",
+        "No regrading from previously graded sizes"
+      ],
+      "acceptance_tests": [
+        "Delta sign / coordinate frame",
+        "reversed grainline",
+        "isolated point",
+        "repeated apply"
+      ],
+      "ux_interaction": "Point-selection inspector with editable X/Y grid and size nest",
+      "math": "P(size)=Pbase+(deltaX(size),deltaY(size))",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/industrialGradeRules.js",
+        "src/core/grading.js",
+        "src/core/rustGradingKernel.js"
+      ],
+      "priority": "P0",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "8YLLRnFukfM",
+          "title": "Skirts 1  true and balance requirements and comprehension using Gerber Accumark pattern software v10",
+          "url": "https://www.youtube.com/watch?v=8YLLRnFukfM",
+          "contact_sheet": "contact_sheets/8YLLRnFukfM.jpg",
+          "frames": 295,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S005",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Create_Delta.htm",
+          "title": "Create Delta"
+        },
+        {
+          "source_id": "S006",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Edit_Delta.htm",
+          "title": "Edit Delta"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/industrialGradeRules.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/grading.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/rustGradingKernel.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": [
+        "accu.grading.size_line",
+        "accu.grading.rule_table"
+      ]
+    },
+    {
+      "id": "accu.grading.offset",
+      "label": "Grade by offset distance",
+      "domain": "grading",
+      "purpose": "Keep graded contour elements at controlled signed distances from reference edges.",
+      "official_source_ids": [
+        "S007",
+        "S008"
+      ],
+      "tutorial_video_ids": [
+        "uXRUzYwGuL0"
+      ],
+      "inputs": [
+        "selected edge/control points",
+        "offset distance per size",
+        "target normal and reference"
+      ],
+      "engineering_algorithm": [
+        "Compute offset curve",
+        "Reconcile joins with other graded edges",
+        "Persist driven dependency"
+      ],
+      "outputs": [
+        "Offset grade rule",
+        "size outlines",
+        "deviation report"
+      ],
+      "safety_invariants": [
+        "Preserve signed normal convention",
+        "Avoid curve singularities",
+        "No self-intersecting offset"
+      ],
+      "acceptance_tests": [
+        "Curved contour offset",
+        "zero radius",
+        "reversed winding",
+        "mixed straight/curve"
+      ],
+      "ux_interaction": "Constraint inspector with offset handles",
+      "math": "G_s(t)=G_base(t)+d_s*n_base(t); recompute joins/intersections",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/project.js",
+        "src/core/industrialGradeRules.js"
+      ],
+      "priority": "P1",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "uXRUzYwGuL0",
+          "title": "blouse 5 sleeve balance cap ease",
+          "url": "https://www.youtube.com/watch?v=uXRUzYwGuL0",
+          "contact_sheet": "contact_sheets/uXRUzYwGuL0.jpg",
+          "frames": 392,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S007",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Create_Offset.htm",
+          "title": "Create Offset"
+        },
+        {
+          "source_id": "S008",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Edit_Offset.htm",
+          "title": "Edit Offset"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/project.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/industrialGradeRules.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": [
+        "accu.grading.size_line",
+        "accu.draft.curve"
+      ]
+    },
+    {
+      "id": "accu.grading.copy",
+      "label": "Copy and distribute grade rules",
+      "domain": "grading",
+      "purpose": "Transfer vetted point grading rules between points and compatible pieces.",
+      "official_source_ids": [
+        "S011",
+        "S056"
+      ],
+      "tutorial_video_ids": [
+        "UJKdj-yjkT0"
+      ],
+      "inputs": [
+        "source point/table/version",
+        "destination points",
+        "transformation and coordinate frame"
+      ],
+      "engineering_algorithm": [
+        "Normalize rule basis",
+        "Copy or interpolate selected deltas",
+        "Recompute target sizes and dependency graph"
+      ],
+      "outputs": [
+        "Rule assignments",
+        "resulting evaluated grade",
+        "provenance"
+      ],
+      "safety_invariants": [
+        "No unintended shared mutable rule",
+        "Respect mirror transform",
+        "Report unsupported destination sizes"
+      ],
+      "acceptance_tests": [
+        "Left/right symmetry",
+        "different size line",
+        "overlapping source/target"
+      ],
+      "ux_interaction": "Batch rule copy/distribute with before/after ghost nest",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/grading.js",
+        "src/core/industrialGradeRules.js"
+      ],
+      "priority": "P1",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "UJKdj-yjkT0",
+          "title": "Alteration",
+          "url": "https://www.youtube.com/watch?v=UJKdj-yjkT0",
+          "contact_sheet": "contact_sheets/UJKdj-yjkT0.jpg",
+          "frames": 242,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S011",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Copy_Grade.htm",
+          "title": "Copy Grade"
+        },
+        {
+          "source_id": "S056",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Distribute_Proportional.htm",
+          "title": "Distribute"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/grading.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/industrialGradeRules.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": [
+        "accu.grading.rule_table"
+      ]
+    },
+    {
+      "id": "accu.grading.point",
+      "label": "Insert or edit a grade point",
+      "domain": "grading",
+      "purpose": "Create a persistent grade anchor along a perimeter or internal curve.",
+      "official_source_ids": [
+        "S013",
+        "S016"
+      ],
+      "tutorial_video_ids": [
+        "uXRUzYwGuL0"
+      ],
+      "inputs": [
+        "piece and edge",
+        "normalized arc station",
+        "stable point ID",
+        "grade rule"
+      ],
+      "engineering_algorithm": [
+        "Split selected geometric edge",
+        "Insert vertex/control anchor",
+        "Reparameterize curve & internal attachments"
+      ],
+      "outputs": [
+        "New grade point",
+        "updated piece topology",
+        "per-size correspondence"
+      ],
+      "safety_invariants": [
+        "No curve discontinuity",
+        "No lost attached notch or seam edge",
+        "Stable cross-size identity"
+      ],
+      "acceptance_tests": [
+        "Near-endpoint insertion",
+        "curved edge",
+        "duplicate station",
+        "undo/redo"
+      ],
+      "ux_interaction": "Add grade anchor with all-size preview",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/draftingSplit.js",
+        "src/core/draftingTopology.js",
+        "src/core/grading.js"
+      ],
+      "priority": "P0",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "uXRUzYwGuL0",
+          "title": "blouse 5 sleeve balance cap ease",
+          "url": "https://www.youtube.com/watch?v=uXRUzYwGuL0",
+          "contact_sheet": "contact_sheets/uXRUzYwGuL0.jpg",
+          "frames": 392,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S013",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Add_Grade_Point.htm",
+          "title": "Add Grade Point"
+        },
+        {
+          "source_id": "S016",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Rule%20Number.htm",
+          "title": "Rule Number"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/draftingSplit.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/draftingTopology.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/grading.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": [
+        "accu.draft.split",
+        "accu.grading.rule_table"
+      ]
+    },
+    {
+      "id": "accu.grading.intersection",
+      "label": "Grade intersections and matching line",
+      "domain": "grading",
+      "purpose": "Reconcile grade directions so independent segments remain sewn or intersect correctly.",
+      "official_source_ids": [
+        "S051",
+        "S055"
+      ],
+      "tutorial_video_ids": [
+        "8YLLRnFukfM",
+        "Jv-TH5X_nIo"
+      ],
+      "inputs": [
+        "moving lines/edges",
+        "target seam/line",
+        "size scope",
+        "constraints",
+        "allowed tolerance"
+      ],
+      "engineering_algorithm": [
+        "Intersect graded construction lines",
+        "Adjust permitted point deltas",
+        "Solve sewn match constraints with residuals"
+      ],
+      "outputs": [
+        "Adjusted size-specific points",
+        "residual and conflict report"
+      ],
+      "safety_invariants": [
+        "Intersections within valid ranges",
+        "No silent point overconstraint",
+        "Maintain sewing relation each size"
+      ],
+      "acceptance_tests": [
+        "Parallel nonintersecting lines",
+        "conflicting joins",
+        "reversed seam",
+        "all-size check"
+      ],
+      "ux_interaction": "Constraint link viewer with per-size residual meter",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/draftingConstructions.js",
+        "src/core/gradedSeamJunctionQA.js"
+      ],
+      "priority": "P0",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "8YLLRnFukfM",
+          "title": "Skirts 1  true and balance requirements and comprehension using Gerber Accumark pattern software v10",
+          "url": "https://www.youtube.com/watch?v=8YLLRnFukfM",
+          "contact_sheet": "contact_sheets/8YLLRnFukfM.jpg",
+          "frames": 295,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "Jv-TH5X_nIo",
+          "title": "Gerber Accumark Truing, Walking Princess Seams, Smoothing Lines, Adding Notch, Select Specific Piece",
+          "url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo",
+          "contact_sheet": "contact_sheets/Jv-TH5X_nIo.jpg",
+          "frames": 331,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S051",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Piece_Match_Line.htm",
+          "title": "Match Line"
+        },
+        {
+          "source_id": "S055",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Piece_Intersection.htm",
+          "title": "Intersection"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/draftingConstructions.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/gradedSeamJunctionQA.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [
+        {
+          "id": "Jv-TH5X_nIo-f52",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 52,
+          "time_seconds_approx": 518,
+          "timestamp_approx": "08:38",
+          "category": "sewing",
+          "observation": "Enlarged pattern pieces with overlaid measurements or annotation",
+          "confidence": "medium",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0052.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-002.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=518s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f69",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 69,
+          "time_seconds_approx": 687,
+          "timestamp_approx": "11:27",
+          "category": "sewing",
+          "observation": "Close-up of adjacent pattern regions and small annotations",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0069.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-002.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=687s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f104",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 104,
+          "time_seconds_approx": 1036,
+          "timestamp_approx": "17:16",
+          "category": "sewing",
+          "observation": "Two adjacent curved pattern-piece edges shown enlarged",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0104.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-004.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=1036s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f208",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 208,
+          "time_seconds_approx": 2071,
+          "timestamp_approx": "34:31",
+          "category": "sewing",
+          "observation": "Curved pattern regions positioned for comparison",
+          "confidence": "medium",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0208.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-008.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=2071s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f243",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 243,
+          "time_seconds_approx": 2420,
+          "timestamp_approx": "40:20",
+          "category": "sewing",
+          "observation": "Close-up of fine annotation text, unreadable as a tool label",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0243.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-009.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=2420s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f313",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 313,
+          "time_seconds_approx": 3117,
+          "timestamp_approx": "51:57",
+          "category": "sewing",
+          "observation": "Multiple shaped garment panels visible on teal editor",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0313.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-012.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=3117s"
+        }
+      ],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": [
+        "accu.grading.delta",
+        "accu.seam.walk"
+      ]
+    },
+    {
+      "id": "accu.grading.keep_angle",
+      "label": "Keep angle and parallel constraints",
+      "domain": "grading",
+      "purpose": "Preserve base-size angular and parallel relationships during multi-size grading.",
+      "official_source_ids": [
+        "S052",
+        "S053"
+      ],
+      "tutorial_video_ids": [
+        "UJKdj-yjkT0"
+      ],
+      "inputs": [
+        "reference line",
+        "constrained line",
+        "angle",
+        "per-size anchor priorities"
+      ],
+      "engineering_algorithm": [
+        "Represent directed tangent-angle constraint",
+        "Solve adjustments at size breaks",
+        "Compute residual"
+      ],
+      "outputs": [
+        "Constraint plus transformed points",
+        "per-size angle report"
+      ],
+      "safety_invariants": [
+        "Prevent zero-vector lines",
+        "Respect grainline coordinate frame",
+        "Conflict detection mandatory"
+      ],
+      "acceptance_tests": [
+        "Mirrored panels",
+        "acute angle",
+        "piece rotation",
+        "impossible triangle"
+      ],
+      "ux_interaction": "Constraint glyphs and conflict diagnostics",
+      "math": "angle(L_s,L_ref_s)=angle(L_base,L_ref_base); dot/cross residual <= tolerance",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/draftingConstructions.js",
+        "src/core/grading.js"
+      ],
+      "priority": "P1",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "UJKdj-yjkT0",
+          "title": "Alteration",
+          "url": "https://www.youtube.com/watch?v=UJKdj-yjkT0",
+          "contact_sheet": "contact_sheets/UJKdj-yjkT0.jpg",
+          "frames": 242,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S052",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Piece_Keep_Angle.htm",
+          "title": "Keep Angle"
+        },
+        {
+          "source_id": "S053",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Piece_Parallel.htm",
+          "title": "Parallel"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/draftingConstructions.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/grading.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.grading.smooth",
+      "label": "Smooth grading across size run",
+      "domain": "grading",
+      "purpose": "Regularize changes between neighboring size breaks without changing frozen rules silently.",
+      "official_source_ids": [
+        "S057"
+      ],
+      "tutorial_video_ids": [
+        "uXRUzYwGuL0"
+      ],
+      "inputs": [
+        "editable point deltas",
+        "protected break sizes",
+        "smoothing weight",
+        "continuity mode"
+      ],
+      "engineering_algorithm": [
+        "Fit monotonic/differentiable displacement series",
+        "Keep fixed endpoints and hand-approved breaks",
+        "Preview before committing"
+      ],
+      "outputs": [
+        "Proposed smoothed grade steps",
+        "delta change report"
+      ],
+      "safety_invariants": [
+        "Do not overwrite manually locked grade rules",
+        "No abrupt or inverted shape at any size"
+      ],
+      "acceptance_tests": [
+        "Nonuniform size break",
+        "sharp intentional break",
+        "locked endpoints",
+        "mirrored panels"
+      ],
+      "ux_interaction": "Grade chart and ghost nest with Accept/Reject",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/grading.js",
+        "src/core/industrialGradeRules.js"
+      ],
+      "priority": "P1",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "uXRUzYwGuL0",
+          "title": "blouse 5 sleeve balance cap ease",
+          "url": "https://www.youtube.com/watch?v=uXRUzYwGuL0",
+          "contact_sheet": "contact_sheets/uXRUzYwGuL0.jpg",
+          "frames": 392,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S057",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Smooth_Grade.htm",
+          "title": "Smooth Grade"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/grading.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/industrialGradeRules.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.grading.nest",
+      "label": "Display and compare all graded sizes",
+      "domain": "grading",
+      "purpose": "Overlay every graded size with point and seam identities to inspect shape progression.",
+      "official_source_ids": [
+        "S014",
+        "S015"
+      ],
+      "tutorial_video_ids": [
+        "8YLLRnFukfM"
+      ],
+      "inputs": [
+        "graded size run",
+        "selection and base size",
+        "overlay color/opacity",
+        "zoom"
+      ],
+      "engineering_algorithm": [
+        "Derive all sizes from immutable authored base",
+        "Render contours at common origin/anchor",
+        "Attach measured dimension differences"
+      ],
+      "outputs": [
+        "Graded-nest viewport",
+        "size legend",
+        "per-size selections"
+      ],
+      "safety_invariants": [
+        "Use same geometric evaluation as export",
+        "No rendering-only geometry alterations",
+        "Stable IDs"
+      ],
+      "acceptance_tests": [
+        "Large run",
+        "missing size",
+        "nonfinite geometry",
+        "mislabeled size"
+      ],
+      "ux_interaction": "Color-coded size nest with direct inspect tool",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/grading.js",
+        "src/core/gradedSizeRunGeometryAudit.js"
+      ],
+      "priority": "P0",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "8YLLRnFukfM",
+          "title": "Skirts 1  true and balance requirements and comprehension using Gerber Accumark pattern software v10",
+          "url": "https://www.youtube.com/watch?v=8YLLRnFukfM",
+          "contact_sheet": "contact_sheets/8YLLRnFukfM.jpg",
+          "frames": 295,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S014",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_AllSizes_View.htm",
+          "title": "View All Sizes"
+        },
+        {
+          "source_id": "S015",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Grade%20Rules.htm",
+          "title": "Grade Rules"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/grading.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/gradedSizeRunGeometryAudit.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.grading.qa",
+      "label": "Validate all-size grading and manufacturing geometry",
+      "domain": "verification",
+      "purpose": "Gate unsafe grading, seam, notch, cutting-edge and conversion outcomes before physical production.",
+      "official_source_ids": [
+        "S004",
+        "S015",
+        "S051",
+        "S052",
+        "S053"
+      ],
+      "tutorial_video_ids": [
+        "8YLLRnFukfM",
+        "Jv-TH5X_nIo",
+        "NNF2-yDD1qs"
+      ],
+      "inputs": [
+        "source pattern",
+        "size-run",
+        "verified rules",
+        "tolerances",
+        "external acceptance evidence"
+      ],
+      "engineering_algorithm": [
+        "Grade all sizes",
+        "Compare contours and seam junctions",
+        "Inspect stitch/CUT topology and notch identity",
+        "Collect blocker report"
+      ],
+      "outputs": [
+        "Per-size engineering report",
+        "issues by piece/seam/notch",
+        "human release requirement"
+      ],
+      "safety_invariants": [
+        "Fail closed for missing/invalid checks",
+        "Keep inspection independent of injected summaries",
+        "Report exact identity"
+      ],
+      "acceptance_tests": [
+        "Zero-area contour",
+        "double notch at t=0",
+        "missing piece",
+        "cyclic rule",
+        "source mutation attempt"
+      ],
+      "ux_interaction": "Read-only QA workbench with clickable blocker-to-canvas navigation",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/gradedSizeRunGeometryAudit.js",
+        "src/core/industrialPatternQA.js",
+        "src/core/manufacturingReleaseReadiness.js",
+        "src/core/industrialDoubleNotchPreflight20261023.js"
+      ],
+      "priority": "P0",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "8YLLRnFukfM",
+          "title": "Skirts 1  true and balance requirements and comprehension using Gerber Accumark pattern software v10",
+          "url": "https://www.youtube.com/watch?v=8YLLRnFukfM",
+          "contact_sheet": "contact_sheets/8YLLRnFukfM.jpg",
+          "frames": 295,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "Jv-TH5X_nIo",
+          "title": "Gerber Accumark Truing, Walking Princess Seams, Smoothing Lines, Adding Notch, Select Specific Piece",
+          "url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo",
+          "contact_sheet": "contact_sheets/Jv-TH5X_nIo.jpg",
+          "frames": 331,
+          "verification": "video title/topic only; exact command not verified"
+        },
+        {
+          "video_id": "NNF2-yDD1qs",
+          "title": "Seam Allowance : Adding, subtracting in Gerber Accumark",
+          "url": "https://www.youtube.com/watch?v=NNF2-yDD1qs",
+          "contact_sheet": "contact_sheets/NNF2-yDD1qs.jpg",
+          "frames": 150,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S004",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Grade_Options.htm",
+          "title": "Grade Options"
+        },
+        {
+          "source_id": "S015",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Grade%20Rules.htm",
+          "title": "Grade Rules"
+        },
+        {
+          "source_id": "S051",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Piece_Match_Line.htm",
+          "title": "Match Line"
+        },
+        {
+          "source_id": "S052",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Piece_Keep_Angle.htm",
+          "title": "Keep Angle"
+        },
+        {
+          "source_id": "S053",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/Function_Piece_Parallel.htm",
+          "title": "Parallel"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/gradedSizeRunGeometryAudit.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/industrialPatternQA.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/manufacturingReleaseReadiness.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/industrialDoubleNotchPreflight20261023.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [
+        {
+          "id": "Jv-TH5X_nIo-f52",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 52,
+          "time_seconds_approx": 518,
+          "timestamp_approx": "08:38",
+          "category": "sewing",
+          "observation": "Enlarged pattern pieces with overlaid measurements or annotation",
+          "confidence": "medium",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0052.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-002.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=518s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f69",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 69,
+          "time_seconds_approx": 687,
+          "timestamp_approx": "11:27",
+          "category": "sewing",
+          "observation": "Close-up of adjacent pattern regions and small annotations",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0069.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-002.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=687s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f104",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 104,
+          "time_seconds_approx": 1036,
+          "timestamp_approx": "17:16",
+          "category": "sewing",
+          "observation": "Two adjacent curved pattern-piece edges shown enlarged",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0104.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-004.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=1036s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f208",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 208,
+          "time_seconds_approx": 2071,
+          "timestamp_approx": "34:31",
+          "category": "sewing",
+          "observation": "Curved pattern regions positioned for comparison",
+          "confidence": "medium",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0208.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-008.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=2071s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f243",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 243,
+          "time_seconds_approx": 2420,
+          "timestamp_approx": "40:20",
+          "category": "sewing",
+          "observation": "Close-up of fine annotation text, unreadable as a tool label",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0243.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-009.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=2420s"
+        },
+        {
+          "id": "Jv-TH5X_nIo-f313",
+          "video_id": "Jv-TH5X_nIo",
+          "frame_index": 313,
+          "time_seconds_approx": 3117,
+          "timestamp_approx": "51:57",
+          "category": "sewing",
+          "observation": "Multiple shaped garment panels visible on teal editor",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/Jv-TH5X_nIo_frame0313.png",
+          "sprite_path": "storyboards/Jv-TH5X_nIo/sprite-012.jpg",
+          "video_url": "https://www.youtube.com/watch?v=Jv-TH5X_nIo&t=3117s"
+        },
+        {
+          "id": "NNF2-yDD1qs-f16",
+          "video_id": "NNF2-yDD1qs",
+          "frame_index": 16,
+          "time_seconds_approx": 159,
+          "timestamp_approx": "02:39",
+          "category": "sewing",
+          "observation": "Several pale pattern pieces on editor canvas",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/NNF2-yDD1qs_frame0016.png",
+          "sprite_path": "storyboards/NNF2-yDD1qs/sprite-000.jpg",
+          "video_url": "https://www.youtube.com/watch?v=NNF2-yDD1qs&t=159s"
+        },
+        {
+          "id": "NNF2-yDD1qs-f86",
+          "video_id": "NNF2-yDD1qs",
+          "frame_index": 86,
+          "time_seconds_approx": 854,
+          "timestamp_approx": "14:14",
+          "category": "sewing",
+          "observation": "Zoomed sloped pattern boundary, offset not measurable",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/NNF2-yDD1qs_frame0086.png",
+          "sprite_path": "storyboards/NNF2-yDD1qs/sprite-003.jpg",
+          "video_url": "https://www.youtube.com/watch?v=NNF2-yDD1qs&t=854s"
+        },
+        {
+          "id": "NNF2-yDD1qs-f102",
+          "video_id": "NNF2-yDD1qs",
+          "frame_index": 102,
+          "time_seconds_approx": 1013,
+          "timestamp_approx": "16:53",
+          "category": "sewing",
+          "observation": "Zoomed corner and edge; text unreadable",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/NNF2-yDD1qs_frame0102.png",
+          "sprite_path": "storyboards/NNF2-yDD1qs/sprite-004.jpg",
+          "video_url": "https://www.youtube.com/watch?v=NNF2-yDD1qs&t=1013s"
+        },
+        {
+          "id": "NNF2-yDD1qs-f125",
+          "video_id": "NNF2-yDD1qs",
+          "frame_index": 125,
+          "time_seconds_approx": 1241,
+          "timestamp_approx": "20:41",
+          "category": "sewing",
+          "observation": "Several panels shown in wider workspace",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/NNF2-yDD1qs_frame0125.png",
+          "sprite_path": "storyboards/NNF2-yDD1qs/sprite-005.jpg",
+          "video_url": "https://www.youtube.com/watch?v=NNF2-yDD1qs&t=1241s"
+        }
+      ],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": [
+        "accu.grading.nest",
+        "accu.seam.notch",
+        "accu.seam.walk",
+        "accu.seam.allowance"
+      ]
+    },
+    {
+      "id": "accu.marker.setup",
+      "label": "Create marker order and fabric constraints",
+      "domain": "marker",
+      "purpose": "Assemble actual cut demand by piece, size, material, orientation and quantity.",
+      "official_source_ids": [
+        "S027",
+        "S028",
+        "S062",
+        "S065"
+      ],
+      "tutorial_video_ids": [
+        "_CIw_aTIC5U"
+      ],
+      "inputs": [
+        "model",
+        "ordered quantities by size/variant",
+        "fabric width",
+        "grain/nap",
+        "allowed rotations",
+        "gap"
+      ],
+      "engineering_algorithm": [
+        "Expand quantity bill to piece instances",
+        "Group by fabric",
+        "Validate piece availability and orientations"
+      ],
+      "outputs": [
+        "Marker job",
+        "required piece inventory",
+        "fabric bounds"
+      ],
+      "safety_invariants": [
+        "No omitted size/instance",
+        "Correct mirror treatment",
+        "Never silently skip unplaceable piece"
+      ],
+      "acceptance_tests": [
+        "Missing size",
+        "incompatible nap",
+        "narrow fabric",
+        "quantity 0",
+        "wrong ply mode"
+      ],
+      "ux_interaction": "Guided marker job setup with quantity and material tables",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/marker.js"
+      ],
+      "priority": "P0",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "_CIw_aTIC5U",
+          "title": "Automatic Fabric Spreading and Fabric Cutting machine //Gerber Fabric cutter machine/Lay cutting m/c",
+          "url": "https://www.youtube.com/watch?v=_CIw_aTIC5U",
+          "contact_sheet": "contact_sheets/_CIw_aTIC5U.jpg",
+          "frames": 131,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S027",
+          "url": "https://gerber-help.lectra.com/AccuMark/Easy_Marking/Component_Toolbox.htm",
+          "title": "Toolbox"
+        },
+        {
+          "source_id": "S028",
+          "url": "https://gerber-help.lectra.com/AccuMark/Easy_Marking/File_New_Marker_Wizard.htm",
+          "title": "Marker Wizard"
+        },
+        {
+          "source_id": "S062",
+          "url": "https://gerber-help.lectra.com/AccuMark/Easy_Marking/Component_Work_Area.htm",
+          "title": "Marker Work Area"
+        },
+        {
+          "source_id": "S065",
+          "url": "https://gerber-help.lectra.com/AccuMark/Easy_Marking/Component_Marker_Info_Bar.htm",
+          "title": "Marker Information Bar"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/marker.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.marker.nest",
+      "label": "Manual/automatic marker placement",
+      "domain": "marker",
+      "purpose": "Place physical cut outlines within usable cloth width while respecting material and grain constraints.",
+      "official_source_ids": [
+        "S027",
+        "S028",
+        "S062",
+        "S065"
+      ],
+      "tutorial_video_ids": [
+        "_CIw_aTIC5U"
+      ],
+      "inputs": [
+        "marker job",
+        "cut-piece contours",
+        "allowed rotations",
+        "spacing",
+        "fabric width"
+      ],
+      "engineering_algorithm": [
+        "Generate candidate rigid placements",
+        "Check polygon clearance and grain",
+        "Optimize marker length/utilization"
+      ],
+      "outputs": [
+        "Placed piece instances",
+        "unplaced list",
+        "marker length/utilization"
+      ],
+      "safety_invariants": [
+        "No overlaps or out-of-bounds",
+        "Honor cut multiplicity",
+        "Preserve grain, grain tolerance and fold constraints"
+      ],
+      "acceptance_tests": [
+        "Mirrored pieces",
+        "tiny gaps",
+        "impossible width",
+        "constraint conflicts"
+      ],
+      "ux_interaction": "Draggable marker canvas and automatic placement candidates",
+      "math": "efficiency=sum(placed piece areas)/(usableWidth*markerLength)",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/marker.js",
+        "src/core/markerArtifacts.js"
+      ],
+      "priority": "P1",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "_CIw_aTIC5U",
+          "title": "Automatic Fabric Spreading and Fabric Cutting machine //Gerber Fabric cutter machine/Lay cutting m/c",
+          "url": "https://www.youtube.com/watch?v=_CIw_aTIC5U",
+          "contact_sheet": "contact_sheets/_CIw_aTIC5U.jpg",
+          "frames": 131,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S027",
+          "url": "https://gerber-help.lectra.com/AccuMark/Easy_Marking/Component_Toolbox.htm",
+          "title": "Toolbox"
+        },
+        {
+          "source_id": "S028",
+          "url": "https://gerber-help.lectra.com/AccuMark/Easy_Marking/File_New_Marker_Wizard.htm",
+          "title": "Marker Wizard"
+        },
+        {
+          "source_id": "S062",
+          "url": "https://gerber-help.lectra.com/AccuMark/Easy_Marking/Component_Work_Area.htm",
+          "title": "Marker Work Area"
+        },
+        {
+          "source_id": "S065",
+          "url": "https://gerber-help.lectra.com/AccuMark/Easy_Marking/Component_Marker_Info_Bar.htm",
+          "title": "Marker Information Bar"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/marker.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/markerArtifacts.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": [
+        "accu.marker.setup",
+        "accu.seam.allowance"
+      ]
+    },
+    {
+      "id": "accu.marker.cost",
+      "label": "Marker material use and cost calculation",
+      "domain": "marker",
+      "purpose": "Calculate fabric length, marker efficiency, waste and per-garment cost with assumptions.",
+      "official_source_ids": [
+        "S065",
+        "S085"
+      ],
+      "tutorial_video_ids": [
+        "_CIw_aTIC5U"
+      ],
+      "inputs": [
+        "marker geometry",
+        "width",
+        "roll costing",
+        "size order",
+        "waste assumptions"
+      ],
+      "engineering_algorithm": [
+        "Compute marker bounding length and filled area",
+        "Derive material usage/cost by order or size"
+      ],
+      "outputs": [
+        "Efficiency %",
+        "length and cost breakdown",
+        "exception list"
+      ],
+      "safety_invariants": [
+        "Unplaced demand cannot count as completed",
+        "Report assumptions",
+        "Zero marker area handled safely"
+      ],
+      "acceptance_tests": [
+        "Zero pieces",
+        "partial order",
+        "alternate widths",
+        "fabric unit conversion"
+      ],
+      "ux_interaction": "Marker dashboard with sensitivity to width and order quantities",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/marker.js",
+        "src/core/markerArtifacts.js"
+      ],
+      "priority": "P1",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "_CIw_aTIC5U",
+          "title": "Automatic Fabric Spreading and Fabric Cutting machine //Gerber Fabric cutter machine/Lay cutting m/c",
+          "url": "https://www.youtube.com/watch?v=_CIw_aTIC5U",
+          "contact_sheet": "contact_sheets/_CIw_aTIC5U.jpg",
+          "frames": 131,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S065",
+          "url": "https://gerber-help.lectra.com/AccuMark/Easy_Marking/Component_Marker_Info_Bar.htm",
+          "title": "Marker Information Bar"
+        },
+        {
+          "source_id": "S085",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/File_Process_Costing_Markerl_Tab_File.htm",
+          "title": "Process Costing Marker"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/marker.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/markerArtifacts.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": [
+        "accu.marker.nest"
+      ]
+    },
+    {
+      "id": "accu.output.import",
+      "label": "Import and inspect outside pattern formats",
+      "domain": "exchange",
+      "purpose": "Create editable data from supported vendor or exchange geometry and preserve source evidence.",
+      "official_source_ids": [
+        "S088",
+        "S097",
+        "S100",
+        "S109"
+      ],
+      "tutorial_video_ids": [
+        "UoxE9J3o8dc"
+      ],
+      "inputs": [
+        "source file + format",
+        "units",
+        "layer mapping",
+        "size/piece IDs",
+        "parser options"
+      ],
+      "engineering_algorithm": [
+        "Parse into quarantined preview",
+        "Map contours and marks",
+        "Report semantic omissions",
+        "Accept into versioned project only after review"
+      ],
+      "outputs": [
+        "Parsed pattern candidates",
+        "loss/ambiguity manifest",
+        "import provenance"
+      ],
+      "safety_invariants": [
+        "Never imply full editable grade from geometry-only import",
+        "Reject traversal/malformed documents",
+        "Maintain original file hash"
+      ],
+      "acceptance_tests": [
+        "DXF cut vs stitch ambiguity",
+        "missing grade metadata",
+        "units mismatch",
+        "unsupported entity"
+      ],
+      "ux_interaction": "Import wizard with layer mapping and visual review",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/dxf.js"
+      ],
+      "priority": "P0",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "UoxE9J3o8dc",
+          "title": "Digitizing",
+          "url": "https://www.youtube.com/watch?v=UoxE9J3o8dc",
+          "contact_sheet": "contact_sheets/UoxE9J3o8dc.jpg",
+          "frames": 149,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S088",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/File_Import_Tab_File.htm",
+          "title": "Import"
+        },
+        {
+          "source_id": "S097",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Import_Zip.htm",
+          "title": "Import Zip"
+        },
+        {
+          "source_id": "S100",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Import.htm",
+          "title": "Import Plot and Digitized Data"
+        },
+        {
+          "source_id": "S109",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Function_DCU.htm",
+          "title": "Data Conversion Utility"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/dxf.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [
+        {
+          "id": "UoxE9J3o8dc-f16",
+          "video_id": "UoxE9J3o8dc",
+          "frame_index": 16,
+          "time_seconds_approx": 158,
+          "timestamp_approx": "02:38",
+          "category": "digitizing",
+          "observation": "Physical digitizing button puck held by operator",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/UoxE9J3o8dc_frame0016.png",
+          "sprite_path": "storyboards/UoxE9J3o8dc/sprite-000.jpg",
+          "video_url": "https://www.youtube.com/watch?v=UoxE9J3o8dc&t=158s"
+        },
+        {
+          "id": "UoxE9J3o8dc-f31",
+          "video_id": "UoxE9J3o8dc",
+          "frame_index": 31,
+          "time_seconds_approx": 306,
+          "timestamp_approx": "05:06",
+          "category": "digitizing",
+          "observation": "Pattern tracing board with paper and digitizing tool",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/UoxE9J3o8dc_frame0031.png",
+          "sprite_path": "storyboards/UoxE9J3o8dc/sprite-001.jpg",
+          "video_url": "https://www.youtube.com/watch?v=UoxE9J3o8dc&t=306s"
+        },
+        {
+          "id": "UoxE9J3o8dc-f47",
+          "video_id": "UoxE9J3o8dc",
+          "frame_index": 47,
+          "time_seconds_approx": 464,
+          "timestamp_approx": "07:44",
+          "category": "digitizing",
+          "observation": "Physical drawing and curved pattern lines on board",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/UoxE9J3o8dc_frame0047.png",
+          "sprite_path": "storyboards/UoxE9J3o8dc/sprite-001.jpg",
+          "video_url": "https://www.youtube.com/watch?v=UoxE9J3o8dc&t=464s"
+        },
+        {
+          "id": "UoxE9J3o8dc-f62",
+          "video_id": "UoxE9J3o8dc",
+          "frame_index": 62,
+          "time_seconds_approx": 612,
+          "timestamp_approx": "10:12",
+          "category": "digitizing",
+          "observation": "Operator traces paper pattern with puck",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/UoxE9J3o8dc_frame0062.png",
+          "sprite_path": "storyboards/UoxE9J3o8dc/sprite-002.jpg",
+          "video_url": "https://www.youtube.com/watch?v=UoxE9J3o8dc&t=612s"
+        },
+        {
+          "id": "UoxE9J3o8dc-f109",
+          "video_id": "UoxE9J3o8dc",
+          "frame_index": 109,
+          "time_seconds_approx": 1077,
+          "timestamp_approx": "17:57",
+          "category": "digitizing",
+          "observation": "Digital outlines on teal software canvas",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/UoxE9J3o8dc_frame0109.png",
+          "sprite_path": "storyboards/UoxE9J3o8dc/sprite-004.jpg",
+          "video_url": "https://www.youtube.com/watch?v=UoxE9J3o8dc&t=1077s"
+        },
+        {
+          "id": "UoxE9J3o8dc-f117",
+          "video_id": "UoxE9J3o8dc",
+          "frame_index": 117,
+          "time_seconds_approx": 1156,
+          "timestamp_approx": "19:16",
+          "category": "digitizing",
+          "observation": "Pattern data list in a file manager",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/UoxE9J3o8dc_frame0117.png",
+          "sprite_path": "storyboards/UoxE9J3o8dc/sprite-004.jpg",
+          "video_url": "https://www.youtube.com/watch?v=UoxE9J3o8dc&t=1156s"
+        }
+      ],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.output.export",
+      "label": "Export manufacturing DXF / interchange formats",
+      "domain": "exchange",
+      "purpose": "Emit size-indexed pattern entities with specified receiving CAD profiles and loss reports.",
+      "official_source_ids": [
+        "S089",
+        "S098",
+        "S099"
+      ],
+      "tutorial_video_ids": [
+        "u9Oi9F6L6HA"
+      ],
+      "inputs": [
+        "project and revision",
+        "approved size run",
+        "selected format profile",
+        "units/layer rules",
+        "grading mode"
+      ],
+      "engineering_algorithm": [
+        "Evaluate exact graded geometry",
+        "Serialize contours, notches and internals",
+        "Validate geometric payload and labels"
+      ],
+      "outputs": [
+        "AAMA/ASTM/generic DXF candidate file",
+        "manifest",
+        "per-feature transfer loss report"
+      ],
+      "safety_invariants": [
+        "Every exported size matches authored size ID",
+        "Do not promote self-validation to vendor acceptance",
+        "Notch parity mandatory"
+      ],
+      "acceptance_tests": [
+        "Curves tessellated",
+        "lost notches",
+        "receiver changes winding",
+        "different unit basis",
+        "unsupported tags"
+      ],
+      "ux_interaction": "Export profile panel with semantics preview and receiver status",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/dxf.js",
+        "src/core/manufacturingReleaseReadiness.js"
+      ],
+      "priority": "P0",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "u9Oi9F6L6HA",
+          "title": "Plotting",
+          "url": "https://www.youtube.com/watch?v=u9Oi9F6L6HA",
+          "contact_sheet": "contact_sheets/u9Oi9F6L6HA.jpg",
+          "frames": 98,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S089",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/File_Export_Tab_File.htm",
+          "title": "Export"
+        },
+        {
+          "source_id": "S098",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Export.htm",
+          "title": "Export"
+        },
+        {
+          "source_id": "S099",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Export_V9_to_V8.htm",
+          "title": "Export V9 Pieces/Models to V8"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/dxf.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/manufacturingReleaseReadiness.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [
+        {
+          "id": "u9Oi9F6L6HA-f20",
+          "video_id": "u9Oi9F6L6HA",
+          "frame_index": 20,
+          "time_seconds_approx": 98,
+          "timestamp_approx": "01:38",
+          "category": "plotting",
+          "observation": "Teal CAD work area displayed",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/u9Oi9F6L6HA_frame0020.png",
+          "sprite_path": "storyboards/u9Oi9F6L6HA/sprite-000.jpg",
+          "video_url": "https://www.youtube.com/watch?v=u9Oi9F6L6HA&t=98s"
+        },
+        {
+          "id": "u9Oi9F6L6HA-f41",
+          "video_id": "u9Oi9F6L6HA",
+          "frame_index": 41,
+          "time_seconds_approx": 201,
+          "timestamp_approx": "03:21",
+          "category": "plotting",
+          "observation": "White print or plot setup-style dialog",
+          "confidence": "medium",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/u9Oi9F6L6HA_frame0041.png",
+          "sprite_path": "storyboards/u9Oi9F6L6HA/sprite-001.jpg",
+          "video_url": "https://www.youtube.com/watch?v=u9Oi9F6L6HA&t=201s"
+        },
+        {
+          "id": "u9Oi9F6L6HA-f82",
+          "video_id": "u9Oi9F6L6HA",
+          "frame_index": 82,
+          "time_seconds_approx": 402,
+          "timestamp_approx": "06:42",
+          "category": "plotting",
+          "observation": "Popup selector during output lesson, labels unreadable",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/u9Oi9F6L6HA_frame0082.png",
+          "sprite_path": "storyboards/u9Oi9F6L6HA/sprite-003.jpg",
+          "video_url": "https://www.youtube.com/watch?v=u9Oi9F6L6HA&t=402s"
+        }
+      ],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": [
+        "accu.grading.qa",
+        "accu.seam.notch"
+      ]
+    },
+    {
+      "id": "accu.output.plot",
+      "label": "Plot, print, and tiled pattern output",
+      "domain": "exchange",
+      "purpose": "Produce scaled physical plots with piece identity, grain, calibration and stitch/cut layers.",
+      "official_source_ids": [
+        "S067",
+        "S092",
+        "S093",
+        "S101",
+        "S102",
+        "S103",
+        "S110"
+      ],
+      "tutorial_video_ids": [
+        "u9Oi9F6L6HA"
+      ],
+      "inputs": [
+        "pattern/marker",
+        "selected sizes",
+        "paper/plotter width",
+        "unit scale",
+        "marks and label settings"
+      ],
+      "engineering_algorithm": [
+        "Layout geometry at physical scale",
+        "Add calibration and margins",
+        "Slice across pages or roll"
+      ],
+      "outputs": [
+        "Plot PDF/SVG or cutter-ready plot candidate",
+        "print preview",
+        "scale evidence"
+      ],
+      "safety_invariants": [
+        "Page scaling is explicit",
+        "Notch and drill layer preservation",
+        "1:1 plot requires physical calibration"
+      ],
+      "acceptance_tests": [
+        "Printer fit-to-page trap",
+        "split tile seam",
+        "wrong paper format",
+        "mirrored output"
+      ],
+      "ux_interaction": "Print preview with measured calibration square",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/patternTiledPrint.js",
+        "src/core/markerArtifacts.js"
+      ],
+      "priority": "P1",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "u9Oi9F6L6HA",
+          "title": "Plotting",
+          "url": "https://www.youtube.com/watch?v=u9Oi9F6L6HA",
+          "contact_sheet": "contact_sheets/u9Oi9F6L6HA.jpg",
+          "frames": 98,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S067",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Plotters.htm",
+          "title": "Plotters"
+        },
+        {
+          "source_id": "S092",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/File_Plot_Tab_File.htm",
+          "title": "Plot"
+        },
+        {
+          "source_id": "S093",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/File_Plot_Altered_Tab_File1.htm",
+          "title": "Plot Altered"
+        },
+        {
+          "source_id": "S101",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Print.htm",
+          "title": "Print"
+        },
+        {
+          "source_id": "S102",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Print_Preview.htm",
+          "title": "Print Preview"
+        },
+        {
+          "source_id": "S103",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Print_Setup.htm",
+          "title": "Print Setup"
+        },
+        {
+          "source_id": "S110",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Function_Winplot.htm",
+          "title": "Winplot"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/patternTiledPrint.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/markerArtifacts.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [
+        {
+          "id": "u9Oi9F6L6HA-f20",
+          "video_id": "u9Oi9F6L6HA",
+          "frame_index": 20,
+          "time_seconds_approx": 98,
+          "timestamp_approx": "01:38",
+          "category": "plotting",
+          "observation": "Teal CAD work area displayed",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/u9Oi9F6L6HA_frame0020.png",
+          "sprite_path": "storyboards/u9Oi9F6L6HA/sprite-000.jpg",
+          "video_url": "https://www.youtube.com/watch?v=u9Oi9F6L6HA&t=98s"
+        },
+        {
+          "id": "u9Oi9F6L6HA-f41",
+          "video_id": "u9Oi9F6L6HA",
+          "frame_index": 41,
+          "time_seconds_approx": 201,
+          "timestamp_approx": "03:21",
+          "category": "plotting",
+          "observation": "White print or plot setup-style dialog",
+          "confidence": "medium",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/u9Oi9F6L6HA_frame0041.png",
+          "sprite_path": "storyboards/u9Oi9F6L6HA/sprite-001.jpg",
+          "video_url": "https://www.youtube.com/watch?v=u9Oi9F6L6HA&t=201s"
+        },
+        {
+          "id": "u9Oi9F6L6HA-f82",
+          "video_id": "u9Oi9F6L6HA",
+          "frame_index": 82,
+          "time_seconds_approx": 402,
+          "timestamp_approx": "06:42",
+          "category": "plotting",
+          "observation": "Popup selector during output lesson, labels unreadable",
+          "confidence": "high",
+          "evidence_type": "visual observation of low-resolution frame",
+          "limit": "Exact command names and mouse interactions not readable",
+          "frame_path": "reviewed_frames/u9Oi9F6L6HA_frame0082.png",
+          "sprite_path": "storyboards/u9Oi9F6L6HA/sprite-003.jpg",
+          "video_url": "https://www.youtube.com/watch?v=u9Oi9F6L6HA&t=402s"
+        }
+      ],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.output.cutdata",
+      "label": "Cut data and factory package handoff",
+      "domain": "exchange",
+      "purpose": "Package a traceable manufacturing job with reconciled piece demand and release disposition.",
+      "official_source_ids": [
+        "S041",
+        "S048",
+        "S065"
+      ],
+      "tutorial_video_ids": [
+        "_CIw_aTIC5U"
+      ],
+      "inputs": [
+        "versioned project",
+        "sizes/quantities",
+        "marker",
+        "cut profile",
+        "approval evidence"
+      ],
+      "engineering_algorithm": [
+        "Assemble immutable bill",
+        "Validate geometry and source inventory",
+        "Create recipient manifest and SHA digests"
+      ],
+      "outputs": [
+        "Cut-job package and blocked/approval report",
+        "receiving-CAD checklist"
+      ],
+      "safety_invariants": [
+        "Fail closed on open contours and missing notches",
+        "Human approval and factory receiving CAD mandatory"
+      ],
+      "acceptance_tests": [
+        "Partial marker",
+        "altered source after QA",
+        "missing sample",
+        "incorrect grain"
+      ],
+      "ux_interaction": "Factory package workbench with signed manifest and unmet blockers",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/factoryPackage.js",
+        "src/core/manufacturingReleaseReadiness.js"
+      ],
+      "priority": "P0",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "_CIw_aTIC5U",
+          "title": "Automatic Fabric Spreading and Fabric Cutting machine //Gerber Fabric cutter machine/Lay cutting m/c",
+          "url": "https://www.youtube.com/watch?v=_CIw_aTIC5U",
+          "contact_sheet": "contact_sheets/_CIw_aTIC5U.jpg",
+          "frames": 131,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S041",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/New_Users_cutdata.htm",
+          "title": "New Users Can Quickly Make Cut Data"
+        },
+        {
+          "source_id": "S048",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Tab_Output.htm",
+          "title": "Output Tab"
+        },
+        {
+          "source_id": "S065",
+          "url": "https://gerber-help.lectra.com/AccuMark/Easy_Marking/Component_Marker_Info_Bar.htm",
+          "title": "Marker Information Bar"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/factoryPackage.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/manufacturingReleaseReadiness.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": [
+        "accu.grading.qa",
+        "accu.marker.nest",
+        "accu.output.export"
+      ]
+    },
+    {
+      "id": "accu.automation.erp",
+      "label": "Bulk orders, CSV and ERP interfaces",
+      "domain": "workspace",
+      "purpose": "Map external orders and jobs into validated model, size and fabric demands.",
+      "official_source_ids": [
+        "S042",
+        "S046",
+        "S047",
+        "S049",
+        "S095",
+        "S111",
+        "S113",
+        "S114",
+        "S115",
+        "S116"
+      ],
+      "tutorial_video_ids": [],
+      "inputs": [
+        "order CSV/ERP data",
+        "style IDs",
+        "size set",
+        "material",
+        "quantity"
+      ],
+      "engineering_algorithm": [
+        "Parse mappings and validate referential integrity",
+        "Reconcile requested sizes with pieces and inventory"
+      ],
+      "outputs": [
+        "Normalized job/order records",
+        "parsing errors",
+        "audit trail"
+      ],
+      "safety_invariants": [
+        "Reject unknown style and negative quantities",
+        "Preserve original raw record and source format"
+      ],
+      "acceptance_tests": [
+        "Malformed CSV",
+        "unexpected encoding",
+        "duplicated order",
+        "unknown size"
+      ],
+      "ux_interaction": "Column-mapping wizard with preview and import report",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/gradeRuleCsv.js"
+      ],
+      "priority": "P2",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [],
+      "official_references": [
+        {
+          "source_id": "S042",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/ERP_Wizard.htm",
+          "title": "Import from ERP Wizard"
+        },
+        {
+          "source_id": "S046",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Tab_Process.htm",
+          "title": "Process Tab"
+        },
+        {
+          "source_id": "S047",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Tab_Automation.htm",
+          "title": "Automation Tab"
+        },
+        {
+          "source_id": "S049",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Tab_Reports.htm",
+          "title": "Reports Tab"
+        },
+        {
+          "source_id": "S095",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/ERP_Wizard_Getting_Started.htm",
+          "title": "Getting Started with  Import from ERP Wizard"
+        },
+        {
+          "source_id": "S111",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Function_Import_ERP.htm",
+          "title": "Import from ERP"
+        },
+        {
+          "source_id": "S113",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/Group_Add_Jobs.htm",
+          "title": "Add Jobs"
+        },
+        {
+          "source_id": "S114",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/CSV_Import.htm",
+          "title": "CSV Import"
+        },
+        {
+          "source_id": "S115",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/CSV_Query.htm",
+          "title": "CSV Query"
+        },
+        {
+          "source_id": "S116",
+          "url": "https://gerber-help.lectra.com/AccuMark/AMX/CSV_Reports.htm",
+          "title": "CSV Reports"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/gradeRuleCsv.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": []
+    },
+    {
+      "id": "accu.simulation.2d3d",
+      "label": "2D to 3D pattern and avatar workflow",
+      "domain": "simulation",
+      "purpose": "Maintain piece identity and seam information when visualizing a pattern on a 3D avatar.",
+      "official_source_ids": [
+        "S003",
+        "S031",
+        "S032",
+        "S074"
+      ],
+      "tutorial_video_ids": [
+        "RaBffG1zLL8"
+      ],
+      "inputs": [
+        "piece geometry",
+        "seam graph",
+        "fabric",
+        "avatar",
+        "positioning"
+      ],
+      "engineering_algorithm": [
+        "Map editable 2D panels to 3D shell",
+        "Apply material, avatar arrangement and sewing relations"
+      ],
+      "outputs": [
+        "3D preview with cross-linked piece selections",
+        "simulation status"
+      ],
+      "safety_invariants": [
+        "Do not alter approved 2D contours from display-only projection",
+        "Separate physical fit approval from simulation"
+      ],
+      "acceptance_tests": [
+        "Disconnected sewing pair",
+        "mirrored piece",
+        "avatar size mismatch"
+      ],
+      "ux_interaction": "Linked 2D/3D canvases with shared identifiers",
+      "math": "",
+      "design_notes": "",
+      "candidate_exo_modules": [
+        "src/core/patternBodyArrangement.js",
+        "src/core/clothMeshing.js"
+      ],
+      "priority": "P1",
+      "implementation_status": "candidate code references only; AccuMark parity unverified",
+      "evidence_status": "official help names documented; video association by title only",
+      "video_references": [
+        {
+          "video_id": "RaBffG1zLL8",
+          "title": "How T-Shirts Are Made In America | From The Ground Up",
+          "url": "https://www.youtube.com/watch?v=RaBffG1zLL8",
+          "contact_sheet": "contact_sheets/RaBffG1zLL8.jpg",
+          "frames": 136,
+          "verification": "video title/topic only; exact command not verified"
+        }
+      ],
+      "official_references": [
+        {
+          "source_id": "S003",
+          "url": "https://gerber-help.lectra.com/AccuMark_3D/Pattern_Design_2D/Getting_Started_with_2D.htm",
+          "title": "Getting Started with 2D"
+        },
+        {
+          "source_id": "S031",
+          "url": "https://gerber-help.lectra.com/AccuMark_3D/Pattern_Design_3D/Avatar_Window_Tools.htm",
+          "title": "Avatar Window and Tools"
+        },
+        {
+          "source_id": "S032",
+          "url": "https://gerber-help.lectra.com/AccuMark_3D/Pattern_Design_2D/3D_Menu_for_2D_Workarea.htm",
+          "title": "3D Functions in the 2D Workarea"
+        },
+        {
+          "source_id": "S074",
+          "url": "https://gerber-help.lectra.com/AccuMark/PDS/File_New3D_Workspace.htm",
+          "title": "New 3D Workspace"
+        }
+      ],
+      "candidate_code_checks": [
+        {
+          "path": "src/core/patternBodyArrangement.js",
+          "exists": true
+        },
+        {
+          "path": "src/core/clothMeshing.js",
+          "exists": true
+        }
+      ],
+      "screen_observations": [],
+      "visual_verification_scope": "Reviewed frames establish screen context, not operation semantics",
+      "dependencies": [
+        "accu.storage.model",
+        "accu.seam.walk"
+      ]
+    }
+  ],
+  "count": 33,
+  "scope": {
+    "playlist_url": "https://www.youtube.com/playlist?list=PLG_GGaxQ1PeBCW38w6NeJ4dX1wZia62HN",
+    "catalog_source": "docs/research/gerber-accumark-100p-20261023/GERBER_COMMAND_CATALOG.csv",
+    "visual_evidence": "58 archived sets of low-resolution YouTube storyboard frames; no exact menu-label or click-path verification",
+    "code_status": "Path presence checked, behavioral parity not established; no source files modified",
+    "created_for": "EXO ClothCraft engineering discovery, not vendor imitation/certification"
+  },
+  "validation_status": "specification and candidate module mapping only; no function parity tests run"
+}

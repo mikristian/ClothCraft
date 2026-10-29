@@ -16,10 +16,12 @@ try {
 
   const twoD = page.locator('.clo-corner-toolkit-2d')
   const threeD = page.locator('.clo-corner-toolkit-3d')
-  assert.equal(await twoD.locator('.clo-corner-tool-group').count(), 6)
+  assert.equal(await twoD.locator('.clo-corner-tool-group').count(), 8)
   assert.equal(await threeD.locator('.clo-corner-tool-group').count(), 5)
-  assert.equal(await twoD.locator('.clo-corner-tool-group > button .cad-tool-icon').count(), 6)
-  assert.equal(await threeD.locator('.clo-corner-tool-group > button .cad-tool-icon').count(), 5)
+  // CadToolIcon renders paired color-artwork and theme-mask nodes; count
+  // each family's source artwork once, not both presentational layers.
+  assert.equal(await twoD.locator('.clo-corner-tool-group > button .cad-tool-icon-artwork').count(), 8)
+  assert.equal(await threeD.locator('.clo-corner-tool-group > button .cad-tool-icon-artwork').count(), 5)
   for (const dimension of [twoD, threeD]) {
     assert.equal(await dimension.locator('.clo-corner-tool-group > button:not(:has(.cad-tool-icon))').count(), 0,
       'Every corner tool requires a real CAD icon')
@@ -70,7 +72,7 @@ try {
   const previewPath = 'qa-viewport-selection-icons-20261013.png'
   await page.screenshot({ path: previewPath })
   assert.deepEqual(errors, [], `Uncaught browser errors: ${errors.join('; ')}`)
-  console.log(JSON.stringify({ pass: true, selectedOutline: colors.outline, neutralBoundingBox: colors.box, linked3DSelection: true, quickIconCount: 11, screenshot: previewPath }, null, 2))
+  console.log(JSON.stringify({ pass: true, selectedOutline: colors.outline, neutralBoundingBox: colors.box, linked3DSelection: true, quickIconCount: 13, screenshot: previewPath }, null, 2))
 } finally {
   await browser.close()
 }

@@ -1,0 +1,102 @@
+[
+  {
+    "project": {
+      "pieces": []
+    },
+    "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<GarmentStudioBOM schemaVersion=\"1.0\" projectId=\"\" projectName=\"\" revision=\"1\" baseSize=\"M\" patternUnits=\"cm\" usageBasis=\"one finished garment\"><Fabrics></Fabrics><TrimsAndConstruction></TrimsAndConstruction><FabricCostEstimates currency=\"USD\" basis=\"per garment, excludes trims and labor\"></FabricCostEstimates></GarmentStudioBOM>\n"
+  },
+  {
+    "project": {
+      "id": "雪 🧵 &<>\"'\n",
+      "name": "雪 🧵 &<>\"'\n",
+      "revision": 0,
+      "grading": {
+        "baseSize": "M",
+        "sizes": [
+          "M",
+          "L"
+        ]
+      },
+      "fabrics": {
+        "main": {
+          "name": "雪 🧵 &<>\"'\n",
+          "gsm": 180,
+          "thickness": 0.0005,
+          "pricePerMeter": 2.675,
+          "stretchWarp": 0.12
+        },
+        "unused": {}
+      },
+      "pieces": [
+        {
+          "id": "p&",
+          "name": "雪 🧵 &<>\"'\n",
+          "fabricId": "main",
+          "cutQuantity": 2.5,
+          "seamAllowance": 1.125,
+          "points": [
+            {
+              "x": 0,
+              "y": 0
+            },
+            {
+              "x": 10,
+              "y": 0
+            },
+            {
+              "x": 10,
+              "y": 20
+            },
+            {
+              "x": 0,
+              "y": 20
+            }
+          ],
+          "zippers": [
+            {
+              "id": "zippers",
+              "name": "雪 🧵 &<>\"'\n",
+              "lengthCm": 0
+            }
+          ],
+          "buttons": [
+            {
+              "id": "buttons",
+              "name": "雪 🧵 &<>\"'\n",
+              "lengthCm": 0
+            }
+          ],
+          "buttonholes": [
+            {
+              "id": "buttonholes",
+              "name": "雪 🧵 &<>\"'\n",
+              "lengthCm": 0
+            }
+          ],
+          "bindings": [
+            {
+              "id": "bindings",
+              "name": "雪 🧵 &<>\"'\n",
+              "lengthCm": 0
+            }
+          ],
+          "topstitches": [
+            {
+              "id": "topstitches",
+              "name": "雪 🧵 &<>\"'\n",
+              "lengthCm": 0
+            }
+          ]
+        }
+      ],
+      "fasteners": [
+        {
+          "id": "f",
+          "name": "雪 🧵 &<>\"'\n",
+          "type": "hook"
+        }
+      ]
+    },
+    "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<GarmentStudioBOM schemaVersion=\"1.0\" projectId=\"雪 🧵 &amp;&lt;&gt;&quot;&apos;\n\" projectName=\"雪 🧵 &amp;&lt;&gt;&quot;&apos;\n\" revision=\"0\" baseSize=\"M\" patternUnits=\"cm\" usageBasis=\"one finished garment\"><Fabrics><Fabric id=\"main\" name=\"雪 🧵 &amp;&lt;&gt;&quot;&apos;\n\" color=\"\" gsm=\"180\" thicknessMm=\"0.50\" cutQuantityPerGarment=\"3\" patternAreaCm2=\"600.00\" pricePerMeter=\"2.67\" priceCurrency=\"USD\" stretchWarpPct=\"12.00\" stretchWeftPct=\"0.00\" shrinkWarpPct=\"0.00\" shrinkWeftPct=\"0.00\"><Pattern id=\"p&amp;\" name=\"雪 🧵 &amp;&lt;&gt;&quot;&apos;\n\" cutQuantity=\"3\" seamAllowanceCm=\"1.13\"></Pattern></Fabric><Fabric id=\"unused\" name=\"unused\" color=\"\" gsm=\"\" thicknessMm=\"0.00\" cutQuantityPerGarment=\"0\" patternAreaCm2=\"0.00\" pricePerMeter=\"\" priceCurrency=\"USD\" stretchWarpPct=\"0.00\" stretchWeftPct=\"0.00\" shrinkWarpPct=\"0.00\" shrinkWeftPct=\"0.00\"></Fabric></Fabrics><TrimsAndConstruction><Trim type=\"hook\" id=\"f\" quantityPerGarment=\"1\" specification=\"雪 🧵 &amp;&lt;&gt;&quot;&apos;\n\"></Trim><Trim type=\"zippers\" id=\"zippers\" patternId=\"p&amp;\" quantityPerGarment=\"3\" description=\"雪 🧵 &amp;&lt;&gt;&quot;&apos;\n\" lengthCm=\"0\"></Trim><Trim type=\"buttons\" id=\"buttons\" patternId=\"p&amp;\" quantityPerGarment=\"3\" description=\"雪 🧵 &amp;&lt;&gt;&quot;&apos;\n\" lengthCm=\"0\"></Trim><Trim type=\"buttonholes\" id=\"buttonholes\" patternId=\"p&amp;\" quantityPerGarment=\"3\" description=\"雪 🧵 &amp;&lt;&gt;&quot;&apos;\n\" lengthCm=\"0\"></Trim><Trim type=\"bindings\" id=\"bindings\" patternId=\"p&amp;\" quantityPerGarment=\"3\" description=\"雪 🧵 &amp;&lt;&gt;&quot;&apos;\n\" lengthCm=\"0\"></Trim><Trim type=\"topstitches\" id=\"topstitches\" patternId=\"p&amp;\" quantityPerGarment=\"3\" description=\"雪 🧵 &amp;&lt;&gt;&quot;&apos;\n\" lengthCm=\"0\"></Trim></TrimsAndConstruction><FabricCostEstimates currency=\"USD\" basis=\"per garment, excludes trims and labor\"><EstimatedFabricCost size=\"M\" fabricId=\"main\" lengthMeters=\"0.2225\" pricePerMeter=\"2.67\" currency=\"USD\" amount=\"0.60\" status=\"ESTIMATED\"></EstimatedFabricCost><EstimatedFabricCost size=\"L\" fabricId=\"main\" lengthMeters=\"0.2345\" pricePerMeter=\"2.67\" currency=\"USD\" amount=\"0.63\" status=\"ESTIMATED\"></EstimatedFabricCost></FabricCostEstimates></GarmentStudioBOM>\n"
+  }
+]

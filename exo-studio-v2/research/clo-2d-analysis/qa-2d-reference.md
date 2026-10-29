@@ -1,0 +1,83 @@
+# ClothCraft V2 2D pattern reference QA
+
+Audit date: 2026-10-17. Scope: read-only inspection of `src/components/ClothCraftBoardV2.jsx` and existing isolated Playwright tests. This is a test plan, **not** certification of a live CLO visual match or a successful end-to-end run.
+
+## Official CLO behavior to compare
+
+- [Ruler & Guidelines](https://support.clo3d.com/hc/en-us/articles/360010960074-Ruler-Guidelines): rulers support mm/cm/in; guidelines can be dragged from rulers, moved, locked, offset, snapped, deleted and traced into pattern elements.
+- [Edit Pattern](https://support.clo3d.com/hc/en-us/articles/115012380108-Edit-Pattern): selects and edits actual pattern points and edges; supports point/line interaction and marquee/lasso selection.
+- [Create POM](https://support.clo3d.com/hc/en-us/articles/360025716774-Create-POM) and [Edit 2D POM](https://support.clo3d.com/hc/en-us/articles/360025716814-Edit-2D-POM): measurement rulers can be authored, edited, and associated with real pattern outlines/internal lines.
+- [Create Notch](https://support.clo3d.com/hc/en-us/articles/115013214287-Create-Notch) and [Select/Move Notch](https://support.clo3d.com/hc/en-us/articles/115013214367-Select-Move-Notch): native notches attach to outlines, can be selected, adjusted precisely, and persist as geometry metadata.
+
+## Existing implementation: evidence versus open questions
+
+| Feature | Observed source evidence | QA implication |
+| --- | --- | --- |
+| Chest, belly, upper/lower hem, center line | `ConstructionGuides` derives line spans from transformed UV / Rust boundary vertices (`ClothCraftBoardV2.jsx:50-140`), positions from bounding-box fractions | These landmarks are **heuristic proportions**, not measured garment landmarks or editable internal lines. Compare appearance, but label them correctly. |
+| Guide hit areas | Guides have a transparent SVG line with `pointerEvents="stroke"`, width `.017` world units and click handlers with `stopPropagation()` (`:77-106`) | Verify at several zooms with real pointer input, plus near-miss and overlap cases. |
+| Guide lengths | Horizontal span uses `(b-a)*1000` mm; center length subtracts `.012` metres after endpoint inset (`:69-107, :712-719`) | Compare against the same measured SVG/model coordinates, not pixel width or a fixture constant. Check rotation separately. |
+| Decorative notch-like ticks | `ConstructionGuides` creates red `data-2d-construction="notch-tick"` lines, specifically SVG-only (`:109-139`) | Must not appear in Rust polygon notches, export, editable notch lists, or undo history. |
+| Native authored notches | Distinct rendering from `panel.polygon.notches` (`:970-982`); click/edit handler logic near `:630-660` | Assert persisted native-notch count/position separately from decorative ticks, including reload. |
+| Graphic measurements | `GraphicMeasurementBox` uses `width*1000`, `height*1000` and data attributes (`:194-227`) | Assert physical units, visibility toggles, property-editor synchronization and persistence. |
+| Undo | In-progress drawing has dedicated Cmd/Ctrl+Z handling (`:590-600`) | Validate draft undo versus native persisted undo/redo and keyboard focus in inputs independently. |
+| Pattern transform | `SelectionMarquee2D` uses SVG transform handles (`:142-190`) | Test pointer movement, rotate, selected marks and unchanged simulation geometry until committed. |
+
+## Reproducible screenshot comparison
+
+1. Capture native CLO 2D window using the identical garment, patterns, selection state, pan, zoom, visible rulers and measurement units. Reference images already available include `research/screenshots/clo-live-inspector-2d-20261017.png`, `research/screenshots/exo-clo-settings-reference-20261017/clo2d.png` and `research/screenshots/clo-corner-widget-20261017/native-2d-corner-crop.png`. **These are visual references; their garment, camera, units and state are not confirmed identical.**
+2. Capture ClothCraft board at 1680×1040 and a smaller 1280×800 viewport. Use the same selected panel and fit level; record SVG viewBox and model metres-per-screen-pixel. Export unclipped screenshots of the board and detail crops at 100% image scale.
+3. Compare outline proportions, point positions, label readability, ruler/toolbar spacing, selected edge, notch color and mark shape, guide endcaps, stacking/order and hover states. Pair corresponding anchor points first; quantify landmark offsets in screen pixels after registration. Record any differences as either measured deviations or subjective styling observations.
+4. Include zoom levels 0.5×, 1×, 2×, 4× and both light/dark theme variants. Verify every construction guide stays inside the intended panel clip, does not bleed over adjacent panels, and retains a usable hit area.
+5. Do not call the imagery pixel-identical until fixtures match. Native CLO reference screenshots may represent a different build or project.
+
+## Functional acceptance matrix
+
+| Area | Test action | Expected evidence |
+| --- | --- | --- |
+| Guide hit testing | Locate one visible `[data-2d-guide-panel]` and center of its `[data-guide-id]` transparent target; click at midpoint and 1/4, 3/4 lengths | `[data-2d-selected-guide]` reports expected kind; `data-2d-selected-guide-length-mm` finite and positive; selected panel is correct. |
+| Miss / overlap | Click 12–20 screen px outside line hit area, then where a guide crosses a native outline or seam, repeat at several zooms | Miss does not select guide; line intersection produces a stable intended priority; no accidental garment move/draw action. |
+| Real mm geometry | Independently read SVG line endpoints in model metres; calculate Euclidean length ×1000; compare with displayed mm | Horizontal/center measurement absolute error ≤0.2 mm for the **same plotted endpoints**; center comparison accounts for endpoint inset already reflected by length computation. |
+| Rotation / layout | Rotate torso 90°, translate panel, reload it | Selected guide length stays invariant under rigid rotation/translation, and guide tracks boundary and clip. |
+| Decorative vs native marks | Compare `[data-2d-construction="notch-tick"]` counts against `panel.polygon.notches`; save/reload | Decorative ticks may be regenerated, but never generate saved `notches` or change native seam/simulation data. |
+| Actual notch | Add a native notch using the supported tool, move it, save/reload | Native notch exists on correct boundary at same arclength fraction, remains editable, and reverts under undo. |
+| Graphic measurements | Import 100 mm test graphic, toggle measurements off/on, drag graphic, reload | `data-graphic-width-mm=100.00`; dimensions independent of zoom; native `graphics-set` saves position and survives reload. |
+| Native undo/redo | With canvas focused, edit a polygon vertex / notch; Cmd+Z, Shift+Cmd+Z | Exactly one native edit reverted/restored per keypress; guide-only selection creates no native history entry. |
+| Draft undo and input focus | Start drawing with at least two draft points; Cmd+Z; focus a numeric or text input and type then Cmd+Z | Draft loses one point without invoking native undo; text input retains normal browser text undo. |
+| Persistence | Save fixture; reload page and re-fetch native workspace; compare pattern, notch and graphic records | Only intended authored data persists; visual heuristics recompute identically from current geometry. |
+| Errors | Attach `pageerror`, failing network response, console error listeners | No uncaught React errors, broken bridge requests, or serialisation errors. |
+
+The 0.2 mm check is a suggested tolerance for the current SVG/metres conversion, not a documented CLO manufacturing tolerance. A path-length or curved measurement must integrate segments/arcs; endpoint distance alone is inappropriate.
+
+## Existing executable harnesses and current verification
+
+### Live guide regression, October 18, 2026
+
+**Follow-up live evidence (center-front visibility, October 18):** Disk had 488 MiB free before the first rerun and 439 MiB before a second, so the isolated test was allowed. Chest and belly real pointer selections passed, as did center-front selection after changing the group locator's wait state to `attached`. The centered hit line is vertical: SVG endpoints `(0.5, 0.071)` to `(0.5, 0.654)`, screen midpoint `(1083, 474.67)`, DOM bounds `width: 0 px, height: 81.296 px`. Playwright considers this `<g>` hidden because its geometric bounding rectangle has zero width; the transparent SVG stroke remains fully hit-testable with computed `pointer-events: stroke`. `document.elementsFromPoint` confirms that line is topmost ahead of the front fabric path. Its clip path is `url(#_r_0_-pattern-0)`; the clipping ancestor has nonzero bounds (approximately 131 by 90 pixels) and the line midpoint is inside the SVG viewport (832,35 through 1334,975). This is an **isolated QA locator issue**, not evidence of a visual or interaction defect in center-front.
+
+The test now advances through guide selection, measured lengths and zoom to the native `InternalLine` command. That downstream request failed with HTTP **422** (no JS exceptions). Captured payload: `{"revision":0,"op":"edit","command":{"kind":"InternalLine","panel":"front","points":[[0.035225,0.2574],[0.964775,0.2574]],"tangents":[[0,0],[0,0]]}}`. The backend returned a populated workspace document with the error response; current diagnostics show only the first 1200 response characters and do not establish the backend's validation reason. The script therefore still exits FAIL. Screenshot: `/var/folders/f5/g84wvtpj3gg2d5_9ngt4yykr0000gn/T/exo-guide-reference-A4piyE/reference-guide-failure.png`. Reload/persistence checks after this failure are not proven.
+
+**Root cause confirmed in subsequent controlled request:** Native Rust rejected the guide-derived endpoint pair with `La ligne doit rester à l'intérieur du tissu` (line must stay inside the fabric). An otherwise identical command on the same disposable session using safely interior points `[[0.27,0.40],[0.69,0.40]]` returned HTTP **200**, `ok:true`, updated revision **1**. The Rust session is functional and the failure is geometry containment at the guide ends near the cut boundary. Last screenshot: `/var/folders/f5/g84wvtpj3gg2d5_9ngt4yykr0000gn/T/exo-guide-reference-495Lik/reference-guide-failure.png`. The reference guide selection and zoom assertions pass; exact-endpoint InternalLine conversion remains failing until the guide-to-native-line endpoint handling is adjusted.
+
+**Post-fix rerun, October 18:** The prime's 10 mm per-end inset fixes the Rust 422. Full live isolated script returned `pass:true`: chest, belly, center-front real pointer selections and measured geometry passed, zoomed chest remained **929.55 mm**, and one native `InternalLine` request was accepted with **909.55 mm** physical length (exactly 20 mm shorter). Dotted center and purple shoulder references passed, frontend page reload rendered the front guide successfully, and reopening the disposable Rust preset returned panels. Both pageerror and failed workspace response collections were empty. Final screenshot: `/var/folders/f5/g84wvtpj3gg2d5_9ngt4yykr0000gn/T/exo-guide-reference-hJ4zuL/reference-guides-selected.png`. **Limit:** The existing reload assertion confirms the frontend remount and native preset reopen, but does not independently compare a saved internal-line object before and after reopening a persisted document; that deeper persistence invariant remains untested.
+
+**Final visual-accuracy rerun, October 18:** Full isolated script exited successfully with `pass:true` after chest landmark fraction changed to `.46` and decorative red fallback was restricted to underarm/armhole attachments. Front chest was **444.41 mm** (independent SVG geometry **444.41081 mm**), belly **482.94 mm** (geometry **482.94054 mm**), and center-front **583.00 mm** (geometry **583.00 mm**). Actual pointer selection passed for all three; zoomed chest remained **444.41 mm**. One accepted Rust `InternalLine` command measured **424.41081 mm**, consistent with 10 mm inset on each end. Dotted center and shoulder offset assertions, frontend reload, native preset reopen, `errors: []`, and `failedResponses: []` all passed. Screenshot: `/var/folders/f5/g84wvtpj3gg2d5_9ngt4yykr0000gn/T/exo-guide-reference-nlcuSj/reference-guides-selected.png`. The final script validates reference fallback presence indirectly through rendered UI, but does not specifically enumerate every red fallback boundary; same saved-document persistence limitation as above.
+
+New isolated Playwright harness: `integrations/clothcraft/qa-v2-reference-guide-20261018.mjs`. Launches temporary Rust workspace, bridge on 5421, Vite on 5284, headless Chrome, checks chest/belly/center guide clicks and actual SVG metric lengths, zoom-invariance, purple shoulder offset, dotted center, native InternalLine request, reload, JS errors, and captures a failure screenshot. **Current live result: FAIL** at the first real mouse click (chest midpoint). At 1728×1040 the computed chest guide midpoint is screen `(1083, 460.015)` and its SVG model length is `929.55 mm`, but `document.elementFromPoint` returns `<path data-panel="front">` rather than the transparent guide stroke. The selected-guide popup never opens. Follow-on assertions for belly, center, zoom, native command and reload were therefore **not reached**; their absence must not be reported as passes. The JS pageerror and failed workspace response arrays were empty until the failure. `node --check` passed.
+
+Failure screenshot: `/var/folders/f5/g84wvtpj3gg2d5_9ngt4yykr0000gn/T/exo-guide-reference-msNbTy/reference-guide-failure.png`. Test result is deterministic over two runs; one earlier diagnostic used a forced Playwright locator click, which could not resolve the SVG target and was removed. The native frontend needs its guide target stacking/hit-test order inspected before this test can pass. All artifacts are within a disposable system temp directory. The script exits nonzero and preserves that screenshot for inspection.
+
+- `integrations/clothcraft/qa-v2-2d-graphic-drag-measure-20261017.mjs` launches a disposable Rust output workspace and Vite, checks graphic hit selection, 100 mm dimensions, toggle sync, drag, native `graphics-set`, reload and screenshot. **Caution:** it writes a screenshot into repository `screenshots/`; use a disposable branch/copy or redirect that output when running unattended.
+- `integrations/clothcraft/qa-v2-2d-marquee.mjs` checks panel selection, eight visual scale handles, rotation marker, move and screenshots.
+- `integrations/clothcraft/qa-v2-2d-point-colors.mjs` checks contrasting vertex, selected vertex, curve and seam styles, and screenshot.
+- All three scripts passed `node --check` on audit date. This proves JavaScript syntax only. No live browser/native test was executed in this audit; integration and screenshot parity remain **unverified**.
+
+Recommended implementation for a new **non-destructive** test: launch the same isolated server + Vite fixture as the graphic test, place temporary screenshots under `mkdtempSync(tmpdir())`, capture target guide SVG endpoints and client-to-screen transform through `SVGPoint.matrixTransform(getScreenCTM())`, perform actual `page.mouse.click()` on target midpoints, read the panel's measured data attribute, assert expected physical length, then reload the page and assert native workspace data unchanged. Ensure `finally` closes Chromium and kills only the child process groups the test launched. Use unique free ports and never point native bridge to an installed or user-owned workspace.
+
+## Priority defects/hypotheses for prime review
+
+1. **Behavior gap (confirmed by code):** chest/belly/hem marks and notch ticks are computed SVG overlays. CLO guidelines, internal lines, POMs and notches are separately authorable/editable objects. Visually convincing marks should not be presented to the user as equivalent native entities.
+2. **Hit-area robustness (unverified):** transparent SVG stroke hit width is defined in board coordinates; its screen-pixel footprint changes with zoom. Browser hit tests at extreme zooms are needed.
+3. **Length semantics (confirmed by code):** guide panel value describes a cross-section or center trace computed from boundaries; it should not be called circumference or a real-world body measurement.
+4. **History isolation (unverified):** the draft Cmd+Z branch exists, but dedicated proof for an edited Rust polygon/notch followed by redo and focused text-input undo is still needed.
+
+This audit intentionally changes no production code, stages, garments or snapshots.

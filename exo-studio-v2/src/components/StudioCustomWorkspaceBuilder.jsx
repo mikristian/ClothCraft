@@ -1,0 +1,53 @@
+import React,{useState} from 'react'
+import {STUDIO_TOOL_CATALOG} from '../core/studioCustomization.js'
+import {CUSTOM_WORKSPACE_PRESETS,CUSTOM_WIDGET_MODES} from '../core/customWorkspacePresets.js'
+import {STUDIO_THEME_PRESETS} from '../core/studioThemePresets.js'
+import CadToolIcon from './CadToolIcon.jsx'
+import './StudioCustomWorkspaceBuilder.css'
+const catalog=new Map(STUDIO_TOOL_CATALOG.map(tool=>[tool.id,tool]))
+const stamp=()=>Date.now().toString(36)
+export default function StudioCustomWorkspaceBuilder({value,onChange}){
+ const workspace=value.workspace||{},appearance=value.appearance||{}
+ const [name,setName]=useState('My Workspace')
+ const [filter,setFilter]=useState('')
+ const [feedback,setFeedback]=useState('')
+ const [selection,setSelection]=useState(0)
+ const layouts=workspace.savedWorkspaceLibrary||[]
+ const widgets=workspace.customWorkspaceWidgets||[]
+ const updateWorkspace=changes=>onChange({...value,workspace:{...workspace,...changes}})
+ const updateWidget=(id,changes)=>updateWorkspace({customWorkspaceWidgets:widgets.map(w=>w.id===id?{...w,...changes}:w)})
+ const addWidget=(kind='toolbar',id)=>{
+  if(widgets.length>=16){setFeedback('Up to sixteen workspace widgets can be created.');return}
+  const index=widgets.length,entry={id:`widget-${stamp()}-${index}`,name:kind==='button'?'Custom action button':`Tools widget ${index+1}`,kind,tools:id?[id]:[],dock:'floating',visible:true,liquidGlass:!!appearance.liquidGlass,columns:kind==='button'?1:2}
+  updateWorkspace({customWorkspaceWidgets:[...widgets,entry]});setSelection(index);setFeedback('Created a reusable workspace widget.')
+ }
+ const apply=(preset)=>{
+  const widget={id:`widget-${stamp()}`,name:`${preset.name} tools`,kind:'toolbar',tools:preset.tools,dock:preset.layout==='2d'?'top':'floating',visible:true,liquidGlass:preset.glass,columns:2}
+  onChange({...value,appearance:{...appearance,theme:preset.theme,liquidGlass:preset.glass,glassWidgets:preset.glass},workspace:{...workspace,viewportLayout:preset.layout,panelOrder:preset.order,objectBrowserVisible:preset.right,customWorkspaceWidgets:[widget],topTabsVisible:true}})
+  setSelection(0);setFeedback(`Applied ${preset.name}. The actual application still uses EXO command implementations.`)
+ }
+ const capture=()=>{
+  const entry={id:`workspace-${stamp()}`,name:name.trim().slice(0,64)||'Untitled workspace',workspace:{viewportLayout:workspace.viewportLayout,panelOrder:workspace.panelOrder,libraryWidth:workspace.libraryWidth,inspectorWidth:workspace.inspectorWidth,objectBrowserHeight:workspace.objectBrowserHeight,topTabsVisible:workspace.topTabsVisible,objectBrowserVisible:workspace.objectBrowserVisible,leftToolbarDock:workspace.leftToolbarDock,rightToolbarDock:workspace.rightToolbarDock,customWorkspaceWidgets:widgets.map(w=>({...w,tools:[...w.tools]}))},appearance:{theme:appearance.theme,panelFinish:appearance.panelFinish,liquidGlass:appearance.liquidGlass,glassWidgets:appearance.glassWidgets}}
+  updateWorkspace({savedWorkspaceLibrary:[entry,...layouts].slice(0,24)});setFeedback(`Saved ${entry.name} to your Workspace Library.`)
+ }
+ const restore=item=>{onChange({...value,workspace:{...workspace,...item.workspace,savedWorkspaceLibrary:layouts},appearance:{...appearance,...item.appearance}});setFeedback(`Loaded ${item.name}.`)}
+ const current=widgets[Math.min(selection,widgets.length-1)]
+ const addTool=id=>{if(!current||current.tools.includes(id))return;updateWidget(current.id,{tools:current.kind==='button'?[id]:[...current.tools,id].slice(0,64)})}
+ return <section className="studio-settings-group exo-workspace-builder" aria-label="Custom workspace builder" data-testid="custom-workspace-builder">
+  <h4>Start with a workspace</h4><p>Build on EXO Native or create an Optitex/Modaris-inspired arrangement. These are familiar layouts, not claims of proprietary software equivalence.</p>
+  <div className="exo-workspace-preset-grid">{CUSTOM_WORKSPACE_PRESETS.map(p=><button type="button" key={p.id} onClick={()=>apply(p)}><strong>{p.name}</strong><small>{p.description}</small></button>)}</div>
+  <div className="exo-workspace-builder-controls">
+   <label>Viewport<select aria-label="Custom workspace viewport" value={workspace.viewportLayout||'split'} onChange={e=>updateWorkspace({viewportLayout:e.target.value})}>{['split','stack','2d','3d'].map(v=><option key={v} value={v}>{v}</option>)}</select></label>
+   <label>Panels<select aria-label="Custom workspace panel ordering" value={workspace.panelOrder||'standard'} onChange={e=>updateWorkspace({panelOrder:e.target.value})}><option value="standard">Library left / Properties right</option><option value="swapped">Properties left / Library right</option></select></label>
+   <label>Theme<select aria-label="Custom workspace theme" value={appearance.theme||'graphite'} onChange={e=>onChange({...value,appearance:{...appearance,theme:e.target.value}})}>{STUDIO_THEME_PRESETS.map(t=><option key={t.id} value={t.id}>{t.name}</option>)}</select></label>
+   <label>Panel finish<select aria-label="Custom workspace panel finish" value={appearance.panelFinish||'balanced'} onChange={e=>onChange({...value,appearance:{...appearance,panelFinish:e.target.value}})}><option value="balanced">Balanced</option><option value="matte">Matte</option><option value="deep">Deep</option><option value="unified">Unified</option><option value="tinted">Tinted</option></select></label>
+  </div>
+  <div className="exo-workspace-checks">{[['topTabsVisible','Top navigation tabs'],['objectBrowserVisible','Object Browser'],['toolbarEditMode','Rearrange side tools']].map(([key,label])=><label key={key}><input type="checkbox" checked={!!workspace[key]} onChange={e=>updateWorkspace({[key]:e.target.checked})}/>{label}</label>)}<label><input type="checkbox" checked={!!appearance.glassWidgets} onChange={e=>onChange({...value,appearance:{...appearance,glassWidgets:e.target.checked,liquidGlass:e.target.checked||appearance.liquidGlass}})}/>Liquid-glass widgets</label></div>
+  <h4>Side panels and tool rails</h4><div className="exo-workspace-builder-controls">{[['libraryWidth','Library width',160,350],['inspectorWidth','Properties width',295,540],['objectBrowserHeight','Object Browser height',230,650]].map(([key,label,min,max])=><label key={key}>{label}<input aria-label={`Custom ${label}`} type="range" min={min} max={max} value={workspace[key]??min} onChange={e=>updateWorkspace({[key]:Number(e.target.value)})}/><small>{workspace[key]??min}px</small></label>)}{['left','right'].map(side=><label key={side}>{side} toolbar<select aria-label={`Custom workspace ${side} toolbar dock`} value={workspace[`${side}ToolbarDock`]||side} onChange={e=>updateWorkspace({[`${side}ToolbarDock`]:e.target.value})}>{CUSTOM_WIDGET_MODES.map(mode=><option key={mode}>{mode}</option>)}</select></label>)}</div>
+  <div className="exo-workspace-widget-heading"><div><h4>Custom widget library</h4><p>Create floating or docked tool groups and single-action buttons. Every added action routes through the existing EXO tool system.</p></div><div><button type="button" onClick={()=>addWidget('toolbar')}>+ Tool widget</button><button type="button" onClick={()=>addWidget('button')}>+ Widget button</button></div></div>
+  <div className="exo-workspace-widget-layout"><div className="exo-workspace-widget-list">{widgets.map((widget,i)=><button type="button" key={widget.id} className={current?.id===widget.id?'active':''} onClick={()=>setSelection(i)}>{widget.kind==='button'?'◉':'▦'} {widget.name}<small>{widget.tools.length} tools · {widget.dock}</small></button>)}{!widgets.length&&<p>No widgets yet. Create one above or load a workspace preset.</p>}</div>
+   <div className="exo-workspace-widget-editor">{current?<><label>Widget title<input aria-label="Workspace widget title" maxLength={64} value={current.name} onChange={e=>updateWidget(current.id,{name:e.target.value})}/></label><div className="exo-workspace-builder-controls"><label>Dock<select aria-label="Workspace widget dock" value={current.dock} onChange={e=>updateWidget(current.id,{dock:e.target.value})}>{CUSTOM_WIDGET_MODES.map(d=><option key={d}>{d}</option>)}</select></label><label>Columns<select aria-label="Workspace widget columns" value={current.columns} onChange={e=>updateWidget(current.id,{columns:Number(e.target.value)})}>{[1,2,3,4].map(n=><option key={n}>{n}</option>)}</select></label></div><div className="exo-workspace-checks"><label><input type="checkbox" checked={current.visible} onChange={e=>updateWidget(current.id,{visible:e.target.checked})}/>Show widget</label><label><input type="checkbox" checked={current.liquidGlass} onChange={e=>updateWidget(current.id,{liquidGlass:e.target.checked})}/>Liquid glass</label></div><div className="exo-workspace-widget-preview" data-glass={String(current.liquidGlass)}>{current.tools.map(id=><button type="button" key={id} title={`Remove ${catalog.get(id)?.label||id}`} onClick={()=>updateWidget(current.id,{tools:current.tools.filter(t=>t!==id)})}><CadToolIcon id={catalog.get(id)?.icon||id} size={20}/><span>{catalog.get(id)?.label||id}</span> ×</button>)}{!current.tools.length&&<small>Choose a tool from the library to populate this widget.</small>}</div><input aria-label="Search workspace widget tools" placeholder="Search all available tools…" value={filter} onChange={e=>setFilter(e.target.value)}/><div className="exo-workspace-tool-library">{STUDIO_TOOL_CATALOG.filter(t=>`${t.label} ${t.group}`.toLowerCase().includes(filter.toLowerCase())).map(tool=><button key={tool.id} type="button" disabled={current.tools.includes(tool.id)} title={tool.status==='reference'?'Listed for reference; action is not fully implemented':tool.label} onClick={()=>addTool(tool.id)}><CadToolIcon id={tool.icon} size={16}/>{tool.label}</button>)}</div><button type="button" onClick={()=>{updateWorkspace({customWorkspaceWidgets:widgets.filter(x=>x.id!==current.id)});setSelection(0)}}>Delete selected widget</button></>:<p>Choose or create a widget to edit its tools and appearance.</p>}</div></div>
+  <div className="exo-workspace-saved"><h4>Saved Workspace Library</h4><div className="exo-workspace-save"><input aria-label="Workspace layout name" value={name} maxLength={64} onChange={e=>setName(e.target.value)}/><button type="button" onClick={capture}>Save entire workspace</button></div>{layouts.map(item=><div key={item.id} className="exo-workspace-saved-item"><strong>{item.name}</strong><button type="button" onClick={()=>restore(item)}>Load workspace</button><button type="button" aria-label={`Delete workspace ${item.name}`} onClick={()=>updateWorkspace({savedWorkspaceLibrary:layouts.filter(x=>x.id!==item.id)})}>×</button></div>)}</div>
+  {feedback&&<p role="status">{feedback}</p>}
+ </section>
+}

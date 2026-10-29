@@ -1,0 +1,110 @@
+# EXO 100-page build spec: table of contents
+
+
+## Foundations and native garment engineering
+- Page 001: EXO platform build contract
+- Page 002: Scope, user roles and job outcomes
+- Page 003: Success metrics and nonfunctional requirements
+- Page 004: Current architecture audit and protected boundaries
+- Page 005: Canonical garment object model
+- Page 006: Draft, garment and release revision graph
+- Page 007: Local-first desktop and connected web architecture
+- Page 008: Shared interface system and navigation
+- Page 009: Design workspace and tool behavior contract
+- Page 010: Geometric coordinates, units and topology
+- Page 011: Parametric patterns, blocks and grading rules
+- Page 012: Seam graph, edge correspondence and ease
+- Page 013: Notch authoring and industrial seam allowances
+- Page 014: Trims, hardware, graphics and engineered placement
+- Page 015: Measured fabrics, visual textiles and supplier data
+- Page 016: Simulation orchestration and contact diagnostics
+- Page 017: Avatar sizing, poses and fit evidence
+- Page 018: Graded export, DXF/RUL and independent round trips
+- Page 019: Marker making, nesting and cut-order planning
+- Page 020: Measurement engine and production preflight
+- Page 021: Technical drawings and generated specification assets
+- Page 022: Source asset library, search and licensing
+- Page 023: AI agent actions, tool schema and verified skills
+- Page 024: Engineering integration contracts and staged migrations
+- Page 025: Development foundation milestone and technical gates
+
+## Living manufacturer tech pack and factory production
+- Page 026: Living tech-pack schema and data authority
+- Page 027: Style overview and manufacturer information architecture
+- Page 028: Point-of-measurement specification engine
+- Page 029: Size-run and graded-production validation
+- Page 030: Production BOM and supplier material records
+- Page 031: Construction operation and seam instruction system
+- Page 032: Comment anchors and geometry remapping
+- Page 033: Discussion threads, assignments and response times
+- Page 034: Factory sample photographs, files and evidence
+- Page 035: Structured change proposals and manufacturer suggestions
+- Page 036: Diff review, impact analysis and rebase
+- Page 037: Internal technical approvals and signatures
+- Page 038: Immutable factory release and downloadable package
+- Page 039: Factory invitation, membership and external partnerships
+- Page 040: Multi-tenant ACL and supplier data isolation
+- Page 041: Manufacturer production dashboard
+- Page 042: Sample rounds, fit comments and approvals
+- Page 043: Quality inspection and corrective action records
+- Page 044: Work orders, quantities and stage scheduling
+- Page 045: Material sourcing, factory RFQ and substitutions
+- Page 046: Estimated cost, confirmed quotation and landed economics
+- Page 047: Marker, cut plan and production quantity handoff
+- Page 048: Factory package formats and round-trip receipts
+- Page 049: Mobile, offline access and factory notifications
+- Page 050: Factory pilot release tests and operational drills
+
+## Virtual photography and real-world shoot planning
+- Page 051: Photo studio outcomes and boundaries
+- Page 052: Creative projects, looks and wardrobe
+- Page 053: Shots, setups and shot groups
+- Page 054: Storyboards and contact sheets
+- Page 055: 3D stage library and quality gates
+- Page 056: Stage schemas, units and transforms
+- Page 057: Props, collision and practical blocking
+- Page 058: Avatars, poses and revision-locked drape
+- Page 059: Camera sensor geometry and framing
+- Page 060: Lenses, focus and depth of field
+- Page 061: Light rigs, energy and color temperature
+- Page 062: Translating virtual light to real fixtures
+- Page 063: Materials, shaders and color management
+- Page 064: Garment fidelity gates and image QA
+- Page 065: Responsive Three.js composition preview
+- Page 066: Blender scene compiler and parity checks
+- Page 067: Cycles profile and rendering pipeline
+- Page 068: Render queue, retries and idempotency
+- Page 069: Render passes and compositing revisions
+- Page 070: Review, approvals and change records
+- Page 071: Ecommerce coverage presets and marketplaces
+- Page 072: Editorial and campaign storytelling presets
+- Page 073: Surveyed physical studio and venue plan
+- Page 074: Crew, call sheets and equipment logistics
+- Page 075: On-set ingest and virtual-real comparison
+
+## Cloud platform, security, delivery and quality
+- Page 076: Identity, sessions and authentication
+- Page 077: Tenant boundaries and object permissions
+- Page 078: Private assets and rights-controlled URLs
+- Page 079: Audit events and provenance
+- Page 080: REST contracts and generated clients
+- Page 081: Transactions, concurrency and idempotency
+- Page 082: Realtime events, notifications and offline use
+- Page 083: PostgreSQL relations and indexes
+- Page 084: Object storage and render artifact lifecycles
+- Page 085: Schema migrations and source importers
+- Page 086: AI tools, permissions and safety
+- Page 087: Agent edit verification and controlled execution
+- Page 088: Observability, service health and cost
+- Page 089: Crash recovery and protected editor state
+- Page 090: Test architecture and fixture discipline
+- Page 091: Grading and geometry property tests
+- Page 092: Factory release and authorization security tests
+- Page 093: Photo Studio render-parity QA
+- Page 094: Accessibility and interactive performance
+- Page 095: Phased launch and feature-gate strategy
+- Page 096: Delivery team and accountable ownership
+- Page 097: Twelve-month dependency roadmap
+- Page 098: Risk register, owners and mitigation
+- Page 099: Pilot workflows and acceptance evidence
+- Page 100: Formal release exit and open decisions

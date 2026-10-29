@@ -1,49 +1,67 @@
 // Analytic drafting geometry in centimeters. No numerical sampling, no eval,
 // no implicit rounding and no writes to the original pattern document.
 import { assertDraftCoordinate, precisePointEdit } from './draftingPrecision.js'
+import { rustConstructionIntersection, rustConstructionProjection, rustConstructionAlong, rustConstructionMirror } from './rustConstructionKernel.js'
 
 const epsilon=1e-10
+const checkedPoint=(point,label)=>({
+  x:assertDraftCoordinate(point?.x,`${label} X`),
+  y:assertDraftCoordinate(point?.y,`${label} Y`),
+})
 
 export function constructionReferencePoint(piece, oneBasedIndex) {
-  const n=Number(oneBasedIndex)
-  if (!Number.isInteger(n) || n<1 || n>piece?.points?.length) {
+  // Point selectors come from numeric UI fields. Do not coerce booleans,
+  // arrays, objects or alternate-base literals into a different point index.
+  const decimalText=typeof oneBasedIndex==='string'&&oneBasedIndex.length<=64&&
+    /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(oneBasedIndex.trim())
+  const n=typeof oneBasedIndex==='number'?oneBasedIndex:decimalText?Number(oneBasedIndex):NaN
+  if (!Array.isArray(piece?.points) || !Number.isInteger(n) || n<1 || n>piece.points.length) {
     throw new Error(`Reference index must be a pattern point between 1 and ${piece?.points?.length ?? 0}`)
   }
   const point=piece.points[n-1]
+  // Imported or partially edited patterns can have sparse/null vertices.
+  // Reject them as invalid references rather than throwing an uncontrolled
+  // TypeError or accepting an array-like fabricated points collection.
+  if (!point || typeof point !== 'object' || Array.isArray(point)) {
+    throw new Error('Invalid pattern reference vertex')
+  }
   return {x:assertDraftCoordinate(point.x,'Reference X'),y:assertDraftCoordinate(point.y,'Reference Y')}
 }
 
 export function lineIntersection(a,b,c,d) {
+  a=checkedPoint(a,'Line A');b=checkedPoint(b,'Line B')
+  c=checkedPoint(c,'Line C');d=checkedPoint(d,'Line D')
   const u={x:b.x-a.x,y:b.y-a.y}
   const v={x:d.x-c.x,y:d.y-c.y}
   const cross=u.x*v.y-u.y*v.x
   if (Math.abs(cross)<epsilon) throw new Error('Construction lines are parallel or coincident')
-  const t=((c.x-a.x)*v.y-(c.y-a.y)*v.x)/cross
-  return {x:a.x+t*u.x,y:a.y+t*u.y}
+  return checkedPoint(rustConstructionIntersection(a,b,c,d),'Intersection')
 }
 
 export function projectOntoLine(point,a,b) {
+  point=checkedPoint(point,'Projection point')
+  a=checkedPoint(a,'Line A');b=checkedPoint(b,'Line B')
   const u={x:b.x-a.x,y:b.y-a.y}
   const norm=u.x*u.x+u.y*u.y
   if (norm<epsilon*epsilon) throw new Error('Construction reference line has zero length')
-  const t=((point.x-a.x)*u.x+(point.y-a.y)*u.y)/norm
-  return {x:a.x+t*u.x,y:a.y+t*u.y}
+  return checkedPoint(rustConstructionProjection(point,a,b),'Projection')
 }
 
 export function pointAlongLine(a,b,distanceCm,{perpendicular=false}={}) {
+  a=checkedPoint(a,'Line A');b=checkedPoint(b,'Line B')
   const delta={x:b.x-a.x,y:b.y-a.y}
   const norm=Math.hypot(delta.x,delta.y)
   if (norm<epsilon) throw new Error('Construction reference line has zero length')
   const distance=assertDraftCoordinate(distanceCm,'Construction offset')
-  const unit=perpendicular
-    ? {x:-delta.y/norm,y:delta.x/norm}
-    : {x:delta.x/norm,y:delta.y/norm}
-  return {x:a.x+unit.x*distance,y:a.y+unit.y*distance}
+  return checkedPoint(rustConstructionAlong(a,b,distance,perpendicular),'Construction point')
 }
 
 export function mirrorPointAcrossLine(point,a,b) {
-  const foot=projectOntoLine(point,a,b)
-  return {x:foot.x*2-point.x,y:foot.y*2-point.y}
+  // Keep the original zero-length validation and error message.
+  const checked=checkedPoint(point,'Mirror point')
+  const checkedA=checkedPoint(a,'Line A'),checkedB=checkedPoint(b,'Line B')
+  projectOntoLine(checked,checkedA,checkedB)
+  return checkedPoint(rustConstructionMirror(checked,checkedA,checkedB),'Mirror')
 }
 
 export const DRAFT_CONSTRUCTION_MODES=Object.freeze({

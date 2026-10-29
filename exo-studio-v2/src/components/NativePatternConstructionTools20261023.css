@@ -1,0 +1,19 @@
+.exo-native-construction{max-height:min(70vh,630px);overflow:auto;display:flex;flex-direction:column;gap:8px;padding:13px 16px 15px;min-width:365px;background:#252a30;color:#edf2f7;font-size:11px;line-height:1.4}
+.exo-native-construction>strong{font-size:12px;letter-spacing:.04em}
+.exo-native-construction p{margin:0;line-height:1.55}
+.exo-native-construction label{display:flex;flex-direction:column;gap:4px;color:#cdd8e4;font-size:11px}
+.exo-native-construction select,.exo-native-construction input,.exo-native-construction textarea{width:100%;box-sizing:border-box;border-radius:4px;border:1px solid #697684;padding:6px 8px;min-height:31px;color:#f5f8fa;background:#171c23;font:inherit}
+.exo-native-construction textarea{resize:vertical;min-height:75px;line-height:1.6}
+.exo-construction-worksheet{display:flex;flex-direction:column;gap:8px;border:1px solid #536473;padding:9px;background:#222f38;border-radius:4px}
+.exo-construction-worksheet p{color:#dce8f3;font-variant-numeric:tabular-nums}
+.exo-construction-save-worksheet{padding:7px;border:1px solid #718594;border-radius:4px;background:#364f63;color:#fff;cursor:pointer}
+.exo-construction-reference-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.exo-construction-result{display:flex;flex-direction:column;gap:4px;border-left:3px solid #9bc6d2;padding:8px;background:#343f47;font-variant-numeric:tabular-nums}
+.exo-construction-result strong{letter-spacing:.03em;font-size:10px}
+.exo-construction-invalid{border-left:3px solid #efa17b;padding:8px;background:#4b3331}
+.exo-construction-actions{display:flex;gap:6px}
+.exo-construction-actions button{border:1px solid #82919b;border-radius:4px;background:#35434d;color:#f4f6f9;padding:7px;cursor:pointer}
+.exo-construction-actions button:first-child{background:#526d7e;font-weight:600;flex:1}
+.exo-construction-actions button:disabled{opacity:.48;cursor:not-allowed}
+.exo-construction-message{background:#384452;padding:7px}
+.exo-native-construction small{color:#afc3d0;line-height:1.5}

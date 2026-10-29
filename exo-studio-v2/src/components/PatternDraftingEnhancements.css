@@ -2,6 +2,9 @@
 .pattern-editor-shell .pattern-canvas {background:#c6c7c9;}
 .pattern-editor-shell .pattern-fill {fill:#f4f4f3;fill-opacity:.94;}
 .pattern-editor-shell .pattern-piece.selected .pattern-fill {fill:#f4f4f3;fill-opacity:.94;filter:none;}
+/* Tracing mode: let the locked background photograph show through pieces. */
+.pattern-editor-shell:has([data-2d-reference-image]) .pattern-fill,
+.pattern-editor-shell:has([data-2d-reference-image]) .pattern-piece.selected .pattern-fill {fill-opacity:.26;}
 .pattern-editor-shell .pattern-edge {stroke:#3e91b5;stroke-width:.95;}
 .pattern-editor-shell .pattern-selection-box {stroke:#8a8b8d;stroke-width:1.05;}
 .pattern-editor-shell .draft-avatar-guide {opacity:.22;}
@@ -11,19 +14,19 @@
 .pattern-editor-shell .draft-origin-dot {fill:#8e8f94;stroke:none;}
 .pattern-editor-shell .grainline {stroke:#656668;stroke-width:.65;stroke-dasharray:2.5 2;}
 .pattern-editor-shell .pattern-notch line,.pattern-editor-shell .pattern-notch.matched line {stroke:#e1292f;stroke-width:1.5;}
-.pattern-editor-shell .clo-bodice-drafting-guides .bodice-center-guide {stroke:#797b80;stroke-width:.58;stroke-dasharray:2.4 1.65;vector-effect:non-scaling-stroke;}
-.pattern-editor-shell .clo-bodice-drafting-guides .bodice-chest-guide {stroke:#b23a44;stroke-width:.55;stroke-dasharray:1.5 1.9;vector-effect:non-scaling-stroke;}
-.pattern-editor-shell .clo-bodice-drafting-guides circle {fill:#d23742;stroke:#fff;stroke-width:.35;}
-.pattern-editor-shell .clo-bodice-drafting-guides path {fill:none;stroke:#bc2937;stroke-width:.65;vector-effect:non-scaling-stroke;}
+.pattern-editor-shell .clo-bodice-drafting-guides .bodice-center-guide {stroke:#666ac4;stroke-width:.7;stroke-dasharray:2.4 1.65;vector-effect:non-scaling-stroke;}
+.pattern-editor-shell .clo-bodice-drafting-guides .bodice-chest-guide {stroke:#696cc2;stroke-width:.72;stroke-dasharray:1.5 1.9;vector-effect:non-scaling-stroke;}
+.pattern-editor-shell .clo-bodice-drafting-guides circle {fill:#f4f4f3;stroke:#7174c3;stroke-width:.4;}
+.pattern-editor-shell .clo-bodice-drafting-guides path {fill:none;stroke:#646bc1;stroke-width:.65;vector-effect:non-scaling-stroke;}
 .pattern-editor-shell .pattern-node {fill:#fdfdfd;stroke:#3b515d;stroke-width:1.35;vector-effect:non-scaling-stroke;paint-order:stroke fill;}
 .pattern-editor-shell .pattern-node.selected-point {fill:#fff6c2;stroke:#394347;stroke-width:1.55;}
 .pattern-editor-shell .pattern-node.editable {fill:#fff127;stroke:#252525;stroke-width:1.85;}
 .pattern-editor-shell .clo-pom-station line {stroke-width:.8;stroke-dasharray:2.4 1.6;vector-effect:non-scaling-stroke;}
-.pattern-editor-shell .clo-pom-station.bodice-chest-guide line {stroke:#c33640;}
-.pattern-editor-shell .clo-pom-station.bodice-stomach-guide line {stroke:#b94b3f;}
-.pattern-editor-shell .clo-pom-station circle {fill:#de3941;stroke:#fff;stroke-width:.8;vector-effect:non-scaling-stroke;}
-.pattern-editor-shell .clo-pom-station path {fill:none;stroke:#b72b32;stroke-width:1.1;vector-effect:non-scaling-stroke;}
-.pattern-editor-shell .clo-pom-measurement-label {fill:#a33337;stroke:#f4f4f3;stroke-width:.35;paint-order:stroke fill;font-size:2.4px;font-weight:750;letter-spacing:.02em;}
+.pattern-editor-shell .clo-pom-station.bodice-chest-guide line {stroke:#6a6bc1;}
+.pattern-editor-shell .clo-pom-station.bodice-stomach-guide line {stroke:#7071ba;}
+.pattern-editor-shell .clo-pom-station circle {fill:#f4f4f3;stroke:#666bc0;stroke-width:.65;vector-effect:non-scaling-stroke;}
+.pattern-editor-shell .clo-pom-station path {fill:none;stroke:#656ac1;stroke-width:.8;vector-effect:non-scaling-stroke;}
+.pattern-editor-shell .clo-pom-measurement-label {fill:#545bad;stroke:#f4f4f3;stroke-width:.35;paint-order:stroke fill;font-size:2.4px;font-weight:750;letter-spacing:.02em;}
 .pattern-editor-shell .canvas-scale {color:#4e5155;text-shadow:0 1px 1px #fff;}
 .clo-pattern-context-menu {position:absolute;z-index:100;display:flex;flex-direction:column;width:205px;max-height:min(440px,80vh);overflow:auto;padding:5px;border:1px solid #6e7175;border-radius:4px;background:#eeeef0;box-shadow:0 11px 31px #0006;}
 .clo-pattern-context-menu strong {font-size:10px;color:#404246;padding:8px;border-bottom:1px solid #c2c3c5;margin-bottom:3px;}

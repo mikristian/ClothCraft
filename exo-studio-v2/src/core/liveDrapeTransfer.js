@@ -1,6 +1,7 @@
 // Transfer the previous simulated drape to a remeshed pattern by nearest
 // pattern-space vertex. Limit movement to avoid injecting unstable contact
 // impulses when a user makes a large 2D edit.
+import {rustBarycentricUV} from './rustCoreMathKernel.js'
 export function captureDrape(simulation) {
   if (!simulation?.pieces) return null
   const result = new Map()
@@ -31,8 +32,7 @@ export function transferDrape(snapshot, simulation, maxOffsetM = 0.035, validate
       for (const [a,b,c] of triangles) {
         const denominator=(b.y-c.y)*(a.x-c.x)+(c.x-b.x)*(a.y-c.y)
         if (Math.abs(denominator)<1e-9) continue
-        const u=((b.y-c.y)*(point.x-c.x)+(c.x-b.x)*(point.y-c.y))/denominator
-        const v=((c.y-a.y)*(point.x-c.x)+(a.x-c.x)*(point.y-c.y))/denominator
+        const [u,v]=rustBarycentricUV(point,a,b,c,denominator)
         const w=1-u-v
         if (Math.min(u,v,w)<-1e-5) continue
         best={position:{x:u*a.position.x+v*b.position.x+w*c.position.x,

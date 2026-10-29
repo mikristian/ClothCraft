@@ -1,0 +1,11 @@
+relative_path,filename,extension,size_bytes,present_in_core_by_filename,identical_sha256_in_core
+Object/Closed_Bottom_Stopper_01.zsp,Closed_Bottom_Stopper_01.zsp,.zsp,257704,True,True
+Object/Open_Bottom_Stopper_01.zsp,Open_Bottom_Stopper_01.zsp,.zsp,663924,True,True
+Object/Puller_01.zpl,Puller_01.zpl,.zpl,358310,True,True
+Object/Slider_01.zsd,Slider_01.zsd,.zsd,469838,True,True
+Object/Top_Stopper_01.zsp,Top_Stopper_01.zsp,.zsp,622838,True,True
+Tape/Plastic_01_Tape.png,Plastic_01_Tape.png,.png,215127,True,True
+Tape/Plastic_01_Tape_NRM.png,Plastic_01_Tape_NRM.png,.png,418511,True,True
+Tape/Plastic_01_Teeth.png,Plastic_01_Teeth.png,.png,80146,True,True
+Tape/Plastic_01_Teeth_NRM.png,Plastic_01_Teeth_NRM.png,.png,80271,True,True
+Tape/Transparent.png,Transparent.png,.png,3486,False,False

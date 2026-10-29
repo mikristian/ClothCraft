@@ -1,0 +1,203 @@
+{
+  "pass": true,
+  "feature": "CPU VBD per-vertex spectral material-strain constraint",
+  "fixture": "T-shirt preset; identical rest state; 10 physics step(s), two Rayon workers",
+  "userProjectUnchanged": true,
+  "installedAppUnchanged": true,
+  "runs": [
+    {
+      "label": "interactive",
+      "accepted": true,
+      "completedSteps": 10,
+      "trace": [
+        {
+          "step": 1,
+          "seamGapMm": 447.4944147470859,
+          "principalExtension": null,
+          "fiberMax": 70.97100403959679,
+          "rigidPanelShiftMm": 0,
+          "contacts": 0
+        },
+        {
+          "step": 2,
+          "seamGapMm": 373.4677221155022,
+          "principalExtension": null,
+          "fiberMax": 282.3777624515082,
+          "rigidPanelShiftMm": 0,
+          "contacts": 13
+        },
+        {
+          "step": 3,
+          "seamGapMm": 331.48062570616645,
+          "principalExtension": null,
+          "fiberMax": 407.2944103953449,
+          "rigidPanelShiftMm": 0,
+          "contacts": 53
+        },
+        {
+          "step": 4,
+          "seamGapMm": 295.7224648045789,
+          "principalExtension": null,
+          "fiberMax": 385.1175242107636,
+          "rigidPanelShiftMm": 0,
+          "contacts": 121
+        },
+        {
+          "step": 5,
+          "seamGapMm": 271.834907910415,
+          "principalExtension": null,
+          "fiberMax": 348.14456060737297,
+          "rigidPanelShiftMm": 0,
+          "contacts": 163
+        },
+        {
+          "step": 6,
+          "seamGapMm": 236.04380890366556,
+          "principalExtension": null,
+          "fiberMax": 314.97185207408654,
+          "rigidPanelShiftMm": 0,
+          "contacts": 224
+        },
+        {
+          "step": 7,
+          "seamGapMm": 194.29940865322627,
+          "principalExtension": null,
+          "fiberMax": 272.6865817469948,
+          "rigidPanelShiftMm": 0,
+          "contacts": 291
+        },
+        {
+          "step": 8,
+          "seamGapMm": 149.39764673731065,
+          "principalExtension": null,
+          "fiberMax": 232.92016691949078,
+          "rigidPanelShiftMm": 0,
+          "contacts": 320
+        },
+        {
+          "step": 9,
+          "seamGapMm": 108.27114148671654,
+          "principalExtension": null,
+          "fiberMax": 183.6722506887858,
+          "rigidPanelShiftMm": 0,
+          "contacts": 337
+        },
+        {
+          "step": 10,
+          "seamGapMm": 77.90849083233373,
+          "principalExtension": null,
+          "fiberMax": 124.00965475687586,
+          "rigidPanelShiftMm": 0,
+          "contacts": 340
+        }
+      ],
+      "p95StretchPercent": 39.28805958577415,
+      "maxFiberStretchPercent": 124.00965475687586,
+      "maxPrincipalExtensionPercent": null,
+      "strainClampedVertices": 0,
+      "rigidPanelShiftMm": 0,
+      "nativeStepMs": 629.67925,
+      "seamGapMm": 77.90849083233373,
+      "contactCount": 340,
+      "simulatedSeconds": 0.16666666666666666,
+      "positions": 2454
+    },
+    {
+      "label": "strainLimited5",
+      "accepted": true,
+      "completedSteps": 10,
+      "trace": [
+        {
+          "step": 1,
+          "seamGapMm": 512.4708756093521,
+          "principalExtension": 5.000000009999983,
+          "fiberMax": 4.999709849443401,
+          "rigidPanelShiftMm": 1.1718750000000246,
+          "contacts": 0
+        },
+        {
+          "step": 2,
+          "seamGapMm": 507.78337566420186,
+          "principalExtension": 5.000000010000116,
+          "fiberMax": 4.998579750848164,
+          "rigidPanelShiftMm": 2.3437500000000195,
+          "contacts": 0
+        },
+        {
+          "step": 3,
+          "seamGapMm": 502.0069118991666,
+          "principalExtension": 5.000000010000116,
+          "fiberMax": 4.996086201911454,
+          "rigidPanelShiftMm": 2.34375,
+          "contacts": 0
+        },
+        {
+          "step": 4,
+          "seamGapMm": 496.06283578940344,
+          "principalExtension": 5.000000010000005,
+          "fiberMax": 4.999270116916588,
+          "rigidPanelShiftMm": 2.343750000000006,
+          "contacts": 0
+        },
+        {
+          "step": 5,
+          "seamGapMm": 491.25729457058554,
+          "principalExtension": 5.000000010000005,
+          "fiberMax": 4.999463357191991,
+          "rigidPanelShiftMm": 2.343750000000023,
+          "contacts": 0
+        },
+        {
+          "step": 6,
+          "seamGapMm": 486.5534714394222,
+          "principalExtension": 5.000000010000005,
+          "fiberMax": 4.999557554106615,
+          "rigidPanelShiftMm": 2.3437500000000013,
+          "contacts": 0
+        },
+        {
+          "step": 7,
+          "seamGapMm": 481.85924154074036,
+          "principalExtension": 5.000000010000005,
+          "fiberMax": 4.999615572070315,
+          "rigidPanelShiftMm": 2.3437500000000075,
+          "contacts": 0
+        },
+        {
+          "step": 8,
+          "seamGapMm": 477.1675570825618,
+          "principalExtension": 5.000000010000005,
+          "fiberMax": 4.999658696591114,
+          "rigidPanelShiftMm": 2.34375000000001,
+          "contacts": 0
+        },
+        {
+          "step": 9,
+          "seamGapMm": 472.47657800788886,
+          "principalExtension": 5.000000010000005,
+          "fiberMax": 4.999699715635142,
+          "rigidPanelShiftMm": 2.3437500000000093,
+          "contacts": 0
+        },
+        {
+          "step": 10,
+          "seamGapMm": 467.78582244720855,
+          "principalExtension": 5.000000010000005,
+          "fiberMax": 4.999743075057905,
+          "rigidPanelShiftMm": 2.3437500000000124,
+          "contacts": 0
+        }
+      ],
+      "p95StretchPercent": 2.5833481173588524,
+      "maxFiberStretchPercent": 4.999743075057905,
+      "maxPrincipalExtensionPercent": 5.000000010000005,
+      "strainClampedVertices": 3943,
+      "rigidPanelShiftMm": 2.3437500000000124,
+      "nativeStepMs": 457.969375,
+      "seamGapMm": 467.78582244720855,
+      "contactCount": 0,
+      "simulatedSeconds": 0.16666666666666666,
+      "positions": 2454
+    }
+  ]
+}

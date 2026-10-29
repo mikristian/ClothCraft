@@ -1,0 +1,14 @@
+.cc-viewport-2d {position:relative}
+.exo-native-pattern-audit{position:absolute;z-index:7;right:12px;top:12px;width:min(385px,calc(100% - 24px));max-height:min(70vh,510px);display:flex;flex-direction:column;gap:7px;padding:13px;background:rgba(27,32,38,.96);color:#f0f3f6;border:1px solid rgba(255,255,255,.20);box-shadow:0 9px 28px rgba(0,0,0,.25);border-radius:10px;font-size:12px}
+.exo-native-pattern-audit header{display:flex;align-items:center;gap:8px}
+.exo-native-pattern-audit header span{color:#bec7cd;flex:1}
+.exo-native-pattern-audit header button{background:transparent;color:inherit;border:1px solid #647078;border-radius:5px;cursor:pointer}
+.exo-native-pattern-audit p{margin:0;color:#c7d0d6}
+.exo-pattern-audit-scroll{overflow:auto;min-height:30px;display:grid;gap:8px}
+.exo-pattern-audit-scroll section{border-top:1px solid rgba(255,255,255,.12);padding-top:8px;display:grid;gap:4px}
+.exo-native-pattern-audit summary{cursor:pointer}
+.exo-native-pattern-audit ul{padding-left:19px;margin:3px 0;display:grid;gap:3px}
+.exo-native-pattern-audit footer{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:6px}
+.exo-native-pattern-audit footer button{background:#384a5c;border:1px solid #6b7e8f;border-radius:6px;color:#fff;padding:7px;cursor:pointer}
+.exo-native-pattern-audit li button{display:inline-block;margin:5px 0 0 5px;border:1px solid #647e91;background:#3c5367;border-radius:5px;color:#fff;padding:4px 7px;cursor:pointer}
+.exo-native-pattern-audit footer button:disabled{opacity:.45;cursor:wait}

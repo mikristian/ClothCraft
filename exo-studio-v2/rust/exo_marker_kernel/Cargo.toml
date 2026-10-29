@@ -1,0 +1,14 @@
+[package]
+name = "exo-marker-kernel"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic marker placement for EXO garment cutting layouts"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "abort"

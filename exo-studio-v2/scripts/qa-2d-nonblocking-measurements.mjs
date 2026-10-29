@@ -63,7 +63,8 @@ try {
     'Selecting points must not auto-open measurement QA')
 
   await page.getByRole('button', { name: 'Edit Curves', exact: true }).first().click()
-  await front.locator('.curve-control circle').first().click({ force: true })
+  await front.locator('.edge-hit').first().dispatchEvent('pointerdown',{button:0,pointerId:37,isPrimary:true})
+  await front.locator('[data-pattern-curve-control="front:0"] circle').first().click({force:true})
   await inSidebar('.precision-curve-inspector')
   await unchangedCanvas()
   assert.equal(await audit.evaluate(element => element.open), false,

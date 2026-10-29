@@ -1,0 +1,59 @@
+.optitex-grading-table{display:grid;gap:7px;padding:9px;border:1px solid #566a77;border-radius:7px;background:var(--exo-panel,#202d37);color:var(--exo-text,#eef3f7);font-size:12px;min-width:0;min-height:0;grid-template-rows:auto auto minmax(0,1fr) auto}
+.optitex-grading-tabs,.optitex-size-actions,.optitex-compare-controls{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.optitex-grading-tabs strong{margin-right:auto;letter-spacing:.065em;font-size:11px;color:#d9eaf4}
+.optitex-grading-table button{border:1px solid #627685;border-radius:4px;padding:4px 7px;background:#344652;color:#f4f7f9;cursor:pointer;min-height:25px}
+.optitex-grading-table button:hover:not(:disabled){background:#456174;border-color:#97b7c8}
+.optitex-grading-table button:focus-visible,.optitex-grading-table input:focus-visible,.optitex-grading-table select:focus-visible{outline:2px solid #8ec9f3;outline-offset:1px}
+.optitex-grading-table button[aria-pressed=true]{background:#365d7c;box-shadow:inset 0 0 0 1px #87bddd}
+.optitex-grading-table button:disabled{opacity:.5;cursor:not-allowed}
+.optitex-grading-table label{display:flex;align-items:center;gap:5px}
+.optitex-grading-table select,.optitex-grading-table input[type=number]{max-width:150px;min-width:45px;padding:4px;border:1px solid #627b8b;border-radius:4px;background:#182b37;color:#eff6fc}
+.optitex-grading-table input[type=number]{width:80px}
+.optitex-grading-table input[type=color]{height:24px;width:33px;padding:0;border:1px solid #566e7e;border-radius:2px;background:transparent}
+.optitex-table-notice{margin:0;font-size:11px;opacity:.85;line-height:1.4}
+.optitex-table-scroll{overflow:auto;max-height:280px;min-height:70px;scrollbar-color:#627b8b #1a2a33}
+.optitex-grading-table table{border-collapse:separate;border-spacing:0;width:100%;white-space:nowrap;font-size:11px;font-variant-numeric:tabular-nums;line-height:1.35}
+.optitex-grading-table th,.optitex-grading-table td{padding:5px 8px;border-right:1px solid #344d5a;border-bottom:1px solid #3a515d;text-align:right;font-weight:500}
+.optitex-grading-table thead th{position:sticky;top:0;background:#334956;z-index:2;color:#dbe8f0;text-transform:uppercase;font-size:10px;letter-spacing:.035em;font-weight:650;border-bottom:1px solid #718897}
+.optitex-grading-table thead th:first-child,.optitex-grading-table tbody td:first-child,.optitex-grading-table tbody th:first-child{border-left:1px solid #344d5a}
+.optitex-grading-table tbody tr:nth-child(odd){background:#263944}
+.optitex-grading-table tbody tr:nth-child(even){background:#20323d}
+.optitex-grading-table tbody tr:hover{background:#344d5c}
+.optitex-grading-table tbody tr.is-active{background:#375b76;box-shadow:inset 3px 0 #8ec9f3}
+.optitex-grading-table tbody th{text-align:left;font-weight:650;position:sticky;left:0;z-index:1;background:inherit}
+.optitex-grading-table tbody th button{font-size:11px;border:0;background:none;text-align:left;padding:2px;color:inherit;white-space:nowrap}
+.optitex-grading-table tbody td input[type=number]{width:73px;text-align:right;font-variant-numeric:tabular-nums}
+.optitex-grading-table tbody td input[type=checkbox]{accent-color:#80bff0}
+.optitex-grading-table small{line-height:1.5;color:#bdced8}
+.optitex-grade-inline-tools{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:5px 6px;border:1px solid #4c6472;border-radius:5px;background:#1c303d;min-width:0}
+.optitex-grade-inline-tools .optitex-inline-tool-group,.optitex-grade-inline-tools .optitex-inline-grade-motion{display:inline-flex;align-items:center;gap:3px}
+.optitex-grade-inline-tools button{display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:3px 5px;min-width:27px;min-height:26px}
+.optitex-grade-inline-tools label{gap:4px;color:#c9d8e1;font-size:11px;white-space:nowrap}
+.optitex-grade-inline-tools select{max-width:66px;padding:3px 4px}
+.optitex-grade-inline-tools input[type=number]{width:51px;min-width:45px;padding:3px 4px;text-align:right}
+.optitex-inline-tool-divider{height:19px;border-left:1px solid #506a79}
+.optitex-grading-table--compact{gap:5px;padding:6px;grid-template-rows:auto auto minmax(0,1fr) auto}
+.optitex-grading-table--compact .optitex-table-scroll{max-height:220px}
+.optitex-grading-table--compact .optitex-grade-inline-tools{gap:4px;padding:4px}
+.optitex-grading-table--compact th,.optitex-grading-table--compact td{padding:4px 6px}
+.optitex-compare-controls{padding:7px;border:1px solid #496170;border-radius:5px;background:#1e313c;gap:7px 12px}
+.optitex-compare-controls label{font-size:11px;color:#cbdde8;gap:5px}
+.optitex-compare-controls select{max-width:190px;min-width:90px}
+.optitex-compare-controls input[type=number]{width:67px}
+@media(max-width:660px){.optitex-grade-inline-tools{gap:4px}.optitex-inline-tool-divider{display:none}.optitex-compare-controls label{flex:1 1 165px}.optitex-compare-controls select{min-width:0;flex:1}}
+
+/* Dense but legible industrial grade chart. The first columns remain visible
+   while scrolling the 2–24 size matrix horizontally. */
+.optitex-grading-table .optitex-table-scroll{overscroll-behavior:contain}
+.optitex-grading-table thead th{padding:9px 10px;line-height:1.35;letter-spacing:.045em}
+.optitex-grading-table tbody th,.optitex-grading-table tbody td{padding:7px 10px;line-height:1.45}
+.optitex-grading-table tbody tr.is-active{outline:1px solid #8ec9f3;outline-offset:-1px}
+.optitex-grading-table tbody tr:focus-within{background:#3a5363}
+.optitex-grading-table tbody th button{font-weight:750;min-width:44px}
+.optitex-grading-table tbody td input[type=number]{min-height:29px;width:78px;font-size:12px}
+.optitex-grading-table tbody td input[type=color]{width:34px;height:29px}
+.optitex-grading-table .optitex-grade-inline-tools{row-gap:7px}
+.optitex-grading-table .optitex-table-notice{font-size:11px;line-height:1.55;color:var(--studio-text-secondary,#c4d5e0)}
+.optitex-grading-table--compact thead th,.optitex-grading-table--compact tbody th,.optitex-grading-table--compact tbody td{padding:5px 7px}
+.optitex-grading-table .optitex-compare-length-link{font:inherit;font-variant-numeric:tabular-nums;color:#b9e8ff;background:transparent;border:0;border-radius:3px;min-height:20px;padding:1px 3px;text-decoration:underline;text-decoration-color:#8abfdf66;text-underline-offset:2px}
+.optitex-grading-table .optitex-compare-length-link:hover:not(:disabled),.optitex-grading-table .optitex-compare-length-link:focus-visible{color:#fff;background:#336481;text-decoration-color:currentColor}

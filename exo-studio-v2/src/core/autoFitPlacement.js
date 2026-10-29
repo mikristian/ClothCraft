@@ -1,3 +1,5 @@
+import { rustAutoFitPlacement } from './rustAutoFitPlacementKernel.js'
+
 /**
  * Turn a manual 3D staging translation into a small, safe *rigid* hint on the
  * canonical body-fitted solver pose. The input is recorded separately from
@@ -17,11 +19,14 @@ export function constrainAutoFitPlacement(arrangement = {}, options = {}) {
   const maxMagnitude = Number.isFinite(options.maxMagnitude)
     ? Math.max(0, options.maxMagnitude)
     : 0.027
+  // Keep JavaScript coercion and strict option semantics at the API boundary.
+  const values = ['X', 'Y', 'Z'].map(axis => Number(arrangement[`userPlacementDelta${axis}`]))
+  const accelerated = rustAutoFitPlacement(values, [limits.x, limits.y, limits.z], maxMagnitude)
+  if (accelerated) return accelerated
   const requested = {}
   const applied = {}
   for (const axis of ['x', 'y', 'z']) {
-    const key = `userPlacementDelta${axis.toUpperCase()}`
-    const value = Number(arrangement[key])
+    const value = values[['x', 'y', 'z'].indexOf(axis)]
     requested[axis] = Number.isFinite(value) ? Math.max(-2, Math.min(2, value)) : 0
     applied[axis] = Math.max(-limits[axis], Math.min(limits[axis], requested[axis]))
   }

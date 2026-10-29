@@ -1,0 +1,15 @@
+[package]
+name = "exo-sewing-kernel"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Pure numerical seam-length difference and warning calculations for EXO's native sewing inspector"
+
+[lib]
+crate-type = ["rlib", "cdylib"]
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "abort"

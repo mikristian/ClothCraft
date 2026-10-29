@@ -1,0 +1,282 @@
+{
+  "createdAt": "2026-10-18T16:45:02.385Z",
+  "rounds": 3,
+  "cases": 10,
+  "total": 30,
+  "counts": {
+    "PASS": 27,
+    "BLOCKED_MISSING_FIXTURE": 3
+  },
+  "results": [
+    {
+      "round": 1,
+      "name": "curve metric oracle",
+      "script": "research/clo-2d-analysis/engine-rig/qa-partial-curve-seams.mjs",
+      "state": "PASS",
+      "durationMs": 48,
+      "exitCode": 0,
+      "message": "{\"pass\":true,\"curveIntervals\":24,\"straightIntervals\":2,\"metric\":\"cm\",\"reference\":\"independent Simpson quadrature\"}"
+    },
+    {
+      "round": 1,
+      "name": "native WASM geometry",
+      "script": "scripts/qa-rust-geometry-kernel.mjs",
+      "state": "PASS",
+      "durationMs": 44,
+      "exitCode": 0,
+      "message": "{\"pass\":true,\"backend\":\"rust-wasm\",\"version\":1,\"wasmBytes\":5474,\"parityCases\":551,\"operations\":[\"grid snapping\",\"nearest 2D edge\",\"2D and 3D selection lengths\",\"adaptive quadratic Bézier arclength\"]}"
+    },
+    {
+      "round": 1,
+      "name": "closed topology",
+      "script": "scripts/check-drafting-topology.mjs",
+      "state": "PASS",
+      "durationMs": 48,
+      "exitCode": 0,
+      "message": "2D geometry topology: valid, crossed, overlapping, duplicate, nonfinite, vertex and Bézier edits, 4 real garment pieces PASS"
+    },
+    {
+      "round": 1,
+      "name": "precise splits",
+      "script": "scripts/check-drafting-splits.mjs",
+      "state": "PASS",
+      "durationMs": 35,
+      "exitCode": 0,
+      "message": "2D precise splitting: uniform, length, ratio, exact Bézier arc fraction and invalid lengths: PASS"
+    },
+    {
+      "round": 1,
+      "name": "symmetric unfold",
+      "script": "scripts/check-drafting-unfold.mjs",
+      "state": "PASS",
+      "durationMs": 37,
+      "exitCode": 0,
+      "message": "2D symmetric unfold: doubled true curve area, reflected armhole, notch, internal line, sewing map and invalid fold guards PASS"
+    },
+    {
+      "round": 1,
+      "name": "drafting precision",
+      "script": "scripts/check-drafting-precision.mjs",
+      "state": "PASS",
+      "durationMs": 38,
+      "exitCode": 0,
+      "message": "Precision drafting: analytic curve length, seam report, inverse chord controls, point and invalid-input tests PASS"
+    },
+    {
+      "round": 1,
+      "name": "partial sewing",
+      "script": "scripts/check-partial-seams.mjs",
+      "state": "PASS",
+      "durationMs": 170,
+      "exitCode": 0,
+      "message": "{\n  \"lengthsCm\": {\n    \"a\": 20,\n    \"b\": 20\n  },\n  \"seamConstraints\": {\n    \"partial\": 2,\n    \"full\": 3\n  },\n  \"settledGapCm\": {\n    \"average\": 0.8,\n    \"max\": 0.8\n  },\n  \"exportedRanges\": {\n    \"a\": {\n      \"pieceId\": \"partial-a\",\n      \"edgeIndex\": 0,\n      \"startT\": 0.25,\n      \"endT\": 0.75\n    },\n    \"b\": {\n      \"pieceId\": \"partial-b\",\n      \"edgeIndex\": 0,\n      \"startT\": 0.1,\n      \"endT\": 0.6\n    }\n  }\n}"
+    },
+    {
+      "round": 1,
+      "name": "DXF roundtrip",
+      "script": "scripts/dxf-roundtrip-check.mjs",
+      "state": "PASS",
+      "durationMs": 52,
+      "exitCode": 0,
+      "message": "{\n  \"roundTrip\": {\n    \"sourcePieces\": 4,\n    \"importedPieces\": 4,\n    \"names\": [\n      \"FRONT\",\n      \"BACK\",\n      \"LEFT SLEEVE\",\n      \"RIGHT SLEEVE\"\n    ],\n    \"sourceAreas\": [\n      3609.1,\n      3676.03,\n      1986.99,\n      1986.99\n    ],\n    \"importedAreas\": [\n      3609.1,\n      3676.03,\n      1986.99,\n      1986.99\n    ],\n    \"areaRatios\": [\n      1,\n      1,\n      1,\n      1\n    ],\n    \"notchCounts\": [\n      8,\n      10,\n      7,\n      7\n    ],\n    \"grainAngles\": [\n      0,\n      0,\n      0,\n      0\n    ],\n    \"scaleToCm\": 0.1\n  },\n  \"lwPolyline\": {\n    \"pieces\": 1,\n    \"name\": \"TEST FRONT\",\n    \"areaCm2\": 3500,\n    \"scaleToCm\": 0.1\n  }\n}"
+    },
+    {
+      "round": 1,
+      "name": "factory handoff",
+      "script": "scripts/check-production-handoff.mjs",
+      "state": "PASS",
+      "durationMs": 220,
+      "exitCode": 0,
+      "message": "{\n  \"defaultPreflight\": {\n    \"blockers\": 0,\n    \"warnings\": 8\n  },\n  \"overflowBlockers\": 6,\n  \"markerPDFBytes\": 5816,\n  \"packagedFiles\": 45\n}"
+    },
+    {
+      "round": 1,
+      "name": "sewing construction fixture",
+      "script": "scripts/check-sewing-construction.mjs",
+      "state": "BLOCKED_MISSING_FIXTURE",
+      "durationMs": 47,
+      "exitCode": 1,
+      "message": "eUtf8(path, stringToFlags(options.flag));\n                   ^\n\nError: ENOENT: no such file or directory, open 'research/clo-reference/live-audit-20261014/exports/clo-male-tshirt-sewn-EXPERIMENTAL.garment.json'\n    at Object.readFileSync (node:fs:439:20)\n    at file:///Users/mikylecouto/Chat%20On%20Steroids%20Workspace/exo-clothcraft-v2/scripts/check-sewing-construction.mjs:38:32\n    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\n  errno: -2,\n  code: 'ENOENT',\n  syscall: 'open',\n  path: 'research/clo-reference/live-audit-20261014/exports/clo-male-tshirt-sewn-EXPERIMENTAL.garment.json'\n}\n\nNode.js v24.13.1"
+    },
+    {
+      "round": 2,
+      "name": "curve metric oracle",
+      "script": "research/clo-2d-analysis/engine-rig/qa-partial-curve-seams.mjs",
+      "state": "PASS",
+      "durationMs": 41,
+      "exitCode": 0,
+      "message": "{\"pass\":true,\"curveIntervals\":24,\"straightIntervals\":2,\"metric\":\"cm\",\"reference\":\"independent Simpson quadrature\"}"
+    },
+    {
+      "round": 2,
+      "name": "native WASM geometry",
+      "script": "scripts/qa-rust-geometry-kernel.mjs",
+      "state": "PASS",
+      "durationMs": 38,
+      "exitCode": 0,
+      "message": "{\"pass\":true,\"backend\":\"rust-wasm\",\"version\":1,\"wasmBytes\":5474,\"parityCases\":551,\"operations\":[\"grid snapping\",\"nearest 2D edge\",\"2D and 3D selection lengths\",\"adaptive quadratic Bézier arclength\"]}"
+    },
+    {
+      "round": 2,
+      "name": "closed topology",
+      "script": "scripts/check-drafting-topology.mjs",
+      "state": "PASS",
+      "durationMs": 47,
+      "exitCode": 0,
+      "message": "2D geometry topology: valid, crossed, overlapping, duplicate, nonfinite, vertex and Bézier edits, 4 real garment pieces PASS"
+    },
+    {
+      "round": 2,
+      "name": "precise splits",
+      "script": "scripts/check-drafting-splits.mjs",
+      "state": "PASS",
+      "durationMs": 35,
+      "exitCode": 0,
+      "message": "2D precise splitting: uniform, length, ratio, exact Bézier arc fraction and invalid lengths: PASS"
+    },
+    {
+      "round": 2,
+      "name": "symmetric unfold",
+      "script": "scripts/check-drafting-unfold.mjs",
+      "state": "PASS",
+      "durationMs": 37,
+      "exitCode": 0,
+      "message": "2D symmetric unfold: doubled true curve area, reflected armhole, notch, internal line, sewing map and invalid fold guards PASS"
+    },
+    {
+      "round": 2,
+      "name": "drafting precision",
+      "script": "scripts/check-drafting-precision.mjs",
+      "state": "PASS",
+      "durationMs": 39,
+      "exitCode": 0,
+      "message": "Precision drafting: analytic curve length, seam report, inverse chord controls, point and invalid-input tests PASS"
+    },
+    {
+      "round": 2,
+      "name": "partial sewing",
+      "script": "scripts/check-partial-seams.mjs",
+      "state": "PASS",
+      "durationMs": 162,
+      "exitCode": 0,
+      "message": "{\n  \"lengthsCm\": {\n    \"a\": 20,\n    \"b\": 20\n  },\n  \"seamConstraints\": {\n    \"partial\": 2,\n    \"full\": 3\n  },\n  \"settledGapCm\": {\n    \"average\": 0.8,\n    \"max\": 0.8\n  },\n  \"exportedRanges\": {\n    \"a\": {\n      \"pieceId\": \"partial-a\",\n      \"edgeIndex\": 0,\n      \"startT\": 0.25,\n      \"endT\": 0.75\n    },\n    \"b\": {\n      \"pieceId\": \"partial-b\",\n      \"edgeIndex\": 0,\n      \"startT\": 0.1,\n      \"endT\": 0.6\n    }\n  }\n}"
+    },
+    {
+      "round": 2,
+      "name": "DXF roundtrip",
+      "script": "scripts/dxf-roundtrip-check.mjs",
+      "state": "PASS",
+      "durationMs": 51,
+      "exitCode": 0,
+      "message": "{\n  \"roundTrip\": {\n    \"sourcePieces\": 4,\n    \"importedPieces\": 4,\n    \"names\": [\n      \"FRONT\",\n      \"BACK\",\n      \"LEFT SLEEVE\",\n      \"RIGHT SLEEVE\"\n    ],\n    \"sourceAreas\": [\n      3609.1,\n      3676.03,\n      1986.99,\n      1986.99\n    ],\n    \"importedAreas\": [\n      3609.1,\n      3676.03,\n      1986.99,\n      1986.99\n    ],\n    \"areaRatios\": [\n      1,\n      1,\n      1,\n      1\n    ],\n    \"notchCounts\": [\n      8,\n      10,\n      7,\n      7\n    ],\n    \"grainAngles\": [\n      0,\n      0,\n      0,\n      0\n    ],\n    \"scaleToCm\": 0.1\n  },\n  \"lwPolyline\": {\n    \"pieces\": 1,\n    \"name\": \"TEST FRONT\",\n    \"areaCm2\": 3500,\n    \"scaleToCm\": 0.1\n  }\n}"
+    },
+    {
+      "round": 2,
+      "name": "factory handoff",
+      "script": "scripts/check-production-handoff.mjs",
+      "state": "PASS",
+      "durationMs": 203,
+      "exitCode": 0,
+      "message": "{\n  \"defaultPreflight\": {\n    \"blockers\": 0,\n    \"warnings\": 8\n  },\n  \"overflowBlockers\": 6,\n  \"markerPDFBytes\": 5816,\n  \"packagedFiles\": 45\n}"
+    },
+    {
+      "round": 2,
+      "name": "sewing construction fixture",
+      "script": "scripts/check-sewing-construction.mjs",
+      "state": "BLOCKED_MISSING_FIXTURE",
+      "durationMs": 46,
+      "exitCode": 1,
+      "message": "eUtf8(path, stringToFlags(options.flag));\n                   ^\n\nError: ENOENT: no such file or directory, open 'research/clo-reference/live-audit-20261014/exports/clo-male-tshirt-sewn-EXPERIMENTAL.garment.json'\n    at Object.readFileSync (node:fs:439:20)\n    at file:///Users/mikylecouto/Chat%20On%20Steroids%20Workspace/exo-clothcraft-v2/scripts/check-sewing-construction.mjs:38:32\n    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\n  errno: -2,\n  code: 'ENOENT',\n  syscall: 'open',\n  path: 'research/clo-reference/live-audit-20261014/exports/clo-male-tshirt-sewn-EXPERIMENTAL.garment.json'\n}\n\nNode.js v24.13.1"
+    },
+    {
+      "round": 3,
+      "name": "curve metric oracle",
+      "script": "research/clo-2d-analysis/engine-rig/qa-partial-curve-seams.mjs",
+      "state": "PASS",
+      "durationMs": 42,
+      "exitCode": 0,
+      "message": "{\"pass\":true,\"curveIntervals\":24,\"straightIntervals\":2,\"metric\":\"cm\",\"reference\":\"independent Simpson quadrature\"}"
+    },
+    {
+      "round": 3,
+      "name": "native WASM geometry",
+      "script": "scripts/qa-rust-geometry-kernel.mjs",
+      "state": "PASS",
+      "durationMs": 40,
+      "exitCode": 0,
+      "message": "{\"pass\":true,\"backend\":\"rust-wasm\",\"version\":1,\"wasmBytes\":5474,\"parityCases\":551,\"operations\":[\"grid snapping\",\"nearest 2D edge\",\"2D and 3D selection lengths\",\"adaptive quadratic Bézier arclength\"]}"
+    },
+    {
+      "round": 3,
+      "name": "closed topology",
+      "script": "scripts/check-drafting-topology.mjs",
+      "state": "PASS",
+      "durationMs": 46,
+      "exitCode": 0,
+      "message": "2D geometry topology: valid, crossed, overlapping, duplicate, nonfinite, vertex and Bézier edits, 4 real garment pieces PASS"
+    },
+    {
+      "round": 3,
+      "name": "precise splits",
+      "script": "scripts/check-drafting-splits.mjs",
+      "state": "PASS",
+      "durationMs": 35,
+      "exitCode": 0,
+      "message": "2D precise splitting: uniform, length, ratio, exact Bézier arc fraction and invalid lengths: PASS"
+    },
+    {
+      "round": 3,
+      "name": "symmetric unfold",
+      "script": "scripts/check-drafting-unfold.mjs",
+      "state": "PASS",
+      "durationMs": 38,
+      "exitCode": 0,
+      "message": "2D symmetric unfold: doubled true curve area, reflected armhole, notch, internal line, sewing map and invalid fold guards PASS"
+    },
+    {
+      "round": 3,
+      "name": "drafting precision",
+      "script": "scripts/check-drafting-precision.mjs",
+      "state": "PASS",
+      "durationMs": 37,
+      "exitCode": 0,
+      "message": "Precision drafting: analytic curve length, seam report, inverse chord controls, point and invalid-input tests PASS"
+    },
+    {
+      "round": 3,
+      "name": "partial sewing",
+      "script": "scripts/check-partial-seams.mjs",
+      "state": "PASS",
+      "durationMs": 164,
+      "exitCode": 0,
+      "message": "{\n  \"lengthsCm\": {\n    \"a\": 20,\n    \"b\": 20\n  },\n  \"seamConstraints\": {\n    \"partial\": 2,\n    \"full\": 3\n  },\n  \"settledGapCm\": {\n    \"average\": 0.8,\n    \"max\": 0.8\n  },\n  \"exportedRanges\": {\n    \"a\": {\n      \"pieceId\": \"partial-a\",\n      \"edgeIndex\": 0,\n      \"startT\": 0.25,\n      \"endT\": 0.75\n    },\n    \"b\": {\n      \"pieceId\": \"partial-b\",\n      \"edgeIndex\": 0,\n      \"startT\": 0.1,\n      \"endT\": 0.6\n    }\n  }\n}"
+    },
+    {
+      "round": 3,
+      "name": "DXF roundtrip",
+      "script": "scripts/dxf-roundtrip-check.mjs",
+      "state": "PASS",
+      "durationMs": 50,
+      "exitCode": 0,
+      "message": "{\n  \"roundTrip\": {\n    \"sourcePieces\": 4,\n    \"importedPieces\": 4,\n    \"names\": [\n      \"FRONT\",\n      \"BACK\",\n      \"LEFT SLEEVE\",\n      \"RIGHT SLEEVE\"\n    ],\n    \"sourceAreas\": [\n      3609.1,\n      3676.03,\n      1986.99,\n      1986.99\n    ],\n    \"importedAreas\": [\n      3609.1,\n      3676.03,\n      1986.99,\n      1986.99\n    ],\n    \"areaRatios\": [\n      1,\n      1,\n      1,\n      1\n    ],\n    \"notchCounts\": [\n      8,\n      10,\n      7,\n      7\n    ],\n    \"grainAngles\": [\n      0,\n      0,\n      0,\n      0\n    ],\n    \"scaleToCm\": 0.1\n  },\n  \"lwPolyline\": {\n    \"pieces\": 1,\n    \"name\": \"TEST FRONT\",\n    \"areaCm2\": 3500,\n    \"scaleToCm\": 0.1\n  }\n}"
+    },
+    {
+      "round": 3,
+      "name": "factory handoff",
+      "script": "scripts/check-production-handoff.mjs",
+      "state": "PASS",
+      "durationMs": 202,
+      "exitCode": 0,
+      "message": "{\n  \"defaultPreflight\": {\n    \"blockers\": 0,\n    \"warnings\": 8\n  },\n  \"overflowBlockers\": 6,\n  \"markerPDFBytes\": 5816,\n  \"packagedFiles\": 45\n}"
+    },
+    {
+      "round": 3,
+      "name": "sewing construction fixture",
+      "script": "scripts/check-sewing-construction.mjs",
+      "state": "BLOCKED_MISSING_FIXTURE",
+      "durationMs": 46,
+      "exitCode": 1,
+      "message": "eUtf8(path, stringToFlags(options.flag));\n                   ^\n\nError: ENOENT: no such file or directory, open 'research/clo-reference/live-audit-20261014/exports/clo-male-tshirt-sewn-EXPERIMENTAL.garment.json'\n    at Object.readFileSync (node:fs:439:20)\n    at file:///Users/mikylecouto/Chat%20On%20Steroids%20Workspace/exo-clothcraft-v2/scripts/check-sewing-construction.mjs:38:32\n    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\n  errno: -2,\n  code: 'ENOENT',\n  syscall: 'open',\n  path: 'research/clo-reference/live-audit-20261014/exports/clo-male-tshirt-sewn-EXPERIMENTAL.garment.json'\n}\n\nNode.js v24.13.1"
+    }
+  ]
+}

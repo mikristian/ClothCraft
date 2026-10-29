@@ -1,0 +1,10 @@
+{
+  "source": "/Users/mikylecouto/Chat On Steroids Workspace/exo-clothcraft-v2/integrations/clothcraft/output/visible-handles-backup-20261019",
+  "destination": "jarvismikristian@100.82.90.101:/Volumes/Expansion/EXO-Engineering/verified-backups/EXO-ClothCraft-Offload-20261021/visible-handles-backup-20261019.tar.gz",
+  "archiveSha256": "bf3e614525cd9f5ebceaeb93570adea1f7b873be4572ffd63f3d08ef97e6227c",
+  "archiveBytes": 319059341,
+  "membersVerified": 735,
+  "logicalFileBytes": 373503397,
+  "verify": "remote SSH archive full stream and per-member SHA-256",
+  "utc": "2026-10-21T04:09:27.207399+00:00"
+}

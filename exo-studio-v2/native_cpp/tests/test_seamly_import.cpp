@@ -20,5 +20,17 @@ int main(int argc,char** argv){
  assert(garment::applySeamlyMeasurements(Json::object(),measurements,true)["avatar"]["heightCm"]==175);
  const auto construction=garment::parseSeamlyConstructionReference("<pattern><version>1</version><unit>cm</unit><draftBlock name='A'><calculation><point id='1' type='single' name='P'/></calculation></draftBlock></pattern>");
  assert(construction["toolCount"]==1);
+ const auto incrementSource=[](int count){
+  std::string xml="<pattern><version>1</version><unit>cm</unit><increments>";
+  for(int i=0;i<count;++i)xml+="<increment name='#value_"+std::to_string(i)+"' formula='1'/>";
+  xml+="</increments><draftBlock><calculation><point id='1'/></calculation></draftBlock></pattern>";
+  return xml;
+ };
+ const auto validIncrements=garment::parseSeamlyConstructionReference(incrementSource(6000));
+ assert(validIncrements["incrementCount"]==6000);
+ bool rejectedExcess=false;
+ try{(void)garment::parseSeamlyConstructionReference(incrementSource(6001));}
+ catch(const std::invalid_argument& error){rejectedExcess=std::string(error.what()).find("too many increments")!=std::string::npos;}
+ assert(rejectedExcess);
  std::cout<<"native Seamly import tests passed\n";
 }

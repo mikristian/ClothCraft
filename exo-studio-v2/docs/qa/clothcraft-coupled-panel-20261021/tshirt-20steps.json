@@ -1,0 +1,26 @@
+{
+  "pass": true,
+  "sourceRevision": 0,
+  "steps": 20,
+  "strainLimitPercent": 5,
+  "coupledPanelMotionAcceptedSteps": 0,
+  "selectedBestStep": 20,
+  "terminalGapMm": 420.4727581833001,
+  "seamReboundAfterBestMm": 0,
+  "initialGapMm": 530,
+  "finalGapMm": 420.4727581833001,
+  "improvementPercent": 20.665517323905647,
+  "principalExtensionMaxPercent": 5.000000010000272,
+  "stagedOffsetM": [
+    0,
+    0,
+    0.9877008686000001
+  ],
+  "stagedAvatarEndpointChecked": true,
+  "avatarReentryValidated": false,
+  "sweptContactCertified": false,
+  "savedPositionsUnchanged": true,
+  "revisionUnchanged": true,
+  "privateProject": true,
+  "productionAppUntouched": true
+}

@@ -86,7 +86,7 @@ The viewer manages avatar visibility, garment transparency and material ordering
 
 ## Capture, demonstrations, and privacy
 
-Public captures should show a real, identifiable revision of the running app. Use the MakeHuman CC0 avatar, neutral grid, coherent lighting and a garment generated from a source fixture. Show both a wide scene and close-up details, with camera and exposure fixed for comparative shots. The existing repository includes screenshots and a V16 film referenced from README; those are historical demonstrations and should not be presented as independently verified current functionality without recapture.
+Public captures should show a real, identifiable revision of the running app. Use the MakeHuman CC0 avatar, neutral grid, coherent lighting and a garment generated from a source fixture. Show both a wide scene and close-up details, with camera and exposure fixed for comparative shots. The latest repository README shows October 19 ClothCraft Studio V2 screenshots, with earlier screenshots marked as historical; recapture before claiming new features.
 
 An engineering capture should state fixture, commit, fabric, avatar model, camera, exposure, simulation backend and frame number. To demonstrate actual simulation, show the Simulate action and two distinct temporal states. To demonstrate materials, change a visual parameter on the same garment and check geometry positions stay unchanged. Avoid implying that a smooth-looking render has passed contact or production tests.
 

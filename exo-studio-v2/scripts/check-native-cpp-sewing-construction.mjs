@@ -40,6 +40,15 @@ project.seams.push({id:'second',...seam(.15,.25)})
 same(auditSewingConstruction(project),native('audit',{project}));checks++
 project.pieces[0].active3d=false
 same(auditSewingConstruction(project,{maxExamples:2}),native('audit',{project,options:{maxExamples:2}}));checks++
+// Both engines must reject a geometrically invalid seam even when every
+// serialized coordinate is finite (the edge subtraction overflows).
+const overflowProject={pieces:[makePiece('a'),makePiece('b')],seams:[]}
+overflowProject.pieces[0].points[0].x=-1e308
+overflowProject.pieces[0].points[1].x=1e308
+const overflowSeam={id:'overflow',...seam(0,1)}
+same(validateNewSeam(overflowProject,overflowSeam),native('validate',{project:overflowProject,seam:overflowSeam}));checks++
+overflowProject.seams.push(overflowSeam)
+same(auditSewingConstruction(overflowProject),native('audit',{project:overflowProject}));checks++
 const fixture='research/clo-reference/live-audit-20261014/exports/clo-male-tshirt-sewn-EXPERIMENTAL.garment.json'
 try{const imported=JSON.parse(readFileSync(resolve(root,fixture),'utf8'));same(auditSewingConstruction(imported),native('audit',{project:imported}));checks++}catch(e){if(e.code!=='ENOENT')throw e;console.log('Imported CLO fixture unavailable; remaining fixture comparisons passed')}
 assert.ok(checks>=27)

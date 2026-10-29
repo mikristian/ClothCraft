@@ -1,0 +1,558 @@
+{
+  "schema": "exo.physics-lab.v2",
+  "phase": "initial_assembly_transient",
+  "equilibriumEstablished": false,
+  "fitDefectEstablished": false,
+  "releaseGate": false,
+  "interpretation": "Separated panels start with large initial seam gaps. 12 simulated steps without independent physical-contact and velocity/residual equilibrium verification cannot establish a converged garment fit, defective seam solver, or release failure. Per-step vertex speeds are observed, not proof of equilibrium.",
+  "backendClaim": "Native exo-session snapshot backend field; GPU selection is not independently attested",
+  "requestedBackend": "gpu",
+  "actualBackendReported": [
+    "ClothCraft GPU VBD + CPU OGC"
+  ],
+  "execution": "GPU requested (--gpu), single garment smoke",
+  "binary": "/Users/mikylecouto/Chat On Steroids Workspace/exo-clothcraft-v2/.exo-build-scratch/physics-gpu-plateau-diagnostics/exo-session",
+  "avatar": "/Users/mikylecouto/Chat On Steroids Workspace/exo-clothcraft-v2/research/oss/clothcraft/assets/makehuman/mannequin.obj",
+  "binarySha256": "2fc125b669194fe2768c5aa571e14e85aa4bf5d5992f694d155314bf17ac5a08",
+  "sourceSha256": "a11d05e97de5438e44a139e3429d53c27a195f12edca585908762b6e97c827d3",
+  "sourceHashNote": "Current working-tree source fingerprint only; provenance of prebuilt executable cannot be independently established",
+  "avatarSha256": "f10b3f9d169c9ec6c2503e6e2f66d3800996bfa7650890b7885e0010d3184867",
+  "crossBackendSpeedComparison": "prohibited_without_verified_same_source_build_fixture_settings_and_executable",
+  "thresholds": {
+    "max_seam_gap_m": 0.025,
+    "extension_p95_percent": 15,
+    "extension_max_percent": 60,
+    "minimum_distance_m": 0
+  },
+  "thresholdPolicy": "Provisional engineering screening thresholds for future settled-state runs only. Transient exceedances are diagnostic observations, not release failures, fit certification, or evidence of faulty seam enforcement.",
+  "cases": [
+    {
+      "id": "tshirt-gpu-smoke",
+      "preset": "tshirt",
+      "status": "initial_assembly_transient_measured",
+      "equilibriumEstablished": false,
+      "fitDefectEstablished": false,
+      "initial": {
+        "vertices": 2454,
+        "triangles": 4570,
+        "seams": 8,
+        "backend": "ClothCraft GPU VBD + CPU OGC",
+        "time_s": 0,
+        "max_seam_gap_m": 0.53
+      },
+      "steps": 12,
+      "final_time_s": 0.19999999999999998,
+      "timeTrajectory": [
+        {
+          "step": 0,
+          "time_s": 0,
+          "max_seam_gap_m": 0.53,
+          "phase": "initial_separated_assembly"
+        },
+        {
+          "step": 1,
+          "time_s": 0.016666666666666666,
+          "max_seam_gap_m": 0.44702801951781773,
+          "solver_max_seam_gap_m": 0.44702801951781773,
+          "extension_p95_percent": 15.210963302236259,
+          "contacts": 0,
+          "max_cloth_speed_mps": 2.588330791451961,
+          "rms_cloth_speed_mps": 0.9700090369950747
+        },
+        {
+          "step": 2,
+          "time_s": 0.03333333333333333,
+          "max_seam_gap_m": 0.37456325072100466,
+          "solver_max_seam_gap_m": 0.37456325072100466,
+          "extension_p95_percent": 62.19925751789233,
+          "contacts": 0,
+          "max_cloth_speed_mps": 5.181298115833181,
+          "rms_cloth_speed_mps": 2.07913734143405
+        },
+        {
+          "step": 3,
+          "time_s": 0.05,
+          "max_seam_gap_m": 0.33203798007143215,
+          "solver_max_seam_gap_m": 0.33203798007143215,
+          "extension_p95_percent": 103.87595777512506,
+          "contacts": 66,
+          "max_cloth_speed_mps": 5.182126584370713,
+          "rms_cloth_speed_mps": 2.3196437350164607
+        },
+        {
+          "step": 4,
+          "time_s": 0.06666666666666667,
+          "max_seam_gap_m": 0.3026507211567452,
+          "solver_max_seam_gap_m": 0.3026507211567452,
+          "extension_p95_percent": 111.66435041474378,
+          "contacts": 116,
+          "max_cloth_speed_mps": 5.166126181187765,
+          "rms_cloth_speed_mps": 2.1321336069513532
+        },
+        {
+          "step": 5,
+          "time_s": 0.08333333333333333,
+          "max_seam_gap_m": 0.2868596450942553,
+          "solver_max_seam_gap_m": 0.2868596450942553,
+          "extension_p95_percent": 90.22465418957417,
+          "contacts": 205,
+          "max_cloth_speed_mps": 3.1977741446322416,
+          "rms_cloth_speed_mps": 1.5619132565113611
+        },
+        {
+          "step": 6,
+          "time_s": 0.09999999999999999,
+          "max_seam_gap_m": 0.25277490586057755,
+          "solver_max_seam_gap_m": 0.25277490586057755,
+          "extension_p95_percent": 69.6740291011404,
+          "contacts": 243,
+          "max_cloth_speed_mps": 3.060900849797069,
+          "rms_cloth_speed_mps": 1.1690817847787767
+        },
+        {
+          "step": 7,
+          "time_s": 0.11666666666666665,
+          "max_seam_gap_m": 0.2200575621285457,
+          "solver_max_seam_gap_m": 0.2200575621285457,
+          "extension_p95_percent": 56.70905266703423,
+          "contacts": 276,
+          "max_cloth_speed_mps": 2.9524798529023077,
+          "rms_cloth_speed_mps": 0.9487157978855746
+        },
+        {
+          "step": 8,
+          "time_s": 0.13333333333333333,
+          "max_seam_gap_m": 0.18680290988735346,
+          "solver_max_seam_gap_m": 0.18680290988735346,
+          "extension_p95_percent": 53.64938926893912,
+          "contacts": 328,
+          "max_cloth_speed_mps": 3.8993829929382415,
+          "rms_cloth_speed_mps": 0.8230274071867189
+        },
+        {
+          "step": 9,
+          "time_s": 0.15,
+          "max_seam_gap_m": 0.1704073808562703,
+          "solver_max_seam_gap_m": 0.1704073808562703,
+          "extension_p95_percent": 51.621174549218594,
+          "contacts": 328,
+          "max_cloth_speed_mps": 3.472070778775498,
+          "rms_cloth_speed_mps": 0.7236649668968258
+        },
+        {
+          "step": 10,
+          "time_s": 0.16666666666666666,
+          "max_seam_gap_m": 0.16974222877420386,
+          "solver_max_seam_gap_m": 0.16974222877420386,
+          "extension_p95_percent": 47.85906014970196,
+          "contacts": 348,
+          "max_cloth_speed_mps": 1.8011980819025375,
+          "rms_cloth_speed_mps": 0.5990249563039154
+        },
+        {
+          "step": 11,
+          "time_s": 0.18333333333333332,
+          "max_seam_gap_m": 0.16954321359903268,
+          "solver_max_seam_gap_m": 0.16954321359903268,
+          "extension_p95_percent": 40.957098598516104,
+          "contacts": 358,
+          "max_cloth_speed_mps": 2.7405762494223125,
+          "rms_cloth_speed_mps": 0.5508477873923391
+        },
+        {
+          "step": 12,
+          "time_s": 0.19999999999999998,
+          "max_seam_gap_m": 0.16947961324362962,
+          "solver_max_seam_gap_m": 0.16947961324362962,
+          "extension_p95_percent": 36.74146910340781,
+          "contacts": 367,
+          "max_cloth_speed_mps": 1.5047653314780514,
+          "rms_cloth_speed_mps": 0.4826002885728237
+        }
+      ],
+      "metrics": {
+        "max_seam_gap_m": {
+          "value": 0.44702801951781773,
+          "threshold": 0.025,
+          "status": "fail"
+        },
+        "extension_p95_percent": {
+          "value": 111.66435041474378,
+          "threshold": 15,
+          "status": "fail"
+        },
+        "extension_max_percent": {
+          "value": 397.14303855530824,
+          "threshold": 60,
+          "status": "fail"
+        },
+        "minimum_distance_m": {
+          "value": 0.0000042598067017581435,
+          "threshold": 0,
+          "status": "pass"
+        },
+        "contact_penetration_m": {
+          "value": null,
+          "status": "inconclusive",
+          "reason": "VBD session reports minimum_distance_m but no independently evaluated penetration depth"
+        }
+      },
+      "lastStep": {
+        "broad_phase_rebuilds": 8,
+        "contact_profile": {
+          "candidate_pairs": 3796995,
+          "candidates_ms": 101.11724899999999,
+          "narrow_ms": 195.271915,
+          "refit_ms": 4.60721
+        },
+        "contact_terms": 10292,
+        "contacts": 367,
+        "detection_ms": 302.67070799999993,
+        "detection_updates": 17,
+        "dt_s": 0.016666666666666666,
+        "extension_max_percent": 310.4221966472692,
+        "extension_p95_percent": 36.74146910340781,
+        "gpu_compute_ms": null,
+        "iterations": 16,
+        "max_seam_gap_m": 0.16947961324362962,
+        "minimum_distance_m": 0.0000042598067017581435,
+        "residual_rms_n": null,
+        "solve_ms": 79.67804200000006,
+        "step_ms": 382.34875,
+        "time_s": 0.19999999999999998,
+        "truncated_vertices": 0
+      },
+      "trajectory": [
+        {
+          "step": 1,
+          "broad_phase_rebuilds": 9,
+          "contact_profile": {
+            "candidate_pairs": 498037,
+            "candidates_ms": 34.978707,
+            "narrow_ms": 12.911453999999999,
+            "refit_ms": 3.7615839999999996
+          },
+          "contact_terms": 0,
+          "contacts": 0,
+          "detection_ms": 52.213333999999996,
+          "detection_updates": 17,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 63.81295570332608,
+          "extension_p95_percent": 15.210963302236259,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.44702801951781773,
+          "minimum_distance_m": 0.006,
+          "residual_rms_n": null,
+          "solve_ms": 47.903416000000014,
+          "step_ms": 100.11675000000001,
+          "time_s": 0.016666666666666666,
+          "truncated_vertices": 0
+        },
+        {
+          "step": 2,
+          "broad_phase_rebuilds": 17,
+          "contact_profile": {
+            "candidate_pairs": 1386321,
+            "candidates_ms": 84.458458,
+            "narrow_ms": 35.690752,
+            "refit_ms": 3.8797909999999995
+          },
+          "contact_terms": 126,
+          "contacts": 0,
+          "detection_ms": 124.72920699999999,
+          "detection_updates": 17,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 254.63365617612618,
+          "extension_p95_percent": 62.19925751789233,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.37456325072100466,
+          "minimum_distance_m": 0.0030639463426577257,
+          "residual_rms_n": null,
+          "solve_ms": 47.87837600000002,
+          "step_ms": 172.607583,
+          "time_s": 0.03333333333333333,
+          "truncated_vertices": 0
+        },
+        {
+          "step": 3,
+          "broad_phase_rebuilds": 16,
+          "contact_profile": {
+            "candidate_pairs": 1393975,
+            "candidates_ms": 88.46733400000001,
+            "narrow_ms": 39.406961,
+            "refit_ms": 3.6131250000000006
+          },
+          "contact_terms": 826,
+          "contacts": 66,
+          "detection_ms": 132.160416,
+          "detection_updates": 17,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 397.14303855530824,
+          "extension_p95_percent": 103.87595777512506,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.33203798007143215,
+          "minimum_distance_m": 0.0015266035261889532,
+          "residual_rms_n": null,
+          "solve_ms": 52.01583400000001,
+          "step_ms": 184.17625,
+          "time_s": 0.05,
+          "truncated_vertices": 0
+        },
+        {
+          "step": 4,
+          "broad_phase_rebuilds": 16,
+          "contact_profile": {
+            "candidate_pairs": 1638828,
+            "candidates_ms": 99.555501,
+            "narrow_ms": 50.07504200000001,
+            "refit_ms": 3.552086
+          },
+          "contact_terms": 2315,
+          "contacts": 116,
+          "detection_ms": 153.99774799999997,
+          "detection_updates": 17,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 394.8484911469122,
+          "extension_p95_percent": 111.66435041474378,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.3026507211567452,
+          "minimum_distance_m": 0.0009413230741580777,
+          "residual_rms_n": null,
+          "solve_ms": 54.704710000000034,
+          "step_ms": 208.702458,
+          "time_s": 0.06666666666666667,
+          "truncated_vertices": 0
+        },
+        {
+          "step": 5,
+          "broad_phase_rebuilds": 16,
+          "contact_profile": {
+            "candidate_pairs": 2106585,
+            "candidates_ms": 118.00529200000001,
+            "narrow_ms": 72.293706,
+            "refit_ms": 3.749376
+          },
+          "contact_terms": 4493,
+          "contacts": 205,
+          "detection_ms": 195.03891599999997,
+          "detection_updates": 17,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 383.5728870444697,
+          "extension_p95_percent": 90.22465418957417,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.2868596450942553,
+          "minimum_distance_m": 0.0007140569545917356,
+          "residual_rms_n": null,
+          "solve_ms": 64.38070900000002,
+          "step_ms": 259.419625,
+          "time_s": 0.08333333333333333,
+          "truncated_vertices": 0
+        },
+        {
+          "step": 6,
+          "broad_phase_rebuilds": 16,
+          "contact_profile": {
+            "candidate_pairs": 2486247,
+            "candidates_ms": 131.590168,
+            "narrow_ms": 94.14833499999999,
+            "refit_ms": 3.70846
+          },
+          "contact_terms": 5820,
+          "contacts": 243,
+          "detection_ms": 230.657585,
+          "detection_updates": 17,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 356.37621133229624,
+          "extension_p95_percent": 69.6740291011404,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.25277490586057755,
+          "minimum_distance_m": 0.0005945147191486333,
+          "residual_rms_n": null,
+          "solve_ms": 70.236456,
+          "step_ms": 300.894041,
+          "time_s": 0.09999999999999999,
+          "truncated_vertices": 0
+        },
+        {
+          "step": 7,
+          "broad_phase_rebuilds": 16,
+          "contact_profile": {
+            "candidate_pairs": 2763828,
+            "candidates_ms": 142.484665,
+            "narrow_ms": 105.42962500000002,
+            "refit_ms": 3.6493329999999995
+          },
+          "contact_terms": 6783,
+          "contacts": 276,
+          "detection_ms": 252.943041,
+          "detection_updates": 17,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 322.68632330867365,
+          "extension_p95_percent": 56.70905266703423,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.2200575621285457,
+          "minimum_distance_m": 0.00029110329694201126,
+          "residual_rms_n": null,
+          "solve_ms": 75.58195900000004,
+          "step_ms": 328.52500000000003,
+          "time_s": 0.11666666666666665,
+          "truncated_vertices": 0
+        },
+        {
+          "step": 8,
+          "broad_phase_rebuilds": 16,
+          "contact_profile": {
+            "candidate_pairs": 2984223,
+            "candidates_ms": 147.83833499999997,
+            "narrow_ms": 116.35362699999999,
+            "refit_ms": 3.5514580000000002
+          },
+          "contact_terms": 7544,
+          "contacts": 328,
+          "detection_ms": 269.150794,
+          "detection_updates": 17,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 298.14532817741747,
+          "extension_p95_percent": 53.64938926893912,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.18680290988735346,
+          "minimum_distance_m": 0.00004257615863258106,
+          "residual_rms_n": null,
+          "solve_ms": 79.32916499999999,
+          "step_ms": 348.479959,
+          "time_s": 0.13333333333333333,
+          "truncated_vertices": 0
+        },
+        {
+          "step": 9,
+          "broad_phase_rebuilds": 15,
+          "contact_profile": {
+            "candidate_pairs": 3207821,
+            "candidates_ms": 156.509792,
+            "narrow_ms": 151.396875,
+            "refit_ms": 4.403208
+          },
+          "contact_terms": 8095,
+          "contacts": 328,
+          "detection_ms": 314.05170899999996,
+          "detection_updates": 17,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 311.4494787697082,
+          "extension_p95_percent": 51.621174549218594,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.1704073808562703,
+          "minimum_distance_m": 0.00000796662187007288,
+          "residual_rms_n": null,
+          "solve_ms": 86.82379100000003,
+          "step_ms": 400.8755,
+          "time_s": 0.15,
+          "truncated_vertices": 0
+        },
+        {
+          "step": 10,
+          "broad_phase_rebuilds": 10,
+          "contact_profile": {
+            "candidate_pairs": 3437625,
+            "candidates_ms": 219.581751,
+            "narrow_ms": 243.509539,
+            "refit_ms": 5.467710999999999
+          },
+          "contact_terms": 9097,
+          "contacts": 348,
+          "detection_ms": 470.691542,
+          "detection_updates": 17,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 310.7850703418121,
+          "extension_p95_percent": 47.85906014970196,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.16974222877420386,
+          "minimum_distance_m": 0.00000455349424209818,
+          "residual_rms_n": null,
+          "solve_ms": 159.37904200000003,
+          "step_ms": 630.070584,
+          "time_s": 0.16666666666666666,
+          "truncated_vertices": 0
+        },
+        {
+          "step": 11,
+          "broad_phase_rebuilds": 12,
+          "contact_profile": {
+            "candidate_pairs": 3640362,
+            "candidates_ms": 205.60345800000002,
+            "narrow_ms": 234.669916,
+            "refit_ms": 4.4174169999999995
+          },
+          "contact_terms": 9850,
+          "contacts": 358,
+          "detection_ms": 446.31187399999993,
+          "detection_updates": 17,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 310.49441258009784,
+          "extension_p95_percent": 40.957098598516104,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.16954321359903268,
+          "minimum_distance_m": 0.0000042622276809106765,
+          "residual_rms_n": null,
+          "solve_ms": 93.7134180000001,
+          "step_ms": 540.025292,
+          "time_s": 0.18333333333333332,
+          "truncated_vertices": 0
+        },
+        {
+          "step": 12,
+          "broad_phase_rebuilds": 8,
+          "contact_profile": {
+            "candidate_pairs": 3796995,
+            "candidates_ms": 101.11724899999999,
+            "narrow_ms": 195.271915,
+            "refit_ms": 4.60721
+          },
+          "contact_terms": 10292,
+          "contacts": 367,
+          "detection_ms": 302.67070799999993,
+          "detection_updates": 17,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 310.4221966472692,
+          "extension_p95_percent": 36.74146910340781,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.16947961324362962,
+          "minimum_distance_m": 0.0000042598067017581435,
+          "residual_rms_n": null,
+          "solve_ms": 79.67804200000006,
+          "step_ms": 382.34875,
+          "time_s": 0.19999999999999998,
+          "truncated_vertices": 0
+        }
+      ]
+    }
+  ],
+  "repeatability": {
+    "status": "not_applicable",
+    "reason": "Single-case GPU smoke does not measure repeatability"
+  },
+  "screeningObservations": [
+    {
+      "case": "tshirt-gpu-smoke",
+      "transientExceedances": [
+        "max_seam_gap_m",
+        "extension_p95_percent",
+        "extension_max_percent"
+      ],
+      "assessment": "transient_only"
+    }
+  ],
+  "overall": "transient_observed_equilibrium_inconclusive",
+  "fitCertified": false
+}

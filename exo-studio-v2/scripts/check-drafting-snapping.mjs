@@ -33,6 +33,12 @@ const curve = snapDraftPattern({ x: 112.46, y: 15.2 }, [piece], { toleranceCm: 1
 assert.equal(curve.kind, 'edge')
 assert.equal(curve.edgeIndex, 1)
 assert.equal(snapDraftPattern({ x: 105, y: 19.5 }, [piece], { excludedPieceId: 'front' }), null)
+for (const samplesPerCurve of [Infinity, NaN, -1, 0, 1, 2.5, 257, 1e9, '16']) {
+  assert.throws(() => snapDraftPattern({ x: 112, y: 15 }, [piece], { samplesPerCurve }),
+    /curve sampling resolution/, `unsafe curve subdivision count: ${String(samplesPerCurve)}`)
+}
+assert.equal(snapDraftPattern({ x: 112.46, y: 15.2 }, [piece],
+  { toleranceCm: 1, samplesPerCurve: 256 })?.kind, 'edge')
 assert.equal(snapDraftPattern({ x: 100.01, y: 19.99 }, [piece], {
   excludedPoint: { pieceId: 'front', pointIndex: 0 }, allowEdges: false, toleranceCm: 0.5,
 }), null)

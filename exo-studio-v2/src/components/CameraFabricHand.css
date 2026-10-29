@@ -1,0 +1,118 @@
+/* Compact Webcam launcher in the actual LEFT 3D tool rail: below Press B18.
+   CLO B18 is positioned 658px below the top of the observed second column.
+   The next 30px tool occupies 694px, following the same 34px rhythm. */
+.tool-rail .clo-left-3d-double-bars.clo-observed-3d-bars > .clo-observed-3d-column .clo-3d-webcam-slot{
+  position:absolute;left:3px;top:694px;width:28px;height:28px;
+  display:grid;place-items:center;z-index:2;
+}
+.tool-rail .clo-left-3d-double-bars.clo-observed-3d-bars > .clo-observed-3d-column .clo-3d-webcam-slot > .cc-camera-hand-launch{
+  position:relative;top:auto;left:auto;display:grid;place-items:center;
+  width:24px;height:24px;min-width:24px;padding:0;margin:0;
+  color:#9dd9ea;background:#333b43;border:1px solid #596a76;
+  border-radius:4px;cursor:pointer;box-shadow:none;
+}
+.tool-rail .clo-3d-webcam-slot > .cc-camera-hand-launch:is(:hover,:focus-visible,.active){
+  color:#d5f8ff;background:#395362;border-color:#85b7cc;
+}
+.tool-rail .clo-left-3d-double-bars.clo-observed-3d-bars > .clo-observed-3d-column > button.clo-3d-collapse-slot {
+  position:absolute;left:3px;top:728px;width:28px;height:28px;min-width:28px;
+  display:grid;place-items:center;padding:0;margin:0;border:1px solid #596a76;
+  border-radius:4px;background:#333b43;color:#9dd9ea;cursor:pointer;
+}
+.tool-rail .clo-observed-3d-column > button.clo-3d-collapse-slot:is(:hover,:focus-visible) {
+  background:#395362;border-color:#85b7cc;color:#d5f8ff;
+}
+/* The fallback is part of the existing 3D quick-toolbar in standalone V2.
+   The full EXO interface already has the left Press toolbar, so hide the
+   unused fallback there rather than leaving a blank tool in the 3D canvas. */
+.cc-3d-camera-hand-host{margin-top:4px}
+.cc-rust-embedded .cc-scene .cc-3d-camera-hand-host{display:none}
+.cc-corner-tool-host .cc-3d-camera-hand-host [data-camera-hand-toolbar-fallback-slot]{
+  display:grid;place-items:center;width:30px;height:30px;
+}
+.cc-corner-tool-host .cc-3d-camera-hand-host .cc-camera-hand-launch{
+  position:relative;display:grid;place-items:center;width:24px;height:24px;min-width:24px;
+  padding:0;margin:0;color:#9dd9ea;background:#333b43;border:1px solid #596a76;
+  border-radius:4px;cursor:pointer;box-shadow:none;
+}
+.cc-corner-tool-host .cc-3d-camera-hand-host .cc-camera-hand-launch:is(:hover,:focus-visible,.active){
+  color:#d5f8ff;background:#395362;border-color:#85b7cc;
+}
+.cc-camera-hand-launch:disabled{opacity:.42;cursor:not-allowed}
+.cc-camera-hand-icon{position:absolute;right:0;bottom:0;display:grid;place-items:center;pointer-events:none}
+
+/* Draggable floating preview within the viewport, independent of tracked cursor. */
+.cc-scene > .cc-camera-hand-panel,.cc-rust-embedded .cc-embedded-main > .cc-camera-hand-panel{
+  position:absolute;z-index:65;left:auto;right:14px;bottom:14px;top:auto;
+  box-sizing:border-box;width:min(318px,calc(100% - 16px));max-height:calc(100% - 16px);
+  padding:9px;background:rgba(18,23,28,.97);color:#eef4f5;
+  border:1px solid rgba(203,238,250,.25);border-radius:13px;
+  box-shadow:0 16px 45px rgba(0,0,0,.46),inset 0 1px rgba(255,255,255,.16);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  font:11px/1.45 system-ui,sans-serif;overflow:auto;
+}
+.cc-scene > .cc-camera-hand-panel[style*="left"],.cc-rust-embedded .cc-embedded-main > .cc-camera-hand-panel[style*="left"]{right:auto;bottom:auto}
+.cc-camera-hand-heading{
+  display:flex;align-items:center;gap:7px;margin:0 0 8px;padding:2px 1px 7px;
+  cursor:grab;touch-action:none;user-select:none;
+}
+.cc-camera-hand-heading:active{cursor:grabbing}
+.cc-camera-hand-heading strong{font-size:11px;font-weight:600;white-space:nowrap;flex:1}
+.cc-camera-hand-heading label{display:flex;gap:4px;align-items:center;cursor:default}
+.cc-camera-hand-heading label span{display:none}
+.cc-camera-hand-heading select{max-width:111px;background:#252e35;color:#f0f6f6;border:1px solid #43515a;border-radius:7px;padding:4px;font-size:10px}
+.cc-camera-hand-heading button,.cc-camera-hand-meta button{background:transparent;border:0;color:#e4ecef;border-radius:7px;padding:5px;cursor:pointer}
+.cc-camera-hand-heading button:hover,.cc-camera-hand-meta button:hover{background:#354048}
+.cc-camera-hand-feed{
+  position:relative;background:#070d13;border-radius:9px;overflow:hidden;
+  aspect-ratio:4/3;display:grid;place-items:center;
+}
+.cc-camera-hand-feed video{display:block;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.cc-camera-hand-point{
+  position:absolute;pointer-events:none;width:16px;height:16px;border:2px solid #9ffff1;
+  background:#9ffff133;box-shadow:0 0 0 7px #9ffff122;border-radius:50%;
+  transform:translate(-50%,-50%);
+}
+.cc-camera-hand-grabbing{border-color:#ffd17b;background:#ffd17b66;box-shadow:0 0 0 11px #ffd17b2b}
+.cc-camera-hand-loading{position:absolute;background:#091018c9;color:#f1f5f6;border-radius:4px;padding:5px 9px;font-size:10px;letter-spacing:.07em}
+.cc-camera-hand-recording-indicator{position:absolute;top:8px;left:8px;display:flex;align-items:center;gap:5px;background:#190b0be0;color:#ff8686;padding:4px 6px;border-radius:5px;font-size:10px;font-weight:700}
+.cc-camera-hand-actions{display:flex;align-items:center;justify-content:center;gap:18px;padding:10px 0 5px}
+.cc-camera-hand-actions button{display:flex;align-items:center;justify-content:center;gap:7px;color:#e8eef1;background:#2b353d;border:1px solid #44525d;border-radius:24px;min-width:106px;height:34px;cursor:pointer;font-size:11px;font-weight:600}
+.cc-camera-hand-actions button:hover:not(:disabled){background:#3b4853}
+.cc-camera-hand-actions button:disabled{opacity:.42;cursor:not-allowed}
+.cc-camera-hand-actions .cc-camera-hand-shutter{background:#e7eef1;color:#1a2730;border-color:#e7eef1}
+.cc-camera-hand-actions .cc-camera-hand-shutter:hover:not(:disabled){background:#fff}
+.cc-camera-hand-actions .cc-camera-hand-video-button svg{color:#ed6969}
+.cc-camera-hand-actions .cc-camera-hand-video-button.is-recording{border-color:#dd7777;color:#ffdada}
+.cc-camera-hand-meta{display:flex;align-items:center;gap:6px;min-height:26px;font-size:10px;color:#9caeb7}
+.cc-camera-hand-tracking-state{flex:1}
+.cc-camera-hand-meta .cc-camera-hand-stop{display:flex;align-items:center;gap:4px;color:#becbd1}
+.cc-camera-hand-feedback{margin:3px 1px;color:#bddac8;font-size:10px;line-height:1.4}
+.cc-camera-hand-feedback.is-error{color:#ffaaa8}
+
+/* Real screen-space hand cursor, driven by the same coordinates as the Rust grab. */
+.cc-camera-fabric-cursor{
+  position:absolute;z-index:50;width:28px;height:34px;pointer-events:none;
+  transform:translate(-3px,-3px);filter:drop-shadow(0 2px 2px rgba(4,13,22,.85));
+  transition:opacity .10s ease;opacity:0;visibility:hidden;
+}
+.cc-camera-fabric-cursor[data-visible="true"]{opacity:1;visibility:visible}
+.cc-camera-fabric-cursor .cc-camera-cursor-arrow{
+  position:absolute;top:0;left:0;width:21px;height:27px;
+  background:#08232f;clip-path:polygon(0 0,0 100%,6px 18px,11px 27px,15px 25px,10px 16px,20px 17px);
+}
+.cc-camera-fabric-cursor .cc-camera-cursor-arrow::after{
+  content:"";position:absolute;inset:2px;background:#aaf1ff;
+  clip-path:polygon(0 0,0 100%,6px 18px,11px 27px,15px 25px,10px 16px,20px 17px);
+}
+.cc-camera-fabric-cursor .cc-camera-cursor-contact{
+  position:absolute;left:2px;top:0;width:15px;height:15px;border-radius:50%;
+  border:2px solid #7fe9f7;box-shadow:0 0 0 4px rgba(66,211,251,.16);opacity:0;
+}
+.cc-camera-fabric-cursor[data-over-fabric="true"] .cc-camera-cursor-contact{opacity:1}
+.cc-camera-fabric-cursor[data-grabbing="true"] .cc-camera-cursor-contact{
+  border-color:#ffce73;background:rgba(255,193,80,.3);box-shadow:0 0 0 8px rgba(255,193,80,.17);opacity:1;
+}
+.cc-camera-fabric-cursor[data-grabbing="true"] .cc-camera-cursor-arrow{opacity:.5}
+@media(max-width:480px){.cc-scene > .cc-camera-hand-panel,.cc-rust-embedded .cc-embedded-main > .cc-camera-hand-panel{width:min(275px,calc(100% - 16px))}}
+@media(prefers-reduced-motion:reduce){.cc-camera-fabric-cursor{transition:none}}

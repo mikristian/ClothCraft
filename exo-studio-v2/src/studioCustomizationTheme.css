@@ -1,0 +1,1014 @@
+/* Personal workspace palette. Only editor chrome changes: garment mesh and
+   PBR materials remain independent of the designer's UI preferences. */
+.app-shell[data-studio-customized="true"] {
+  --accent: var(--studio-accent);
+  --exo-toolbar-accent: var(--studio-accent);
+  --exo-toolbar-bg: var(--studio-panel);
+  --exo-toolbar-border: var(--studio-accent);
+}
+.studio-personal-brand {
+  display:inline-flex;align-items:center;gap:5px;max-width:118px;min-width:0;padding:3px 6px;
+  border:1px solid #60646c;border-radius:5px;background:#303139;color:#e9eaf0;
+  font:600 10px/1.2 -apple-system,BlinkMacSystemFont,sans-serif;cursor:pointer
+}
+.studio-personal-brand img{width:19px;height:19px;flex:0 0 19px;object-fit:cover;border-radius:4px}
+.studio-personal-brand span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.app-shell[data-studio-customized="true"] .clo-edge-tabs,
+.app-shell[data-studio-customized="true"] .asset-browser,
+.app-shell[data-studio-customized="true"] .clo-library-top,
+.app-shell[data-studio-customized="true"] .clo-library-search,
+.app-shell[data-studio-customized="true"] .tool-rail,
+.app-shell[data-studio-customized="true"] .clo-right-tool-palette {
+  background:var(--studio-sidebar) !important;
+}
+.app-shell[data-studio-customized="true"] .clo-inspector,
+.app-shell[data-studio-customized="true"] .clo-inspector-content,
+.app-shell[data-studio-customized="true"] .clo-object-browser,
+.app-shell[data-studio-customized="true"] .clo-property-panel,
+.app-shell[data-studio-customized="true"] .clo-pe-list,
+.app-shell[data-studio-customized="true"] .clo-mac-menu {
+  background:var(--studio-panel) !important;
+}
+.app-shell[data-studio-customized="true"] .clo-left-3d-column button.active,
+.app-shell[data-studio-customized="true"] .clo-right-tool-grid button.active,
+.app-shell[data-studio-customized="true"] .clo-edge-tabs button.active {
+  color:var(--studio-accent);
+  border-color:var(--studio-accent);
+}
+/* Swapping the inspector and asset library is a view-only grid arrangement.
+   DOM ownership, keyboard editing, drafts and garment project stay unchanged. */
+.app-shell[data-studio-panel-order="swapped"] .main-layout {
+  grid-template-columns:25px minmax(0,var(--effective-inspector-width,392px)) 72px minmax(0,1fr) minmax(0,var(--effective-library-width,232px)) !important;
+}
+.app-shell[data-studio-panel-order="swapped"] .main-layout>.clo-edge-tabs {grid-column:1;grid-row:1}
+.app-shell[data-studio-panel-order="swapped"] .main-layout>.clo-inspector {grid-column:2;grid-row:1}
+.app-shell[data-studio-panel-order="swapped"] .main-layout>.tool-rail {grid-column:3;grid-row:1}
+.app-shell[data-studio-panel-order="swapped"] .main-layout>.workspaces {grid-column:4;grid-row:1}
+.app-shell[data-studio-panel-order="swapped"] .main-layout>.asset-browser {grid-column:5;grid-row:1}
+.app-shell[data-studio-panel-order="swapped"] .main-layout>.clo-inspector {border-right:1px solid #454950;border-left:0}
+.app-shell[data-studio-panel-order="swapped"] .main-layout>.asset-browser {border-left:1px solid #454950;border-right:0}
+.app-shell[data-studio-panel-order="swapped"] .clo-panel-resizer.clo-left-resizer {left:0;right:auto}
+.app-shell[data-studio-panel-order="swapped"] .clo-panel-resizer.clo-right-resizer {left:auto;right:0}
+
+/* Theme variables cover interface chrome only. All pattern geometry, fabric
+   colors, lighting, camera and 3D render canvases retain their own colors. */
+.app-shell[data-studio-customized="true"] .clo-mac-menu,
+.app-shell[data-studio-customized="true"] .clo-edge-tabs,
+.app-shell[data-studio-customized="true"] .asset-browser,
+.app-shell[data-studio-customized="true"] .clo-object-browser,
+.app-shell[data-studio-customized="true"] .clo-property-panel,
+.app-shell[data-studio-customized="true"] .clo-right-tool-palette,
+.app-shell[data-studio-customized="true"] .clo-inspector {
+  color:var(--studio-text,#f2f5f8);
+  border-color:var(--studio-border,#585d65);
+}
+.app-shell[data-studio-customized="true"] .clo-object-browser button,
+.app-shell[data-studio-customized="true"] .clo-property-panel button,
+.app-shell[data-studio-customized="true"] .clo-mac-menu button,
+.app-shell[data-studio-customized="true"] .clo-right-tool-palette button,
+.app-shell[data-studio-customized="true"] .clo-edge-tabs button {
+  color:var(--studio-text,#f2f5f8);
+}
+.app-shell[data-studio-customized="true"] .clo-inspector small,
+.app-shell[data-studio-customized="true"] .clo-object-browser small,
+.app-shell[data-studio-customized="true"] .clo-property-panel small {color:var(--studio-muted,#c4cbd3)}
+.app-shell[data-studio-customized="true"] :is(.clo-mac-menu,.clo-object-browser,.clo-property-panel,.clo-edge-tabs) button:focus-visible {
+  outline:2px solid var(--studio-accent,#c8cdd8);
+  outline-offset:1px;
+}
+/* Liquid Glass: softened tint and highlights behind opaque, bright labels.
+   All gradients stay under controls; no hard white panels or unreadable text. */
+.app-shell[data-studio-liquid-glass="true"] :is(.clo-mac-menu,.clo-library-top,.clo-library-search,.clo-edge-tabs,.clo-right-tool-palette,.tool-rail,.asset-browser,.clo-inspector,.clo-inspector-content,.clo-object-browser,.clo-property-panel,.clo-pe-list) {
+  background:linear-gradient(145deg,rgba(255,255,255,.11),rgba(255,255,255,.025) 42%,rgba(0,0,0,.08)),
+    color-mix(in srgb,var(--studio-panel,#303139) 88%,transparent 12%) !important;
+  backdrop-filter:blur(22px) saturate(126%);
+  -webkit-backdrop-filter:blur(22px) saturate(126%);
+  border-color:color-mix(in srgb,var(--studio-border,#757b84) 75%,white 25%);
+}
+.app-shell[data-studio-liquid-glass="true"] :is(.clo-mac-menu,.clo-object-browser,.clo-property-panel,.clo-edge-tabs) {
+  box-shadow:inset 0 1px rgba(255,255,255,.12),0 6px 19px rgba(0,0,0,.10);
+}
+.app-shell[data-studio-liquid-glass="true"] :is(.clo-property-panel,.clo-object-browser) input {
+  border-color:var(--studio-border,#717780);
+}
+@media(prefers-reduced-transparency:reduce){
+  .app-shell[data-studio-liquid-glass="true"] :is(.clo-mac-menu,.clo-library-top,.clo-library-search,.clo-edge-tabs,.clo-right-tool-palette,.tool-rail,.asset-browser,.clo-inspector,.clo-inspector-content,.clo-object-browser,.clo-property-panel,.clo-pe-list) {backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--studio-panel,#303139)!important}
+}
+
+/* One set of semantic colors drives every chrome layer, including the tool
+   palette icons. Keep these rules inside the shell so canvas backgrounds and
+   garment material previews never inherit interface tint. */
+.app-shell[data-studio-customized="true"] {
+  --studio-control:color-mix(in srgb,var(--studio-panel) 96%,var(--studio-accent) 4%);
+  --studio-control-hover:color-mix(in srgb,var(--studio-panel) 88%,var(--studio-accent) 12%);
+  --studio-control-active:color-mix(in srgb,var(--studio-panel) 78%,var(--studio-accent) 22%);
+  --studio-divider:color-mix(in srgb,var(--studio-border) 62%,transparent);
+  --studio-icon:color-mix(in srgb,var(--studio-accent) 62%,var(--studio-text) 38%);
+  --studio-icon-muted:color-mix(in srgb,var(--studio-accent) 35%,var(--studio-muted) 65%);
+  --studio-field:color-mix(in srgb,var(--studio-panel) 86%,#05090f 14%);
+  color:var(--studio-text);
+}
+.app-shell[data-studio-customized="true"] :is(
+  .clo-library-top,.clo-library-top>strong,.clo-library-search,.clo-panel-header,
+  .clo-inspector-topline,.clo-property-panel .inspector-head,.clo-inspector .panel-section,
+  .clo-object-browser .panel-section,.clo-pe-list,.clo-pe-group,.clo-pe-section,
+  .clo-edge-tabs,.clo-mac-menu,.clo-left-3d-column,.clo-right-tool-palette,
+  .clo-right-tool-grid,.tool-rail,.asset-browser,.clo-inspector,.clo-inspector-content,
+  .clo-object-browser,.clo-property-panel
+) { background-color:var(--studio-panel)!important; border-color:var(--studio-divider)!important; color:var(--studio-text); }
+.app-shell[data-studio-customized="true"] :is(.asset-browser,.tool-rail,.clo-left-3d-column,.clo-edge-tabs,.clo-right-tool-palette,.clo-right-tool-grid) {background-color:var(--studio-sidebar)!important}
+.app-shell[data-studio-customized="true"] :is(
+  .clo-right-tool-grid button,.tool-rail button,.clo-left-3d-column button,
+  .clo-edge-tabs button,.clo-inspector-topline button,.clo-mac-menu button,
+  .clo-property-panel button,.clo-object-browser button
+) {background-color:var(--studio-control)!important;color:var(--studio-icon)!important;border-color:var(--studio-divider)!important}
+.app-shell[data-studio-customized="true"] :is(.clo-right-tool-grid button,.tool-rail button,.clo-left-3d-column button,.clo-edge-tabs button,.clo-inspector-topline button,.clo-mac-menu button,.clo-property-panel button,.clo-object-browser button):hover:not(:disabled){background-color:var(--studio-control-hover)!important;color:var(--studio-text)!important}
+.app-shell[data-studio-customized="true"] :is(.clo-right-tool-grid button,.tool-rail button,.clo-left-3d-column button,.clo-edge-tabs button,.clo-inspector-topline button,.clo-mac-menu button,.clo-property-panel button,.clo-object-browser button):is(.active,[aria-pressed="true"],[aria-selected="true"]){background-color:var(--studio-control-active)!important;color:var(--studio-text)!important;border-color:var(--studio-accent)!important}
+.app-shell[data-studio-customized="true"] :is(.clo-right-tool-grid,.tool-rail,.clo-left-3d-column,.clo-edge-tabs) button :is(svg,path,line,polyline,circle,rect){stroke:currentColor}
+.cad-tool-icon-mask {display:none}
+.app-shell[data-studio-customized="true"] :is(.clo-right-tool-grid,.tool-rail,.clo-left-3d-column,.clo-edge-tabs,.clo-right-tool-palette) .cad-tool-icon-mask {display:inline-block!important;color:var(--studio-icon);background-color:currentColor;-webkit-mask-image:var(--cad-tool-icon-mask);mask-image:var(--cad-tool-icon-mask);-webkit-mask-position:center;mask-position:center;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:contain;mask-size:contain}
+.app-shell[data-studio-customized="true"] :is(.clo-right-tool-grid,.tool-rail,.clo-left-3d-column,.clo-edge-tabs,.clo-right-tool-palette) .cad-tool-icon-artwork {display:none!important}
+.app-shell[data-studio-customized="true"] :is(.clo-right-tool-grid,.tool-rail,.clo-left-3d-column,.clo-edge-tabs,.clo-right-tool-palette) :is(button:hover,button.active,button[aria-pressed="true"]) .cad-tool-icon-mask{color:var(--studio-text)}
+.app-shell[data-studio-customized="true"] :is(.clo-inspector,.asset-browser,.clo-object-browser,.clo-property-panel) :is(input,select,textarea){background-color:var(--studio-field);color:var(--studio-text);border-color:var(--studio-border);accent-color:var(--studio-accent)}
+.app-shell[data-studio-customized="true"] :is(.clo-inspector,.asset-browser,.clo-object-browser,.clo-property-panel) :is(label,small,.description,.muted){color:var(--studio-muted)}
+.app-shell[data-studio-customized="true"] :is(.clo-inspector,.asset-browser,.clo-object-browser,.clo-property-panel) :is(h1,h2,h3,h4,strong,.panel-title){color:var(--studio-text)}
+
+/* Translucent surfaces reveal a subtle backdrop through their actual alpha.
+   Isolating the shell protects the working viewports from the compositing. */
+.app-shell[data-studio-liquid-glass="true"]{isolation:isolate;background:radial-gradient(ellipse at 15% 12%,color-mix(in srgb,var(--studio-accent) 21%,transparent),transparent 58%),radial-gradient(ellipse at 92% 78%,color-mix(in srgb,var(--studio-accent) 13%,transparent),transparent 48%),#131820}
+.app-shell[data-studio-liquid-glass="true"] :is(
+  .clo-library-top,.clo-library-search,.clo-panel-header,.clo-inspector-topline,
+  .clo-inspector .panel-section,.clo-pe-group,.clo-pe-section,.clo-right-tool-grid,
+  .clo-left-3d-column,.clo-inspector,.asset-browser,.clo-property-panel,
+  .clo-object-browser,.clo-inspector-content,.tool-rail,.clo-edge-tabs,.clo-mac-menu,.clo-right-tool-palette
+){background:linear-gradient(145deg,rgba(255,255,255,.105),transparent 46%,rgba(0,0,0,.06)),color-mix(in srgb,var(--studio-panel) 48%,transparent)!important;backdrop-filter:blur(26px) saturate(155%);-webkit-backdrop-filter:blur(26px) saturate(155%);border-color:color-mix(in srgb,var(--studio-accent) 24%,rgba(255,255,255,.22))!important;box-shadow:inset 0 1px rgba(255,255,255,.14)}
+.app-shell[data-studio-liquid-glass="true"] :is(.clo-right-tool-grid button,.tool-rail button,.clo-left-3d-column button,.clo-edge-tabs button){background:color-mix(in srgb,var(--studio-control) 59%,transparent)!important}
+@media(prefers-reduced-transparency:reduce){.app-shell[data-studio-liquid-glass="true"] :is(.clo-library-top,.clo-library-search,.clo-panel-header,.clo-inspector-topline,.clo-inspector .panel-section,.clo-pe-group,.clo-pe-section,.clo-right-tool-grid,.clo-left-3d-column,.clo-inspector,.asset-browser,.clo-property-panel,.clo-object-browser,.clo-inspector-content,.tool-rail,.clo-edge-tabs,.clo-mac-menu,.clo-right-tool-palette){background:var(--studio-panel)!important;backdrop-filter:none;-webkit-backdrop-filter:none}}
+
+/* Native Property Editor has its own nested accordion backgrounds, selectors
+   and form rules; these must inherit the active preset as well. */
+.app-shell[data-studio-customized="true"] :is(.clo-property-editor,.clo-pe-list,.clo-pe-section,.clo-pe-content,.clo-inspector-content,.clo-pe-existing-properties){background:var(--studio-panel)!important;color:var(--studio-text)!important;border-color:var(--studio-divider)!important}
+.app-shell[data-studio-customized="true"] .clo-pe-trigger{background:var(--studio-control)!important;color:var(--studio-text)!important;border-color:var(--studio-divider)!important}
+.app-shell[data-studio-customized="true"] .clo-pe-trigger:hover{background:var(--studio-control-hover)!important;color:var(--studio-text)!important}
+.app-shell[data-studio-customized="true"] .clo-pe-section.expanded>.clo-pe-trigger{background:var(--studio-control-active)!important;color:var(--studio-text)!important;border-inline-start:2px solid var(--studio-accent)!important}
+.app-shell[data-studio-customized="true"] :is(.clo-pe-trigger svg,.clo-pe-subtrigger svg,.clo-pe-actions svg,.clo-pe-content button svg){color:var(--studio-icon)!important;stroke:currentColor}
+.app-shell[data-studio-customized="true"] :is(.clo-pe-content label,.clo-pe-content small,.clo-pe-note,.clo-pe-readout>span,.clo-pe-edit-field>label,.clo-pe-fabric>small,.clo-pe-unit-selection,.clo-pe-edit-input>span,.clo-pe-empty){color:var(--studio-muted)!important}
+.app-shell[data-studio-customized="true"] :is(.clo-pe-content strong,.clo-pe-fabric>strong,.clo-pe-readout>strong,.clo-pe-header>span,.clo-pe-line-subheading,.clo-pe-subtrigger){color:var(--studio-text)!important}
+.app-shell[data-studio-customized="true"] :is(.clo-pe-content input,.clo-pe-content select,.clo-pe-content textarea,.clo-pe-line-target input,.clo-pe-line-settings input){background:var(--studio-field)!important;color:var(--studio-text)!important;border-color:var(--studio-border)!important;accent-color:var(--studio-accent)!important}
+.app-shell[data-studio-customized="true"] :is(.clo-pe-content button,.clo-pe-actions button,.clo-pe-action,.clo-pe-material-faces button,.clo-pe-line-target button){background:var(--studio-control)!important;color:var(--studio-icon)!important;border-color:var(--studio-divider)!important}
+.app-shell[data-studio-customized="true"] :is(.clo-pe-content button,.clo-pe-actions button,.clo-pe-action,.clo-pe-material-faces button,.clo-pe-line-target button):hover:not(:disabled){background:var(--studio-control-hover)!important;color:var(--studio-text)!important}
+.app-shell[data-studio-customized="true"] .clo-pe-material-faces button[aria-selected="true"]{background:var(--studio-control-active)!important;color:var(--studio-text)!important;border-bottom-color:var(--studio-accent)!important}
+.app-shell[data-studio-liquid-glass="true"] :is(.clo-property-editor,.clo-pe-list,.clo-pe-content,.clo-pe-section,.clo-inspector-content,.clo-pe-existing-properties){background:linear-gradient(145deg,rgba(255,255,255,.065),transparent 55%),color-mix(in srgb,var(--studio-panel) 48%,transparent)!important;backdrop-filter:blur(26px) saturate(155%);-webkit-backdrop-filter:blur(26px) saturate(155%)}
+@media(prefers-reduced-transparency:reduce){.app-shell[data-studio-liquid-glass="true"] :is(.clo-property-editor,.clo-pe-list,.clo-pe-content,.clo-pe-section,.clo-inspector-content,.clo-pe-existing-properties){background:var(--studio-panel)!important;backdrop-filter:none;-webkit-backdrop-filter:none}}
+
+/* An uninterrupted surface across both columns of each tool rail. Inactive
+   tools are icons on the rail, not a grid of accented rectangular buttons. */
+.app-shell[data-studio-customized="true"] :is(
+  .clo-reference-dual-bars,.clo-reference-column,.clo-reference-column:nth-child(2),
+  .clo-left-3d-double-bars,.clo-left-3d-column,.clo-left-3d-column:nth-child(2),
+  .clo-right-tool-palette,.clo-palette-scroll,.clo-palette-workflows,
+  .clo-right-tool-grid,.tool-rail,.clo-tool-palette-group-divider
+) {
+  background:var(--studio-sidebar)!important;
+  border-color:var(--studio-divider)!important;
+  box-shadow:none;
+}
+.app-shell[data-studio-customized="true"] :is(
+  .tool-rail button,.clo-left-3d-column button,.clo-reference-column button,
+  .clo-right-tool-grid button,.clo-palette-workflows button,
+  .clo-right-tool-palette .clo-tool-palette-label button,
+  .clo-edge-tabs button,.clo-library-top-icons button,
+  .clo-inspector-topline button
+) {
+  background:transparent!important;
+  border-color:transparent!important;
+  box-shadow:none!important;
+  color:var(--studio-icon)!important;
+}
+.app-shell[data-studio-customized="true"] :is(
+  .tool-rail button,.clo-left-3d-column button,.clo-reference-column button,
+  .clo-right-tool-grid button,.clo-palette-workflows button,
+  .clo-right-tool-palette .clo-tool-palette-label button,
+  .clo-edge-tabs button,.clo-library-top-icons button,
+  .clo-inspector-topline button
+):hover:not(:disabled) {
+  background:var(--studio-control-hover)!important;
+  border-color:transparent!important;
+  color:var(--studio-text)!important;
+}
+.app-shell[data-studio-customized="true"] :is(
+  .tool-rail button,.clo-left-3d-column button,.clo-reference-column button,
+  .clo-right-tool-grid button,.clo-palette-workflows button,
+  .clo-edge-tabs button,.clo-library-top-icons button,
+  .clo-inspector-topline button
+):is(.active,.selected,[aria-pressed="true"],[aria-selected="true"]) {
+  background:var(--studio-control-active)!important;
+  border-color:var(--studio-accent)!important;
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--studio-accent) 35%,transparent)!important;
+  color:var(--studio-text)!important;
+}
+.app-shell[data-studio-customized="true"] :is(
+  .tool-rail button,.clo-left-3d-column button,.clo-reference-column button,
+  .clo-right-tool-grid button,.clo-palette-workflows button,
+  .clo-edge-tabs button,.clo-library-top-icons button,
+  .clo-inspector-topline button
+):focus-visible {
+  outline:2px solid var(--studio-accent)!important;
+  outline-offset:1px;
+}
+
+/* Garment folders, object hierarchy and Property Editor nested surfaces use
+   the exact preset surfaces. Only selected rows gain an accent wash. */
+.app-shell[data-studio-customized="true"] :is(
+  .clo-library-top,.clo-library-top-icons,.clo-library-categories,
+  .clo-library-tree-root-line,.clo-library-tree-children,.clo-library-tree-branch,
+  .clo-library-search,.asset-library-content,.clo-history-browser,
+  .clo-object-list,.clo-object-tabs,.clo-object-actions,.clo-object-search,
+  .clo-object-hierarchy-menu,
+  .clo-object-hierarchy-children,.clo-object-hierarchy-group,
+  .clo-object-graphic-measurements
+) {
+  background:var(--studio-sidebar)!important;
+  color:var(--studio-text)!important;
+  border-color:var(--studio-divider)!important;
+}
+.app-shell[data-studio-customized="true"] :is(
+  .clo-inspector,.clo-inspector-content,.clo-inspector-topline,.clo-property-panel,
+  .clo-property-panel .inspector-head,.clo-property-editor,
+  .clo-pe-header,.clo-pe-list,.clo-pe-section,.clo-pe-content,
+  .clo-pe-existing-properties,.clo-pe-typed-fields,
+  .clo-pe-line-settings,.clo-pe-readout,.clo-pe-edit-field,
+  .clo-pe-fabric,.clo-selected-summary,.clo-selected-stats > div,
+  .clo-inspector .panel-section,.clo-inspector .control-row
+) {
+  background:var(--studio-panel)!important;
+  color:var(--studio-text)!important;
+  border-color:var(--studio-divider)!important;
+}
+.app-shell[data-studio-customized="true"] :is(
+  .clo-object-row,.clo-object-tabs button,
+  .clo-object-hierarchy-group > button,.clo-object-hierarchy-entry,
+  .clo-object-select,.clo-object-mini-action,.clo-object-bullet-menu-trigger,
+  .clo-library-categories button,.clo-library-tree-children button,
+  .clo-library-tree-expand,.asset-library-content .asset-section-heading-toggle
+) {
+  background:transparent!important;
+  color:var(--studio-text)!important;
+  border-color:transparent!important;
+  box-shadow:none!important;
+}
+.app-shell[data-studio-customized="true"] :is(
+  .clo-object-row,.clo-object-tabs button,
+  .clo-object-hierarchy-group > button,.clo-object-hierarchy-entry,
+  .clo-object-select,.clo-object-mini-action,.clo-object-bullet-menu-trigger,
+  .clo-library-categories button,.clo-library-tree-children button,
+  .clo-library-tree-expand,.asset-library-content .asset-section-heading-toggle
+):hover:not(:disabled) {background:var(--studio-control-hover)!important}
+.app-shell[data-studio-customized="true"] :is(
+  .clo-object-row.selected,.clo-object-tabs button.active,
+  .clo-object-hierarchy-entry.selected,.clo-library-categories button.active,
+  .clo-library-tree-root-line.active,.clo-library-tree-children button.selected
+) {
+  background:var(--studio-control-active)!important;
+  box-shadow:inset 2px 0 var(--studio-accent)!important;
+  color:var(--studio-text)!important;
+  border-color:var(--studio-divider)!important;
+}
+.app-shell[data-studio-customized="true"] :is(
+  .clo-library-categories .clo-library-tree-children button svg,
+  .clo-library-selected-folder,.clo-object-row svg,.clo-object-hierarchy-group svg,
+  .clo-object-hierarchy-entry svg,.clo-object-tabs svg,
+  .clo-pe-header svg,.clo-pe-subtrigger svg
+) {color:var(--studio-icon-muted)!important;stroke:currentColor}
+.app-shell[data-studio-customized="true"] :is(
+  .asset-library-content.thumbnail-mode .garment-tile,
+  .clo-pe-material-faces button
+) {
+  background:var(--studio-control)!important;
+  border-color:var(--studio-divider)!important;
+  color:var(--studio-text)!important;
+}
+.app-shell[data-studio-customized="true"] .clo-property-panel .clo-pe-trigger,
+.app-shell[data-studio-customized="true"] .clo-property-panel .clo-pe-subtrigger {
+  background:var(--studio-panel)!important;
+}
+.app-shell[data-studio-customized="true"] .clo-property-panel .clo-pe-trigger:hover,
+.app-shell[data-studio-customized="true"] .clo-property-panel .clo-pe-subtrigger:hover {
+  background:var(--studio-control-hover)!important;
+}
+.app-shell[data-studio-customized="true"] .clo-pe-section.expanded > .clo-pe-trigger {
+  border-color:var(--studio-divider)!important;
+  border-inline-start:2px solid var(--studio-accent)!important;
+}
+.app-shell[data-studio-customized="true"] :is(
+  .asset-library-content.thumbnail-mode .garment-tile.selected,
+  .clo-pe-section.expanded > .clo-pe-trigger,
+  .clo-pe-material-faces button[aria-selected="true"]
+) {background:var(--studio-control-active)!important;border-color:var(--studio-accent)!important}
+.app-shell[data-studio-customized="true"] :is(
+  .clo-pe-header > strong,.clo-pe-readout > span,
+  .clo-object-graphic-measurements-label,.clo-library-scope,
+  .asset-library-content .asset-section-heading,.asset-library-content .asset-template-label
+) {color:var(--studio-muted)!important}
+
+/* Glass inherits the same surfaces, including deep folder trees and accordion
+   content, instead of exposing unrelated gray islands between glass panes. */
+.app-shell[data-studio-liquid-glass="true"] :is(
+  .clo-reference-dual-bars,.clo-reference-column,.clo-left-3d-column,
+  .clo-palette-scroll,.clo-palette-workflows,.clo-library-categories,
+  .asset-library-content,.clo-object-list,.clo-object-tabs,
+  .clo-object-actions,.clo-object-search,
+  .clo-object-hierarchy-menu,.clo-object-hierarchy-children,
+  .clo-property-panel .inspector-head,.clo-pe-header
+) {
+  background:color-mix(in srgb,var(--studio-panel) 48%,transparent)!important;
+  backdrop-filter:blur(26px) saturate(155%);
+  -webkit-backdrop-filter:blur(26px) saturate(155%);
+}
+@media(prefers-reduced-transparency:reduce){
+  .app-shell[data-studio-liquid-glass="true"] :is(
+    .clo-reference-dual-bars,.clo-reference-column,.clo-left-3d-column,
+    .clo-palette-scroll,.clo-palette-workflows,.clo-library-categories,
+    .asset-library-content,.clo-object-list,.clo-object-tabs,
+    .clo-object-actions,.clo-object-search,
+    .clo-object-hierarchy-menu,.clo-object-hierarchy-children,
+    .clo-property-panel .inspector-head,.clo-pe-header
+  ){background:var(--studio-panel)!important;backdrop-filter:none;-webkit-backdrop-filter:none}
+}
+
+/* Liquid Glass v2: one optical sheet per major panel, transparent controls
+   and an atmospheric color field underneath. Avoid stacked blur layers;
+   nested glass-on-glass was creating the grey milky film on every icon. */
+.app-shell[data-studio-liquid-glass="true"] {
+  --studio-icon:color-mix(in srgb,var(--studio-accent) 72%,#ecfaff 28%);
+  --studio-icon-muted:color-mix(in srgb,var(--studio-accent) 32%,#dbeaf5 68%);
+  --studio-glass-rim:rgba(236,249,255,.23);
+  --studio-glass-glow:color-mix(in srgb,var(--studio-accent) 19%,transparent);
+  background:
+    radial-gradient(ellipse 68% 67% at 9% 8%,color-mix(in srgb,var(--studio-glass-backdrop,#253d57) 80%,transparent),transparent 78%),
+    radial-gradient(ellipse 72% 68% at 100% 91%,color-mix(in srgb,var(--studio-accent) 24%,transparent),transparent 78%),
+    linear-gradient(142deg,#101922,#17202b 51%,#101823);
+}
+/* Use translucency and moderate defocus on the *outer* chrome, not on each
+   nested heading, list row, button or property field. This preserves clarity. */
+.app-shell[data-studio-liquid-glass="true"][data-studio-customized="true"] :is(
+  .clo-mac-menu,.asset-browser,.clo-inspector,.clo-object-browser,
+  .clo-property-panel,.clo-right-tool-palette,.tool-rail,.clo-edge-tabs
+) {
+  background:linear-gradient(140deg,rgba(242,253,255,.10),rgba(224,239,255,.025) 34%,rgba(4,13,23,.045) 85%),color-mix(in srgb,var(--studio-panel) var(--studio-glass-fill,51%),transparent)!important;
+  border-color:var(--studio-glass-rim)!important;
+  -webkit-backdrop-filter:blur(var(--studio-glass-blur,17px)) saturate(148%)!important;
+  backdrop-filter:blur(var(--studio-glass-blur,17px)) saturate(148%)!important;
+  box-shadow:inset 0 1px 0 rgba(245,252,255,.19),0 5px 18px rgba(4,10,18,.15);
+}
+.app-shell[data-studio-liquid-glass="true"][data-studio-customized="true"] :is(
+  .clo-library-top,.clo-library-search,.clo-panel-header,.clo-inspector-topline,
+  .clo-inspector .panel-section,.clo-pe-group,.clo-pe-section,.clo-pe-list,
+  .clo-pe-content,.clo-pe-existing-properties,.clo-property-editor,
+  .clo-inspector-content,.clo-left-3d-double-bars,.clo-left-3d-column,
+  .clo-reference-dual-bars,.clo-reference-column,.clo-right-tool-grid,
+  .clo-palette-scroll,.clo-palette-workflows,.clo-library-categories,
+  .asset-library-content,.clo-object-list,.clo-object-tabs,.clo-object-actions,
+  .clo-object-search,.clo-object-hierarchy-menu,.clo-object-hierarchy-children,
+  .clo-property-panel .inspector-head,.clo-pe-header
+) {
+  background:transparent!important;
+  background-color:transparent!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+  box-shadow:none;
+}
+.app-shell[data-studio-liquid-glass="true"] :is(
+  .clo-right-tool-grid,.tool-rail,.clo-left-3d-column,
+  .clo-reference-column,.clo-edge-tabs,.clo-right-tool-palette
+) :is(button,.cad-tool-icon-mask) { -webkit-backdrop-filter:none!important;backdrop-filter:none!important; }
+.app-shell[data-studio-liquid-glass="true"] :is(
+  .clo-right-tool-grid,.tool-rail,.clo-left-3d-column,
+  .clo-reference-column,.clo-palette-workflows,.clo-edge-tabs,
+  .clo-library-top-icons,.clo-inspector-topline
+) button:not(:hover):not(:focus-visible) {
+  background:transparent!important;
+  border-color:transparent!important;
+  box-shadow:none!important;
+  color:var(--studio-icon)!important;
+}
+.app-shell[data-studio-liquid-glass="true"] :is(
+  .clo-right-tool-grid,.tool-rail,.clo-left-3d-column,
+  .clo-reference-column,.clo-palette-workflows,.clo-edge-tabs,
+  .clo-library-top-icons,.clo-inspector-topline
+) button:is(:hover,:focus-visible) {
+  background:rgba(228,249,255,.095)!important;
+  border-color:rgba(236,252,255,.16)!important;
+  color:#f4fcff!important;
+}
+.app-shell[data-studio-liquid-glass="true"] :is(
+  .clo-right-tool-grid,.tool-rail,.clo-left-3d-column,
+  .clo-reference-column,.clo-palette-workflows,.clo-edge-tabs
+) button:is(.active,.selected,[aria-pressed="true"],[aria-selected="true"]) {
+  background:color-mix(in srgb,var(--studio-accent) 11%,transparent)!important;
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--studio-accent) 57%,transparent)!important;
+  color:#edfbff!important;
+}
+.app-shell[data-studio-liquid-glass="true"] :is(
+  .clo-right-tool-grid,.tool-rail,.clo-left-3d-column,
+  .clo-reference-column,.clo-right-tool-palette
+) .cad-tool-icon-mask {color:inherit!important;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
+@media (prefers-reduced-transparency:reduce){
+  .app-shell[data-studio-liquid-glass="true"][data-studio-customized="true"] :is(.clo-mac-menu,.asset-browser,.clo-inspector,.clo-object-browser,.clo-property-panel,.clo-right-tool-palette,.tool-rail,.clo-edge-tabs){background:var(--studio-panel)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+}
+
+/* Adaptive icon contrast is the default: dark ink on the white 2D drafting
+   board, ivory on the darker 3D viewport and sidebar chrome. The choice may
+   also be changed without enabling an opaque tile or any additional blur. */
+.app-shell[data-studio-liquid-glass="true"][data-glass-icon-color="adaptive"] {
+  --studio-icon:#f4f8fd;
+  --studio-icon-muted:#d7e1e9;
+}
+.app-shell[data-glass-icon-color="adaptive"] :is(.cc-board,.pattern-editor-shell) .clo-corner-toolkit.exo-viewport-inline-tools {
+  /* Darken only the CAD artwork, not the transparent glass underneath. */
+  --exo-glass-ink:#102532;
+  --exo-glass-ink-active:#082f46;
+}
+.app-shell[data-studio-liquid-glass="true"][data-glass-icon-color="adaptive"] :is(.cc-board,.pattern-editor-shell)
+  .clo-corner-toolkit.exo-viewport-inline-tools :is(.clo-corner-tool-group > button,.clo-corner-tool-options > button) {
+  color:var(--exo-glass-ink)!important;
+}
+.app-shell[data-studio-liquid-glass="true"][data-glass-icon-color="adaptive"] :is(.cc-board,.pattern-editor-shell)
+  .clo-corner-toolkit.exo-viewport-inline-tools :is(.clo-corner-tool-group > button,.clo-corner-tool-options > button):is(.active,[aria-pressed="true"]) {
+  color:var(--exo-glass-ink-active)!important;
+}
+.app-shell[data-studio-liquid-glass="true"][data-glass-icon-color="adaptive"] :is(.cc-board,.pattern-editor-shell)
+  .clo-corner-toolkit.exo-viewport-inline-tools .cad-tool-icon-mask {
+  color:inherit!important;
+  opacity:1;
+}
+.app-shell[data-glass-icon-color="adaptive"] :is(.cc-scene,.viewport-shell) .clo-corner-toolkit.exo-viewport-inline-tools {
+  --exo-glass-ink:#fbfcff;
+  --exo-glass-ink-active:#ffffff;
+}
+.app-shell[data-glass-icon-color="white"] {
+  --studio-icon:#f8fcff;
+  --studio-icon-muted:#e0e9f1;
+}
+.app-shell[data-glass-icon-color="white"] .clo-corner-toolkit.exo-viewport-inline-tools {--exo-glass-ink:#f8fcff;--exo-glass-ink-active:#fff}
+.app-shell[data-glass-icon-color="ink"] {
+  --studio-icon:#263743;
+  --studio-icon-muted:#354752;
+}
+.app-shell[data-glass-icon-color="ink"] .clo-corner-toolkit.exo-viewport-inline-tools {--exo-glass-ink:#162f40;--exo-glass-ink-active:#092939}
+.app-shell[data-glass-icon-color="accent"] {
+  --studio-icon:var(--studio-accent);
+  --studio-icon-muted:color-mix(in srgb,var(--studio-accent) 66%,#eefaff 34%);
+}
+.app-shell[data-glass-icon-color="accent"] .clo-corner-toolkit.exo-viewport-inline-tools {--exo-glass-ink:var(--studio-accent);--exo-glass-ink-active:var(--studio-accent)}
+/* Adaptive icons must remain dark when hovering over the light board, and
+   keep high contrast in the active state without colouring the whole tile. */
+.app-shell[data-glass-icon-color="adaptive"] .cc-board .clo-corner-toolkit.exo-viewport-inline-tools :is(.clo-corner-tool-group > button,.clo-corner-tool-options > button):is(:hover,:focus-visible,.active) {color:#082d40}
+
+/* Each target is independently configurable. Off uses the ordinary solid
+   palette, while the nested rows keep their transparent, clean layout. */
+.app-shell[data-studio-liquid-glass="true"][data-glass-library="false"] :is(.asset-browser,.clo-library-top,.clo-library-search) {
+  background:var(--studio-sidebar)!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+}
+.app-shell[data-studio-liquid-glass="true"][data-glass-inspector="false"] :is(.clo-inspector,.clo-inspector-content,.clo-object-browser,.clo-property-panel,.clo-property-editor,.clo-pe-list) {
+  background:var(--studio-panel)!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+}
+.app-shell[data-studio-liquid-glass="true"][data-glass-toolbars="false"] :is(.clo-right-tool-palette,.tool-rail,.clo-edge-tabs,.clo-left-3d-double-bars,.clo-reference-dual-bars) {
+  background:var(--studio-sidebar)!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+}
+.app-shell[data-studio-liquid-glass="true"][data-glass-menu="false"] .clo-mac-menu {
+  background:var(--studio-panel)!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+}
+
+/* Floating viewport tools get an optional shared glass lens around the icon
+   rail. Individual icons keep their fully clear, unblurred button surfaces. */
+.app-shell[data-studio-liquid-glass="true"][data-glass-widgets="true"] :is(
+  .clo-camera-widget,.clo-3d-view-controls,
+  .cc-corner-tool-host .clo-corner-toolkit.exo-viewport-inline-tools
+) {
+  background:linear-gradient(130deg,rgba(250,254,255,.13),rgba(240,252,255,.022) 61%),color-mix(in srgb,var(--studio-panel) var(--studio-glass-fill,51%),transparent)!important;
+  border:1px solid rgba(245,252,255,.35)!important;
+  -webkit-backdrop-filter:blur(var(--studio-glass-blur,17px)) saturate(148%)!important;
+  backdrop-filter:blur(var(--studio-glass-blur,17px)) saturate(148%)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.25),0 5px 18px rgba(5,14,22,.22)!important;
+}
+.app-shell[data-studio-liquid-glass="true"][data-glass-widgets="true"] .cc-corner-tool-host .clo-corner-toolkit.exo-viewport-inline-tools button {
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+}
+.app-shell[data-studio-liquid-glass="true"][data-glass-widgets="false"] :is(.clo-camera-widget,.clo-3d-view-controls) {
+  background:var(--studio-control)!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+}
+@media(prefers-reduced-transparency:reduce){
+  .app-shell[data-studio-liquid-glass="true"][data-glass-widgets="true"] :is(.clo-camera-widget,.clo-3d-view-controls,.cc-corner-tool-host .clo-corner-toolkit.exo-viewport-inline-tools){background:var(--studio-panel)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+}
+
+/* Final side-rail parity override. Loaded after the general Studio solid
+   surface rules, otherwise their !important background shorthand overwrites
+   the upper-right Liquid Glass lens. Keep the left and right rails identical
+   without altering the selected material of the Library / Property Editor. */
+.app-shell[data-studio-customized="true"][data-studio-liquid-glass="false"]
+  :is(.tool-rail,.clo-left-3d-double-bars,.clo-right-tool-palette) {
+  background-image:linear-gradient(140deg,rgba(240,252,255,.13),rgba(226,241,255,.04) 36%,rgba(6,13,24,.07) 89%)!important;
+  background-color:rgba(38,46,56,.55)!important;
+  border-color:rgba(232,248,255,.28)!important;
+  backdrop-filter:blur(17px) saturate(148%)!important;
+  -webkit-backdrop-filter:blur(17px) saturate(148%)!important;
+  box-shadow:inset 0 1px 0 rgba(245,252,255,.19),0 5px 18px rgba(4,10,18,.15)!important;
+}
+.app-shell[data-studio-customized="true"][data-studio-liquid-glass="false"]
+  :is(.clo-right-tool-palette,.clo-left-3d-double-bars)
+  :is(.clo-palette-scroll,.clo-palette-workflows,.clo-reference-dual-bars,.clo-reference-column,.clo-left-3d-column,.clo-right-tool-grid) {
+  background:transparent!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  box-shadow:none!important;
+}
+@media(prefers-reduced-transparency:reduce){
+  .app-shell[data-studio-customized="true"][data-studio-liquid-glass="false"]
+    :is(.tool-rail,.clo-left-3d-double-bars,.clo-right-tool-palette){
+    background:var(--studio-sidebar)!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+}
+
+/* The toolbars INSIDE the 2D drafting viewport use Liquid Glass. The fixed
+   application left/right toolbars are part of the selected theme, not glass.
+   Keep this final scoped distinction independent of the global Glass toggle:
+   the user's current global material is Solid and widget glass is disabled. */
+.app-shell[data-studio-customized="true"][data-studio-liquid-glass][data-glass-toolbars][data-glass-widgets]
+  :is(.tool-rail,.clo-right-tool-palette) {
+  background:var(--studio-sidebar,#303139)!important;
+  background-image:none!important;
+  background-color:var(--studio-sidebar,#303139)!important;
+  border-color:var(--studio-border,#484a4e)!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  box-shadow:none!important;
+}
+/* The left rail already owns the opaque theme surface; don't paint a second
+   milky/dark sheet on its nested two-column tools. */
+.app-shell[data-studio-customized="true"][data-studio-liquid-glass][data-glass-toolbars][data-glass-widgets]
+  .tool-rail > .clo-left-3d-double-bars {
+  background:transparent!important;
+  background-image:none!important;
+  background-color:transparent!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  box-shadow:none!important;
+}
+.app-shell[data-studio-customized="true"][data-studio-liquid-glass][data-glass-toolbars][data-glass-widgets]
+  .clo-right-tool-palette :is(.clo-palette-scroll,.clo-palette-workflows,.clo-right-tool-grid,.clo-reference-dual-bars,.clo-reference-column) {
+  background:transparent!important;
+  background-image:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+/* Share the EXISTING 3D clear optical-glass language with the 2D viewport.
+   3D quick-tool parent is completely clear, while individual buttons have
+   very subtle transparent glass rims. Do NOT put a tinted/frosted blur sheet
+   behind the entire 2D stack; it hides the pattern rather than refracting it.
+   Never target the solid left/right Studio toolbars. */
+.app-shell .cc-board .cc-corner-tool-host
+  .clo-corner-toolkit.exo-viewport-inline-tools {
+  background:transparent!important;
+  background-image:none!important;
+  background-color:transparent!important;
+  border:1px solid rgba(243,253,255,.20)!important;
+  border-radius:12px!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  box-shadow:none!important;
+}
+.app-shell .cc-board .cc-corner-tool-host
+  .clo-corner-toolkit.exo-viewport-inline-tools :is(.clo-corner-tool-group > button,.cc-2d-display-trigger) {
+  background:rgba(210,236,255,.035)!important;
+  background-image:none!important;
+  border:1px solid rgba(246,253,255,.31)!important;
+  border-radius:9px!important;
+  color:var(--exo-glass-ink,#1a506c)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.18),0 1px 3px rgba(2,13,23,.22)!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+.app-shell .cc-board .cc-corner-tool-host
+  .clo-corner-toolkit.exo-viewport-inline-tools :is(.clo-corner-tool-group > button,.cc-2d-display-trigger):is(:hover,:focus-visible) {
+  background:rgba(220,247,255,.10)!important;
+  border-color:rgba(224,251,255,.72)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.32),0 0 0 1px rgba(170,233,255,.14)!important;
+}
+.app-shell .cc-board .cc-corner-tool-host
+  .clo-corner-toolkit.exo-viewport-inline-tools :is(.clo-corner-tool-group > button,.cc-2d-display-trigger):is(.active,[aria-pressed="true"]) {
+  background:rgba(52,183,237,.10)!important;
+  border-color:rgba(153,230,255,.82)!important;
+  color:var(--exo-glass-ink-active,#075078)!important;
+  box-shadow:inset 0 0 0 1px rgba(113,218,250,.22),0 0 10px rgba(39,157,208,.15)!important;
+}
+.app-shell .cc-board .cc-corner-tool-host
+  .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-options {
+  background:rgba(22,39,57,.26)!important;
+  background-image:none!important;
+  border-color:rgba(234,253,255,.37)!important;
+  border-radius:11px!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.18),0 6px 18px rgba(4,14,27,.22)!important;
+}
+
+/* The 2D top horizontal controls were flattened by the old CLO audit.
+   Match the live 3D horizontal orientation lens, down to gradient, opacity,
+   rim, blur radius and shadow, even while the global material is Solid. */
+.app-shell .cc-board .cc-v2-orientation.cc-v2-board-orientation {
+  background:linear-gradient(155deg,rgba(255,255,255,.105),transparent 38%,rgba(255,255,255,.025) 84%),rgba(23,39,54,.065)!important;
+  background-image:linear-gradient(155deg,rgba(255,255,255,.105),transparent 38%,rgba(255,255,255,.025) 84%),none!important;
+  background-color:rgba(23,39,54,.065)!important;
+  border:1px solid rgba(236,249,255,.42)!important;
+  border-radius:12px!important;
+  -webkit-backdrop-filter:blur(3px) saturate(115%)!important;
+  backdrop-filter:blur(3px) saturate(115%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.52),inset 0 -1px 0 rgba(255,255,255,.09),0 5px 16px rgba(4,10,18,.12)!important;
+}
+.app-shell .cc-board .cc-v2-orientation.cc-v2-board-orientation button {
+  border-radius:6px!important;
+  background:transparent!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+.app-shell .cc-board .cc-v2-orientation.cc-v2-board-orientation button:is(:hover,:focus-visible) {
+  background:rgba(228,249,255,.17)!important;
+  box-shadow:inset 0 0 0 1px rgba(236,252,255,.15)!important;
+}
+.app-shell .cc-board .cc-v2-orientation.cc-v2-board-orientation button:is(.active,[aria-pressed="true"]) {
+  background:rgba(67,129,171,.18)!important;
+  box-shadow:inset 0 0 0 1px rgba(36,100,145,.34)!important;
+}
+
+/* Eliminate the solid charcoal CLO-audit title strip crossing the upper
+   edge of the 2D viewport. Keep its label and hierarchy unobstructed. */
+.app-shell .cc-board .cc-pattern-window-title {
+  background:linear-gradient(155deg,rgba(255,255,255,.105),transparent 38%,rgba(255,255,255,.025) 84%),rgba(23,39,54,.065)!important;
+  background-image:linear-gradient(155deg,rgba(255,255,255,.105),transparent 38%,rgba(255,255,255,.025) 84%)!important;
+  background-color:rgba(23,39,54,.065)!important;
+  border-bottom-color:rgba(236,249,255,.42)!important;
+  color:#253f4e!important;
+  text-shadow:0 1px rgba(255,255,255,.56);
+  -webkit-backdrop-filter:blur(3px) saturate(115%)!important;
+  backdrop-filter:blur(3px) saturate(115%)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.52)!important;
+}
+@media(prefers-reduced-transparency:reduce){
+  .app-shell .cc-board .cc-corner-tool-host
+    .clo-corner-toolkit.exo-viewport-inline-tools,
+  .app-shell .cc-board .cc-corner-tool-host
+    .clo-corner-toolkit.exo-viewport-inline-tools .clo-corner-tool-options,
+  .app-shell .cc-board .cc-v2-orientation.cc-v2-board-orientation,
+  .app-shell .cc-board .cc-pattern-window-title {
+    background:rgba(236,242,245,.93)!important;
+    background-image:none!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+}
+
+/* Retire the 2D viewport's redundant heading. Native desktop releases built
+   before the JSX removal still contain this element, so hide it there too.
+   Reclaim the empty 24px gap for the same clear-glass corner controls; the
+   outer workspace header, 3D controls and solid side rails are unchanged. */
+.app-shell .cc-board .cc-pattern-window-title {
+  display:none!important;
+}
+.app-shell .cc-board .cc-corner-tool-host {
+  top:8px!important;
+}
+.app-shell .cc-board .cc-v2-orientation.cc-v2-board-orientation {
+  top:11px!important;
+}
+
+/* User-selected icon colors are interface-only. Keep material/fabric colors
+   separate from these editor controls. */
+.app-shell[data-studio-customized="true"][data-global-toolbar-color-custom="true"] :is(.tool-rail,.clo-right-tool-palette,.clo-mac-menu,.clo-edge-tabs,.clo-left-3d-column,.clo-right-tool-grid,.clo-corner-toolkit,.studio-custom-toolbar) button :is(svg,.cad-tool-icon-mask){color:var(--exo-ui-icon-ink,#dcefff)!important;stroke:currentColor}
+.app-shell[data-studio-customized="true"][data-global-toolbar-color-custom="true"] :is(.tool-rail,.clo-right-tool-palette,.clo-mac-menu,.clo-edge-tabs,.clo-left-3d-column,.clo-right-tool-grid,.clo-corner-toolkit,.studio-custom-toolbar) button .cad-tool-icon-mask{background-color:currentColor!important}
+.app-shell[data-studio-customized="true"][data-global-toolbar-glow="true"] :is(.tool-rail,.clo-right-tool-palette,.clo-mac-menu,.clo-edge-tabs,.clo-left-3d-column,.clo-right-tool-grid,.clo-corner-toolkit,.studio-custom-toolbar) button :is(svg,.cad-tool-icon-mask){filter:drop-shadow(0 0 3px currentColor) drop-shadow(0 0 6px currentColor)}
+.app-shell[data-studio-customized="true"][data-2d-toolbar-color-custom="true"] .main-layout[data-pattern-workspace="true"] :is(.tool-rail,.clo-right-tool-palette) button :is(svg,.cad-tool-icon-mask),
+.app-shell[data-studio-customized="true"][data-2d-toolbar-color-custom="true"] :is(.pattern-editor-shell,.cc-board) .clo-corner-toolkit button :is(svg,.cad-tool-icon-mask){color:var(--exo-2d-toolbar-ink,#dcefff)!important;stroke:currentColor}
+.app-shell[data-studio-customized="true"][data-2d-toolbar-color-custom="true"] .main-layout[data-pattern-workspace="true"] :is(.tool-rail,.clo-right-tool-palette) button .cad-tool-icon-mask,
+.app-shell[data-studio-customized="true"][data-2d-toolbar-color-custom="true"] :is(.pattern-editor-shell,.cc-board) .clo-corner-toolkit button .cad-tool-icon-mask{background-color:currentColor!important}
+.app-shell[data-studio-customized="true"][data-2d-toolbar-glow="true"] .main-layout[data-pattern-workspace="true"] :is(.tool-rail,.clo-right-tool-palette) button :is(svg,.cad-tool-icon-mask),
+.app-shell[data-studio-customized="true"][data-2d-toolbar-glow="true"] :is(.pattern-editor-shell,.cc-board) .clo-corner-toolkit button :is(svg,.cad-tool-icon-mask){filter:drop-shadow(0 0 3px var(--exo-2d-toolbar-ink)) drop-shadow(0 0 7px var(--exo-2d-toolbar-ink))!important}
+
+/* The 2D top and vertical viewport controls use the same clear optical glass.
+   The tint is limited to each button so grid dots remain visible behind them. */
+.app-shell[data-studio-customized="true"][data-2d-glass-color-custom="true"] :is(.pattern-editor-shell,.cc-board) .clo-corner-toolkit.exo-viewport-inline-tools :is(.clo-corner-tool-group > button,.cc-2d-display-trigger){
+  background:color-mix(in srgb,var(--exo-2d-toolbar-glass,#bceaff) 11%,transparent)!important;
+  border-color:color-mix(in srgb,var(--exo-2d-toolbar-glass,#bceaff) 48%,transparent)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.3),0 2px 9px rgba(0,0,0,.1)!important;
+}
+.app-shell[data-studio-customized="true"] .main-layout[data-pattern-workspace="true"] :is(.tool-rail,.clo-right-tool-palette) button:is(:hover,.active,[aria-pressed="true"]){border-color:color-mix(in srgb,var(--exo-2d-toolbar-ink,#dcefff) 45%,transparent)!important}
+
+/* Render-only pattern colors, leaving actual source geometry and fabric alone. */
+.app-shell[data-studio-customized="true"][data-2d-pattern-custom="true"] .pattern-editor-shell .pattern-fill,
+.app-shell[data-studio-customized="true"][data-2d-pattern-custom="true"] .pattern-editor-shell .pattern-piece.selected .pattern-fill{fill:var(--exo-2d-pattern-color,#f4f4f3)!important}
+.app-shell[data-studio-customized="true"][data-2d-edge-custom="true"] .pattern-editor-shell .pattern-edge:not(.sewn):not(.draft-selected-edge):not(.hovered):not(.pending):not(.walk-highlight){stroke:var(--exo-2d-edge-color,#3e91b5)!important}
+.app-shell[data-studio-customized="true"][data-2d-selection-custom="true"] .pattern-editor-shell :is(.pattern-selection-outline,.pattern-piece.selected .pattern-edge:not(.sewn),.pattern-node.selected-point,.pattern-node.precision-active-point){stroke:var(--exo-2d-selection-color,#fff127)!important}
+.app-shell[data-studio-customized="true"][data-2d-point-custom="true"] .pattern-editor-shell .pattern-node{fill:var(--exo-2d-point-color,#fdfdfd)!important}
+.app-shell[data-studio-customized="true"][data-2d-notch-custom="true"] .pattern-editor-shell .pattern-notch line{stroke:var(--exo-2d-notch-color,#e1292f)!important}
+.app-shell[data-studio-customized="true"][data-2d-pattern-custom="true"] .cc-board [data-pattern-surface="drafting-paper"]{fill:var(--exo-2d-pattern-color,#f4f4f3)!important}
+.app-shell[data-studio-customized="true"][data-2d-edge-custom="true"] .cc-board [data-2d-pattern-selected="false"] polyline[data-active-curve-edge="false"][data-cutline-hover-blue="false"]{stroke:var(--exo-2d-edge-color,#3e91b5)!important}
+.app-shell[data-studio-customized="true"][data-2d-selection-custom="true"] .cc-board [data-2d-pattern-selected="true"] polyline[data-active-curve-edge="false"][data-cutline-hover-blue="false"]{stroke:var(--exo-2d-selection-color,#fff127)!important}
+.app-shell[data-studio-customized="true"][data-2d-point-custom="true"] .cc-board [data-2d-visible-corner],
+.app-shell[data-studio-customized="true"][data-2d-point-custom="true"] .cc-board [data-control-point="vertex"]{fill:var(--exo-2d-point-color,#fdfdfd)!important}
+.app-shell[data-studio-customized="true"][data-2d-notch-custom="true"] .cc-board [data-native-notch]{stroke:var(--exo-2d-notch-color,#e1292f)!important}
+
+/* EXO V2 independent viewport, rail and side-panel presentation controls.
+   All values are validated by the shared Rust/WASM theme adapter. Neither
+   garment materials nor 2D CAD source geometry are touched. */
+.app-shell[data-2d-horizontal-custom="true"] :is(.cc-board,.pattern-editor-shell) .cc-v2-board-orientation :is(button,strong){color:var(--exo-2d-horizontal-ink)!important;-webkit-text-fill-color:var(--exo-2d-horizontal-ink)!important}
+.app-shell[data-3d-horizontal-custom="true"] .cc-viewport-3d .cc-v2-orientation :is(button,strong),
+.app-shell[data-3d-horizontal-custom="true"] .cc-scene .cc-v2-orientation :is(button,strong){color:var(--exo-3d-horizontal-ink)!important;-webkit-text-fill-color:var(--exo-3d-horizontal-ink)!important}
+.app-shell[data-2d-vertical-custom="true"] .cc-viewport-2d .clo-corner-toolkit :is(button,svg,.cad-tool-icon-mask),
+.app-shell[data-2d-vertical-custom="true"] .cc-board .clo-corner-toolkit :is(button,svg,.cad-tool-icon-mask),
+.app-shell[data-2d-vertical-custom="true"] .pattern-editor-shell .clo-corner-toolkit :is(button,svg,.cad-tool-icon-mask){color:var(--exo-2d-vertical-ink)!important;stroke:currentColor!important}
+.app-shell[data-3d-vertical-custom="true"] .cc-viewport-3d .clo-corner-toolkit :is(button,svg,.cad-tool-icon-mask),
+.app-shell[data-3d-vertical-custom="true"] .cc-scene .clo-corner-toolkit :is(button,svg,.cad-tool-icon-mask){color:var(--exo-3d-vertical-ink)!important;stroke:currentColor!important}
+.app-shell[data-2d-vertical-custom="true"] :is(.cc-board,.pattern-editor-shell) .clo-corner-toolkit .cad-tool-icon-mask,
+.app-shell[data-3d-vertical-custom="true"] .cc-scene .clo-corner-toolkit .cad-tool-icon-mask{background-color:currentColor!important}
+.app-shell[data-2d-horizontal-custom="true"] .cc-board .cc-v2-board-orientation button:is(:hover,.active,[aria-pressed="true"]),
+.app-shell[data-3d-horizontal-custom="true"] .cc-scene .cc-v2-orientation button:is(:hover,.active,[aria-pressed="true"]){text-shadow:0 0 8px currentColor}
+/* Translucent viewport chrome still exposes the patterns underneath. */
+.app-shell[data-studio-customized="true"] .cc-board .cc-v2-board-orientation{border-color:color-mix(in srgb,var(--exo-2d-viewer-glass,#bceaff) 56%,transparent)!important}
+.app-shell[data-studio-customized="true"] .cc-scene .cc-v2-orientation{border-color:color-mix(in srgb,var(--exo-3d-viewer-glass,#bceaff) 56%,transparent)!important}
+.app-shell[data-studio-customized="true"] .cc-board .clo-corner-toolkit.exo-viewport-inline-tools,
+.app-shell[data-studio-customized="true"] .cc-scene .clo-corner-toolkit.exo-viewport-inline-tools{border-color:color-mix(in srgb,var(--exo-2d-viewer-glass,#bceaff) 39%,transparent)!important}
+/* Keep view-specific tint independent from the previously shared 2D glass tint. */
+.app-shell[data-studio-customized="true"] .cc-board .cc-v2-board-orientation{background-color:color-mix(in srgb,var(--exo-2d-viewer-glass,#bceaff) 7%,transparent)!important}
+.app-shell[data-studio-customized="true"] .cc-scene .cc-v2-orientation{background-color:color-mix(in srgb,var(--exo-3d-viewer-glass,#bceaff) 7%,transparent)!important}
+
+.app-shell[data-library-panel-custom="true"] :is(.asset-browser,.clo-library-top,.clo-library-search,.clo-edge-tabs){background:var(--exo-library-panel-color)!important;background-image:none!important}
+.app-shell[data-object-panel-custom="true"] :is(.clo-object-browser,.clo-inspector,.clo-property-panel,.clo-inspector-content){background:var(--exo-object-panel-color)!important;background-image:none!important}
+.app-shell[data-left-rail-custom="true"] :is(.tool-rail,.clo-left-3d-column){background:var(--exo-left-rail-color)!important;background-image:none!important}
+.app-shell[data-right-rail-custom="true"] :is(.clo-right-tool-palette,.clo-right-tool-grid){background:var(--exo-right-rail-color)!important;background-image:none!important}
+.app-shell[data-library-icon-custom="true"] .asset-browser :is(button svg,.cad-tool-icon-mask),
+.app-shell[data-library-icon-custom="true"] .clo-edge-tabs :is(button,svg){color:var(--exo-library-icon-color)!important;stroke:currentColor!important}
+.app-shell[data-object-icon-custom="true"] :is(.clo-object-browser,.clo-inspector) :is(button svg,.cad-tool-icon-mask){color:var(--exo-object-icon-color)!important;stroke:currentColor!important}
+
+/* Adjustable brightness: unselected icons do not illuminate when selected-only
+   is chosen. Filter radius is a numerical user preference, not a new color. */
+.app-shell[data-global-toolbar-glow="true"] :is(.tool-rail,.clo-right-tool-palette,.clo-mac-menu,.clo-edge-tabs,.clo-left-3d-column,.clo-right-tool-grid,.studio-custom-toolbar) button :is(svg,.cad-tool-icon-mask),
+.app-shell[data-2d-toolbar-glow="true"] :is(.cc-board,.pattern-editor-shell,.cc-scene) .clo-corner-toolkit button :is(svg,.cad-tool-icon-mask){filter:drop-shadow(0 0 var(--exo-toolbar-glow-radius,5px) currentColor)!important}
+.app-shell[data-2d-toolbar-glow="true"] .cc-board .cc-v2-board-orientation button,
+.app-shell[data-global-toolbar-glow="true"] .cc-scene .cc-v2-orientation button{text-shadow:0 0 var(--exo-toolbar-glow-radius,5px) currentColor!important}
+.app-shell[data-toolbar-glow-selected-only="true"] :is(.tool-rail,.clo-right-tool-palette,.clo-mac-menu,.clo-edge-tabs,.clo-left-3d-column,.clo-right-tool-grid,.clo-corner-toolkit,.studio-custom-toolbar) button:not(:is(.active,[aria-pressed="true"],:focus-visible)) :is(svg,.cad-tool-icon-mask){filter:none!important}
+.app-shell[data-toolbar-glow-selected-only="true"] .cc-v2-orientation button:not(:is(.active,[aria-pressed="true"],:focus-visible)){text-shadow:none!important}
+.app-shell[data-studio-customized="true"] .cad-viewport-rulers .cad-ruler-illumination :is(line,path,text){filter:drop-shadow(0 0 var(--exo-ruler-glow-radius,4px) var(--cad-ruler-glow,#a7dfff))!important}
+.app-shell .asset-browser,
+.app-shell :is(.clo-object-browser,.clo-inspector){transition:box-shadow .18s ease,outline-color .18s ease}
+.app-shell[data-studio-customized="true"] :is(.asset-browser,.clo-object-browser,.clo-inspector){--exo-panel-light:color-mix(in srgb,var(--studio-accent) 62%,transparent)}
+.app-shell[data-studio-customized="true"] :is(.asset-browser,.clo-object-browser,.clo-inspector) :is(button.active,button[aria-pressed="true"]) :is(svg,.cad-tool-icon-mask){filter:drop-shadow(0 0 var(--exo-panel-glow-radius,0px) var(--studio-accent))!important}
+.app-shell[data-panel-glow-selected-only="false"] :is(.asset-browser,.clo-object-browser,.clo-inspector) button :is(svg,.cad-tool-icon-mask){filter:drop-shadow(0 0 var(--exo-panel-glow-radius,0px) var(--studio-accent))!important}
+
+/* The target picker and settings hover focus the actual UI component. */
+.exo-theme-pick-banner{position:fixed;top:39px;left:50%;transform:translateX(-50%);z-index:2147483001;padding:10px 16px;border-radius:12px;border:1px solid #9abaf0;background:rgba(13,24,40,.95);color:#f1f7ff;box-shadow:0 9px 24px #0007;font:12px/1.5 -apple-system,BlinkMacSystemFont,sans-serif;pointer-events:none}
+.exo-theme-pick-banner button{margin-left:12px;pointer-events:auto;background:transparent;color:#c6e5ff;border:1px solid #768ba3;border-radius:6px;padding:4px 9px;cursor:pointer}
+.app-shell[data-theme-picking="true"] :is(.asset-browser,.clo-object-browser,.clo-inspector,.tool-rail,.clo-right-tool-palette,.cc-v2-orientation,.clo-corner-toolkit){cursor:crosshair!important}
+.app-shell[data-theme-picking="true"] :is(.asset-browser,.clo-object-browser,.clo-inspector,.tool-rail,.clo-right-tool-palette,.cc-v2-orientation,.clo-corner-toolkit):hover{outline:2px solid #70d4ff!important;outline-offset:-3px;box-shadow:0 0 0 3px #69c9fc55!important}
+.app-shell[data-theme-hover-target="panelLibraryColor"] .asset-browser,
+.app-shell[data-theme-hover-target="panelObjectBrowserColor"] :is(.clo-object-browser,.clo-inspector),
+.app-shell[data-theme-hover-target="leftRailColor"] .tool-rail,
+.app-shell[data-theme-hover-target="rightRailColor"] .clo-right-tool-palette,
+.app-shell[data-theme-hover-target="twoDViewerHorizontalColor"] .cc-board .cc-v2-board-orientation,
+.app-shell[data-theme-hover-target="twoDViewerVerticalColor"] .cc-board .clo-corner-toolkit,
+.app-shell[data-theme-hover-target="threeDViewerHorizontalColor"] .cc-scene .cc-v2-orientation,
+.app-shell[data-theme-hover-target="threeDViewerVerticalColor"] .cc-scene .clo-corner-toolkit{outline:2px solid var(--studio-accent,#a7dfff)!important;outline-offset:3px;box-shadow:0 0 18px color-mix(in srgb,var(--studio-accent) 45%,transparent)!important}
+@media(prefers-reduced-motion:reduce){.app-shell :is(.asset-browser,.clo-object-browser,.clo-inspector){transition:none}}
+
+/* One live global ink preview has precedence over every individual toolbar or
+   category override; moving the pointer away restores saved colors instantly. */
+.app-shell[data-studio-customized="true"][data-icon-color-preview="true"] :is(
+  .main-layout,.clo-mac-menu,.clo-menu-popover,.exo-floating-panel,
+  .studio-custom-toolbar,.exo-custom-toolbar-docking,.exo-pattern-toolpanel,
+  .clo-topbar,.clo-edge-tabs,.clo-floating-toolbar,.exo-toolbar-widget
+) :is(button,[role="button"],[role="menuitem"],.clo-panel-header,.clo-inspector,.asset-browser) :is(svg,.cad-tool-icon-mask){
+  color:var(--exo-preview-icon-color)!important;
+  stroke:currentColor!important;
+}
+.app-shell[data-studio-customized="true"][data-icon-color-preview="true"] :is(
+  .main-layout,.clo-mac-menu,.clo-menu-popover,.exo-floating-panel,
+  .studio-custom-toolbar,.exo-custom-toolbar-docking,.exo-pattern-toolpanel,
+  .clo-topbar,.clo-edge-tabs,.clo-floating-toolbar,.exo-toolbar-widget
+) :is(button,[role="button"],[role="menuitem"],.clo-panel-header,.clo-inspector,.asset-browser) .cad-tool-icon-mask{
+  background-color:currentColor!important;
+}
+/* Saving the GLOBAL color changes all interactive icons. An explicitly
+   customized per-button icon can still override it until a hover preview. */
+.app-shell[data-studio-customized="true"][data-global-toolbar-color-custom="true"]:not([data-icon-color-preview="true"]) :is(
+  .main-layout,.clo-mac-menu,.clo-menu-popover,.exo-floating-panel,
+  .studio-custom-toolbar,.exo-custom-toolbar-docking,.exo-pattern-toolpanel,
+  .clo-topbar,.clo-edge-tabs,.clo-floating-toolbar,.exo-toolbar-widget
+) :is(button,[role="button"],[role="menuitem"],.clo-panel-header,.clo-inspector,.asset-browser) :is(svg,.cad-tool-icon-mask){
+  color:var(--exo-ui-icon-ink)!important;
+  stroke:currentColor!important;
+}
+.app-shell[data-studio-customized="true"][data-global-toolbar-color-custom="true"]:not([data-icon-color-preview="true"]) :is(
+  .main-layout,.clo-mac-menu,.clo-menu-popover,.exo-floating-panel,
+  .studio-custom-toolbar,.exo-custom-toolbar-docking,.exo-pattern-toolpanel,
+  .clo-topbar,.clo-edge-tabs,.clo-floating-toolbar,.exo-toolbar-widget
+) :is(button,[role="button"],[role="menuitem"],.clo-panel-header,.clo-inspector,.asset-browser) .cad-tool-icon-mask{background-color:currentColor!important}
+.app-shell[data-icon-color-preview="true"] :is(
+ .tool-rail,.clo-right-tool-palette,.clo-corner-toolkit,.exo-pattern-toolpanel,
+ .exo-custom-toolbar-docking,.studio-custom-toolbar,.clo-mac-menu,.asset-browser,
+ .clo-inspector,.clo-edge-tabs,.clo-right-tool-grid,.clo-left-3d-column
+) :is(button svg,button .cad-tool-icon-mask){
+  color:var(--exo-preview-icon-color)!important;
+  stroke:currentColor!important;
+}
+.app-shell[data-icon-color-preview="true"] :is(.tool-rail,.clo-right-tool-palette,.clo-corner-toolkit,.exo-pattern-toolpanel,.exo-custom-toolbar-docking,.studio-custom-toolbar,.clo-mac-menu,.asset-browser,.clo-inspector,.clo-edge-tabs,.clo-right-tool-grid,.clo-left-3d-column) button .cad-tool-icon-mask{background-color:currentColor!important}
+.app-shell[data-studio-customized="true"][data-global-toolbar-color-custom="true"] :is(
+ .exo-pattern-toolpanel,.exo-custom-toolbar-docking,.asset-browser,.clo-inspector
+) :is(button svg,button .cad-tool-icon-mask){
+  color:var(--exo-ui-icon-ink)!important;stroke:currentColor!important;
+}
+.app-shell[data-studio-customized="true"][data-global-toolbar-color-custom="true"] :is(.exo-pattern-toolpanel,.exo-custom-toolbar-docking,.asset-browser,.clo-inspector) button .cad-tool-icon-mask{background-color:currentColor!important}
+.app-shell[data-studio-customized="true"]:not([data-icon-color-preview="true"]) .exo-custom-toolbar-docking
+ button[style*="--exo-per-tool-icon-color"] :is(svg,.cad-tool-icon-mask){
+ color:var(--exo-per-tool-icon-color)!important;
+ stroke:currentColor!important;
+}
+.app-shell[data-studio-customized="true"]:not([data-icon-color-preview="true"]) .exo-custom-toolbar-docking button[style*="--exo-per-tool-icon-color"] .cad-tool-icon-mask{background-color:currentColor!important}
+
+/* TRUE LIGHT THEME: legacy inspector and measurement widgets use fixed
+   charcoal fills. Light mode must recolor those actual surfaces, not merely
+   the outer shell. Keep custom object-panel colors respected, and never tint
+   the native 2D pattern paper, garment, material preview or canvas imagery. */
+.app-shell[data-studio-customized="true"][data-studio-theme-mode="light"]{
+  --studio-field:color-mix(in srgb,var(--studio-panel) 74%,#ffffff 26%);
+  --studio-control:color-mix(in srgb,var(--studio-sidebar) 76%,#ffffff 24%);
+  --studio-control-hover:color-mix(in srgb,var(--studio-sidebar) 68%,var(--studio-accent) 8%);
+  --studio-control-active:color-mix(in srgb,var(--studio-sidebar) 75%,var(--studio-accent) 25%);
+  color-scheme:light;
+}
+.app-shell[data-studio-customized="true"][data-studio-theme-mode="light"] .clo-inspector{
+  --pe-canvas:var(--studio-panel);
+  --pe-head:var(--studio-sidebar);
+  --pe-raised:var(--studio-control);
+  --pe-hover:var(--studio-control-hover);
+  --pe-control:var(--studio-field);
+  --pe-line:var(--studio-border);
+  --pe-hairline:var(--studio-divider);
+  --pe-text:var(--studio-text);
+  --pe-muted:var(--studio-muted);
+  --pe-dim:var(--studio-muted);
+  --pe-focus:var(--studio-accent);
+  color-scheme:light;
+}
+.app-shell[data-studio-customized="true"][data-studio-theme-mode="light"] :is(
+  .clo-inspector,.clo-inspector-content,.clo-property-panel,.clo-property-editor,
+  .clo-pe-list,.clo-pe-content,.clo-pe-section,.clo-pe-existing-properties,
+  .clo-pe-typed-fields,.clo-pe-material-faces,.clo-pe-readout,.clo-pe-edit-field,
+  .clo-object-browser,.clo-object-list,.clo-object-hierarchy-menu,
+  .clo-object-hierarchy-children,.clo-object-hierarchy-group
+){
+  background:var(--studio-panel)!important;
+  color:var(--studio-text)!important;
+  border-color:var(--studio-divider)!important;
+}
+.app-shell[data-studio-customized="true"][data-studio-theme-mode="light"] :is(
+  .clo-inspector-topline,.clo-property-panel .inspector-head,.clo-pe-header,
+  .clo-object-browser>.clo-panel-header,.clo-object-tabs,.clo-object-actions,
+  .clo-object-graphic-measurements,.clo-pe-unit-selection,
+  .clo-pe-native-seam-picker,.clo-pe-identity input[readonly],
+  .clo-property-category-nav,.clo-property-category-list-toggle,
+  .clo-property-category-groups,.clo-property-category-group-trigger,
+  .clo-property-category-options,.clo-pe-trigger,.clo-pe-subtrigger,
+  .clo-pe-empty,.clo-pe-material-mode strong
+){
+  background:var(--studio-sidebar)!important;
+  background-image:none!important;
+  color:var(--studio-text)!important;
+  border-color:var(--studio-divider)!important;
+}
+.app-shell[data-studio-customized="true"][data-studio-theme-mode="light"] .clo-object-browser>.clo-panel-header,
+.app-shell[data-studio-customized="true"][data-studio-theme-mode="light"] .main-layout[data-pattern-workspace="true"] .clo-object-browser>.clo-panel-header{
+  background:var(--studio-sidebar)!important;
+  color:var(--studio-text)!important;
+  border-bottom-color:var(--studio-border)!important;
+}
+.app-shell[data-studio-customized="true"][data-studio-theme-mode="light"] :is(
+  .clo-pe-header>span,.clo-pe-header>strong,.clo-pe-trigger,.clo-pe-trigger span,
+  .clo-pe-trigger svg,.clo-pe-subtrigger,.clo-pe-line-subheading,
+  .clo-pe-note,.clo-pe-unit-selection,.clo-pe-native-seam-picker,
+  .clo-pe-gray-row>label,.clo-pe-material-mode,.clo-object-graphic-measurements-label,
+  .clo-object-graphic-measurements-toggle,.clo-object-hierarchy-group>button,
+  .clo-object-hierarchy-entry,.clo-object-row-name,.clo-property-category-nav,
+  .clo-property-category-group-trigger,.clo-property-category-options button,
+  .clo-pe-edit-input>span,.exo-hardware-property-number span
+){
+  color:var(--studio-text)!important;
+  -webkit-text-fill-color:var(--studio-text)!important;
+}
+.app-shell[data-studio-customized="true"][data-studio-theme-mode="light"] :is(
+  .clo-pe-readout>span,.clo-pe-edit-field>label,.clo-pe-line-target label,
+  .clo-pe-native-seam-picker>label,.clo-object-graphic-measurements-label,
+  .clo-pe-header>strong,.clo-pe-note,.clo-object-row-name small
+){color:var(--studio-muted)!important;-webkit-text-fill-color:var(--studio-muted)!important}
+.app-shell[data-studio-customized="true"][data-studio-theme-mode="light"] .clo-inspector :is(input:not([type="checkbox"]):not([type="range"]),select,textarea),
+.app-shell[data-studio-customized="true"][data-studio-theme-mode="light"] .clo-pe-material-mode strong{
+  color:var(--studio-text)!important;
+  -webkit-text-fill-color:var(--studio-text)!important;
+  background:var(--studio-field)!important;
+  border-color:var(--studio-border)!important;
+  color-scheme:light!important;
+}
+.app-shell[data-studio-customized="true"][data-studio-theme-mode="light"] .clo-inspector :is(
+  .clo-pe-actions button,.clo-pe-action,.clo-pe-material-faces button,
+  .clo-pe-line-target button,.clo-property-category-group-trigger,
+  .clo-object-graphic-measurements-track
+){background:var(--studio-control)!important;color:var(--studio-text)!important;border-color:var(--studio-border)!important}
+.app-shell[data-studio-customized="true"][data-studio-theme-mode="light"] .clo-inspector :is(
+  .clo-pe-actions button,.clo-pe-action,.clo-pe-material-faces button,
+  .clo-property-category-group-trigger
+):hover{background:var(--studio-control-hover)!important;color:var(--studio-text)!important}
+.app-shell[data-studio-customized="true"][data-studio-theme-mode="light"] .clo-inspector .clo-object-graphic-measurements-track>span{
+  background:var(--studio-accent)!important;
+}
+.app-shell[data-studio-customized="true"][data-studio-theme-mode="light"] .clo-inspector :is(
+  .clo-pe-edit-field,.clo-pe-readout,.clo-pe-line-settings,.clo-pe-gray-row,
+  .clo-pe-unit-selection,.clo-object-graphic-measurements
+){border-color:var(--studio-divider)!important}
+
+/* Universal icon preview for every clickable control in the EXO chrome:
+   includes floating 2D widgets, property tabs, 3D tools, library items and
+   native CLO rails, while deliberately leaving CAD drawing vectors untouched. */
+.app-shell[data-studio-customized="true"][data-icon-color-preview="true"] :is(
+  button,[role="button"],[role="menuitem"],[role="tab"]
+) :is(svg,.cad-tool-icon-mask),
+.app-shell[data-studio-customized="true"][data-icon-color-preview="true"] :is(
+  .clo-inspector,.asset-browser,.clo-mac-menu,.clo-panel-header,.clo-menu-popover,
+  .clo-edge-tabs,.tool-rail,.clo-right-tool-palette,.exo-pattern-toolpanel,
+  .exo-custom-toolbar-docking,.studio-custom-toolbar
+) :is(svg.lucide,.cad-tool-icon-mask){
+  color:var(--exo-preview-icon-color)!important;
+  stroke:currentColor!important;
+}
+.app-shell[data-studio-customized="true"][data-icon-color-preview="true"] :is(
+  button,[role="button"],[role="menuitem"],[role="tab"],
+  .clo-inspector,.asset-browser,.clo-mac-menu,.clo-panel-header,.clo-menu-popover,
+  .clo-edge-tabs,.tool-rail,.clo-right-tool-palette,.exo-pattern-toolpanel,
+  .exo-custom-toolbar-docking,.studio-custom-toolbar
+) .cad-tool-icon-mask{background-color:currentColor!important}
+/* 3D optical glass has a separate tint from 2D; do not blend their settings. */
+.app-shell[data-studio-customized="true"] .cc-scene .clo-corner-toolkit.exo-viewport-inline-tools{border-color:color-mix(in srgb,var(--exo-3d-viewer-glass,#bceaff) 39%,transparent)!important}
+.app-shell[data-studio-customized="true"] .cc-scene .clo-corner-toolkit.exo-viewport-inline-tools button{background:color-mix(in srgb,var(--exo-3d-viewer-glass,#bceaff) 9%,transparent)!important}
+.app-shell[data-studio-customized="true"] .cc-board .clo-corner-toolkit.exo-viewport-inline-tools button{background:color-mix(in srgb,var(--exo-2d-viewer-glass,#bceaff) 9%,transparent)!important}
+/* This wins over the older native CLO board's selected/hover text colors.
+   Horizontal bars are text icons (FR/GR/CAD/PTS), not SVG icons. */
+.app-shell[data-studio-customized="true"][data-2d-horizontal-custom="true"] .cc-board .cc-v2-orientation.cc-v2-board-orientation :is(button,strong),
+.app-shell[data-studio-customized="true"][data-2d-horizontal-custom="true"] .pattern-editor-shell .cc-v2-orientation.cc-v2-board-orientation :is(button,strong){color:var(--exo-2d-horizontal-ink)!important;-webkit-text-fill-color:var(--exo-2d-horizontal-ink)!important}
+.app-shell[data-studio-customized="true"][data-3d-horizontal-custom="true"] .cc-scene .cc-v2-orientation :is(button,strong){color:var(--exo-3d-horizontal-ink)!important;-webkit-text-fill-color:var(--exo-3d-horizontal-ink)!important}
+/* Explicit color components override the old per-panel background-color audit
+   rule, whose !important declaration otherwise beats a weaker background. */
+.app-shell[data-studio-customized="true"][data-library-panel-custom="true"] :is(.asset-browser,.clo-library-top,.clo-library-search,.clo-edge-tabs){background:var(--exo-library-panel-color)!important;background-color:var(--exo-library-panel-color)!important;background-image:none!important}
+.app-shell[data-studio-customized="true"][data-object-panel-custom="true"] :is(.clo-object-browser,.clo-inspector,.clo-property-panel,.clo-inspector-content){background:var(--exo-object-panel-color)!important;background-color:var(--exo-object-panel-color)!important;background-image:none!important}
+.app-shell[data-studio-customized="true"][data-left-rail-custom="true"] :is(.tool-rail,.clo-left-3d-column){background:var(--exo-left-rail-color)!important;background-color:var(--exo-left-rail-color)!important;background-image:none!important}
+.app-shell[data-studio-customized="true"][data-right-rail-custom="true"] :is(.clo-right-tool-palette,.clo-right-tool-grid){background:var(--exo-right-rail-color)!important;background-color:var(--exo-right-rail-color)!important;background-image:none!important}
+
+/* Expanded interface ink controls: panel copy and icons inherit the overall
+   user-selected ink (unless the panel supplies a specific icon color). No
+   pattern geometry, preview thumbnails, material swatches or garments change. */
+.app-shell[data-studio-customized="true"]:is([data-interface-ink-custom="true"],[data-library-panel-custom="true"]) :is(.asset-browser,.clo-library-top,.clo-library-search,.clo-edge-tabs){color:var(--exo-library-text-ink)!important}
+.app-shell[data-studio-customized="true"]:is([data-interface-ink-custom="true"],[data-library-panel-custom="true"]) :is(.asset-browser,.clo-library-top,.clo-library-search,.clo-edge-tabs) :is(button:not([disabled]),span,small,strong,label,h1,h2,h3,h4,p,.description,.muted){color:var(--exo-library-text-ink)!important}
+.app-shell[data-studio-customized="true"]:is([data-interface-ink-custom="true"],[data-object-panel-custom="true"]) :is(.clo-inspector,.clo-object-browser,.clo-property-panel,.clo-inspector-content){color:var(--exo-object-text-ink)!important}
+.app-shell[data-studio-customized="true"]:is([data-interface-ink-custom="true"],[data-object-panel-custom="true"]) :is(.clo-inspector,.clo-object-browser,.clo-property-panel,.clo-inspector-content) :is(button:not([disabled]),span,small,strong,label,h1,h2,h3,h4,p,.description,.muted){color:var(--exo-object-text-ink)!important}
+.app-shell[data-studio-customized="true"][data-interface-ink-custom="true"] :is(.clo-mac-menu,.clo-menu-popover,.studio-custom-toolbar) :is(button,span,small,strong,label,kbd){color:var(--exo-interface-ink)!important}
+.app-shell[data-studio-customized="true"]:is([data-interface-ink-custom="true"],[data-left-rail-custom="true"]) :is(.tool-rail,.clo-left-3d-column) :is(button,span,small,strong,svg){color:var(--exo-left-rail-ink)!important}
+.app-shell[data-studio-customized="true"]:is([data-interface-ink-custom="true"],[data-right-rail-custom="true"]) :is(.clo-right-tool-palette,.clo-right-tool-grid) :is(button,span,small,strong,svg){color:var(--exo-right-rail-ink)!important}
+.app-shell[data-studio-customized="true"]:is([data-interface-ink-custom="true"],[data-library-panel-custom="true"]) .asset-browser button :is(svg,.cad-tool-icon-mask),
+.app-shell[data-studio-customized="true"]:is([data-interface-ink-custom="true"],[data-library-panel-custom="true"]) .clo-edge-tabs button svg{color:var(--exo-library-panel-icon-ink)!important;stroke:currentColor!important}
+.app-shell[data-studio-customized="true"]:is([data-interface-ink-custom="true"],[data-object-panel-custom="true"]) :is(.clo-inspector,.clo-object-browser,.clo-property-panel) button :is(svg,.cad-tool-icon-mask){color:var(--exo-object-panel-icon-ink)!important;stroke:currentColor!important}
+.app-shell[data-studio-customized="true"] :is(.clo-left-3d-column,.clo-right-tool-palette,.asset-browser,.clo-object-browser,.clo-inspector) .cad-tool-icon-mask{background-color:currentColor!important}
+.app-shell[data-studio-customized="true"][data-library-icon-custom="true"] .asset-browser button :is(svg,.cad-tool-icon-mask),
+.app-shell[data-studio-customized="true"][data-object-icon-custom="true"] :is(.clo-object-browser,.clo-inspector) button :is(svg,.cad-tool-icon-mask){color:var(--exo-library-panel-icon-ink)!important}
+.app-shell[data-studio-customized="true"][data-object-icon-custom="true"] :is(.clo-object-browser,.clo-inspector) button :is(svg,.cad-tool-icon-mask){color:var(--exo-object-panel-icon-ink)!important}
+
+/* Light- and dark-safe toolbar glyphs; explicit viewer overrides remain local. */
+.app-shell[data-studio-customized="true"][data-interface-ink-custom="true"] :is(.tool-rail,.clo-right-tool-palette,.clo-left-3d-column,.clo-right-tool-grid) .cad-tool-icon-mask{color:var(--exo-ui-icon-ink)!important;background-color:currentColor!important}
+.app-shell[data-studio-customized="true"][data-interface-ink-custom="true"] :is(.clo-mac-menu,.clo-menu-popover) button svg{color:var(--exo-interface-ink)!important;stroke:currentColor!important}
+
+/* Adjustable optical glow on clear Liquid Glass widgets and glass side panels.
+   Keep the underlying viewport visible; this adds only a perimeter halo. */
+.app-shell[data-liquid-glass-glow="true"] :is(.cc-board,.cc-scene) .cc-v2-orientation,
+.app-shell[data-liquid-glass-glow="true"] :is(.cc-board,.cc-scene) .clo-corner-toolkit.exo-viewport-inline-tools,
+.app-shell[data-liquid-glass-glow="true"] .exo-native-grade-quick{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.34),0 0 var(--exo-glass-glow-radius,8px) color-mix(in srgb,var(--studio-accent,#9fd6f5) 65%,transparent)!important;
+}
+.app-shell[data-liquid-glass-glow="true"][data-studio-liquid-glass="true"] :is(.asset-browser,.clo-inspector,.clo-object-browser,.tool-rail,.clo-right-tool-palette){
+  box-shadow:inset 0 1px rgba(255,255,255,.16),0 0 var(--exo-glass-glow-radius,8px) color-mix(in srgb,var(--studio-accent,#9fd6f5) 30%,transparent)!important;
+}
+@media(prefers-reduced-transparency:reduce){.app-shell[data-liquid-glass-glow="true"] :is(.cc-board,.cc-scene) :is(.cc-v2-orientation,.clo-corner-toolkit.exo-viewport-inline-tools){backdrop-filter:none!important;-webkit-backdrop-filter:none!important}}

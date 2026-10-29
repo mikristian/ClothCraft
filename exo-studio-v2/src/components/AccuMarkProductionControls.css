@@ -1,0 +1,14 @@
+.exo-accu-production{margin:8px 10px;background:#1f303e;border:1px solid #547084;border-radius:5px;color:#e4f0f8;font-size:10px;max-height:32vh;overflow:auto}
+.exo-accu-production summary{cursor:pointer;padding:10px 11px;font-weight:700;font-size:11px;color:#b8e3fa}
+.exo-accu-production fieldset{display:flex;flex-direction:column;gap:8px;border:0;margin:0;padding:8px 11px 12px;min-width:0}
+.exo-accu-production p,.exo-accu-production small{font-size:10px;line-height:1.5;color:#b7ccdb;margin:0}
+.exo-accu-production>small{display:block;padding:8px}
+.exo-accu-prod-row{display:flex;gap:7px;flex-wrap:wrap}
+.exo-accu-production label{display:flex;flex-direction:column;gap:3px;min-width:65px;flex:1 1 80px;font-size:10px;color:#c1d9e7}
+.exo-accu-production input,.exo-accu-production select{width:100%;min-height:29px;background:#14222d;border:1px solid #607d90;border-radius:4px;padding:4px;color:white;font-size:11px}
+.exo-accu-production .exo-accu-prod-check{display:flex;flex-direction:row;align-items:center}
+.exo-accu-production .exo-accu-prod-check input{width:14px;min-height:14px}
+.exo-accu-production button{background:#356c89;border:1px solid #81a5bc;border-radius:4px;padding:7px;color:#fff;font-size:10px}
+.exo-accu-production button:disabled{opacity:.5}
+.exo-accu-production .exo-accu-prod-error{color:#ffb6b6}
+.exo-accu-prod-report{display:flex;flex-direction:column;gap:5px;padding:7px;border:1px solid #657f8e;border-radius:5px}

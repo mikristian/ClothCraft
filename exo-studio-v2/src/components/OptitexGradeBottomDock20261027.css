@@ -1,0 +1,1700 @@
+.exo-grade-bottom-widget{
+ position:fixed;box-sizing:border-box;
+ display:flex;flex-direction:column;
+ max-width:calc(100vw - 16px);max-height:calc(100dvh - 55px);
+ background:var(--studio-sidebar,#292d30);
+ color:var(--studio-text,#edf0f1);
+ border:1px solid var(--studio-border,#585b60);
+ border-radius:6px 6px 3px 3px;box-shadow:0 13px 36px #0009;
+ overflow:hidden;font:11px/1.35 Inter,system-ui,sans-serif;
+}
+.exo-grade-bottom-widget__titlebar{
+ display:flex;align-items:center;gap:7px;
+ flex:none;min-height:29px;padding:3px 5px 3px 9px;
+ border-bottom:1px solid var(--studio-border,#4e5156);
+ background:var(--studio-panel,#242628);color:var(--studio-text,#f1f1f2);
+ user-select:none;touch-action:none;cursor:move;
+}
+.exo-grade-bottom-widget__titlebar strong{font-size:11px;font-weight:650;letter-spacing:.02em}
+.exo-grade-bottom-widget__titlebar small{font-size:9px;margin-left:auto;min-width:0;
+ white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--studio-muted,#b6b9bd)}
+.exo-grade-bottom-widget__titlebar:focus-visible{outline:2px solid var(--studio-accent,#95bbca);outline-offset:-2px}
+.exo-grade-bottom-widget__corner-grip{
+ display:grid;place-items:center;flex:none;width:21px;height:23px;
+ margin-left:-4px;border-radius:3px;cursor:grab;touch-action:none;
+ color:#aacfe8;background:#344d5d;border:1px solid #678ba4;
+}
+.exo-grade-bottom-widget__corner-grip:hover,
+.exo-grade-bottom-widget__corner-grip:focus-visible{
+ color:#fff;background:#4b8fc4;border-color:#7fcbff;
+ outline:2px solid #68b8ff;outline-offset:-2px;
+}
+.exo-grade-bottom-widget__corner-grip:active{cursor:grabbing}
+.exo-grade-bottom-widget__titlebar button{
+ display:grid;place-items:center;width:23px;height:23px;
+ border:0;border-radius:3px;background:transparent;color:inherit;cursor:pointer;
+}
+.exo-grade-bottom-widget__titlebar button:hover{background:#ffffff25}
+.exo-grade-bottom-widget__content{flex:1;min-height:0;overflow:hidden;container-type:inline-size}
+.exo-grade-bottom-widget .optitex-grading-table{
+ min-height:0;height:100%;display:flex;flex-direction:column;
+ gap:3px;padding:4px;background:var(--studio-sidebar,#292d30);
+ color:var(--studio-text,#e9eced);border:0;border-radius:0;
+}
+.exo-grade-bottom-widget .optitex-grading-tabs{gap:4px;flex:none}
+.exo-grade-bottom-widget .optitex-grading-tabs>strong{font-size:9px;color:var(--studio-muted,#bac2c8)}
+.exo-grade-bottom-widget .optitex-grading-tabs button,
+.exo-grade-bottom-widget .optitex-size-actions button{
+ padding:3px 5px;font-size:9px;
+ background:var(--studio-panel,#343638);color:var(--studio-text,#e8e9eb);
+ border-color:var(--studio-border,#50545a);
+}
+.exo-grade-bottom-widget .optitex-table-scroll{
+ min-height:0;flex:1 1 auto;max-height:none;overflow:visible;
+}
+.exo-grade-bottom-widget .optitex-grading-table table{font-size:10px}
+.exo-grade-bottom-widget .optitex-grading-table :is(th,td){padding:2px 3px;height:23px;box-sizing:border-box}
+.exo-grade-bottom-widget .optitex-grading-table input[type=number]{
+ width:57px;padding:3px 2px;font-size:10px;
+ background:var(--studio-field,#202327);color:var(--studio-text,#fff);
+ border-color:var(--studio-border,#555a60);
+}
+.exo-grade-bottom-widget .optitex-grading-table input[type=color]{width:24px;height:17px}
+.exo-grade-bottom-widget .optitex-grading-table thead th{
+ background:var(--studio-panel,#35383a);color:var(--studio-text,#f4f4f5);
+}
+.exo-grade-bottom-widget .optitex-grading-table tbody tr.is-active{
+ background:color-mix(in srgb,var(--studio-panel,#343638) 68%,var(--studio-accent,#7698a4) 32%);
+}
+.exo-grade-bottom-widget .optitex-compare-controls{flex:none;gap:5px}
+.exo-grade-bottom-widget .optitex-compare-controls label{font-size:9px}
+.exo-grade-bottom-widget .optitex-compare-controls select{
+ max-width:115px;padding:3px 2px;font-size:9px;
+ background:var(--studio-field,#202327);color:var(--studio-text,#fff);
+ border-color:var(--studio-border,#5a6066);
+}
+.exo-grade-bottom-widget .optitex-grading-table small{font-size:9px;color:var(--studio-muted,#c0c4c8)}
+.exo-grade-bottom-widget .optitex-grading-table button{min-height:21px}
+.exo-grade-bottom-widget .optitex-grade-inline-tools{gap:3px;padding:2px 3px}
+.exo-grade-bottom-widget .optitex-grade-inline-tools button{min-width:22px;min-height:22px;padding:2px}
+.exo-grade-bottom-widget .optitex-grade-inline-tools .optitex-inline-tool-divider{height:15px}
+.exo-grade-bottom-widget .optitex-grade-inline-tools{
+ display:grid;grid-template-columns:auto minmax(0,1fr) auto;
+ grid-template-rows:23px 23px;align-items:center;gap:2px 4px;
+ min-height:48px;max-height:51px;
+}
+.exo-grade-bottom-widget .optitex-grade-inline-tools>.optitex-inline-tool-divider{display:none}
+.exo-grade-bottom-widget .optitex-grade-inline-tools>:nth-child(1){grid-column:1;grid-row:1}
+.exo-grade-bottom-widget .optitex-grade-inline-tools>:nth-child(2){grid-column:2;grid-row:1}
+.exo-grade-bottom-widget .optitex-grade-inline-tools>:nth-child(4){grid-column:3;grid-row:1}
+.exo-grade-bottom-widget .optitex-grade-inline-tools>:nth-child(6){grid-column:1;grid-row:2}
+.exo-grade-bottom-widget .optitex-grade-inline-tools>:nth-child(8){grid-column:2/4;grid-row:2;justify-self:end}
+.exo-grade-bottom-widget .optitex-grade-inline-tools select{max-width:56px;height:21px;padding:1px 2px}
+.exo-grade-bottom-widget .optitex-grade-inline-tools input[type=number]{width:42px;height:21px;padding:1px 2px}
+.exo-grade-bottom-widget .optitex-grade-inline-tools label{font-size:10px;gap:2px}
+.exo-grade-bottom-widget .optitex-grading-table tbody :is(td,th){height:20px;padding:1px 3px}
+.exo-grade-bottom-widget .optitex-grading-table tbody td input[type=number]{height:19px;padding:1px 2px}
+.exo-grade-bottom-widget .optitex-grading-table small[role=status]{
+ max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+}
+.exo-grade-bottom-widget .optitex-size-actions{gap:4px}
+.exo-grade-bottom-widget .optitex-size-actions button{min-height:20px}
+.exo-grade-bottom-widget .optitex-compare-controls{padding:3px 5px;gap:4px}
+.exo-grade-bottom-widget .optitex-compare-controls label{white-space:nowrap}
+.exo-grade-bottom-widget .optitex-compare-controls input{max-width:58px}
+.exo-grade-bottom-widget .optitex-grading-table tbody th button{font-size:10px}
+@container (max-width: 310px){
+ .exo-grade-bottom-widget .optitex-grading-table th,
+ .exo-grade-bottom-widget .optitex-grading-table td{padding:2px 2px;font-size:9px}
+ .exo-grade-bottom-widget .optitex-grading-table tbody td input[type=number]{width:43px;min-width:0}
+ .exo-grade-bottom-widget .optitex-grading-table[data-grade-display-mode="values"] th:nth-child(n+6),
+ .exo-grade-bottom-widget .optitex-grading-table[data-grade-display-mode="values"] td:nth-child(n+6){display:none}
+ .exo-grade-bottom-widget .optitex-grading-table[data-grade-display-mode="compare"] th:last-child,
+ .exo-grade-bottom-widget .optitex-grading-table[data-grade-display-mode="compare"] td:last-child{display:none}
+ .exo-grade-bottom-widget .optitex-grading-tabs strong{display:none}
+}
+
+/* Optitex-style bottom worksheet. Unlike floating palettes this is part of
+   the actual 2D page layout: a permanent narrow rail, a reserved content row
+   only while occupied, and a strong blue ghost BEFORE a pointer drop. */
+.exo-grade-workspace-dock-host,
+[data-exo-grade-dock-host="true"]{
+ box-sizing:border-box;display:flex;flex:0 0 29px;flex-wrap:wrap;align-content:flex-start;
+ column-gap:4px;row-gap:3px;min-height:29px;height:29px;padding:0 4px 3px;
+ position:relative;z-index:100075;overflow:visible;pointer-events:auto;
+ background:#24292d;border-top:1px solid #5c6269;
+}
+.exo-grade-workspace-dock-host[data-exo-grade-dock-occupied="true"],
+[data-exo-grade-dock-host="true"][data-exo-grade-dock-occupied="true"]{
+ flex:0 0 auto;height:var(--exo-bottom-dock-height,158px);padding-bottom:5px;
+ border-top-color:#78848f;
+}
+.exo-bottom-dock-rail{
+ box-sizing:border-box;display:flex;align-items:center;gap:5px;
+ flex:0 0 100%;width:100%;height:27px;min-height:27px;
+ background:#272c30;color:#d7e3e9;white-space:nowrap;
+ border-bottom:1px solid #454d56;position:relative;z-index:2;
+}
+.exo-bottom-dock-handle{
+ display:grid;place-items:center;width:19px;color:#93a3b1;
+ font-size:16px;font-weight:700;letter-spacing:-4px;user-select:none;
+}
+.exo-bottom-dock-tab{
+ height:23px;padding:3px 10px;border:1px solid transparent;
+ background:#353b40;color:#c7d3db;border-radius:3px 3px 0 0;
+ font:600 10px/1.15 Inter,system-ui,sans-serif;cursor:pointer;
+}
+[data-native-history-controls="true"]{display:inline-flex;align-items:center;gap:3px;flex:0 0 auto}
+[data-native-history-controls="true"] .exo-bottom-dock-tab{display:inline-flex;align-items:center;gap:4px}
+[data-native-history-controls="true"] .exo-bottom-dock-tab:disabled{opacity:.5;cursor:not-allowed}
+.exo-bottom-dock-tab:hover{background:#465968;color:#fff;border-color:#71889a}
+.exo-bottom-dock-tab[aria-pressed="true"]{
+ color:#f4faff;background:#3d5264;border-color:#7697b5;
+ box-shadow:inset 0 -2px #8ac6ff;
+}
+.exo-bottom-dock-instruction{
+ font:500 10px/1.2 Inter,system-ui,sans-serif;color:#91a1ae;
+ margin-left:10px;overflow:hidden;text-overflow:ellipsis;
+}
+.exo-bottom-dock-status{margin-left:auto;position:relative;align-self:center;display:flex;align-items:center}
+.exo-bottom-dock-status>button{
+ display:grid;place-items:center;width:24px;height:22px;
+ background:transparent;border:1px solid #414b53;border-radius:3px;
+ color:#95acbc;cursor:pointer;
+}
+.exo-bottom-dock-status>button:hover{background:#405668;color:#e7f4ff}
+.exo-bottom-dock-diagnostics{
+ position:absolute;bottom:27px;right:0;z-index:90;width:240px;
+ display:grid;gap:8px;padding:11px;background:#2a333a;color:#eaf4fa;
+ border:1px solid #748a9b;border-radius:6px;box-shadow:0 8px 28px #0008;
+ font:11px Inter,system-ui,sans-serif;white-space:normal;
+}
+.exo-bottom-dock-diagnostics button{background:#3d5669;border:1px solid #688a9f;color:white;padding:6px;cursor:pointer}
+.exo-bottom-dock-diagnostics small{color:#aebfc8}
+.exo-grade-bottom-widget--docked{
+ position:relative!important;left:auto!important;top:auto!important;width:auto!important;
+ height:calc(100% - 33px)!important;min-height:0;z-index:1!important;
+ flex:1 1 0;min-width:0;max-width:none;max-height:none;
+ box-shadow:none;border-radius:2px;overflow:hidden;
+ background:#2d3136;border-color:#626c74;
+}
+/* Optitex's Grading Table is narrow; Compare Length receives the larger
+   measurement grid. When more widgets are docked, use balanced columns. */
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked[data-exo-grade-bottom-widget="values"]{
+ flex:0 1 35%;min-width:230px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked[data-exo-grade-bottom-widget="compare"]{
+ flex:1 1 65%;min-width:0;
+}
+[data-exo-grade-dock-host="true"]:has(>.clo-floating-tool--docked)>.exo-grade-bottom-widget--docked,
+[data-exo-grade-dock-host="true"]:has(>.exo-grade-bottom-widget--docked:nth-of-type(4))>.exo-grade-bottom-widget--docked{
+ flex:1 1 0;min-width:0;
+}
+.exo-grade-bottom-widget--docked[data-minimized="true"]{
+ flex:0 0 auto;width:min(33%,205px)!important;height:31px!important;
+ align-self:flex-start;
+}
+.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__titlebar{
+ cursor:default;touch-action:auto;background:#313941;height:20px;min-height:20px;
+}
+.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__titlebar{
+ gap:3px;padding:0 3px 0 5px;
+}
+.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__titlebar strong{font-size:10px}
+.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__titlebar small{display:none}
+.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__titlebar button{
+ width:19px;height:19px;
+}
+.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__corner-grip{
+ width:17px;height:18px;margin-left:0;
+}
+.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__corner-grip svg{width:13px;height:13px}
+.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__content>.optitex-grading-table{
+ /* Preserve the editable six-size worksheet at half the previous dock height. */
+ zoom:.86;width:116.279%;height:116.279%;gap:2px;padding:2px;
+}
+.exo-grade-bottom-widget--docked .optitex-grading-tabs{gap:2px}
+.exo-grade-bottom-widget--docked .optitex-grading-tabs>strong{display:none}
+.exo-grade-bottom-widget--docked .optitex-grading-tabs button,
+.exo-grade-bottom-widget--docked .optitex-size-actions button{
+ min-height:16px;padding:0 3px;font-size:9px;line-height:1.15;
+}
+.exo-grade-bottom-widget--docked .optitex-grade-inline-tools{
+ grid-template-rows:15px 15px;min-height:30px;max-height:30px;
+ padding:0 2px;gap:0 3px;border-radius:2px;
+}
+.exo-grade-bottom-widget--docked .optitex-grade-inline-tools button{
+ min-width:17px;min-height:15px;padding:0 1px;
+}
+.exo-grade-bottom-widget--docked .optitex-grade-inline-tools svg{width:12px;height:12px}
+.exo-grade-bottom-widget--docked .optitex-grade-inline-tools :is(select,input[type=number]){
+ height:15px;min-height:15px;padding:0 1px;font-size:9px;
+}
+.exo-grade-bottom-widget--docked .optitex-grading-table :is(th,td){
+ height:13px;padding:0 2px;font-size:9px;line-height:1.1;
+}
+.exo-grade-bottom-widget--docked .optitex-grading-table thead th{
+ height:14px;font-size:8px;padding:0 2px;
+}
+.exo-grade-bottom-widget--docked .optitex-grading-table tbody td input[type=number]{
+ height:13px;width:48px;font-size:9px;padding:0 1px;
+}
+.exo-grade-bottom-widget--docked .optitex-grading-table tbody td input[type=color]{
+ width:19px;height:12px;
+}
+.exo-grade-bottom-widget--docked .optitex-grading-table tbody th button{
+ min-height:13px;font-size:9px;padding:0 2px;
+}
+.exo-grade-bottom-widget--docked .optitex-compare-controls{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px 5px;
+ padding:1px 3px;border-radius:2px;
+}
+.exo-grade-bottom-widget--docked .optitex-compare-controls label{
+ min-width:0;font-size:9px;gap:2px;overflow:hidden;
+}
+.exo-grade-bottom-widget--docked .optitex-compare-controls :is(select,input){
+ min-width:0;max-width:100%;width:50%;height:15px;padding:0 2px;font-size:9px;
+}
+.exo-grade-bottom-widget--docked .optitex-grading-table small[role=status]{
+ font-size:9px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.exo-grade-bottom-widget--docked .optitex-grading-table p[role=status],
+.exo-grade-bottom-widget--docked .optitex-grading-table p[role=alert]{
+ margin:0;min-height:0;max-height:13px;overflow:hidden;
+ white-space:nowrap;text-overflow:ellipsis;font-size:9px;line-height:13px;
+}
+.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__corner-grip{cursor:grab}
+.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__content{overflow:hidden;min-height:0}
+.exo-grade-bottom-widget[data-dock-hover="true"]{outline:2px solid #69baff;outline-offset:-2px}
+/* A translucent ghost pane PREVIEWS the actual insert position on the 2D page,
+   while the 5px blue rail marks the precise insert edge (Notion-like). */
+[data-exo-grade-dock-host="true"][data-exo-grade-dock-drag-hover="true"]::before{
+ content:attr(data-exo-grade-dock-drag-label) ' will embed here';
+ box-sizing:border-box;display:grid;place-items:center;
+ position:absolute;bottom:calc(100% + 2px);
+ left:var(--exo-dock-preview-left,10px);
+ width:var(--exo-dock-preview-width,min(48%,450px));
+ height:var(--exo-dock-preview-height,240px);z-index:100;
+ border:3px solid #62b4ff;border-radius:4px;
+ background:rgba(48,137,218,.25);color:#e8f6ff;
+ text-align:center;font:700 13px Inter,system-ui,sans-serif;
+ text-shadow:0 2px 6px #051d35;box-shadow:inset 0 0 35px #77c2ff4b,0 0 24px #3f9dfba6;
+ pointer-events:none;
+}
+[data-exo-grade-dock-host="true"][data-exo-grade-dock-drag-hover="true"]::after{
+ content:'';position:absolute;z-index:105;
+ left:var(--exo-dock-preview-left,10px);top:-4px;
+ width:var(--exo-dock-preview-width,min(48%,450px));height:6px;
+ background:#53bbff;border-radius:8px;
+ box-shadow:0 0 0 2px #e0f6ff,0 0 18px #3a9df5;
+ pointer-events:none;
+}
+[data-exo-grade-dock-host="true"][data-exo-grade-dock-drag-hover="true"] .exo-bottom-dock-rail{
+ background:#1d4262;box-shadow:inset 0 2px #5cb5ff;
+}
+/* When a neighbor is already embedded, preview the new left/right column
+   directly BESIDE that live widget, as a block editor does on hover. */
+[data-exo-grade-dock-host="true"][data-exo-grade-dock-occupied="true"][data-exo-grade-dock-drag-hover="true"]::before{
+ top:29px;bottom:auto;height:calc(100% - 34px);
+ border:2px dashed #65bfff;background:rgba(57,145,225,.22);
+ font-size:11px;box-shadow:inset 0 0 0 1px #bbdfff88;
+}
+[data-exo-grade-dock-host="true"][data-exo-grade-dock-occupied="true"][data-exo-grade-dock-drag-hover="true"]::after{
+ top:29px;left:calc(var(--exo-dock-preview-left,10px) - 2px);
+ width:4px;height:calc(100% - 34px);border-radius:3px;
+}
+.exo-grade-bottom-widget__titlebar button:focus-visible,
+.exo-bottom-dock-rail button:focus-visible{outline:2px solid #65baff;outline-offset:-2px}
+@media(max-width:740px){
+ [data-exo-grade-dock-host="true"][data-exo-grade-dock-occupied="true"]{height:min(48dvh,var(--exo-bottom-dock-height,268px))}
+ .exo-grade-bottom-widget--docked .exo-grade-bottom-widget__titlebar small,
+ .exo-bottom-dock-instruction{display:none}
+ .exo-bottom-dock-tab{font-size:9px;padding:3px 6px}
+}
+
+/* Compact worksheets: condense controls while retaining all six rows in view
+   at the normal dock height. Smaller hand-resized layouts may scroll. */
+.exo-grade-bottom-widget__titlebar{min-height:25px;padding:2px 4px 2px 6px;gap:4px}
+.exo-grade-bottom-widget__titlebar small{font-size:8px}
+.exo-grade-bottom-widget__titlebar button{width:20px;height:20px}
+.exo-grade-bottom-widget .optitex-grading-table{
+ gap:2px;padding:3px;overflow:hidden
+}
+.exo-grade-bottom-widget .optitex-grading-tabs{
+ gap:3px;flex:none;flex-wrap:nowrap;overflow-x:auto;min-height:21px
+}
+.exo-grade-bottom-widget .optitex-grading-tabs button,
+.exo-grade-bottom-widget .optitex-size-actions button{
+ padding:1px 4px;min-height:19px;font-size:9px;white-space:nowrap
+}
+.exo-grade-bottom-widget .optitex-table-scroll{
+ flex:1 1 auto;min-height:24px;max-height:none;overflow:auto
+}
+.exo-grade-bottom-widget .optitex-grading-table :is(th,td){
+ height:19px;padding:1px 3px
+}
+.exo-grade-bottom-widget .optitex-grading-table tbody :is(th,td){height:18px}
+.exo-grade-bottom-widget .optitex-grade-inline-tools{
+ display:flex;flex-wrap:nowrap;align-items:center;gap:3px;
+ min-height:25px;max-height:29px;overflow-x:auto;overflow-y:hidden;padding:2px 3px
+}
+.exo-grade-bottom-widget .optitex-grade-inline-tools> :is(span,label){flex:none}
+.exo-grade-bottom-widget .optitex-compare-controls{
+ display:flex;flex-wrap:nowrap;align-items:center;gap:4px;
+ min-height:25px;max-height:29px;overflow-x:auto;overflow-y:hidden;padding:2px 4px
+}
+.exo-grade-bottom-widget .optitex-compare-controls label{flex:none;white-space:nowrap}
+.exo-grade-workspace-dock-host[data-exo-grade-dock-occupied="true"],
+[data-exo-grade-dock-host="true"][data-exo-grade-dock-occupied="true"]{
+ height:var(--exo-bottom-dock-height,268px);padding-bottom:3px
+}
+.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__titlebar{
+ height:25px;min-height:25px
+}
+/* During a drag, show the candidate side-by-side slot inside an occupied dock. */
+[data-exo-grade-dock-host="true"][data-exo-grade-dock-occupied="true"][data-exo-grade-dock-drag-hover="true"]::before{
+ bottom:4px;height:var(--exo-dock-preview-height,120px);
+ max-height:calc(100% - 33px);border-width:2px;
+ font-size:10px;background:rgba(48,137,218,.4)
+}
+[data-exo-grade-dock-host="true"][data-exo-grade-dock-occupied="true"][data-exo-grade-dock-drag-hover="true"]::after{
+ top:28px;height:calc(100% - 33px);width:3px
+}
+@container (max-width:310px){
+ .exo-grade-bottom-widget .optitex-grading-table[data-grade-display-mode="values"] th:nth-child(n+6),
+ .exo-grade-bottom-widget .optitex-grading-table[data-grade-display-mode="values"] td:nth-child(n+6),
+ .exo-grade-bottom-widget .optitex-grading-table[data-grade-display-mode="compare"] th:last-child,
+ .exo-grade-bottom-widget .optitex-grading-table[data-grade-display-mode="compare"] td:last-child{
+  display:table-cell
+ }
+}
+@media(max-width:740px){
+ [data-exo-grade-dock-host="true"][data-exo-grade-dock-occupied="true"]{
+  height:min(40dvh,var(--exo-bottom-dock-height,268px))
+ }
+}
+
+/* Compact physical grading widgets: reduce floating and embedded footprint. */
+.exo-grade-bottom-widget__titlebar{min-height:22px;height:22px;padding:1px 4px;gap:4px}
+.exo-grade-bottom-widget__titlebar strong{font-size:9px}
+.exo-grade-bottom-widget__titlebar small{font-size:8px}
+.exo-grade-bottom-widget__titlebar button{width:19px;height:19px}
+.exo-grade-bottom-widget__corner-grip{width:18px;height:19px}
+.exo-grade-bottom-widget .optitex-grading-table{gap:2px;padding:2px;font-size:9px}
+.exo-grade-bottom-widget .optitex-grading-table table{font-size:9px;line-height:1.1}
+.exo-grade-bottom-widget .optitex-grading-table :is(th,td){height:16px;padding:1px 2px;font-size:9px}
+.exo-grade-bottom-widget .optitex-grading-table tbody :is(th,td){height:16px;padding:1px 2px}
+.exo-grade-bottom-widget .optitex-grading-table tbody td input[type=number]{height:16px;width:38px;font-size:9px;padding:0 2px}
+.exo-grade-bottom-widget .optitex-grading-table input[type=number]{height:17px;width:40px;font-size:9px;padding:1px 2px}
+.exo-grade-bottom-widget .optitex-grading-table input[type=color]{width:18px;height:14px}
+.exo-grade-bottom-widget .optitex-grade-inline-tools{grid-template-rows:18px 18px;min-height:38px;max-height:39px;gap:1px 2px;padding:1px 2px}
+.exo-grade-bottom-widget .optitex-grade-inline-tools button{min-height:17px;min-width:18px;padding:1px}
+.exo-grade-bottom-widget .optitex-grade-inline-tools select,.exo-grade-bottom-widget .optitex-grade-inline-tools input[type=number]{height:17px;font-size:9px}
+.exo-grade-bottom-widget .optitex-grading-tabs button,.exo-grade-bottom-widget .optitex-size-actions button{min-height:17px;padding:1px 3px;font-size:9px}
+.exo-grade-bottom-widget .optitex-compare-controls{gap:2px;padding:2px}
+.exo-grade-bottom-widget .optitex-compare-controls select{padding:1px;font-size:9px;max-width:80px}
+.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__titlebar{min-height:22px;height:22px}
+[data-exo-grade-dock-host=true]>.exo-grade-bottom-widget--docked[data-exo-grade-bottom-widget=values]{flex:0 1 31%;min-width:185px}
+[data-exo-grade-dock-host=true]>.exo-grade-bottom-widget--docked[data-exo-grade-bottom-widget=compare]{flex:0 1 42%;min-width:205px}
+.exo-grade-workspace-dock-host[data-exo-grade-dock-occupied=true],[data-exo-grade-dock-host=true][data-exo-grade-dock-occupied=true]{height:var(--exo-bottom-dock-height,185px)}
+
+/* Readable embedded worksheets: normal scale, horizontal controls, local scroll.
+   Floating palettes retain their user-selected compact dimensions. */
+.exo-grade-bottom-widget--docked {
+ border-radius:0;
+ border-color:var(--studio-border,#50565e);
+ background:var(--studio-sidebar,#292d30);
+}
+.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__titlebar {
+ min-height:28px;height:28px;padding:2px 6px;gap:6px;
+ background:var(--studio-panel,#30353b);
+}
+.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__titlebar strong {font-size:11px;font-weight:600}
+.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__titlebar button {width:24px;height:24px}
+.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__content>.optitex-grading-table {
+ zoom:1;width:100%;height:100%;box-sizing:border-box;padding:6px;gap:6px;
+}
+.exo-grade-bottom-widget--docked .optitex-grade-inline-tools,
+.exo-grade-bottom-widget--docked .optitex-compare-controls {
+ display:flex;flex-wrap:nowrap;align-items:center;gap:6px;
+ min-height:30px;max-height:none;flex-shrink:0;padding:2px 0;
+ overflow-x:auto;overflow-y:hidden;border-radius:0;
+}
+.exo-grade-bottom-widget--docked .optitex-grade-inline-tools button {min-width:26px;min-height:26px}
+.exo-grade-bottom-widget--docked .optitex-grade-inline-tools svg {width:16px;height:16px}
+.exo-grade-bottom-widget--docked .optitex-grading-table :is(th,td),
+.exo-grade-bottom-widget--docked .optitex-grading-table tbody :is(th,td) {
+ height:25px;padding:3px 6px;font-size:11px;line-height:1.35;font-variant-numeric:tabular-nums;
+}
+.exo-grade-bottom-widget--docked .optitex-grading-table tbody td input[type=number] {
+ height:24px;width:60px;font-size:11px;padding:2px 4px;
+}
+.exo-grade-bottom-widget--docked .optitex-compare-controls :is(select,input),
+.exo-grade-bottom-widget--docked .optitex-grade-inline-tools :is(select,input[type=number]) {
+ height:26px;min-height:26px;font-size:11px;width:auto;max-width:180px;padding:2px 5px;
+}
+.exo-grade-bottom-widget--docked .optitex-compare-controls label {font-size:11px;overflow:visible}
+.exo-grade-bottom-widget--docked .optitex-table-scroll {overflow:auto;min-height:32px}
+.exo-grade-bottom-widget--docked .optitex-grading-table :is(p,small)[role] {
+ font-size:11px;line-height:1.4;white-space:normal;max-height:64px;overflow:auto;flex-shrink:0;
+}
+
+/* Compact in-page grading worksheets. The floating dialogs keep their own
+   sizing. Six rows, the two-row mini toolbar and status fit at 268px by
+   reducing chrome rather than clipping the native input cells. */
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__titlebar{
+ height:24px;min-height:24px;padding:1px 5px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__content{
+ min-height:0;overflow:hidden;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table{
+ display:flex;flex-direction:column;zoom:1;width:100%;height:100%;
+ box-sizing:border-box;gap:2px;padding:3px;overflow:hidden;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-tabs{
+ min-height:18px;height:18px;max-height:18px;gap:3px;padding:0;overflow:hidden;flex:none;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-tabs button{
+ height:18px;min-height:18px;padding:1px 4px;font-size:9px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grade-inline-tools{
+ display:grid;grid-template-columns:auto minmax(0,1fr) auto;
+ grid-template-rows:18px 18px;min-height:38px;height:38px;max-height:38px;
+ align-items:center;overflow:hidden;gap:1px 4px;padding:1px 3px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grade-inline-tools>.optitex-inline-tool-divider{display:none}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grade-inline-tools>:nth-child(1){grid-column:1;grid-row:1}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grade-inline-tools>:nth-child(2){grid-column:2;grid-row:1}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grade-inline-tools>:nth-child(4){grid-column:3;grid-row:1}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grade-inline-tools>:nth-child(6){grid-column:1;grid-row:2}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grade-inline-tools>:nth-child(8){grid-column:2/4;grid-row:2;justify-self:end}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grade-inline-tools button{
+ min-width:19px;min-height:17px;height:17px;padding:0 2px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grade-inline-tools svg{width:13px;height:13px}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grade-inline-tools :is(select,input[type=number]){
+ height:17px;min-height:17px;padding:0 2px;font-size:10px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-compare-controls{
+ display:grid;grid-template-columns:1fr 1fr;grid-template-rows:18px 18px;
+ min-height:35px;height:35px;max-height:35px;align-items:center;gap:0 5px;
+ padding:1px 3px;overflow:hidden;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-compare-controls label{
+ display:flex;align-items:center;min-width:0;gap:3px;overflow:hidden;
+ white-space:nowrap;font-size:9px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-compare-controls :is(select,input){
+ min-width:0;max-width:none;flex:1 1 0;width:0;height:17px;min-height:17px;
+ font-size:9px;padding:0 2px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-table-scroll{
+ flex:1 1 auto;min-height:0;max-height:none;overflow:hidden;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table table{
+ font-size:10px;line-height:1.1;table-layout:fixed;width:100%;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table :is(th,td),
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table tbody :is(th,td){
+ height:18px;padding:1px 2px;font-size:10px;line-height:1.1;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table thead th{
+ height:20px;padding:2px;font-size:9px;line-height:1.15;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table tbody td input[type=number]{
+ height:18px;max-width:100%;width:48px;padding:1px 2px;font-size:10px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table tbody th button{
+ height:17px;min-height:17px;font-size:10px;padding:0 2px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table :is(p,small)[role]{
+ flex:0 0 13px;min-height:0;max-height:13px;margin:0;overflow:hidden;
+ white-space:nowrap;text-overflow:ellipsis;font-size:9px;line-height:13px;
+}
+
+/* Readable free-floating worksheets. These overrides never apply to embedded
+   dock panels; only the in-page versions retain the micro layout above. */
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked){
+ border:1px solid #536776;border-radius:8px;
+ box-shadow:0 20px 58px #000b;background:#253039;
+ font:12px/1.4 Inter,system-ui,sans-serif;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .exo-grade-bottom-widget__titlebar{
+ min-height:32px;height:32px;padding:4px 9px;gap:8px;background:#303e48;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .exo-grade-bottom-widget__titlebar strong{
+ font-size:12px;font-weight:700;color:#f0f7fb;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .exo-grade-bottom-widget__titlebar small{
+ font-size:10px;color:#bbceda;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .exo-grade-bottom-widget__titlebar button{
+ width:25px;height:25px;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .exo-grade-bottom-widget__content{
+ flex:1;min-height:0;overflow:hidden;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .optitex-grading-table{
+ gap:6px;padding:8px 10px;font-size:12px;background:#28333b;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .optitex-grading-tabs{
+ min-height:27px;overflow:visible;gap:7px;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .optitex-grading-tabs>strong{
+ font-size:11px;color:#d8e6ee;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .optitex-grading-tabs button,
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .optitex-size-actions button{
+ min-height:25px;padding:4px 8px;font-size:11px;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .optitex-grade-inline-tools{
+ display:flex;align-items:center;flex-wrap:wrap;gap:5px;
+ min-height:30px;max-height:none;overflow:visible;padding:2px 4px;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .optitex-grade-inline-tools button{
+ min-height:26px;min-width:26px;padding:3px 5px;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .optitex-grade-inline-tools :is(input,select){
+ height:26px;font-size:11px;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .optitex-compare-controls{
+ display:grid;grid-template-columns:1fr 1fr;gap:5px 12px;
+ min-height:56px;max-height:none;overflow:visible;padding:4px 6px;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .optitex-compare-controls label{
+ display:flex;align-items:center;min-width:0;gap:6px;
+ font-size:11px;color:#d9e6ee;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .optitex-compare-controls :is(select,input){
+ flex:1 1 auto;width:auto;min-width:0;max-width:145px;height:27px;
+ font-size:11px;padding:3px 5px;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .optitex-table-scroll{
+ min-height:24px;max-height:none;overflow:auto;scrollbar-color:#5c788c #222e36;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .optitex-grading-table table{
+ font-size:12px;line-height:1.4;font-variant-numeric:tabular-nums;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .optitex-grading-table :is(th,td),
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .optitex-grading-table tbody :is(th,td){
+ height:27px;padding:3px 6px;font-size:12px;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .optitex-grading-table tbody td input[type=number]{
+ height:25px;width:62px;max-width:100%;padding:2px 5px;font-size:12px;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .optitex-grading-table tbody th button{
+ min-height:25px;font-size:12px;padding:3px 5px;
+}
+.exo-grade-bottom-widget:not(.exo-grade-bottom-widget--docked) .optitex-grading-table :is(p,small)[role]{
+ min-height:16px;max-height:38px;white-space:normal;overflow:auto;
+ font-size:11px;line-height:1.35;color:#c5d7e3;
+}
+
+/* A toolbar can be dropped into the top strip of either live widget. It
+   shares the same real panel rather than creating an overlapping modal. */
+.exo-grade-bottom-widget__toolbar-slot{display:none;min-width:0;flex:0 0 auto;}
+.exo-grade-bottom-widget__toolbar-slot:has(>.clo-floating-tool--nested){
+ display:block;min-width:0;overflow:hidden;
+ background:#253a47;border-bottom:1px solid #5e7786;
+}
+
+/* The actual measurement grid owns the available space, even when its
+   grading command strip is embedded. No toolbar is allowed to hide the table. */
+.exo-grade-bottom-widget:has(.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"]){
+ display:flex!important;flex-direction:column!important;min-height:0!important;
+}
+.exo-grade-bottom-widget:has(.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"]) .exo-grade-bottom-widget__toolbar-slot{
+ flex:0 0 auto!important;max-height:96px!important;overflow:hidden!important;
+}
+.exo-grade-bottom-widget:has(.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"]) .exo-grade-bottom-widget__content{
+ display:flex!important;flex:1 1 auto!important;min-height:108px!important;
+ overflow:auto!important;
+}
+.exo-grade-bottom-widget:has(.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"]) .exo-grade-bottom-widget__content>.optitex-grading-table{
+ min-height:0!important;min-width:0!important;flex:1 1 auto!important;
+}
+.exo-grade-bottom-widget[data-exo-grade-toolbar-drop-hover="true"]{
+ outline:2px solid #74bfff;outline-offset:-2px;
+}
+.exo-grade-bottom-widget[data-exo-grade-toolbar-drop-hover="true"] .exo-grade-bottom-widget__titlebar{
+ background:#315d7b;color:#fff;
+}
+/* Reserve the worksheet's usual six-size rows when the embedded quick bar is
+   open; standalone 2D widgets remain at their independent floating size. */
+[data-exo-grade-dock-host="true"][data-exo-grade-dock-occupied="true"]:has(.clo-floating-tool--nested){
+ min-height:252px;
+}
+.exo-grade-bottom-widget--docked:has(.clo-floating-tool--nested) .exo-grade-bottom-widget__content{
+ min-height:0;flex:1;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grade-inline-tools{
+ grid-template-rows:16px 16px;height:34px;min-height:34px;max-height:34px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table table{
+ border-spacing:0;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table thead tr{
+ height:18px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table tbody tr{
+ height:18px;max-height:18px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table tbody :is(th,td){
+ height:18px;max-height:18px;padding:0 2px;line-height:1;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table tbody td input[type=color]{
+ height:14px;width:18px;padding:0;vertical-align:middle;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table tbody td input[type=checkbox]{
+ height:13px;width:13px;margin:0;vertical-align:middle;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table tbody td input[type=number]{
+ height:16px;min-height:16px;max-height:16px;line-height:14px;padding:0 2px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table tbody th button{
+ height:16px;min-height:16px;max-height:16px;padding:0 2px;
+}
+
+/* Show the insertion target only during a toolbar drag. Once dropped, this
+   strip contains the actual React portal above the grading worksheet. */
+.exo-grade-bottom-widget[data-exo-grade-toolbar-drop-hover="true"] .exo-grade-bottom-widget__toolbar-slot:empty{
+ display:grid;place-items:center;min-height:32px;max-height:32px;
+ padding:3px 6px;border:2px dashed #78c6ff;
+ background:#244c68;color:#f0f9ff;
+}
+.exo-grade-bottom-widget[data-exo-grade-toolbar-drop-hover="true"] .exo-grade-bottom-widget__toolbar-slot:empty::before{
+ content:'Release to embed Grading Toolbar here';
+ font:600 11px/1.2 Inter,system-ui,sans-serif;text-align:center;
+}
+
+/* V5: short docked worksheets while keeping every editable size accessible.
+   Floating palettes retain the larger readable layout above. */
+[data-exo-grade-dock-host="true"][data-exo-grade-dock-occupied="true"]{
+ height:var(--exo-bottom-dock-height,174px);
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grade-inline-tools{
+ display:flex;align-items:center;flex-wrap:nowrap;
+ height:22px;min-height:22px;max-height:22px;
+ padding:1px 2px;gap:3px;overflow-x:auto;overflow-y:hidden;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grade-inline-tools> :is(span,label){
+ flex:none;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-compare-controls{
+ height:35px;min-height:35px;max-height:35px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-table-scroll{
+ flex:1 1 auto;min-height:20px;max-height:none;overflow:auto;
+ scrollbar-width:thin;overscroll-behavior:contain;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table[data-grade-display-mode="values"] table{
+ min-width:390px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table[data-grade-display-mode="compare"] table{
+ min-width:400px;
+}
+@media(max-width:740px){
+ [data-exo-grade-dock-host="true"][data-exo-grade-dock-occupied="true"]{
+  height:min(35dvh,var(--exo-bottom-dock-height,174px));
+ }
+}
+
+/* 2026-10-28 responsive embed: floating palettes keep their spacious design.
+   A dock never introduces a scrollbar: narrow/short views use one size and an
+   explicit Expand action, rather than clipping a scrolled 6-size worksheet. */
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked{
+ container-type:inline-size;overflow:hidden!important;min-height:0!important;
+ border:1px solid #4b6171;border-radius:4px;background:#24313a;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__titlebar{
+ min-height:22px;height:22px;box-sizing:border-box;padding:0 4px;gap:4px;
+ background:#273a48;border-bottom:1px solid #486478;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__titlebar strong{
+ font-size:10px;letter-spacing:.01em;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__titlebar button{
+ width:19px;height:19px;flex:none;
+}
+.exo-grade-widget-placement{height:18px;min-width:48px;max-width:70px;margin-left:auto;
+ padding:0 2px;border:1px solid #526f84;border-radius:3px;
+ background:#213746;color:#ddebfa;font:9px Inter,system-ui,sans-serif;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .exo-grade-bottom-widget__content{
+ flex:1 1 auto;min-height:0;overflow:hidden!important;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table{
+ display:flex;flex-direction:column;width:100%;height:100%;min-height:0;
+ padding:3px 5px;gap:3px;box-sizing:border-box;overflow:hidden!important;
+ background:#26323c;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-tabs{
+ display:flex;flex-wrap:nowrap;min-height:20px;height:20px;max-height:20px;
+ gap:4px;overflow:hidden!important;align-items:center;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-tabs button{
+ min-height:18px;height:18px;padding:1px 4px;white-space:nowrap;font-size:9px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grade-inline-tools{
+ display:flex;flex-wrap:nowrap;align-items:center;gap:3px;
+ flex:0 0 auto;min-height:22px;height:22px;max-height:22px;
+ padding:1px 2px;border:0;overflow:hidden!important;
+ background:#203542;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grade-inline-tools> :is(span,label){flex:none}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-compare-controls{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ grid-template-rows:19px 19px;height:40px;max-height:40px;min-height:40px;
+ gap:2px 6px;overflow:hidden!important;padding:1px 3px;border:0;
+ background:#203542;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-compare-controls :is(select,input){
+ height:17px;min-height:17px;font-size:9px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-table-scroll{
+ flex:1 1 auto;min-height:0;max-height:none;overflow:hidden!important;
+ scrollbar-width:none;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table table{
+ border-spacing:0;table-layout:fixed;width:100%;min-width:0!important;font-size:10px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table :is(th,td){
+ padding:1px 2px;height:18px;font-size:10px;line-height:1.1;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table tbody td input[type=number]{
+ width:100%;max-width:48px;min-width:0;height:17px;box-sizing:border-box;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table tbody th button{
+ font-size:10px;padding:0 1px;min-height:17px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table :is(p,small)[role]{
+ flex:0 0 auto;max-height:13px;min-height:0;line-height:13px;
+ overflow:hidden!important;white-space:nowrap;text-overflow:ellipsis;font-size:9px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table--micro{
+ display:flex;flex-direction:row;gap:8px;align-items:center;justify-content:flex-start;
+ padding:3px 7px;height:100%;min-height:0;font-size:10px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grading-table--micro :is(select,button){
+ min-height:19px;height:19px;font-size:10px;padding:1px 5px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-embedded-size-picker{
+ white-space:nowrap;gap:2px;font-size:9px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-embedded-size-picker select{
+ height:18px;min-height:18px;min-width:39px;max-width:55px;padding:0 2px;font-size:9px;
+}
+[data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-embedded-expand{
+ margin-left:auto;background:#2f617f;border-color:#6baccf;flex:none;
+}
+/* The first columns contain selection, size, and physical movement. On very
+   narrow columns hide secondary break/ratio information instead of scrolling. */
+@container (max-width:410px){
+ [data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-grade-inline-tools .optitex-inline-tool-group:nth-of-type(n+3),
+ [data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--docked .optitex-inline-grade-motion{display:none}
+ .exo-grade-bottom-widget--docked .optitex-grading-table[data-grade-display-mode="values"] :is(th,td):nth-child(n+6),
+ .exo-grade-bottom-widget--docked .optitex-grading-table[data-grade-display-mode="compare"] :is(th,td):nth-child(n+6){display:none!important}
+}
+/* Top and bottom are independent rails. Neither consumes space for scrollbars. */
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]{
+ order:-1;flex:0 0 auto;min-height:25px;height:25px;
+ border-bottom:1px solid #577b92;border-top:0;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"] .exo-bottom-dock-rail{
+ min-height:24px;height:24px;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"][data-exo-grade-dock-occupied="true"]{
+ height:var(--exo-bottom-dock-height,92px);min-height:68px;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"] .exo-bottom-dock-tab{
+ height:20px;min-height:20px;padding:1px 7px;
+}
+[data-exo-grade-dock-host="true"] .exo-bottom-dock-rail{
+ padding-right:185px;overflow:hidden!important;
+}
+.exo-dock-edge-label{font:700 9px system-ui;letter-spacing:.08em;color:#8fbad5;margin:0 6px}
+
+/* Shallow top command ribbon: the 24px rail and 27px command track are the
+   only vertical consumers. Selected/hovered tabs never inherit white browser
+   button surfaces from the host's light theme. */
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]{
+ color-scheme:dark!important;background:#1c303f!important;color:#e9f5ff!important;
+ border-bottom:1px solid #496b82!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"][data-exo-grade-dock-occupied="true"]{
+ display:grid!important;grid-template-rows:23px minmax(0,1fr)!important;
+ height:var(--exo-bottom-dock-height,56px)!important;min-height:52px!important;
+ padding:0 3px 2px!important;gap:1px!important;box-sizing:border-box!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"]>.exo-bottom-dock-rail{
+ grid-row:1!important;height:22px!important;min-height:22px!important;
+ max-height:22px!important;padding:0 150px 0 4px!important;
+ gap:4px!important;background:#203648!important;color:#cfe8f8!important;
+ border:0!important;overflow:hidden!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"] .exo-bottom-dock-tab{
+ flex:0 0 auto!important;min-height:19px!important;height:19px!important;
+ padding:1px 8px!important;color:#dceefa!important;background:#294354!important;
+ border:1px solid #5d7e95!important;border-radius:3px!important;
+ box-shadow:none!important;font:10px system-ui!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"] .exo-bottom-dock-tab[aria-pressed="true"]{
+ background:#2a6182!important;color:#fff!important;border-color:#8bcaff!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"] .exo-dock-layout-controls{
+ top:1px!important;right:4px!important;height:20px!important;max-height:20px!important;
+ padding:0!important;background:#203648!important;
+}
+[data-exo-grade-dock-host="true"][data-exo-dock-edge="top"] .exo-dock-layout-controls button{
+ height:19px!important;min-height:19px!important;padding:0 6px!important;
+ background:#2d4556!important;color:#e3f2ff!important;border:1px solid #66849c!important;
+}
+
+/* Neutral measurement surfaces: identical contrast in floating and docked mode.
+   Deliberate scope/specificity prevents shell/theme rules tinting data blue. */
+.optitex-grading-table,
+.exo-grade-bottom-widget {
+ --measure-paper:#ffffff;--measure-header:#eef0f2;--measure-ink:#20252b;
+ --measure-muted:#505862;--measure-line:#cbd0d6;--measure-selected:#e1e5e9;
+ background:var(--measure-paper)!important;color:var(--measure-ink)!important;
+ color-scheme:light;
+}
+.exo-grade-bottom-widget .exo-grade-bottom-widget__titlebar {
+ background:#eef0f2!important;color:#20252b!important;border-color:#cbd0d6!important;
+}
+.exo-grade-bottom-widget .exo-grade-bottom-widget__titlebar small {color:#505862!important}
+.exo-grade-bottom-widget .exo-grade-bottom-widget__corner-grip {
+ background:transparent!important;color:#505862!important;border-color:transparent!important;
+}
+.optitex-grading-table :is(.optitex-grade-inline-tools,.optitex-compare-controls) {
+ background:#f5f6f7!important;border-color:#cbd0d6!important;border-radius:3px;
+}
+.optitex-grading-table :is(label,small,strong,.optitex-table-notice) {color:#505862!important}
+.optitex-grading-table :is(button,select,input[type=number]) {
+ background:#fff!important;color:#20252b!important;border-color:#aeb6bf!important;
+ box-shadow:none!important;
+}
+.optitex-grading-table button:hover:not(:disabled) {background:#e9ecef!important;border-color:#626d78!important}
+.optitex-grading-table button[aria-pressed=true] {
+ background:#dce1e6!important;color:#111820!important;box-shadow:inset 0 -2px #404b57!important;
+}
+.optitex-grading-table button:disabled {opacity:1!important;color:#747d86!important;background:#f3f4f5!important;border-color:#d6dbe0!important}
+.optitex-grading-table :is(th,td) {color:#20252b!important;border-color:#cbd0d6!important}
+.optitex-grading-table thead th {background:#eef0f2!important;color:#303943!important;font-weight:650}
+.optitex-grading-table tbody tr:nth-child(odd) {background:#fff!important}
+.optitex-grading-table tbody tr:nth-child(even) {background:#f7f8f9!important}
+.optitex-grading-table tbody tr:hover {background:#edf0f3!important}
+.optitex-grading-table tbody tr.is-active {background:#e1e5e9!important;box-shadow:inset 3px 0 #424d59!important}
+.optitex-grading-table tbody th {background:inherit!important}
+.optitex-grading-table tbody th button {background:transparent!important}
+.optitex-grading-table input[type=checkbox] {accent-color:#414b57!important}
+.optitex-grading-table :is(button,input,select):focus-visible {
+ outline:2px solid #252f3a!important;outline-offset:1px!important;
+}
+.optitex-grading-table .optitex-table-scroll {scrollbar-color:#b1b8c0 #f4f5f6}
+.optitex-grading-table [role=alert] {color:#8b2727!important;background:#fff1f0!important}
+.optitex-grading-table .optitex-inline-tool-divider {border-color:#cbd0d6!important}
+
+/* Optitex-density measurement mode: all six sizes remain visible inside
+   a short dock alongside the nested toolbar; table data takes precedence. */
+.exo-grade-bottom-widget--docked:has(.clo-floating-tool--nested) .exo-grade-bottom-widget__content{
+ flex:1 1 auto!important;min-height:0!important;overflow:hidden!important;
+}
+.exo-grade-bottom-widget--docked:has(.clo-floating-tool--nested) .optitex-grading-table{
+ gap:1px!important;padding:2px 3px!important;min-height:0!important;
+}
+.exo-grade-bottom-widget--docked:has(.clo-floating-tool--nested) .optitex-grading-tabs{
+ height:17px!important;min-height:17px!important;max-height:17px!important;margin:0!important;
+}
+.exo-grade-bottom-widget--docked:has(.clo-floating-tool--nested) .optitex-grade-inline-tools{
+ height:19px!important;min-height:19px!important;max-height:19px!important;padding:0 2px!important;
+}
+.exo-grade-bottom-widget--docked:has(.clo-floating-tool--nested) .optitex-compare-controls{
+ display:flex!important;flex-wrap:nowrap!important;gap:3px!important;
+ height:23px!important;min-height:23px!important;max-height:23px!important;padding:1px 2px!important;
+}
+.exo-grade-bottom-widget--docked:has(.clo-floating-tool--nested) .optitex-compare-controls label{
+ flex:1 1 0!important;min-width:0!important;overflow:hidden!important;
+ font-size:9px!important;white-space:nowrap!important;
+}
+.exo-grade-bottom-widget--docked:has(.clo-floating-tool--nested) .optitex-compare-controls :is(select,input){
+ width:100%!important;min-width:0!important;max-width:none!important;
+ min-height:18px!important;height:18px!important;font-size:9px!important;padding:0 2px!important;
+}
+.exo-grade-bottom-widget--docked:has(.clo-floating-tool--nested) .optitex-table-scroll{
+ flex:1 1 auto!important;min-height:0!important;overflow:auto!important;
+}
+.exo-grade-bottom-widget--docked:has(.clo-floating-tool--nested) .optitex-grading-table table{
+ width:100%!important;table-layout:fixed!important;font-size:10px!important;line-height:1.1!important;
+}
+.exo-grade-bottom-widget--docked:has(.clo-floating-tool--nested) .optitex-grading-table :is(th,td),
+.exo-grade-bottom-widget--docked:has(.clo-floating-tool--nested) .optitex-grading-table tbody :is(th,td){
+ height:18px!important;min-height:18px!important;max-height:18px!important;
+ padding:1px 3px!important;font-size:10px!important;line-height:15px!important;
+}
+.exo-grade-bottom-widget--docked:has(.clo-floating-tool--nested) .optitex-grading-table :is(button,select,input){
+ min-height:17px!important;height:17px!important;font-size:10px!important;padding:0 2px!important;
+}
+.exo-grade-bottom-widget--docked:has(.clo-floating-tool--nested) .optitex-grading-table tbody td input[type=number]{
+ width:100%!important;min-width:0!important;height:17px!important;
+}
+
+/* Strict neutral measurement system: the SAME clear canvas for floating and
+   embedded Grade Table / Compare Length. Docking changes density, not colors. */
+.exo-grade-bottom-widget .optitex-grading-table,
+.exo-grade-bottom-widget--docked .optitex-grading-table,
+[data-exo-grade-dock-host="true"] .exo-grade-bottom-widget .optitex-grading-table{
+ --exo-table-bg:#ffffff;--exo-table-head:#edf0f2;--exo-table-stripe:#f8f9fa;
+ --exo-table-line:#c9cfd5;--exo-table-text:#242a30;--exo-table-muted:#505963;
+ background:var(--exo-table-bg)!important;color:var(--exo-table-text)!important;
+ border-color:var(--exo-table-line)!important;box-shadow:none!important;color-scheme:light!important;
+}
+.exo-grade-bottom-widget .optitex-grading-table table,
+[data-exo-grade-dock-host="true"] .exo-grade-bottom-widget .optitex-grading-table table{
+ background:#fff!important;color:#242a30!important;border-collapse:collapse;line-height:1.3!important;
+}
+.exo-grade-bottom-widget .optitex-grading-table :is(th,td),
+[data-exo-grade-dock-host="true"] .exo-grade-bottom-widget .optitex-grading-table :is(th,td){
+ background:transparent;color:#242a30!important;border-color:#c9cfd5!important;
+ padding:3px 6px!important;font-size:11px!important;min-height:24px!important;
+}
+.exo-grade-bottom-widget .optitex-grading-table thead th,
+[data-exo-grade-dock-host="true"] .exo-grade-bottom-widget .optitex-grading-table thead th{
+ background:#edf0f2!important;color:#252c33!important;font-weight:700!important;
+}
+.exo-grade-bottom-widget .optitex-grading-table tbody tr:nth-child(even){background:#f8f9fa!important}
+.exo-grade-bottom-widget .optitex-grading-table tbody tr.is-active{background:#e3e7eb!important}
+.exo-grade-bottom-widget .optitex-grading-table :is(input,select,button),
+[data-exo-grade-dock-host="true"] .exo-grade-bottom-widget .optitex-grading-table :is(input,select,button){
+ color:#252c33!important;background:#fff!important;border-color:#aeb6bf!important;
+ font-size:11px!important;min-height:23px!important;border-radius:3px!important;
+}
+.exo-grade-bottom-widget .optitex-grading-table :is(label,small,strong,p),
+[data-exo-grade-dock-host="true"] .exo-grade-bottom-widget .optitex-grading-table :is(label,small,strong,p){color:#424b54!important}
+.exo-grade-bottom-widget .optitex-grading-table .optitex-compare-controls,
+[data-exo-grade-dock-host="true"] .exo-grade-bottom-widget .optitex-grading-table .optitex-compare-controls{
+ background:#f4f5f6!important;border-color:#c9cfd5!important;gap:5px!important;
+}
+/* Very narrow embedded slots preserve legible essential measurements rather
+   than squeezing the table type to 8px. Secondary columns remain accessible. */
+[data-exo-grade-dock-host="true"] .exo-grade-bottom-widget--docked .optitex-grading-table{
+ min-width:0!important;max-width:100%!important;container-type:inline-size;
+}
+@container (max-width:380px){
+ [data-exo-grade-dock-host="true"] .exo-grade-bottom-widget--docked .optitex-grading-table :is(th,td){padding:2px 4px!important;font-size:10px!important}
+ [data-exo-grade-dock-host="true"] .exo-grade-bottom-widget--docked .optitex-grading-table :is(input,select,button){font-size:10px!important;min-height:21px!important}
+}
+/* Shared bottom table dock in 2D-only, 3D-only and combined workspaces. This
+   row stays beneath the full editor, not above any canvas or inspector. */
+.cc-rust-embedded .cc-embedded-root:where(.cc-embedded-split,.cc-embedded-stack,.cc-embedded-3d,.cc-embedded-2d)>.exo-grade-workspace-dock-host[data-exo-dock-edge="bottom"]{
+ order:100!important;position:relative!important;flex-shrink:0!important;
+ width:100%!important;min-width:0!important;max-width:100%!important;
+ background:var(--studio-sidebar,#24292d)!important;
+}
+.cc-rust-embedded .cc-embedded-root:where(.cc-embedded-split,.cc-embedded-stack,.cc-embedded-3d,.cc-embedded-2d)>.exo-grade-workspace-dock-host[data-exo-dock-edge="bottom"][data-exo-grade-dock-occupied="true"]{
+ height:clamp(190px,var(--exo-bottom-dock-height,268px),min(42dvh,440px))!important;
+ min-height:190px!important;overflow:hidden!important;
+}
+.cc-rust-embedded .cc-embedded-root:where(.cc-embedded-split,.cc-embedded-stack,.cc-embedded-3d,.cc-embedded-2d)>.exo-grade-workspace-dock-host[data-exo-dock-edge="bottom"]>.exo-grade-bottom-widget--docked{
+ min-width:0!important;overflow:hidden!important;
+}
+.cc-rust-embedded .cc-embedded-root .exo-grade-bottom-widget--docked .exo-grade-bottom-widget__content{
+ min-height:0!important;overflow:auto!important;
+}
+.cc-rust-embedded .cc-embedded-root .exo-grade-bottom-widget--docked .optitex-table-scroll{
+ overflow:auto!important;min-height:0!important;
+}
+/* Global EXO table dock spans below all five columns, including the Library,
+   both toolbars, Object Browser and Property Editor. One grid row is reserved
+   for the dock, so the native 2D/3D canvases shrink instead of being covered. */
+.app-shell .main-layout.clo-adjustable-panels:has(>.exo-global-grade-dock-host){
+ grid-template-rows:minmax(0,1fr) 29px!important;
+}
+.app-shell .main-layout.clo-adjustable-panels:has(>.exo-global-grade-dock-host[data-exo-grade-dock-occupied="true"]){
+ grid-template-rows:minmax(0,1fr) clamp(190px,var(--exo-bottom-dock-height,276px),min(44dvh,440px))!important;
+}
+.app-shell .main-layout.clo-adjustable-panels:has(>.exo-global-grade-dock-host)>.exo-global-grade-dock-host{
+ grid-column:1/-1!important;grid-row:-2/-1!important;
+ min-width:0!important;width:100%!important;max-width:100%!important;
+ height:100%!important;min-height:29px!important;flex:none!important;
+ z-index:100075!important;position:relative!important;
+}
+.app-shell .main-layout.clo-adjustable-panels:has(>.exo-global-grade-dock-host)>.asset-browser,
+.app-shell .main-layout.clo-adjustable-panels:has(>.exo-global-grade-dock-host)>.tool-rail,
+.app-shell .main-layout.clo-adjustable-panels:has(>.exo-global-grade-dock-host)>.workspaces,
+.app-shell .main-layout.clo-adjustable-panels:has(>.exo-global-grade-dock-host)>.clo-inspector{
+ min-height:0!important;grid-row:1!important;
+}
+.app-shell .main-layout.clo-adjustable-panels>.exo-global-grade-dock-host[data-exo-grade-dock-occupied="true"]>.exo-grade-bottom-widget--docked{
+ height:100%!important;min-width:0!important;
+}
+/* Independent secondary dock: inside the actual ClothCraft board. The
+   full-workspace row remains available below Library, toolbars and inspector. */
+.cc-rust-embedded .cc-embedded-root>.exo-grade-inner-bottom-dock[data-exo-dock-edge="inner-bottom"]{
+ order:99!important;flex:0 0 29px!important;height:29px!important;min-height:29px!important;
+ width:100%!important;position:relative!important;overflow:visible!important;
+}
+.cc-rust-embedded .cc-embedded-root>.exo-grade-inner-bottom-dock[data-exo-dock-edge="inner-bottom"][data-exo-grade-dock-occupied="true"]{
+ flex:0 0 auto!important;height:clamp(170px,var(--exo-bottom-dock-height,242px),min(42dvh,420px))!important;
+ min-height:170px!important;overflow:hidden!important;
+}
+.cc-rust-embedded .cc-embedded-root>.exo-grade-inner-bottom-dock[data-exo-dock-edge="inner-bottom"] .exo-grade-bottom-widget__content{
+ overflow:auto!important;
+}
+/* Hide the idle full-board docking rail entirely. A zero-height drop target
+   remains registered so users can still dock tables beneath every panel. */
+.app-shell .main-layout.clo-adjustable-panels:has(>.exo-global-grade-dock-host:not([data-exo-grade-dock-occupied="true"]):not([data-exo-grade-dock-drag-hover="true"])){grid-template-rows:minmax(0,1fr) 0px!important}
+.app-shell .main-layout.clo-adjustable-panels>.exo-global-grade-dock-host:not([data-exo-grade-dock-occupied="true"]):not([data-exo-grade-dock-drag-hover="true"]){height:0!important;min-height:0!important;padding:0!important;border:0!important;overflow:visible!important}
+.app-shell .main-layout.clo-adjustable-panels>.exo-global-grade-dock-host:not([data-exo-grade-dock-occupied="true"]):not([data-exo-grade-dock-drag-hover="true"])>.exo-bottom-dock-rail{display:none!important}
+.app-shell .main-layout.clo-adjustable-panels:has(>.exo-global-grade-dock-host[data-exo-grade-dock-drag-hover="true"]:not([data-exo-grade-dock-occupied="true"])){grid-template-rows:minmax(0,1fr) 29px!important}
+
+/* Shared layout ownership: an idle/occupied grade dock must not override
+   reserved top/bottom horizontal tool rows. The horizontal dock controller
+   owns row allocation when either tool rail is horizontal. */
+.app-shell .main-layout.clo-adjustable-panels:is([data-exo-right-tools-placement="top"],[data-exo-left-tools-placement="top"]):has(>.exo-global-grade-dock-host:not([data-exo-grade-dock-occupied="true"]):not([data-exo-grade-dock-drag-hover="true"])){grid-template-rows:56px minmax(0,1fr) 0px!important}
+.app-shell .main-layout.clo-adjustable-panels:is([data-exo-right-tools-placement="top"],[data-exo-left-tools-placement="top"]):has(>.exo-global-grade-dock-host:not([data-exo-grade-dock-occupied="true"]):not([data-exo-grade-dock-drag-hover="true"]))>:is(.asset-browser,.tool-rail,.workspaces,.clo-inspector){grid-row:2!important}
+
+/* Horizontal toolbar + global grading dock share one explicit grid contract.
+   56px horizontal track, flexible viewer row, then the grade dock track. */
+.app-shell .main-layout.clo-adjustable-panels:is([data-exo-right-tools-placement="top"],[data-exo-left-tools-placement="top"]):has(>.exo-global-grade-dock-host[data-exo-grade-dock-occupied="true"]){grid-template-rows:56px minmax(0,1fr) clamp(190px,var(--exo-bottom-dock-height,276px),min(44dvh,440px))!important}
+.app-shell .main-layout.clo-adjustable-panels:is([data-exo-right-tools-placement="top"],[data-exo-left-tools-placement="top"]):has(>.exo-global-grade-dock-host[data-exo-grade-dock-drag-hover="true"]:not([data-exo-grade-dock-occupied="true"])){grid-template-rows:56px minmax(0,1fr) 29px!important}
+.app-shell .main-layout.clo-adjustable-panels:is([data-exo-right-tools-placement="top"],[data-exo-left-tools-placement="top"]):has(>.exo-global-grade-dock-host)>.exo-global-grade-dock-host{grid-row:3!important}
+/* Horizontal toolbar at bottom must reserve its own row even with an idle
+   global grade dock, which otherwise sets the final grid row to 0px. */
+.app-shell .main-layout.clo-adjustable-panels:is([data-exo-right-tools-placement="bottom"],[data-exo-left-tools-placement="bottom"]):not(:is([data-exo-right-tools-placement="top"],[data-exo-left-tools-placement="top"])):has(>.exo-global-grade-dock-host:not([data-exo-grade-dock-occupied="true"]):not([data-exo-grade-dock-drag-hover="true"])){grid-template-rows:minmax(0,1fr) 56px 0px!important}
+.app-shell .main-layout.clo-adjustable-panels:is([data-exo-right-tools-placement="bottom"],[data-exo-left-tools-placement="bottom"]):not(:is([data-exo-right-tools-placement="top"],[data-exo-left-tools-placement="top"])):has(>.exo-global-grade-dock-host)>.exo-global-grade-dock-host{grid-row:3!important}
+
+/* Theme preset integration: both floating portals (document.body) and docked
+   widgets own their color variables. Never apply styles to garment geometry. */
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme]{
+ --exo-table-bg:var(--exo-measure-paper,#fff);
+ --exo-table-head:var(--exo-measure-header,#edf0f2);
+ --exo-table-stripe:var(--exo-measure-stripe,#f8f9fa);
+ --exo-table-line:var(--exo-measure-line,#c9cfd5);
+ --exo-table-text:var(--exo-measure-ink,#242a30);
+ --exo-table-muted:var(--exo-measure-muted,#505963);
+ --measure-paper:var(--exo-measure-paper,#fff);
+ --measure-header:var(--exo-measure-header,#edf0f2);
+ --measure-ink:var(--exo-measure-ink,#242a30);
+ --measure-muted:var(--exo-measure-muted,#505963);
+ --measure-line:var(--exo-measure-line,#c9cfd5);
+ --measure-selected:var(--exo-measure-selected,#e3e7eb);
+ background:var(--exo-measure-paper)!important;color:var(--exo-measure-ink)!important;
+ border-color:var(--exo-measure-line)!important;color-scheme:normal!important;
+}
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme] .exo-grade-bottom-widget__titlebar{
+ background:var(--exo-measure-header)!important;color:var(--exo-measure-ink)!important;border-color:var(--exo-measure-line)!important;
+}
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme] .exo-grade-bottom-widget__titlebar :is(strong,small,button,select,svg){
+ color:var(--exo-measure-ink)!important;
+}
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme] :is(.optitex-grading-table,.optitex-grading-table table,.exo-grade-bottom-widget__content){
+ background:var(--exo-measure-paper)!important;color:var(--exo-measure-ink)!important;
+ border-color:var(--exo-measure-line)!important;color-scheme:normal!important;
+}
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme] .optitex-grading-table :is(th,td){
+ color:var(--exo-measure-ink)!important;border-color:var(--exo-measure-line)!important;
+}
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme] .optitex-grading-table thead th{
+ background:var(--exo-measure-header)!important;color:var(--exo-measure-ink)!important;
+}
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme] .optitex-grading-table tbody tr:nth-child(even){
+ background:var(--exo-measure-stripe)!important;
+}
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme] .optitex-grading-table tbody tr.is-active{
+ background:var(--exo-measure-selected)!important;
+}
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme] .optitex-grading-table :is(input,select,button){
+ background:var(--exo-measure-field,#fff)!important;color:var(--exo-measure-ink)!important;border-color:var(--exo-measure-line)!important;
+}
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme] .optitex-grading-table :is(label,small,strong,p,.optitex-table-notice){
+ color:var(--exo-measure-muted)!important;
+}
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme] .optitex-grading-table :is(.optitex-compare-controls,.optitex-grade-inline-tools){
+ background:var(--exo-measure-header)!important;border-color:var(--exo-measure-line)!important;
+}
+
+/* Reference-aligned CAD worksheet (Untitled.PNG): concise size checklist on
+   the left, measured contour matrix on the right. The preset-driven paper/ink
+   variables remain authoritative for both floating and embedded palettes. */
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"]{
+ gap:2px!important;padding:3px 5px!important;min-width:0;overflow:hidden!important;
+ background:var(--exo-measure-paper,#fff)!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-tabs{
+ display:flex!important;align-items:center!important;flex-wrap:nowrap!important;
+ gap:4px!important;height:23px!important;min-height:23px!important;
+ max-height:23px!important;padding:0 1px!important;overflow:hidden!important;
+ border-bottom:1px solid var(--exo-measure-line,#ccd2d7);
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-tabs>strong{
+ display:none!important; /* the real dock title already identifies this widget */
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grade-view-switch{
+ display:inline-flex;align-items:center;gap:0;flex:none;
+ border:1px solid var(--exo-measure-line,#cbd1d7);border-radius:3px;
+ overflow:hidden;background:var(--exo-measure-header,#eff1f3);
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grade-view-switch>button{
+ display:block;min-height:19px!important;height:19px!important;padding:1px 8px!important;
+ border:0!important;border-radius:0!important;box-shadow:none!important;
+ color:var(--exo-measure-muted,#56616c)!important;
+ background:var(--exo-measure-header,#eff1f3)!important;
+ font:600 10px/16px Inter,system-ui,sans-serif!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grade-view-switch>button+button{
+ border-left:1px solid var(--exo-measure-line,#cbd1d7)!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grade-view-switch>button[aria-pressed="true"]{
+ background:var(--exo-measure-selected,#e1e5e9)!important;
+ color:var(--exo-measure-ink,#222831)!important;
+ box-shadow:inset 0 -2px var(--exo-measure-ink,#434d58)!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-tabs>button{
+ min-height:19px!important;height:19px!important;padding:1px 6px!important;
+ font:500 10px/16px Inter,system-ui,sans-serif!important;
+ border-radius:2px!important;white-space:nowrap;
+ background:var(--exo-measure-header,#edf0f2)!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-tabs>button:first-of-type{margin-left:auto}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grade-inline-tools{
+ display:flex!important;flex-wrap:nowrap!important;align-items:center!important;
+ gap:3px!important;height:23px!important;min-height:23px!important;max-height:23px!important;
+ padding:1px 3px!important;margin:0!important;overflow:hidden!important;
+ border:0!important;border-bottom:1px solid var(--exo-measure-line,#cbd0d6)!important;
+ border-radius:0!important;
+ background:var(--exo-measure-header,#edf0f2)!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grade-inline-tools>.optitex-inline-tool-group,
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grade-inline-tools>.optitex-inline-grade-motion{
+ display:inline-flex!important;align-items:center!important;gap:2px!important;
+ flex:none!important;grid-column:auto!important;grid-row:auto!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grade-inline-tools>label{
+ flex:none!important;grid-column:auto!important;grid-row:auto!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grade-inline-tools button,
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grade-inline-tools select,
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grade-inline-tools input{
+ height:20px!important;min-height:20px!important;padding:1px 3px!important;
+ border-radius:2px!important;font-size:10px!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grade-inline-tools button{
+ min-width:21px!important;width:auto!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grade-inline-tools svg{
+ width:13px!important;height:13px!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grade-inline-tools .optitex-inline-tool-divider{
+ display:block!important;height:14px!important;margin:0 2px;
+ border-color:var(--exo-measure-line,#cbd0d6)!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-compare-controls{
+ display:flex!important;flex-wrap:nowrap!important;align-items:center!important;
+ flex:0 0 auto!important;height:24px!important;min-height:24px!important;max-height:24px!important;
+ gap:3px 9px!important;padding:1px 3px!important;margin:0!important;
+ overflow:hidden!important;border:0!important;border-bottom:1px solid var(--exo-measure-line,#cbd0d6)!important;
+ border-radius:0!important;background:var(--exo-measure-header,#eef0f2)!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-compare-controls label{
+ display:inline-flex!important;align-items:center!important;flex:0 1 auto!important;
+ min-width:0;gap:3px!important;white-space:nowrap;
+ font:500 10px Inter,system-ui,sans-serif!important;
+ color:var(--exo-measure-muted,#505862)!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-compare-controls label:nth-child(1){flex:1 1 140px!important}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-compare-controls label:nth-child(2){flex:1 1 95px!important}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-compare-controls label:nth-child(3){flex:1 1 75px!important}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-compare-controls label:nth-child(4){flex:0 0 68px!important}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-compare-controls :is(select,input){
+ flex:1 1 auto!important;min-width:0!important;max-width:100%!important;
+ height:19px!important;min-height:19px!important;padding:1px 3px!important;
+ font-size:10px!important;border-radius:2px!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table .optitex-table-scroll{
+ flex:1 1 auto!important;min-height:0!important;max-height:none!important;
+ overflow:hidden!important;scrollbar-width:none!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table table{
+ border-collapse:collapse!important;border-spacing:0!important;
+ width:100%!important;table-layout:fixed!important;
+ font:500 11px/1.15 Inter,system-ui,sans-serif!important;
+ font-variant-numeric:tabular-nums!important;
+ background:var(--exo-measure-paper,#fff)!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table :is(thead th,tbody th,tbody td){
+ box-sizing:border-box!important;height:21px!important;min-height:21px!important;
+ padding:1px 5px!important;line-height:17px!important;
+ border:1px solid var(--exo-measure-line,#cbd0d6)!important;
+ font-size:11px!important;white-space:nowrap!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table thead th{
+ height:22px!important;min-height:22px!important;
+ text-transform:none!important;letter-spacing:0!important;
+ font-weight:650!important;text-align:right!important;
+ background:var(--exo-measure-header,#eef0f2)!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table thead th:first-child,
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table thead th:nth-child(2){text-align:left!important}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table tbody tr.is-active{
+ background:var(--exo-measure-selected,#e2e5e9)!important;
+ box-shadow:inset 2px 0 var(--exo-measure-ink,#424a54)!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table tbody tr:focus-within{
+ outline:1px solid var(--exo-measure-ink,#525b65);outline-offset:-1px;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table tbody th button{
+ display:flex!important;align-items:center!important;justify-content:flex-start!important;
+ width:100%!important;min-width:0!important;min-height:19px!important;height:19px!important;
+ gap:5px!important;padding:0 3px!important;
+ font:600 11px/17px Inter,system-ui,sans-serif!important;
+ border:0!important;box-shadow:none!important;background:transparent!important;
+ color:var(--exo-measure-ink,#242a30)!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table tbody th button::before{
+ content:'';display:block;flex:0 0 4px;width:4px;height:13px;
+ background:var(--exo-grade-swatch,#7a99c6);
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table tbody th .optitex-base-size-mark{
+ color:var(--exo-measure-muted,#56606b)!important;font-size:9px!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-view="sizes"] table{
+ width:190px!important;max-width:100%!important;table-layout:fixed!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-view="sizes"] table :is(th,td):nth-child(1){width:44px!important;text-align:center!important}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-view="sizes"] table :is(th,td):nth-child(2){width:91px!important}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-view="sizes"] table :is(th,td):nth-child(3){width:48px!important;text-align:center!important}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-view="sizes"] input[type=color]{
+ width:22px!important;height:15px!important;min-height:15px!important;
+ margin:0!important;padding:0!important;border-radius:1px!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-view="sizes"] input[type=checkbox]{
+ width:13px;height:13px;margin:0;vertical-align:middle;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-display-mode="compare"] table :is(th,td):nth-child(1){width:15%!important;text-align:left!important}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-display-mode="compare"] table :is(th,td):nth-child(2),
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-display-mode="compare"] table :is(th,td):nth-child(3){width:19%!important}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-display-mode="compare"] table :is(th,td):nth-child(4){width:19%!important}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-display-mode="compare"] table :is(th,td):nth-child(5){width:12%!important}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-display-mode="compare"] table :is(th,td):nth-child(6){width:16%!important}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table td[data-compare-review="review"]{
+ color:#9b3733!important;font-weight:700!important;
+ background:color-mix(in srgb,var(--exo-measure-paper,#fff) 89%,#e89c97 11%)!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table td[data-compare-review="pass"]{
+ color:var(--exo-measure-ink,#20262d)!important;font-weight:650!important;
+}
+/* A narrower dock moves only the comparison's four selectors into two rows;
+   every parameter stays accessible and the measured grid remains unchanged. */
+@container (max-width:505px){
+ :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-compare-controls{
+  display:grid!important;grid-template-columns:1fr 1fr!important;
+  grid-template-rows:20px 20px!important;
+  height:43px!important;min-height:43px!important;max-height:43px!important;
+  gap:2px 6px!important;
+ }
+ :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-compare-controls label{
+  width:100%!important;min-width:0!important;
+ }
+}
+
+/* Fix the actual missing-variable bug: when no per-widget theme is configured,
+   earlier theme rules used var(--exo-measure-paper) with no fallback, making
+   every data surface transparent over the charcoal workspace. Defaults live
+   on the widget; inline Settings theme tokens always take precedence. */
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme]{
+ --exo-measure-paper:#ffffff;
+ --exo-measure-header:#edf0f2;
+ --exo-measure-stripe:#f7f8f9;
+ --exo-measure-line:#c9cfd5;
+ --exo-measure-ink:#242a30;
+ --exo-measure-muted:#525c66;
+ --exo-measure-selected:#e2e6ea;
+ --exo-measure-field:#ffffff;
+ background:var(--exo-measure-paper,#fff)!important;
+ color:var(--exo-measure-ink,#242a30)!important;
+}
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme] .exo-grade-bottom-widget__content,
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme] .optitex-grading-table,
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme] .optitex-grading-table table{
+ background:var(--exo-measure-paper,#fff)!important;
+ color:var(--exo-measure-ink,#242a30)!important;
+}
+/* Preserve the exact compact CAD row height even in tight dock columns. */
+[data-exo-grade-dock-host="true"]>:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"] tbody :is(th,td),
+.exo-global-grade-dock-host :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"] tbody :is(th,td){
+ height:21px!important;max-height:21px!important;padding:0 3px!important;
+ line-height:19px!important;
+}
+[data-exo-grade-dock-host="true"]>:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"] tbody tr,
+.exo-global-grade-dock-host :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"] tbody tr{
+ height:21px!important;max-height:21px!important;
+}
+[data-exo-grade-dock-host="true"]>:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"] tbody th button{
+ height:19px!important;min-height:19px!important;max-height:19px!important;
+ padding:0 3px!important;
+}
+[data-exo-grade-dock-host="true"]>:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-view="sizes"] input[type=color],
+.exo-global-grade-dock-host :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-view="sizes"] input[type=color]{
+ height:15px!important;min-height:15px!important;max-height:15px!important;
+ width:22px!important;padding:0!important;
+}
+
+/* Guarantee every six-size row fits the common 276px dock without a second
+   scrollbar. Reclaim vertical space from redundant chrome, never by hiding data. */
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"]{
+ gap:1px!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"]>.optitex-grading-tabs{
+ height:20px!important;min-height:20px!important;max-height:20px!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"]>.optitex-grade-inline-tools{
+ height:21px!important;min-height:21px!important;max-height:21px!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"]>.optitex-compare-controls{
+ height:22px!important;min-height:22px!important;max-height:22px!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"]>.optitex-grade-inline-tools :is(input,select,button){
+ max-height:19px!important;min-height:19px!important;height:19px!important;
+}
+:is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"]>.optitex-compare-controls :is(input,select){
+ max-height:18px!important;min-height:18px!important;height:18px!important;
+}
+
+/* 2026-10-28 tiny spreadsheet refinement based on Downloads/Untitled.PNG.
+   Only the docked data grid changes; floating palette dimensions, actions,
+   calculated measurements and editable grade inputs stay intact. The reference
+   does not stretch each tiny number across an entire wide dock. */
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"] .optitex-table-scroll {
+  display:block!important;
+  overflow:hidden!important;
+  scrollbar-width:none!important;
+}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"] table {
+  width:fit-content!important;
+  min-width:0!important;
+  max-width:100%!important;
+  table-layout:fixed!important;
+  border-spacing:0!important;
+  border-collapse:collapse!important;
+  font:400 10px/1.15 Arial,Helvetica,system-ui,sans-serif!important;
+  font-variant-numeric:tabular-nums!important;
+  background:var(--exo-measure-paper,#fff)!important;
+  color:var(--exo-measure-ink,#242a30)!important;
+  box-shadow:none!important;
+}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"] table :is(thead th,tbody th,tbody td){
+  box-sizing:border-box!important;
+  height:19px!important;
+  min-height:19px!important;
+  max-height:19px!important;
+  padding:0 4px!important;
+  line-height:18px!important;
+  font-size:10px!important;
+  font-weight:400!important;
+  letter-spacing:0!important;
+  border:1px solid color-mix(in srgb,var(--exo-measure-line,#c9cfd5) 65%,#fff)!important;
+  color:var(--exo-measure-ink,#242a30)!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  white-space:nowrap!important;
+}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"] table thead th{
+  height:20px!important;
+  min-height:20px!important;
+  max-height:20px!important;
+  text-transform:none!important;
+  font-weight:600!important;
+  font-size:10px!important;
+  background:var(--exo-measure-header,#eef0f2)!important;
+}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"] table tbody tr{
+  height:19px!important;
+  max-height:19px!important;
+  outline:0!important;
+  box-shadow:none!important;
+}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"] table tbody tr:nth-child(odd){
+  background:var(--exo-measure-paper,#fff)!important;
+}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"] table tbody tr:nth-child(even){
+  background:color-mix(in srgb,var(--exo-measure-paper,#fff) 96%,var(--exo-measure-header,#eef0f2))!important;
+}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"] table tbody tr.is-active{
+  background:color-mix(in srgb,var(--exo-measure-selected,#e2e6ea) 63%,var(--exo-measure-paper,#fff))!important;
+  outline:0!important;
+  box-shadow:none!important;
+}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"] table tbody tr:hover{
+  background:var(--exo-measure-selected,#e2e6ea)!important;
+}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"] table tbody th button{
+  display:flex!important;
+  width:100%!important;
+  min-width:0!important;
+  height:17px!important;
+  min-height:17px!important;
+  max-height:17px!important;
+  padding:0 2px!important;
+  gap:4px!important;
+  font:600 10px/16px Arial,Helvetica,system-ui,sans-serif!important;
+  border:0!important;
+  outline-offset:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"] table tbody th button::before{
+  width:3px!important;
+  height:11px!important;
+  flex-basis:3px!important;
+}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-reference-density="true"] table .optitex-base-size-mark{
+  font-size:9px!important;font-weight:400!important;
+}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-view="sizes"] table{
+  width:150px!important;
+  max-width:100%!important;
+}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-view="sizes"] table :is(th,td):nth-child(1){width:35px!important}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-view="sizes"] table :is(th,td):nth-child(2){width:79px!important}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-view="sizes"] table :is(th,td):nth-child(3){width:36px!important}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-view="sizes"] table input[type=color]{
+  width:17px!important;height:12px!important;min-height:12px!important;
+  max-height:12px!important;padding:0!important;margin:0!important;
+  border:1px solid #d3d7dd!important;border-radius:1px!important;
+}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-view="sizes"] table input[type=checkbox]{
+  width:12px!important;height:12px!important;min-width:12px!important;
+  margin:0!important;vertical-align:middle!important;
+}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-display-mode="compare"] table{
+  width:525px!important;
+  max-width:100%!important;
+}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-display-mode="compare"] table :is(th,td):nth-child(1){width:58px!important;text-align:left!important}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-display-mode="compare"] table :is(th,td):nth-child(2),
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-display-mode="compare"] table :is(th,td):nth-child(3){width:112px!important}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-display-mode="compare"] table :is(th,td):nth-child(4){width:93px!important}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-display-mode="compare"] table :is(th,td):nth-child(5){width:64px!important}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-display-mode="compare"] table :is(th,td):nth-child(6){width:86px!important}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-display-mode="compare"] table td[data-compare-review="review"]{
+  background:color-mix(in srgb,var(--exo-measure-paper,#fff) 94%,#ef9790)!important;
+  color:#93443a!important;font-weight:600!important;
+}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-display-mode="compare"] table td[data-compare-review="pass"]{
+  color:var(--exo-measure-muted,#56606a)!important;font-weight:400!important;
+}
+/* For editable offsets keep full controls but let the matrix shrink to its data. */
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-view="offsets"][data-grade-display-mode="values"] table{
+  width:445px!important;max-width:100%!important;
+}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-view="offsets"] table tbody td input[type=number]{
+  width:100%!important;min-width:0!important;max-width:none!important;
+  height:17px!important;min-height:17px!important;max-height:17px!important;
+  padding:0 2px!important;font:10px/15px Arial,Helvetica,sans-serif!important;
+  border-color:transparent!important;background:transparent!important;
+  box-shadow:none!important;
+}
+body :is(.exo-grade-bottom-widget--docked,.exo-grade-bottom-widget--reference) .optitex-grading-table[data-grade-view="offsets"] table tbody td input[type=number]:focus{
+  border-color:#8d9dab!important;background:var(--exo-measure-field,#fff)!important;
+}
+
+/* V8: Floating and docked worksheets share the exact same flat CAD grid.
+   Only their surrounding window/dock controls are allowed to differ. */
+.exo-grade-bottom-widget--reference:not(.exo-grade-bottom-widget--docked) .exo-grade-bottom-widget__content{
+ display:flex!important;min-height:0!important;overflow:hidden!important;
+ background:var(--exo-measure-paper,#fff)!important;
+}
+.exo-grade-bottom-widget--reference:not(.exo-grade-bottom-widget--docked) .optitex-grading-table{
+ display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
+ min-width:0!important;height:100%!important;overflow:hidden!important;
+}
+.exo-grade-bottom-widget--reference .optitex-grading-table .optitex-table-scroll{
+ flex:1 1 auto!important;min-height:0!important;overflow:hidden!important;
+}
+.exo-grade-bottom-widget--reference .optitex-grade-inline-tools[data-grade-compact-tools="true"]{
+ display:flex!important;align-items:center!important;gap:3px!important;
+ height:23px!important;min-height:23px!important;max-height:23px!important;
+ overflow:hidden!important;background:var(--exo-measure-header,#edf0f2)!important;
+ color:var(--exo-measure-ink,#242a30)!important;
+ border-color:var(--exo-measure-line,#c9cfd5)!important;
+}
+.exo-grade-bottom-widget--reference .optitex-grade-inline-tools[data-grade-compact-tools="true"]> :is(.optitex-inline-tool-group,.optitex-grade-point-picker){
+ display:inline-flex!important;align-items:center!important;flex:0 0 auto!important;
+ min-width:0!important;gap:2px!important;
+}
+.exo-grade-bottom-widget--reference .optitex-grade-inline-tools[data-grade-compact-tools="true"] .optitex-inline-tool-group button{
+ width:20px!important;min-width:20px!important;max-width:20px!important;
+ height:19px!important;min-height:19px!important;padding:1px!important;
+ display:grid!important;place-items:center!important;border-radius:2px!important;
+ background:var(--exo-measure-field,#fff)!important;
+ color:var(--exo-measure-ink,#242a30)!important;
+ border:1px solid var(--exo-measure-line,#c9cfd5)!important;
+}
+.exo-grade-bottom-widget--reference .optitex-grade-inline-tools[data-grade-compact-tools="true"] svg{
+ width:12px!important;height:12px!important;
+ color:var(--exo-measure-ink,#242a30)!important;
+}
+.exo-grade-bottom-widget--reference .optitex-grade-inline-tools[data-grade-compact-tools="true"] .optitex-inline-tool-group button>span{display:none!important}
+.exo-grade-bottom-widget--reference .optitex-grade-inline-tools[data-grade-compact-tools="true"] :is(select,input){
+ color:var(--exo-measure-ink,#242a30)!important;
+ background:var(--exo-measure-field,#fff)!important;
+ border:1px solid var(--exo-measure-line,#c9cfd5)!important;
+ color-scheme:normal!important;
+}
+.exo-grade-bottom-widget--reference .optitex-grade-inline-tools[data-grade-compact-tools="true"] .optitex-grade-more-tools{
+ margin-left:3px!important;padding:1px 5px!important;
+ height:19px!important;min-height:19px!important;
+ border:1px solid var(--exo-measure-line,#c9cfd5)!important;
+ border-radius:2px!important;
+ color:var(--exo-measure-ink,#242a30)!important;
+ background:var(--exo-measure-field,#fff)!important;
+ font:600 9px Inter,system-ui,sans-serif!important;
+}
+.exo-grade-bottom-widget--reference .optitex-grade-inline-tools[data-grade-compact-tools="true"][data-grade-advanced-open="false"]>.optitex-inline-grade-motion{
+ display:none!important;
+}
+.exo-grade-bottom-widget--reference .optitex-grade-inline-tools[data-grade-compact-tools="true"][data-grade-advanced-open="true"]{
+ flex-wrap:wrap!important;height:auto!important;min-height:42px!important;max-height:50px!important;
+ overflow:hidden!important;
+}
+/* The nested grading widget adopts the parent chart's colors. Its floating
+   styling never overrides the tabular palette while embedded inside a table. */
+.exo-grade-bottom-widget--reference .exo-grade-bottom-widget__toolbar-slot:has(>.clo-floating-tool--nested){
+ background:var(--exo-measure-header,#edf0f2)!important;
+ border-bottom:1px solid var(--exo-measure-line,#c9cfd5)!important;
+ color:var(--exo-measure-ink,#242a30)!important;
+ max-height:55px!important;overflow:hidden!important;
+}
+.exo-grade-bottom-widget--reference .clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"]{
+ background:var(--exo-measure-header,#edf0f2)!important;
+ border:0!important;box-shadow:none!important;color:var(--exo-measure-ink,#242a30)!important;
+ color-scheme:normal!important;
+ min-height:0!important;max-height:53px!important;
+ display:flex!important;flex-direction:column!important;
+}
+.exo-grade-bottom-widget--reference .clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-header{
+ display:flex!important;align-items:center!important;
+ height:21px!important;min-height:21px!important;max-height:21px!important;
+ padding:0 4px!important;margin:0!important;
+ background:var(--exo-measure-header,#edf0f2)!important;
+ color:var(--exo-measure-ink,#242a30)!important;
+ border-bottom:1px solid var(--exo-measure-line,#c9cfd5)!important;
+}
+.exo-grade-bottom-widget--reference .clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-header> :is(select,button),
+.exo-grade-bottom-widget--reference .clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-grip{
+ color:var(--exo-measure-ink,#242a30)!important;
+ background:var(--exo-measure-field,#fff)!important;
+ border:1px solid var(--exo-measure-line,#c9cfd5)!important;
+ color-scheme:normal!important;
+ height:19px!important;min-height:19px!important;
+}
+.exo-grade-bottom-widget--reference .clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade{
+ display:flex!important;flex-direction:row!important;align-items:center!important;
+ gap:4px!important;height:27px!important;min-height:27px!important;max-height:27px!important;
+ padding:1px 4px!important;overflow:hidden!important;
+ background:var(--exo-measure-paper,#fff)!important;
+ color:var(--exo-measure-ink,#242a30)!important;
+}
+.exo-grade-bottom-widget--reference .clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings{
+ display:flex!important;flex:0 0 auto!important;flex-wrap:nowrap!important;
+ align-items:center!important;min-height:24px!important;max-height:24px!important;
+ gap:3px!important;overflow:hidden!important;
+ color:var(--exo-measure-ink,#242a30)!important;
+}
+.exo-grade-bottom-widget--reference .clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings label:nth-child(-n+2){display:none!important}
+.exo-grade-bottom-widget--reference .clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings :is(select,input,button){
+ width:38px!important;max-width:45px!important;min-width:0!important;
+ height:20px!important;min-height:20px!important;padding:0 2px!important;
+ font:9px system-ui!important;background:var(--exo-measure-field,#fff)!important;
+ color:var(--exo-measure-ink,#242a30)!important;
+ border:1px solid var(--exo-measure-line,#c9cfd5)!important;
+ color-scheme:normal!important;
+}
+.exo-grade-bottom-widget--reference .clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid{
+ display:grid!important;flex:1 1 auto!important;min-width:0!important;
+ grid-template-columns:repeat(12,minmax(0,1fr))!important;
+ grid-template-rows:21px!important;gap:2px!important;
+ height:21px!important;max-height:21px!important;overflow:hidden!important;
+}
+.exo-grade-bottom-widget--reference .clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button{
+ display:grid!important;place-items:center!important;min-width:0!important;
+ min-height:21px!important;max-height:21px!important;height:21px!important;
+ padding:1px!important;border:1px solid var(--exo-measure-line,#c9cfd5)!important;
+ border-radius:2px!important;
+ background:var(--exo-measure-field,#fff)!important;
+ color:var(--exo-measure-ink,#242a30)!important;
+}
+.exo-grade-bottom-widget--reference .clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button svg{
+ width:12px!important;height:12px!important;color:var(--exo-measure-ink,#242a30)!important;
+}
+.exo-grade-bottom-widget--reference .clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button span{display:none!important}
+.exo-grade-bottom-widget--reference .clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid button:hover:not(:disabled){
+ background:var(--exo-measure-selected,#e2e6ea)!important;
+}
+@container (max-width:520px){
+ .exo-grade-bottom-widget--reference .clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__settings{display:none!important}
+}
+/* Avoid duplicate icon strips: the native quick actions replace the built-in
+   point toolbar only for the widget currently hosting them. */
+.exo-grade-bottom-widget--reference:has(.clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"]) .optitex-grade-inline-tools{
+ display:none!important;
+}
+
+/* Exact-size native checkboxes: legacy generic input min-height was silently
+   stretching every Grading Table row to 24px and clipping the sixth size. */
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget].exo-grade-bottom-widget--reference .optitex-grading-table[data-reference-density="true"] table input[type=checkbox]{
+ display:inline-block!important;width:13px!important;min-width:13px!important;max-width:13px!important;
+ height:13px!important;min-height:13px!important;max-height:13px!important;
+ padding:0!important;margin:0!important;vertical-align:middle!important;
+}
+/* Table appearance takes precedence over the floating tool's studio tokens.
+   These selectors target the portal inside either worksheet and follow chart
+   palette changes live. Floating toolbar appearance is deliberately untouched. */
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme].exo-grade-bottom-widget--reference .clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"]{
+ background:var(--exo-measure-header)!important;color:var(--exo-measure-ink)!important;
+ border-color:var(--exo-measure-line)!important;
+}
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme].exo-grade-bottom-widget--reference .clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .clo-floating-tool-header{
+ background:var(--exo-measure-header)!important;color:var(--exo-measure-ink)!important;
+ border-color:var(--exo-measure-line)!important;
+}
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme].exo-grade-bottom-widget--reference .clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade{
+ background:var(--exo-measure-paper)!important;color:var(--exo-measure-ink)!important;
+}
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme].exo-grade-bottom-widget--reference .clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] :is(.exo-quick-grade__grid button,.exo-quick-grade__settings select,.exo-quick-grade__settings input,.clo-floating-tool-header select,.clo-floating-tool-header button){
+ background:var(--exo-measure-field)!important;
+ color:var(--exo-measure-ink)!important;
+ border-color:var(--exo-measure-line)!important;
+ color-scheme:normal!important;
+}
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme].exo-grade-bottom-widget--reference .clo-floating-tool--nested[data-clo-floating-widget="grading-quick-toolbar"] .exo-quick-grade__grid svg{
+ color:var(--exo-measure-ink)!important;
+}
+/* The point-selection button had a 19px legacy minimum, expanding a nominal
+   19px CAD row to 21px. Restore an actual 19px table line. */
+body .exo-grade-bottom-widget[data-exo-grade-bottom-widget][data-exo-measure-theme].exo-grade-bottom-widget--reference .optitex-grading-table[data-reference-density="true"] table tbody th button{
+ height:16px!important;min-height:16px!important;max-height:16px!important;
+ line-height:16px!important;padding:0 2px!important;
+}
+/* The advanced movement controls remain genuinely accessible when explicitly
+   requested, including in narrow grading widgets. Default compact view hides
+   them to preserve the reference's restrained two-row control hierarchy. */
+.exo-grade-bottom-widget--reference .optitex-grade-inline-tools[data-grade-compact-tools="true"][data-grade-advanced-open="true"]>.optitex-inline-grade-motion{
+ display:flex!important;align-items:center!important;flex:1 0 140px!important;
+ min-height:19px!important;height:19px!important;gap:3px!important;
+}
+.exo-grade-bottom-widget--reference .optitex-grade-inline-tools[data-grade-compact-tools="true"][data-grade-advanced-open="true"]>.optitex-inline-grade-motion :is(button,select,input){
+ min-height:18px!important;height:18px!important;
+ color:var(--exo-measure-ink,#242a30)!important;
+ background:var(--exo-measure-field,#fff)!important;
+ border-color:var(--exo-measure-line,#c9cfd5)!important;
+}
+/* Final parity: the same 19px measured cell height in a dock as in the
+   floating worksheet. An older host-specific min-height was forcing 21px. */
+body [data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--reference[data-exo-grade-bottom-widget][data-exo-measure-theme] .optitex-grading-table[data-reference-density="true"] table tbody tr,
+body [data-exo-grade-dock-host="true"]>.exo-grade-bottom-widget--reference[data-exo-grade-bottom-widget][data-exo-measure-theme] .optitex-grading-table[data-reference-density="true"] table tbody :is(th,td){
+ height:19px!important;min-height:19px!important;max-height:19px!important;
+ padding-block:0!important;line-height:17px!important;
+}

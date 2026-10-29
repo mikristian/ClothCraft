@@ -1,9 +1,16 @@
+import { rustEllipsoidClearance, rustCapsuleClearance } from './rustAvatarClearanceKernel.js'
+import { projectRustDistanceConstraint } from './rustDistanceConstraintKernel.js'
+import { createRustPbdSweep } from './rustPbdKernel.js'
+import { projectRustAnchor } from './rustAnchorKernel.js'
+import { accumulateRustStructuralStrain } from './rustStructuralStrainKernel.js'
 import { resolveSelfCollisions } from './physics/selfCollision.js'
 import { avatarContactParameters, projectAvatarContacts } from './physics/avatarContactPass.js'
-import { resolveSolverTimestep } from './physics/timestep.js'
+import { resolveSolverTimestep, resolveFabricDamping } from './physics/timestep.js'
 import { assessSimulationFit } from './physics/qualityGate.js'
 import { inspectClothMesh } from './physics/meshQuality.js'
-import { optimizeTriangleQuality } from './physics/qualityTriangulation.js'
+import { optimizeTriangleQuality,materialHingeProtectedEdges } from './physics/qualityTriangulation.js'
+import {smoothInteriorTriangleQuality} from './physics/interiorMeshSmoothingResearch.js'
+import {searchCertifiedPoorFaceFlips} from './physics/materialRetriangulationResearch.js'
 import * as THREE from 'three'
 import { edgePointAt, edgeRangeLength, samplePieceBoundary } from './project.js'
 import { simplifiedClothBoundary } from './clothMeshing.js'
@@ -223,7 +230,7 @@ function hipSectionAtY(worldY, avatar) {
   }
 }
 
-function initialPosition(piece, point, bounds, avatar) {
+export function initialPosition(piece, point, bounds, avatar) {
   const arrangement = piece.arrangement3d || {}
   const flip = arrangement.flip ? -1 : 1
   if (arrangement.wrap === 'front' || arrangement.wrap === 'back') {
@@ -806,6 +813,24 @@ function pairEdgeParticles(aIndices, bIndices, pieceA, pieceB, reverseOverride =
   return pairs
 }
 
+// Seam progress always follows endpoint A's authored start -> end order.
+// Two-ended opening takes precedence when either field is supplied; legacy
+// openFraction/openFrom semantics remain untouched for older projects.
+function zipperStationIsOpen(seam, progress) {
+  if (seam.openStartFraction != null || seam.openEndFraction != null) {
+    const fraction = (value) => Number.isFinite(Number(value))
+      ? THREE.MathUtils.clamp(Number(value), 0, 1)
+      : 0
+    const start = fraction(seam.openStartFraction ?? 0)
+    const end = fraction(seam.openEndFraction ?? 0)
+    return start + end >= 1 || progress <= start && start > 0 || progress >= 1 - end && end > 0
+  }
+  const openFraction = Math.max(0, Math.min(1, Number(seam.openFraction ?? 0)))
+  if (openFraction >= 0.999) return true
+  if (openFraction <= 0) return false
+  return seam.openFrom === 'start' ? progress <= openFraction : progress >= 1 - openFraction
+}
+
 // Microscopic/partial CLO-style stitching must be attached to the original
 // cutline position, not snapped to the nearest simulation vertex. Snapping a
 // 0.2 mm segment onto a 10 mm mesh can miss the seam entirely or attach it
@@ -940,7 +965,7 @@ function addPieceTrimConstraints(pieceSim, constraints) {
   }
 
   for (const stitch of pieceSim.piece.topstitches || []) {
-    const rows = Math.max(1, Math.min(3, Number(stitch.rows || 1)))
+    const rows = Math.max(1, Math.min(8, Number(stitch.rows || 1)))
     const base = 0.48 + rows * 0.08
     addReinforcement(stitch.edgeIndex, base, 'topstitch', stitch.id)
   }
@@ -965,7 +990,9 @@ function addPieceTrimConstraints(pieceSim, constraints) {
   return trimConstraints
 }
 
-export function buildSimulation(project, { optimizeMesh = false } = {}) {
+export function buildSimulation(project, { optimizeMesh = false,protectedHingeAxesByPiece=null,experimentalSmoothInteriorMesh=false,experimentalCertifiedPoorFaceFlips=false } = {}) {
+  if(experimentalCertifiedPoorFaceFlips&&(!optimizeMesh||experimentalSmoothInteriorMesh))
+    throw new Error('Certified poor-face flips require optimized, unsmoothed material geometry')
   const pieces = new Map()
   const constraints = []
   const anchorConstraints = []
@@ -1029,7 +1056,23 @@ export function buildSimulation(project, { optimizeMesh = false } = {}) {
     // its saved drape. Optimizing interior edges does not alter cut boundaries
     // or user patterns; the remaining slivers are filtered by the native
     // strain safety gate while keeping their distance-edge constraints.
-    const mesh = optimizeMesh ? optimizeTriangleQuality(baseMesh) : baseMesh
+    // Experimental, explicit fold-line constraints. Protect all segments of
+    // a material hinge while remeshing, then rebuild native constraints from
+    // the resulting topology below. Default simulation topology is unchanged.
+    const protectedAxes=protectedHingeAxesByPiece?.[piece.id]||[]
+    if(!Array.isArray(protectedAxes))throw new TypeError('Protected material hinge axes must be arrays')
+    const protectedEdges=optimizeMesh ? protectedAxes.flatMap(axis=>
+      materialHingeProtectedEdges(baseMesh,axis)) : []
+    const flippedMesh = optimizeMesh ? optimizeTriangleQuality(baseMesh,{protectedEdges}) : baseMesh
+    // Research-only topology replacement happens before particles, springs,
+    // bending, sewing and collision exclusions are generated. Material UVs
+    // and default simulation behavior are left untouched.
+    const certifiedMesh=experimentalCertifiedPoorFaceFlips
+      ? {...flippedMesh,faces:searchCertifiedPoorFaceFlips(flippedMesh,{
+          protectedEdges,maxFlips:4,maxCandidates:2400}).mesh.faces}
+      : flippedMesh
+    const mesh = experimentalSmoothInteriorMesh
+      ? smoothInteriorTriangleQuality(certifiedMesh,{protectedEdges}) : certifiedMesh
     const meshQuality = inspectClothMesh(mesh.vertices, mesh.faces)
     const bounds = patternBounds(sampled.points)
     const centerX = (bounds.minX + bounds.maxX) * 0.5
@@ -1478,6 +1521,7 @@ export function buildSimulation(project, { optimizeMesh = false } = {}) {
     const seamType = seam.type || 'normal'
     if (seam.useExactCorrespondence === true || Number.isInteger(seam.sourceCloSeamGroup) || project.simulation?.adaptiveCutlineMeshing === true) {
       for (const sample of buildVirtualSeamSamples(seam, pieceA, pieceB)) {
+        if (seamType === 'zipper' && zipperStationIsOpen(seam, sample.progress)) continue
         const constraint = {
           type: 'seam-virtual',
           a: sample.sourceParticles.reduce((best, item, index) => sample.sourceWeights[index] > best.weight ? { particle: item, weight: sample.sourceWeights[index] } : best, { particle: sample.sourceParticles[0], weight: -1 }).particle,
@@ -1523,14 +1567,7 @@ export function buildSimulation(project, { optimizeMesh = false } = {}) {
     for (let pairIndex = 0; pairIndex < pairedParticles.length; pairIndex += 1) {
       const [aIndex, bIndex] = pairedParticles[pairIndex]
       if (seamType === 'zipper' && pairedParticles.length > 1) {
-        const openFraction = Math.max(0, Math.min(1, Number(seam.openFraction ?? 0)))
-        if (openFraction >= 0.999) continue
-        if (openFraction > 0) {
-          const progress = pairIndex / (pairedParticles.length - 1)
-          const opensFromStart = seam.openFrom === 'start'
-          const inOpenSection = opensFromStart ? progress <= openFraction : progress >= 1 - openFraction
-          if (inOpenSection) continue
-        }
+        if (zipperStationIsOpen(seam, pairIndex / (pairedParticles.length - 1))) continue
       }
       const closureRest = seamType === 'zipper' ? 0.003 : 0.008
       const closureStiffness = seamType === 'zipper'
@@ -1629,6 +1666,7 @@ export function buildSimulation(project, { optimizeMesh = false } = {}) {
     pieces,
     meshQuality: Object.fromEntries([...pieces].map(([id,piece])=>[id,piece.meshQuality])),
     constraints,
+    distanceSweep: createRustPbdSweep(constraints),
     clothConstraints: constraints.filter((constraint) => constraint.type !== 'seam'),
     seamConstraints,
     surfaceAttachmentConstraints,
@@ -1657,6 +1695,7 @@ function satisfyDistance(constraint) {
     satisfySurfaceAttachment(constraint)
     return
   }
+  if (projectRustDistanceConstraint(constraint)) return
   const { a, b, rest, stiffness } = constraint
   const wa = a.invMass
   const wb = b.invMass
@@ -1682,6 +1721,7 @@ function satisfyDistance(constraint) {
 function satisfyAnchor(constraint) {
   const particle = constraint.particle
   if (!particle || particle.invMass <= 0) return
+  if (projectRustAnchor(constraint)) return
   if (constraint.axes === 'y') {
     particle.position.y = THREE.MathUtils.lerp(particle.position.y, constraint.target.y, constraint.stiffness)
     // A support tack should not inject vertical Verlet velocity.
@@ -1708,6 +1748,7 @@ function satisfyAnchor(constraint) {
 }
 
 function updateStrain(simulation) {
+  if (accumulateRustStructuralStrain(simulation, EPSILON)) return
   for (const piece of simulation.pieces.values()) {
     for (const particle of piece.particles) {
       particle.strain = 0
@@ -1784,7 +1825,7 @@ function collideEllipsoidPreserveY(particle, center, radii, margin, friction = 0
   )
   const sideZ = particle.collisionSideZ || Math.sign(particle.previous.z - center.z) || 1
   if (q <= EPSILON || Math.abs(particle.patternU ?? 1) < 0.78) {
-    particle.position.z = center.z + sideZ * sectionZ
+    particle.position.z = center.z + sideZ * sectionZ * Math.sqrt(Math.max(0, 1 - (dx * dx) / (sectionX * sectionX)))
   } else {
     const scale = 1 / Math.sqrt(Math.max(q, EPSILON))
     particle.position.x = center.x + dx * scale
@@ -1867,7 +1908,10 @@ function collideVerticalEllipse(particle, centerX, centerZ, minY, maxY, radiusX,
     // hint adjacent particles can choose opposite lateral exits from the body
     // and create impossible local textile stretch.
     const sideZ = particle.collisionSideZ || Math.sign(particle.previous.z - centerZ) || 1
-    particle.position.z = centerZ + sideZ * rz
+    // At the lateral torso edge the available front/back depth tends to zero.
+    // Using full rz here creates a discontinuous jump for adjacent particles
+    // straddling the ellipse boundary, stretching a 1 cm cloth edge by >10 cm.
+    particle.position.z = centerZ + sideZ * rz * Math.sqrt(Math.max(0, 1 - (dx * dx) / (rx * rx)))
   } else {
     const scale = 1 / Math.sqrt(q)
     particle.position.x = centerX + dx * scale
@@ -1928,6 +1972,10 @@ export function getAvatarTorsoRadii(avatar, y) {
 }
 
 function ellipsoidClearance(position, center, radii) {
+  return rustEllipsoidClearance(position, center, radii) ?? ellipsoidClearanceJS(position, center, radii)
+}
+
+export function ellipsoidClearanceJS(position, center, radii) {
   const dx = position.x - center.x
   const dy = position.y - center.y
   const dz = position.z - center.z
@@ -1940,6 +1988,10 @@ function ellipsoidClearance(position, center, radii) {
 }
 
 function capsuleClearance(position, pose) {
+  return rustCapsuleClearance(position, pose) ?? capsuleClearanceJS(position, pose)
+}
+
+export function capsuleClearanceJS(position, pose) {
   const start = pose.center.clone().addScaledVector(pose.axis, -pose.halfLength)
   const end = pose.center.clone().addScaledVector(pose.axis, pose.halfLength)
   const segment = end.clone().sub(start)
@@ -2110,10 +2162,39 @@ export function refreshSimulationAnalysis(simulation, project) {
     .filter((constraint) => constraint?.a && constraint?.b)
     .map((constraint) => seamGap(constraint) * 1000)
     .sort((a, b) => a - b)
-  const strains = (simulation.constraints || [])
-    .filter((constraint) => constraint.type === 'structural' && constraint.rest > EPSILON)
-    .map((constraint) => Math.abs(constraint.a.position.distanceTo(constraint.b.position) - constraint.rest) / constraint.rest)
-    .sort((a, b) => a - b)
+  // Retain the original particle and constraint identities when ranking fit
+  // failures. A scalar maximum cannot distinguish a badly graded armhole from
+  // shoulder contact pushing neighboring sewn vertices apart. The full trace
+  // is ephemeral diagnostic data and never changes the pattern or cloth state.
+  const structuralEdges = (simulation.constraints || [])
+    .flatMap((constraint, constraintIndex) => {
+      if (constraint.type !== 'structural' || constraint.rest <= EPSILON) return []
+      const currentLength = constraint.a.position.distanceTo(constraint.b.position)
+      return [{
+        constraintIndex,
+        a: constraint.a,
+        b: constraint.b,
+        restLengthMm: constraint.rest * 1000,
+        currentLengthMm: currentLength * 1000,
+        strainPercent: Math.abs(currentLength - constraint.rest) / constraint.rest * 100,
+      }]
+    })
+    .sort((a, b) => a.strainPercent - b.strainPercent || a.constraintIndex - b.constraintIndex)
+  const strains = structuralEdges.map(edge => edge.strainPercent / 100)
+  const worstStructuralEdges = structuralEdges.slice(-10).reverse().map(edge => ({
+    constraintIndex: edge.constraintIndex,
+    particleIds: [edge.a.id, edge.b.id],
+    pieceIds: [edge.a.pieceId, edge.b.pieceId],
+    wrapModes: [edge.a.wrapMode, edge.b.wrapMode],
+    seamIds: [
+      [...(edge.a.seamIds || [])],
+      [...(edge.b.seamIds || [])],
+    ],
+    restLengthMm: edge.restLengthMm,
+    currentLengthMm: edge.currentLengthMm,
+    strainPercent: edge.strainPercent,
+    contactDepthMm: [(edge.a.contactDepth || 0) * 1000, (edge.b.contactDepth || 0) * 1000],
+  }))
   const worstSeams = (simulation.seamConstraints || [])
     .filter((constraint) => constraint?.a && constraint?.b)
     .map((constraint) => ({
@@ -2128,6 +2209,7 @@ export function refreshSimulationAnalysis(simulation, project) {
       meanStrainPercent: simulation.strain.average * 100,
       p95StrainPercent: percentile(strains, 0.95) * 100,
       maxStrainPercent: percentile(strains, 1) * 100,
+      worstStructuralEdges,
     },
     sewing: {
       pairs: seamGaps.length,
@@ -2534,6 +2616,12 @@ export function stepSimulation(simulation, project, dt = 1 / 60) {
   if (!schedule) return simulation
   const { safeDt, substeps, subDt, gravityStep, iterations, selfCollisionDistance } = schedule
 
+  // Validate every material before changing any particle or contact state.
+  const dampingByPiece = new Map()
+  for (const piece of simulation.pieces.values()) {
+    dampingByPiece.set(piece, resolveFabricDamping(piece.fabric?.damping ?? 0.985, subDt))
+  }
+
   // Keep the largest contact event seen anywhere in this displayed frame so
   // pressure visualization remains meaningful when using multiple substeps.
   for (const piece of simulation.pieces.values()) {
@@ -2544,7 +2632,7 @@ export function stepSimulation(simulation, project, dt = 1 / 60) {
 
   for (let substep = 0; substep < substeps; substep += 1) {
     for (const piece of simulation.pieces.values()) {
-      const damping = Math.pow(piece.fabric?.damping ?? 0.985, 1 / substeps)
+      const damping = dampingByPiece.get(piece)
       for (const particle of piece.particles) {
         if (particle.invMass <= 0) continue
         const velocity = particle.position.clone().sub(particle.previous).multiplyScalar(damping)
@@ -2560,7 +2648,9 @@ export function stepSimulation(simulation, project, dt = 1 / 60) {
       // bias while still letting seam and structural constraints continuously
       // relax one another. This produced the most stable mirrored drape in the
       // current PBD solver.
-      if ((iteration + substep) % 2 === 0) {
+      if (simulation.distanceSweep?.((iteration + substep) % 2 !== 0, satisfyDistance, simulation.constraints)) {
+        // Rust projects contiguous distance runs; special constraints retain JS dispatch order.
+      } else if ((iteration + substep) % 2 === 0) {
         for (let index = 0; index < simulation.constraints.length; index += 1) satisfyDistance(simulation.constraints[index])
       } else {
         for (let index = simulation.constraints.length - 1; index >= 0; index -= 1) satisfyDistance(simulation.constraints[index])

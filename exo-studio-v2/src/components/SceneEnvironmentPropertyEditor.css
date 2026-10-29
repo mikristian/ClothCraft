@@ -1,0 +1,22 @@
+.scene-pe{font-family:inherit;color:#dedede;background:#323232;font-size:11px;line-height:1.4;min-width:0;padding-bottom:12px}
+.scene-pe-heading{padding:10px 13px;font-size:11px;font-weight:600;color:#e8e8e8;background:#373737;letter-spacing:.01em}
+.scene-pe-group{border:0;margin:0}
+.scene-pe-group-title{display:flex;width:100%;align-items:center;gap:5px;padding:11px 13px 7px;background:transparent;border:0;color:#e3e3e3;text-align:left;font-family:inherit;font-size:11px;font-weight:600;line-height:1.4;cursor:pointer}
+.scene-pe-group-title:hover{background:#3a3a3a}
+.scene-pe-group-title svg{flex-shrink:0;color:#aaa}
+.scene-pe-fields{padding:4px 14px 10px 30px;display:flex;flex-direction:column;gap:10px}
+.scene-pe-field{display:grid;grid-template-columns:minmax(85px,42%) minmax(0,1fr);align-items:center;gap:8px;min-height:23px;margin:0}
+.scene-pe-label{color:#c6c6c6;font-size:10.5px;line-height:1.35}
+.scene-pe-control,.scene-pe-number-wrap,.scene-pe-color{min-width:0;background:#464646;border:1px solid #555;border-radius:3px;color:#e8e8e8;height:24px;box-sizing:border-box}
+.scene-pe-control{width:100%;padding:2px 7px;font:inherit}
+.scene-pe-control:focus,.scene-pe-number-wrap:focus-within{outline:1px solid #8798a8;outline-offset:0}
+.scene-pe-value{display:flex;gap:7px;align-items:center;min-width:0}
+.scene-pe-slider{flex:1;min-width:24px;height:3px;accent-color:#a2a2a2;cursor:pointer}
+.scene-pe-number-wrap{display:flex;align-items:center;min-width:0;width:100%;max-width:120px;padding-right:5px}
+.scene-pe-slider+.scene-pe-number-wrap{width:65px;flex:none}
+.scene-pe-number-wrap input{color:inherit;background:none;border:0;width:100%;min-width:0;padding:3px 5px;font:inherit;outline:none;appearance:textfield;-moz-appearance:textfield}
+.scene-pe-number-wrap input::-webkit-inner-spin-button,.scene-pe-number-wrap input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.scene-pe-number-wrap span{font-size:9px;color:#aaa;white-space:nowrap}
+.scene-pe-switch-row{cursor:pointer}.scene-pe-switch-row input{justify-self:start;margin:0;accent-color:#aaa}
+.scene-pe-color{width:100%;padding:2px 5px;cursor:pointer}
+.scene-pe-hint{margin:0;font-size:10px;line-height:1.55;color:#aaa}

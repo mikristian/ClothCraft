@@ -1,0 +1,100 @@
+/* Minimal editable values across CLO/native and legacy Property Editors.
+   Load after the other inspector styles so existing control dimensions remain intact. */
+.app-shell .clo-inspector :is(
+  input[type="text"], input[type="number"], input[type="search"],
+  input[type="email"], input[type="url"], input:not([type]), textarea
+):not([readonly]):not(:disabled),
+.app-shell .clo-property-panel :is(
+  input[type="text"], input[type="number"], input[type="search"],
+  input[type="email"], input[type="url"], input:not([type]), textarea
+):not([readonly]):not(:disabled) {
+  border-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+
+/* Informational values (for example Type) are readouts, never edit targets. */
+.app-shell .clo-inspector .clo-pe-identity input[readonly],
+.app-shell :is(.clo-inspector,.clo-property-panel) :is(
+  input[type="text"], input[type="number"], input[type="search"],
+  input[type="email"], input[type="url"], input:not([type]), textarea
+)[readonly]:not(:disabled) {
+  border: 1px solid transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  cursor: default;
+  opacity: 1;
+}
+
+/* Preserve native field sizing while taking priority over gray-row and fabric controls. */
+.app-shell .clo-inspector .clo-pe-gray-row .clo-pe-edit-input input[type="number"]:not(:disabled),
+.app-shell :is(.clo-inspector,.clo-property-panel) .cc-fabric-adjust-controls input[type="number"]:not(:disabled),
+.app-shell :is(.clo-inspector,.clo-property-panel) .cc-fabric-metadata-edit input:is([type="text"],[type="number"]):not(:disabled) {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.app-shell .clo-inspector .clo-pe-gray-row .clo-pe-edit-input input[type="number"]:not([readonly]):not(:disabled):is(:hover,:focus),
+.app-shell :is(.clo-inspector,.clo-property-panel) .cc-fabric-adjust-controls input[type="number"]:not([readonly]):not(:disabled):is(:hover,:focus),
+.app-shell :is(.clo-inspector,.clo-property-panel) .cc-fabric-metadata-edit input:is([type="text"],[type="number"]):not([readonly]):not(:disabled):is(:hover,:focus) {
+  background: rgba(255,255,255,.055) !important;
+  border-color: rgba(210,214,220,.32) !important;
+}
+
+/* Show the editing surface as the pointer enters or the value receives focus. */
+.app-shell .clo-inspector :is(
+  input[type="text"], input[type="number"], input[type="search"],
+  input[type="email"], input[type="url"], input:not([type]), textarea
+):not([readonly]):not(:disabled):hover,
+.app-shell .clo-property-panel :is(
+  input[type="text"], input[type="number"], input[type="search"],
+  input[type="email"], input[type="url"], input:not([type]), textarea
+):not([readonly]):not(:disabled):hover {
+  background: rgba(255,255,255,.045) !important;
+  border-color: rgba(210,214,220,.27) !important;
+}
+
+.app-shell .clo-inspector :is(
+  input[type="text"], input[type="number"], input[type="search"],
+  input[type="email"], input[type="url"], input:not([type]), textarea
+):not([readonly]):not(:disabled):focus,
+.app-shell .clo-property-panel :is(
+  input[type="text"], input[type="number"], input[type="search"],
+  input[type="email"], input[type="url"], input:not([type]), textarea
+):not([readonly]):not(:disabled):focus {
+  background: rgba(255,255,255,.07) !important;
+  border-color: var(--pe-focus, #a0a3a7) !important;
+  outline: 1px solid var(--pe-focus, #a0a3a7) !important;
+  outline-offset: 0;
+}
+
+/* A failed validation must remain conspicuous at rest. */
+.app-shell :is(.clo-inspector,.clo-property-panel) :is(input,textarea):is([aria-invalid="true"],:invalid:not(:placeholder-shown)) {
+  border-color: #c7837f !important;
+  background: rgba(190,80,74,.09) !important;
+}
+
+/* Studio preset overrides use an important declaration with specificity
+   .app-shell[data-studio-customized] .clo-pe-content input (0,3,1).
+   This equally themed, more specific rule must win for in-place values. */
+.app-shell[data-studio-customized="true"] .clo-inspector :is(.clo-pe-content,.clo-pe-line-target,.clo-pe-line-settings) :is(input[type="text"],input[type="number"],input[type="search"],input:not([type]),textarea):not(:disabled) {
+  background:transparent!important;
+  border-color:transparent!important;
+  box-shadow:none!important;
+}
+.app-shell[data-studio-customized="true"] .clo-inspector :is(.clo-pe-content,.clo-pe-line-target,.clo-pe-line-settings) :is(input[type="text"],input[type="number"],input[type="search"],input:not([type]),textarea):not([readonly]):not(:disabled):hover {
+  background:rgba(255,255,255,.05)!important;
+  border-color:rgba(210,214,220,.27)!important;
+}
+.app-shell[data-studio-customized="true"] .clo-inspector :is(.clo-pe-content,.clo-pe-line-target,.clo-pe-line-settings) :is(input[type="text"],input[type="number"],input[type="search"],input:not([type]),textarea):not([readonly]):not(:disabled):focus {
+  background:rgba(255,255,255,.075)!important;
+  border-color:var(--studio-accent,#b6bbc0)!important;
+  outline:1px solid var(--studio-accent,#b6bbc0)!important;
+}
+.app-shell[data-studio-customized="true"] .clo-inspector :is(.clo-pe-content,.clo-pe-line-target,.clo-pe-line-settings) :is(input[type="text"],input[type="number"],input[type="search"],input:not([type]),textarea):is([aria-invalid="true"],:invalid:not(:placeholder-shown)) {
+  background:rgba(190,80,74,.09)!important;
+  border-color:#c7837f!important;
+}

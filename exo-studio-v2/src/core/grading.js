@@ -1,38 +1,50 @@
 import { cloneProject, edgeLength } from './project.js'
+import { gradeAutomaticCoordinates, gradePersistedRuleCoordinate,gradeMultiPieceBreakTable } from './rustGradingKernel.js'
+import { evaluateIndustrialGradeRule,convertIndustrialGradeRule, INDUSTRIAL_GRADE_MODES } from './industrialGradeRules.js'
+import {gradeConstructionAttachments, gradeConstructionCurveControls,gradeAttachedConstructionPoint} from './gradedConstructionAttachments.js'
+import {applyAccuMarkNotchArcStationsToGraded} from './accumarkGradedNotchDistance20261023.js'
 
 export const DEFAULT_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
 
 export function sizeOffset(grading, size) {
   const sizes = grading?.sizes?.length ? grading.sizes : DEFAULT_SIZES
   const baseSize = grading?.baseSize || 'M'
-  const baseIndex = Math.max(0, sizes.indexOf(baseSize))
-  const sizeIndex = Math.max(0, sizes.indexOf(size))
+  if (!Array.isArray(sizes) || sizes.some(name => typeof name !== 'string' || !name.trim()) || new Set(sizes).size !== sizes.length) throw new Error('Grading sizes must have unique, non-empty names')
+  if (!sizes.includes(baseSize)) throw new Error('Grading base size must belong to the size set')
+  if (!sizes.includes(size)) throw new Error('Requested grading size is not in the size set')
+  const baseIndex = sizes.indexOf(baseSize)
+  const sizeIndex = sizes.indexOf(size)
   return sizeIndex - baseIndex
 }
 
 export function gradePointForPiece(piece, grading, size, point) {
   const offset = sizeOffset(grading, size)
-  if (!offset) return { ...point }
+  // Industry-style per-break rules take precedence over the older single
+  // constant X/Y grade step. They are evaluated from the base geometry, never
+  // by recursively resizing the last rendered size. A changed project size set
+  // must not silently apply a stale rule from another product revision.
+  if (point.industrialGradeRule) {
+    const rule = point.industrialGradeRule
+    const sizes = grading?.sizes?.length ? grading.sizes : DEFAULT_SIZES
+    if (JSON.stringify(rule.sizes) !== JSON.stringify(sizes) || rule.baseSize !== (grading?.baseSize || 'M')) {
+      throw new Error('Industrial grade rule size set or base size differs from garment grading')
+    }
+    const {dx,dy}=evaluateIndustrialGradeRule(rule,size)
+    const x=point.x+dx,y=point.y+dy
+    if (!Number.isFinite(x)||!Number.isFinite(y))throw new Error('Industrial grade rule produces nonfinite pattern coordinates')
+    return {...cloneProject(point),x,y}
+  }
+  if (!offset) return cloneProject(point)
   const widthPerSize = Number(grading?.widthPerSizeCm ?? 3)
   const lengthPerSize = Number(grading?.lengthPerSizeCm ?? 1.2)
   const pieceBounds = bounds(piece.points)
-  const centerX = (pieceBounds.minX + pieceBounds.maxX) * 0.5
-  const height = Math.max(1, pieceBounds.maxY - pieceBounds.minY)
-  const halfWidthDelta = (widthPerSize * offset) * 0.5
-  const lengthDelta = lengthPerSize * offset
-  const side = Math.sign(point.x - centerX)
-  const normalizedY = (point.y - pieceBounds.minY) / height
-  const widthInfluence = 0.55 + 0.45 * (1 - normalizedY)
-  const lengthInfluence = 1 - normalizedY
-  const automatic = {
-    x: point.x + side * halfWidthDelta * widthInfluence,
-    y: point.y - lengthDelta * lengthInfluence,
-  }
+  const automatic = gradeAutomaticCoordinates(point, pieceBounds, offset, widthPerSize, lengthPerSize)
   const rule = point.gradeRule
-  if (!rule?.enabled) return automatic
+  if (!rule?.enabled) return {...cloneProject(point), ...automatic}
   return {
-    x: Number.isFinite(Number(rule.dxPerSize)) ? point.x + Number(rule.dxPerSize) * offset : automatic.x,
-    y: Number.isFinite(Number(rule.dyPerSize)) ? point.y + Number(rule.dyPerSize) * offset : automatic.y,
+    ...cloneProject(point),
+    x: gradePersistedRuleCoordinate(point.x,rule.dxPerSize,offset,automatic.x),
+    y: gradePersistedRuleCoordinate(point.y,rule.dyPerSize,offset,automatic.y),
   }
 }
 
@@ -54,10 +66,13 @@ function fitGradedSleeveArc(piece, edge, target, preferred) {
   let best = { error: Infinity, cost: Infinity, control: preferred }
   const evaluate = (cx, cy) => {
     piece.curves[edge] = { cx, cy }
-    const error = Math.abs(edgeLength(piece, edge) - target)
+    // Only the signed/absolute views differ. One sampled length is enough
+    // for both, avoiding a redundant curve walk at every sleeve-search step.
+    const difference = edgeLength(piece, edge) - target
+    const error = Math.abs(difference)
     const cost = error * 400 + Math.hypot(cx - preferred.cx, cy - preferred.cy) * 0.07
     if (cost < best.cost) best = { error, cost, control: { cx, cy } }
-    return edgeLength(piece, edge) - target
+    return difference
   }
   for (let column = -7; column <= 7; column++) {
     const cx = preferred.cx + column * .35
@@ -82,10 +97,12 @@ function fitGradedSleeveArc(piece, edge, target, preferred) {
 
 export function gradePiece(piece, grading, size) {
   const offset = sizeOffset(grading, size)
+  const hasPointBreaks = piece.points.some(point => Boolean(point.industrialGradeRule))
+  const hasExplicitAttachments = (piece.internalLines || []).some(line => line.aAnchor || line.bAnchor)
   if (!offset) {
-    return {
+    const result = {
       ...piece,
-      points: piece.points.map((point) => ({ ...point })),
+      points: piece.points.map(point => point.industrialGradeRule ? gradePointForPiece(piece, grading, size, point) : cloneProject(point)),
       curves: piece.curves ? Object.fromEntries(Object.entries(piece.curves).map(([key, curve]) => [key, { ...curve }])) : undefined,
       internalLines: (piece.internalLines || []).map((line) => ({
         ...line,
@@ -93,6 +110,13 @@ export function gradePiece(piece, grading, size) {
         b: { ...line.b },
       })),
     }
+    if(hasPointBreaks||hasExplicitAttachments){
+      if(hasPointBreaks)result.curves=gradeConstructionCurveControls(piece,result)
+      const marks=gradeConstructionAttachments(piece,result)
+      result.internalLines=marks.internalLines
+      if(piece.notches)result.notches=marks.notches
+    }else if(piece.notches)result.notches=cloneProject(piece.notches)
+    return result
   }
   const transform = (point) => gradePointForPiece(piece, grading, size, point)
 
@@ -109,13 +133,20 @@ export function gradePiece(piece, grading, size) {
     b: transform(line.b),
   }))
 
-  return {
+  const result = {
     ...piece,
     points,
     curves,
     internalLines,
     gradeSize: size,
   }
+  if(hasPointBreaks||hasExplicitAttachments){
+    if(hasPointBreaks)result.curves=gradeConstructionCurveControls(piece,result)
+    const marks=gradeConstructionAttachments(piece,result)
+    result.internalLines=marks.internalLines
+    if(piece.notches)result.notches=marks.notches
+  }else if(piece.notches)result.notches=cloneProject(piece.notches)
+  return result
 }
 
 export function gradeProject(project, size) {
@@ -126,7 +157,7 @@ export function gradeProject(project, size) {
   // every piece and curve as a controlled development-grade starting point.
   // Explicit designer grade rules continue to use the general grader.
   const specialTee = project.productionSpec?.gradingModel === 'seam-locked-affine-v1'
-    && !(project.pieces || []).some(piece => piece.points?.some(point => point.gradeRule?.enabled))
+    && !(project.pieces || []).some(piece => piece.points?.some(point => point.gradeRule?.enabled||point.industrialGradeRule))
   if (specialTee) {
     const graded = cloneProject(project)
     graded.previewSize = size
@@ -178,7 +209,7 @@ export function gradeProject(project, size) {
       a: measurement.a ? scale(measurement.a) : measurement.a,
       b: measurement.b ? scale(measurement.b) : measurement.b,
     }))
-    return graded
+    return applyAccuMarkNotchArcStationsToGraded(graded,project,size)
   }
   const graded = cloneProject(project)
   graded.previewSize = size
@@ -186,16 +217,76 @@ export function gradeProject(project, size) {
   graded.customMeasurements = (project.customMeasurements || []).map((measurement) => {
     const piece = project.pieces.find((item) => item.id === measurement.pieceId)
     if (!piece) return cloneProject(measurement)
+    const gradedPiece=graded.pieces.find(item=>item.id===piece.id)
+    if(piece.points.some(point=>point.industrialGradeRule)||measurement.aAnchor||measurement.bAnchor){
+      return {...cloneProject(measurement),
+        a:measurement.a?{...cloneProject(measurement.a),...gradeAttachedConstructionPoint(piece,gradedPiece,measurement.a,measurement.aAnchor)}:measurement.a,
+        b:measurement.b?{...cloneProject(measurement.b),...gradeAttachedConstructionPoint(piece,gradedPiece,measurement.b,measurement.bAnchor)}:measurement.b,
+      }
+    }
     return {
       ...cloneProject(measurement),
       a: gradePointForPiece(piece, project.grading, size, measurement.a),
       b: gradePointForPiece(piece, project.grading, size, measurement.b),
     }
   })
-  return graded
+  return applyAccuMarkNotchArcStationsToGraded(graded,project,size)
 }
 
 export function buildSizeRun(project) {
   const sizes = project.grading?.sizes?.length ? project.grading.sizes : DEFAULT_SIZES
+  if (Array.isArray(project.pieces) && project.pieces.length &&
+      project.pieces.every(piece => piece.points?.length && piece.points.every(point => Boolean(point.industrialGradeRule)))) {
+    return buildNativeIndustrialSizeRun(project)
+  }
   return Object.fromEntries(sizes.map((size) => [size, gradeProject(project, size)]))
+}
+
+/**
+ * Native Rust batch grading for garments with complete point-by-point grade
+ * rules. Exact source coordinates and rule breaks are passed into the Rust
+ * kernel as one validated, transactional, multi-piece size run. Original
+ * string IDs are preserved in the JS document rather than hashed or
+ * truncated to the numeric C ABI. 2D marks and construction metadata are
+ * computed from the resulting geometry and checked against independent JS
+ * evaluation; no partial size run is returned if the two disagree.
+ */
+export function buildNativeIndustrialSizeRun(project) {
+  const sizes=project?.grading?.sizes?.length?project.grading.sizes:DEFAULT_SIZES
+  const baseSize=project?.grading?.baseSize||'M'
+  if(!Array.isArray(project?.pieces)||!project.pieces.length||!sizes.includes(baseSize))throw new Error('Native multi-piece grading requires a valid project and base size')
+  const numericPieces=project.pieces.map((piece,pieceIndex)=>{
+    if(!Array.isArray(piece.points)||!piece.points.length)throw new Error(`Native grading piece ${piece.id} has no points`)
+    return {id:pieceIndex+1,points:piece.points.map((point,pointIndex)=>{
+      if(!point.industrialGradeRule)throw new Error(`Native grading requires industrial rule for ${piece.id} point ${pointIndex}`)
+      if(!Number.isFinite(point.x)||!Number.isFinite(point.y))throw new Error('Nonfinite authored pattern coordinate')
+      const rule=convertIndustrialGradeRule(point.industrialGradeRule,INDUSTRIAL_GRADE_MODES.SMALL_LARGE_INCREMENTAL)
+      if(JSON.stringify(rule.sizes)!==JSON.stringify(sizes)||rule.baseSize!==baseSize)throw new Error(`Stale grade-rule size set in ${piece.id} point ${pointIndex}`)
+      return {id:pointIndex+1,x:point.x,y:point.y,steps:rule.steps}
+    })}
+  })
+  const batch=gradeMultiPieceBreakTable({pieces:numericPieces,sizes,baseSize})
+  // First construct the entire graded document in memory. Only return after
+  // validating each size's geometry/metadata. This cannot partially mutate
+  // the caller's project even on an exception.
+  const run={}
+  for(const computed of batch){
+    const graded=gradeProject(project,computed.size)
+    if(graded.pieces.length!==computed.pieces.length)throw new Error(`Rust size run changed piece count in ${computed.size}`)
+    for(let p=0;p<graded.pieces.length;p++){
+      const nativePiece=computed.pieces[p], jsPiece=graded.pieces[p]
+      if(nativePiece.id!==p+1||nativePiece.points.length!==jsPiece.points.length)throw new Error(`Native point identity mismatch in ${computed.size}`)
+      for(let i=0;i<jsPiece.points.length;i++){
+        const computedPoint=nativePiece.points[i], current=jsPiece.points[i]
+        if(computedPoint.id!==i+1||!Number.isFinite(computedPoint.x)||!Number.isFinite(computedPoint.y)||
+          Math.abs(computedPoint.x-current.x)>1e-8||Math.abs(computedPoint.y-current.y)>1e-8){
+          throw new Error(`Rust/JS industrial grading disagreement: ${computed.size} ${jsPiece.id} point ${i}`)
+        }
+        current.x=computedPoint.x
+        current.y=computedPoint.y
+      }
+    }
+    run[computed.size]=graded
+  }
+  return run
 }

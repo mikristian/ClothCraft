@@ -1,0 +1,128 @@
+/* Simulate's TOP and FOOTER mode lists are full, optically clear glass menus.
+ * No backdrop blur: the scene behind each lens must stay sharp, not foggy.
+ * Kept separate from general Studio glass settings so both menus always match.
+ */
+.app-shell .clo-simulation-popover.exo-simulate-clear-glass,
+.app-shell .sim-footer-mode-menu.exo-simulate-clear-glass{
+  position:absolute;
+  isolation:isolate;
+  box-sizing:border-box;
+  min-width:248px;
+  max-width:min(320px,calc(100vw - 18px));
+  padding:8px;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  border:1px solid rgba(225,247,255,.56)!important;
+  border-radius:13px;
+  background:
+    linear-gradient(163deg,rgba(246,253,255,.14) 0%,rgba(238,249,255,.025) 22%,transparent 46%,rgba(110,191,243,.045) 100%),
+    rgba(15,33,49,.24)!important;
+  /* The glass is physically see-through: no blur, milky veil, saturation
+     haze or backdrop effect. Crisp readable typography is drawn on top. */
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.69),
+    inset 0 -1px 0 rgba(140,208,244,.24),
+    inset 1px 0 0 rgba(242,251,255,.2),
+    0 8px 24px rgba(5,18,32,.26),
+    0 1px 5px rgba(4,15,27,.17)!important;
+  color:#f6fbff!important;
+  text-shadow:0 1px 2px rgba(4,13,23,.78);
+  overflow:hidden;
+}
+/* Thin specular highlight across the whole lens. No separate opaque tile. */
+.app-shell .exo-simulate-clear-glass::before{
+  content:"";
+  position:absolute;
+  z-index:0;
+  pointer-events:none;
+  inset:1px 1px auto;
+  height:35%;
+  border-radius:12px 12px 60% 60%;
+  background:linear-gradient(180deg,rgba(255,255,255,.075),transparent);
+}
+.app-shell .exo-simulate-clear-glass > *{position:relative;z-index:1}
+.app-shell .clo-simulation-popover.exo-simulate-clear-glass{
+  left:auto;
+  right:0;
+  top:calc(100% + 8px);
+  width:258px;
+  z-index:500;
+}
+.app-shell .sim-footer-mode-menu.exo-simulate-clear-glass{
+  left:0;
+  bottom:calc(100% + 8px);
+  width:292px;
+  z-index:10000;
+}
+.app-shell .clo-simulation-popover.exo-simulate-clear-glass > strong{
+  display:block;
+  margin:1px 3px 4px;
+  padding:6px 8px 8px;
+  border-bottom:1px solid rgba(221,243,255,.29);
+  font-size:10px;
+  font-weight:750;
+  letter-spacing:.045em;
+  color:#eaf7ff!important;
+}
+.app-shell .exo-simulate-clear-glass > button,
+.app-shell[data-studio-customized="true"] .clo-mac-menu .clo-simulation-popover.exo-simulate-clear-glass > button{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  width:100%;
+  min-height:33px;
+  height:auto;
+  padding:8px 10px;
+  border:1px solid transparent!important;
+  border-radius:7px;
+  background:transparent!important;
+  background-color:transparent!important;
+  text-align:left;
+  white-space:normal;
+  font:600 11px/1.35 Inter,system-ui,sans-serif;
+  color:#f3faff!important;
+  text-shadow:0 1px 2px rgba(4,12,24,.8);
+  cursor:pointer;
+  transition:background-color .12s,border-color .12s,box-shadow .12s;
+}
+.app-shell .exo-simulate-clear-glass > button > svg{
+  flex-shrink:0;
+  color:#caefff;
+  stroke:currentColor;
+  filter:drop-shadow(0 1px 1px rgba(4,13,23,.52));
+}
+.app-shell .exo-simulate-clear-glass > button > small{
+  margin-left:auto;
+  color:#c7e7fa!important;
+  font-size:9px;
+  font-weight:650;
+}
+.app-shell .exo-simulate-clear-glass > button:is(:hover,:focus-visible):not(:disabled),
+.app-shell[data-studio-customized="true"] .clo-mac-menu .clo-simulation-popover.exo-simulate-clear-glass > button:is(:hover,:focus-visible):not(:disabled){
+  background:rgba(108,191,236,.22)!important;
+  background-color:rgba(108,191,236,.22)!important;
+  border-color:rgba(218,245,255,.44)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.24);
+  color:#ffffff!important;
+  outline:none;
+}
+.app-shell .exo-simulate-clear-glass > button:focus-visible{
+  outline:2px solid rgba(224,249,255,.72)!important;
+  outline-offset:-2px;
+}
+.app-shell .exo-simulate-clear-glass > button:disabled{
+  opacity:.52;
+  cursor:not-allowed;
+  color:#c8d7e0!important;
+}
+@media(prefers-reduced-transparency:reduce){
+  .app-shell .clo-simulation-popover.exo-simulate-clear-glass,
+  .app-shell .sim-footer-mode-menu.exo-simulate-clear-glass{
+    background:rgba(18,37,52,.96)!important;
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
+  }
+}

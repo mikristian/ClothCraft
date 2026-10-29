@@ -98,6 +98,9 @@
 .cc-rust-embedded .cc-embedded-disclosure{font-size:9px;color:#626d6f;background:#e0e6e5;border-bottom:1px solid #c9cdcc;padding:5px 10px;display:flex;align-items:center;gap:6px;line-height:1.35}
 .cc-rust-embedded .cc-embedded-disclosure strong{color:#455a61;white-space:nowrap}
 .cc-rust-embedded .cc-embedded-main{display:grid;grid-template-columns:minmax(0,var(--cc-embedded-split,50%)) minmax(0,1fr);flex:1;min-height:0;min-width:0;overflow:hidden}
+.cc-rust-embedded .cc-embedded-main{position:relative}
+.cc-rust-embedded .cc-embedded-main>.cc-camera-hand-panel{position:absolute;z-index:70;right:14px;bottom:14px;left:auto;top:auto;box-sizing:border-box;width:min(318px,calc(100% - 16px));max-height:calc(100% - 16px);padding:9px;background:rgba(18,23,28,.97);color:#eef4f5;border:1px solid rgba(203,238,250,.25);border-radius:13px;box-shadow:0 16px 45px rgba(0,0,0,.46);overflow:auto}
+.cc-rust-embedded .cc-embedded-main>.cc-camera-hand-panel[style*="left"]{right:auto;bottom:auto}
 .cc-rust-embedded .cc-embedded-stack .cc-embedded-main{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,var(--cc-embedded-split,50%)) minmax(0,1fr)}
 .cc-rust-embedded .cc-embedded-3d .cc-embedded-main,.cc-rust-embedded .cc-embedded-2d .cc-embedded-main{display:block}
 .cc-rust-embedded .cc-embedded-3d .cc-viewport-2d,.cc-rust-embedded .cc-embedded-2d .cc-viewport-3d{display:none}
@@ -143,9 +146,621 @@
 .exo-v2-rust-dot{display:block;width:6px;height:6px;border-radius:50%;background:#75bb98}
 .exo-v2-shell .exo-v2-top-action{display:inline-flex;align-items:center;gap:4px;padding:5px 7px;background:#363739;border:1px solid #535457;border-radius:3px;color:#f0f1f2;font-size:9px;font-weight:650}
 .exo-v2-shell .exo-v2-top-action:disabled{opacity:.42}
-.cc-v2-orientation{position:absolute;top:11px;left:12px;z-index:4;display:flex;gap:3px;align-items:center;padding:4px;background:rgba(231,238,242,.91);border:1px solid #a1b1bb;border-radius:8px;box-shadow:0 3px 16px #172e4240;backdrop-filter:blur(8px)}
-.cc-v2-orientation strong{padding:0 7px;font-size:10px;letter-spacing:.06em;color:#34515f}
-.cc-v2-orientation button{padding:5px 7px!important;font-size:9px!important;letter-spacing:.03em;font-weight:650;border:1px solid transparent!important;background:transparent!important;color:#3d5869!important}
-.cc-v2-orientation button:hover{background:#9bb7c6!important;color:white!important}
-.cc-v2-orientation button:focus-visible{outline:2px solid #47768b}
+/* Clear liquid-glass viewport strips: a thin reflective rim and almost
+   transparent optical sheet preserve the canvas detail beneath each bar. */
+.cc-v2-orientation{
+  position:absolute;top:11px;left:12px;z-index:4;
+  display:flex;align-items:center;gap:3px;width:max-content;max-width:calc(100% - 24px);
+  padding:4px;overflow-x:auto;scrollbar-width:none;
+  border:1px solid rgba(236,249,255,.42);
+  border-radius:12px;
+  background:
+    linear-gradient(155deg,rgba(255,255,255,.105),transparent 38%,rgba(255,255,255,.025) 84%),
+    rgba(23,39,54,.065);
+  -webkit-backdrop-filter:blur(3px) saturate(115%);
+  backdrop-filter:blur(3px) saturate(115%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.52),inset 0 -1px 0 rgba(255,255,255,.09),0 5px 16px rgba(4,10,18,.12);
+  color:#f5fbff;text-shadow:0 1px 2px rgba(6,16,27,.6);isolation:isolate;
+}
+.cc-v2-orientation::-webkit-scrollbar{display:none}
+.cc-scene .cc-v2-orientation{left:auto;right:12px;top:12px}
+.cc-board .cc-v2-orientation{
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.15),rgba(255,255,255,.015) 48%,transparent),
+    rgba(230,241,250,.055);
+  color:#193747;
+  text-shadow:0 1px 0 rgba(255,255,255,.52);
+  border-color:rgba(255,255,255,.66);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.70),0 5px 16px rgba(39,56,74,.12);
+}
+.cc-v2-orientation strong{flex:none;padding:0 7px;font-size:10px;letter-spacing:.06em;color:inherit}
+.cc-v2-orientation button{
+  flex:none;min-height:25px;padding:5px 7px!important;
+  font-size:9px!important;letter-spacing:.03em;font-weight:650;
+  border:1px solid transparent!important;border-radius:6px;
+  background:transparent!important;color:inherit!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+  box-shadow:none;transition:background .14s ease,color .14s ease,box-shadow .14s ease;
+}
+.cc-v2-orientation button:is(:hover,:focus-visible){
+  background:rgba(228,249,255,.17)!important;color:inherit!important;
+  box-shadow:inset 0 0 0 1px rgba(236,252,255,.15);
+}
+.cc-board .cc-v2-orientation button:is(:hover,:focus-visible){background:rgba(255,255,255,.40)!important}
+.cc-v2-orientation button:focus-visible{outline:2px solid #b8e6fb;outline-offset:-2px}
+.cc-v2-board-orientation{left:auto;right:12px;top:11px;gap:2px;padding:3px}
+.cc-v2-board-orientation button{min-width:24px;padding:4px 5px!important;line-height:1.25!important}
+.cc-v2-board-orientation button:is(.active,[aria-pressed="true"]){
+  background:rgba(67,129,171,.18)!important;
+  color:#153e57!important;box-shadow:inset 0 0 0 1px rgba(36,100,145,.34);
+}
+.cc-board-orientation-divider{flex:none;width:1px;height:15px;background:rgba(37,80,113,.27);margin:0 2px}
+/* Only the Liquid Glass 2D top strip is completely optically clear. Solid
+   themes retain their original readable control background. Unlike the
+   corner rail, selected/hovered states must never frost or tint this lens. */
+.app-shell[data-studio-liquid-glass="true"] .cc-board .cc-v2-board-orientation,
+.app-shell[data-studio-liquid-glass="true"] .cc-board .cc-v2-board-orientation > button {
+  background:transparent!important;
+  background-image:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+.app-shell[data-studio-liquid-glass="true"] .cc-board .cc-v2-board-orientation button:is(:hover,:focus-visible){
+  background:transparent!important;
+  box-shadow:inset 0 -1px 0 rgba(28,80,110,.42);
+}
+.app-shell[data-studio-liquid-glass="true"] .cc-board .cc-v2-board-orientation button:is(.active,[aria-pressed="true"]){
+  background:transparent!important;
+  color:#153e57!important;
+  box-shadow:inset 0 -2px 0 rgba(26,90,127,.68);
+}
+.cc-native-free-curve-guide{
+  position:absolute;left:51px;bottom:12px;z-index:8;
+  display:grid;gap:5px;max-width:min(298px,calc(100% - 65px));padding:9px 11px;
+  border:1px solid rgba(255,255,255,.66);border-radius:10px;
+  background:linear-gradient(145deg,rgba(255,255,255,.50),rgba(228,243,251,.12)),rgba(226,237,244,.32);
+  -webkit-backdrop-filter:blur(18px) saturate(145%);backdrop-filter:blur(18px) saturate(145%);
+  color:#244555;box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 3px 15px #122b3e18;
+  font:10px/1.35 -apple-system,BlinkMacSystemFont,sans-serif;
+}
+.cc-native-free-curve-guide strong{font-weight:700}
+.cc-native-free-curve-guide.cc-pattern-compact-hint{left:56px;bottom:10px;max-width:min(225px,calc(100% - 70px));padding:7px 23px 7px 9px;gap:2px;border-radius:6px;font-size:9px;opacity:.8}
+.cc-native-free-curve-guide.cc-pattern-compact-hint button{position:absolute;right:5px;top:2px;border:0;background:transparent;color:#475762;cursor:pointer;font-size:15px;padding:1px 3px;line-height:1}
+.cc-board[data-precision-drafting="true"] .cc-native-free-curve-guide.cc-pattern-compact-hint{max-width:176px;opacity:.65}
+.cc-native-free-curve-guide label{display:flex;align-items:center;gap:7px;cursor:pointer}
+.cc-native-free-curve-guide input{accent-color:#4385a7;margin:0}
+.cc-native-free-curve-guide small{color:#9d4537;line-height:1.3}
+@media(prefers-reduced-transparency:reduce){.cc-native-free-curve-guide{background:#eaf1f5;backdrop-filter:none;-webkit-backdrop-filter:none}}
+.cc-native-sew-pair-readout{
+  position:absolute;right:12px;bottom:12px;z-index:7;display:grid;gap:3px;
+  max-width:calc(100% - 24px);padding:9px 12px;
+  border:1px solid rgba(255,255,255,.63);border-radius:9px;
+  background:linear-gradient(143deg,rgba(255,255,255,.56),rgba(240,248,254,.20)),rgba(221,234,241,.31);
+  -webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 5px 18px #142f4520;
+  color:#183747;text-align:right;pointer-events:none;font-size:10px;font-variant-numeric:tabular-nums;
+}
+.cc-native-sew-pair-readout strong{font-weight:680}
+@media(prefers-reduced-transparency:reduce){.cc-native-sew-pair-readout{background:#e9f1f5;backdrop-filter:none;-webkit-backdrop-filter:none}}
+@media(prefers-reduced-transparency:reduce){
+  .cc-v2-orientation{background:#344b5a;-webkit-backdrop-filter:none;backdrop-filter:none}
+  .cc-board .cc-v2-orientation{background:#ebf0f3}
+}
+.cc-rust-embedded .cc-board-context-tools{max-width:min(370px,calc(100% - 60px));display:flex;flex-wrap:wrap;justify-content:flex-end;gap:3px}
+.cc-rust-embedded .cc-board-context-tools:empty{display:none}
+.cc-rust-embedded .cc-board-context-tools[hidden]{display:none!important}
+.cc-native-tool-properties{display:flex;flex-direction:column;gap:8px}
+.cc-native-tool-properties .cc-embedded-sew-commit{display:flex;flex-direction:column;align-items:stretch;gap:9px;padding:12px 10px;background:#414347;color:#ededee;border:1px solid #65676a;border-radius:4px;font-size:11px}
+.cc-native-tool-properties .cc-embedded-sew-commit label{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px}
+.cc-native-tool-properties .cc-embedded-sew-commit select,.cc-native-tool-properties .cc-embedded-sew-commit input[type=number]{width:100%;min-width:0;background:#303235;color:#e9ebec;border:1px solid #737579;border-radius:3px;padding:6px}
+.cc-native-tool-properties .cc-embedded-sew-commit button{width:100%;border-radius:3px;padding:7px}
 .cc-rust-embedded .cc-embedded-bottom button[title*="Spread"]{background:#afc4ce;border-color:#7c9ead;font-weight:650}
+
+/* Native sewing must be completable from the embedded editor, where the
+   standalone ClothCraft sewing fieldset is not mounted. */
+.cc-rust-embedded .cc-embedded-sew-commit{flex:0 0 auto;display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;padding:7px 10px;border-top:1px solid #9aa3a7;background:#30363a;color:#f0f2f2;font-size:11px}
+.cc-rust-embedded .cc-native-sewing-pair{flex:1 1 270px;line-height:1.35;overflow-wrap:anywhere}
+.cc-rust-embedded .cc-embedded-sew-commit label{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;cursor:pointer}
+.cc-rust-embedded .cc-embedded-sew-commit input{accent-color:#90c7df;cursor:pointer}
+.cc-rust-embedded .cc-embedded-sew-commit button{min-height:30px;font-size:11px;padding:5px 10px;background:#48545a;color:#f5f7f7;border-color:#74848c}
+.cc-rust-embedded .cc-embedded-sew-commit button[data-native-create-seam]{background:#d6e4e9;color:#19303a;border-color:#d6e4e9;font-weight:700}
+.cc-rust-embedded .cc-embedded-sew-commit button:disabled{opacity:.45}
+.cc-rust-embedded .cc-sew-partial-ranges{font-variant-numeric:tabular-nums;border:1px solid #596771;border-radius:5px;padding:5px 8px}
+.cc-rust-embedded .cc-sew-partial-ranges summary{cursor:pointer;color:#e2eff7}
+.cc-rust-embedded .cc-sew-partial-ranges label{display:flex;gap:5px;margin-top:6px}
+.cc-rust-embedded .cc-sew-partial-ranges input[type=number]{width:56px;background:#252d32;border:1px solid #6b7b85;border-radius:4px;color:#fff;padding:4px}
+@media(max-width:740px){.cc-rust-embedded .cc-embedded-sew-commit{gap:6px;padding:8px}.cc-rust-embedded .cc-native-sewing-pair{flex-basis:100%}}
+.cc-native-pom-inspector {
+  position: absolute;
+  z-index: 18;
+  top: 128px;
+  right: 12px;
+  width: min(268px, 46%);
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+  color: #e8f0f4;
+  background: linear-gradient(155deg, rgba(245, 251, 255, .19), rgba(25, 45, 61, .3) 40%), rgba(28, 47, 63, .64);
+  border: 1px solid rgba(241, 251, 255, .26);
+  border-radius: 12px;
+  box-shadow: inset 0 1px rgba(255, 255, 255, .17), 0 7px 28px rgba(15, 28, 39, .16);
+  backdrop-filter: blur(20px) saturate(145%);
+  -webkit-backdrop-filter: blur(20px) saturate(145%);
+}
+.cc-native-pom-inspector strong {font-size: 11px;letter-spacing: .055em}
+.cc-native-pom-inspector p {font-size: 10px;line-height: 1.4;margin: 0;opacity: .84}
+.cc-native-pom-inspector button {cursor: pointer}
+.cc-native-pom-inspector button:disabled {cursor: not-allowed;opacity: .5}
+.cc-native-pom-rows {display: grid;gap: 4px;max-height: 125px;overflow-y: auto}
+.cc-native-pom-rows > span {font-size: 11px;opacity: .8}
+.cc-native-pom-rows button {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: #eef6fa;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.07);
+  text-align: left;
+  font-size: 11px;
+}
+.cc-native-pom-rows button[aria-pressed="true"] {border-color: #f8ac65;background: rgba(237,145,67,.2)}
+.cc-native-pom-edit {display: grid;gap: 7px}
+.cc-native-pom-edit label {display:grid;gap:4px;font-size:10px}
+.cc-native-pom-edit input {
+  min-width: 0;
+  border:1px solid rgba(255,255,255,.25);
+  border-radius: 5px;
+  padding: 6px 8px;
+  color:#eef6fa;
+  background:rgba(0,0,0,.19);
+}
+.cc-native-pom-edit > div {display:flex;gap:6px}
+.cc-native-pom-edit button {
+  flex:1;
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:5px;
+  padding:6px;
+  font-size:10px;
+  color:#eef6fa;
+  background:rgba(255,255,255,.11);
+}
+/* Real Pattern Studio switch is the first item INSIDE the 2D glass tube. */
+.cc-v2-board-orientation>.cc-pattern-studio-glass-arrow{font-size:19px!important;line-height:1!important;font-weight:650;min-width:25px;min-height:25px;border-radius:6px;cursor:pointer}
+.cc-v2-board-orientation>.cc-pattern-studio-glass-arrow:hover{background:rgba(255,255,255,.42)!important}
+.cc-scene .cc-v2-orientation>:is(.cc-3d-studio-glass-arrow,.cc-3d-studio-fullscreen-arrow){font-size:19px!important;line-height:1!important;font-weight:650;min-width:25px;min-height:25px;border-radius:6px;cursor:pointer}
+.cc-scene .cc-v2-orientation>:is(.cc-3d-studio-glass-arrow,.cc-3d-studio-fullscreen-arrow):is(:hover,:focus-visible){background:rgba(228,249,255,.24)!important}
+.cc-scene .cc-v2-orientation>:is(.cc-3d-studio-glass-arrow,.cc-3d-studio-fullscreen-arrow)[aria-pressed="true"]{background:rgba(228,249,255,.16)!important}
+/* A split 3D pane may be only ~400px wide. Reserve a gap for its vertical
+   editing toolbar; keep both 3D view arrows and Animate on a usable glass
+   strip rather than allowing the two toolbars to overlap. */
+.cc-scene .cc-v2-orientation{max-width:calc(100% - 85px)}
+/* Native viewport animation stays inside the 3D editor, including when a
+   user has already expanded the studio; it must not cover the 2D patterns. */
+.cc-scene .cc-v2-orientation>.cc-walk-trigger[aria-expanded="true"]{
+  background:rgba(112,216,241,.24)!important;
+  box-shadow:inset 0 0 0 1px rgba(182,242,255,.55)!important;
+}
+.cc-scene .cc-walk-panel{
+  position:absolute;z-index:12;top:55px;right:12px;
+  width:min(265px,calc(100% - 24px));max-height:calc(100% - 65px);overflow-y:auto;
+  padding:12px;display:flex;flex-direction:column;gap:11px;
+  color:#eaf7ff;background:rgba(23,33,44,.94);
+  border:1px solid rgba(192,224,237,.48);border-radius:12px;
+  box-shadow:0 12px 34px rgba(0,0,0,.4);
+  font-size:11px;letter-spacing:.01em;
+  backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);
+}
+.cc-scene .cc-walk-heading{display:flex;align-items:center;justify-content:space-between}
+.cc-scene .cc-walk-heading strong{font-size:12px;letter-spacing:.07em}
+.cc-scene .cc-walk-heading button{border:0;background:transparent;color:inherit;font-size:20px;cursor:pointer}
+.cc-scene .cc-walk-panel label{display:flex;flex-direction:column;gap:5px;font-size:11px;color:#cde2ee}
+.cc-scene .cc-walk-panel select{width:100%;max-width:100%;padding:7px 6px;font-size:11px;color:#f4fbff;border-radius:5px;border:1px solid #617484;background:#344456}
+.cc-scene .cc-walk-panel input[type="range"]{width:100%;accent-color:#79cbf2}
+.cc-scene .cc-walk-playback{display:flex;gap:6px}
+.cc-scene .cc-walk-playback button{flex:1;padding:8px 6px;color:#f1faff;border-radius:6px;border:1px solid #617484;background:#36556b;cursor:pointer}
+.cc-scene .cc-walk-playback button:disabled{opacity:.45;cursor:not-allowed}
+.cc-scene .cc-walk-panel .cc-walk-loop{display:flex;flex-direction:row;align-items:center;gap:8px}
+.cc-scene .cc-walk-loop input{accent-color:#79cbf2}
+.cc-scene .cc-walk-panel small{font-size:10px;line-height:1.55;color:#b4c7d5}
+/* The entire Animation Studio is a separate docked 3D workspace, not an
+   overlay or an option in the orientation glass tube. The canvas gets its own
+   measured render surface so moving into the dock preserves correct aspect. */
+.cc-scene .cc-scene-render-surface{position:absolute;inset:0;min-width:0;min-height:0;overflow:hidden}
+.cc-scene.cc-animation-workspace{background:#101a26!important}
+.cc-scene.cc-animation-workspace .cc-scene-render-surface{right:0;bottom:var(--cc-animation-timeline-height,205px)}
+.cc-scene.cc-animation-workspace .cc-v2-orientation{right:12px}
+.cc-scene.cc-animation-workspace .cc-walk-panel{
+  top:0!important;right:0!important;bottom:136px!important;
+  width:282px!important;max-width:none!important;max-height:none!important;
+  border-radius:0!important;border-top:0!important;border-bottom:0!important;
+  background:#1c2733!important;backdrop-filter:none!important;
+  box-shadow:-4px 0 18px #0005!important;padding:18px 15px!important;
+}
+.cc-scene.cc-animation-workspace .cc-walk-heading span{font-size:9px;color:#93b8ce;letter-spacing:.08em}
+.cc-scene .cc-walk-timeline{
+  position:absolute;bottom:0;left:0;right:0;z-index:10;height:var(--cc-animation-timeline-height,205px);
+  padding:8px 12px 10px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;
+  background:#151d28;color:#e3f1fb;border-top:1px solid #556879;
+  box-shadow:0 -5px 18px #0005;font-size:11px;
+}
+.cc-scene .cc-animation-timeline-resizer{
+  height:10px;min-height:10px;position:sticky;top:-8px;z-index:13;
+  margin:-8px -12px 0;cursor:ns-resize;touch-action:none;
+  display:flex;justify-content:center;align-items:center;
+  background:#273747;border-bottom:1px solid #4e6979;
+}
+.cc-scene .cc-animation-timeline-resizer>span{display:block;width:50px;height:3px;border-radius:3px;background:#86a6b9}
+.cc-scene .cc-animation-timeline-resizer:hover>span,.cc-scene .cc-animation-timeline-resizer:focus-visible>span{background:#8fe6fa}
+.cc-scene .cc-animation-timeline-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.cc-scene .cc-animation-timeline-heading strong{font-size:11px;letter-spacing:.12em}
+.cc-scene .cc-animation-timeline-heading span{color:#94adbf;font-size:9px}
+.cc-scene .cc-animation-timeline-heading>.cc-animation-photo{
+  margin-left:auto;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:4px 11px;border:1px solid #69afcf;border-radius:5px;
+  background:#315c72;color:#f1fbff;font-size:10px;font-weight:650;white-space:nowrap;cursor:pointer;
+}
+.cc-scene .cc-animation-timeline-heading>.cc-animation-photo:hover{background:#427993;border-color:#8fe5ff}
+.cc-scene .cc-animation-timeline-heading>.cc-animation-photo:focus-visible{outline:2px solid #9de8ff;outline-offset:2px}
+.cc-scene .cc-animation-photo-status{font-size:10px;color:#a4dce9}
+.cc-scene .cc-animation-preset-toolbar,.cc-scene .cc-animation-transport{display:flex;align-items:end;gap:9px;min-width:0}
+.cc-scene .cc-animation-preset-toolbar>label{display:flex;flex:1 1 0;flex-direction:column;gap:4px;min-width:0}
+.cc-scene .cc-animation-preset-toolbar>label:first-child{flex:1.4 1 0}
+.cc-scene .cc-animation-preset-toolbar>label:nth-child(2){flex:1.5 1 0}
+.cc-scene .cc-animation-preset-toolbar>label{gap:2px}
+.cc-scene .cc-animation-timeline-heading{min-height:15px}
+.cc-scene .cc-walk-timeline select,.cc-scene .cc-walk-timeline input[type=number]{
+  min-width:0;width:100%;height:23px;padding:2px 6px;border:1px solid #536879;
+  background:#253442;color:#edf9ff;border-radius:4px;font-size:10px;
+}
+.cc-scene .cc-animation-transport{align-items:center;gap:11px}
+.cc-scene .cc-animation-transport>label{display:flex;align-items:center;gap:5px;white-space:nowrap;color:#9ebacb;font-size:10px}
+.cc-scene .cc-animation-transport>label input{max-width:63px}
+.cc-scene .cc-animation-transport>label select{max-width:61px}
+.cc-scene .cc-animation-play-actions{display:flex;align-items:center;gap:3px}
+.cc-scene .cc-animation-play-actions>button,.cc-scene .cc-animation-key-inspector>button{
+  min-height:27px;padding:4px 8px;border-radius:4px;cursor:pointer;color:#e9f5ff;
+  background:#304557;border:1px solid #586d80;font-size:10px;white-space:nowrap;
+}
+.cc-scene .cc-animation-play-actions>button:hover,.cc-scene .cc-animation-key-inspector>button:hover{background:#446880}
+.cc-scene .cc-animation-play-actions>button:disabled,.cc-scene .cc-animation-key-inspector>button:disabled{opacity:.42;cursor:default}
+.cc-scene .cc-animation-play-actions>.cc-animation-play{min-width:70px;background:#335d76}
+.cc-scene .cc-animation-frame-counter{margin-right:auto;white-space:nowrap;color:#9fb6c8;font-size:10px}
+.cc-scene .cc-animation-frame-counter b{font-size:12px;color:#f7fbff;font-variant-numeric:tabular-nums}
+.cc-scene .cc-animation-frame-counter small{font-size:9px}
+.cc-scene .cc-animation-transport .cc-walk-loop{flex-direction:row;color:#d6e8ee}
+.cc-scene .cc-animation-transport input[type=checkbox]{accent-color:#7fc3de}
+.cc-scene .cc-animation-tracks{
+  display:grid;grid-template-columns:152px minmax(0,1fr);grid-template-rows:20px repeat(3,21px);
+  min-height:83px;border:1px solid #3b5061;background:#172533;
+}
+.cc-scene .cc-animation-track-label{
+  display:flex;align-items:center;padding:0 9px;font-size:10px;color:#bed4e2;
+  border-right:1px solid #3b5061;border-bottom:1px solid #31475a;
+}
+.cc-scene .cc-animation-track-header{font-weight:650;color:#8bb9d0;letter-spacing:.05em}
+.cc-scene .cc-animation-ruler{position:relative;min-width:0;padding:1px 8px;border-bottom:1px solid #415464;background:#263749}
+.cc-scene .cc-animation-ruler-ticks{display:flex;justify-content:space-between;font-size:9px;color:#b0c4d5;font-variant-numeric:tabular-nums}
+.cc-scene .cc-animation-ruler input[type=range]{position:absolute;left:0;right:0;bottom:0;width:100%;height:12px;margin:0;accent-color:#65d0e9;cursor:ew-resize}
+.cc-scene .cc-animation-track-lane{position:relative;min-width:0;overflow:hidden;border-bottom:1px solid #31475a;cursor:crosshair;
+  background:repeating-linear-gradient(90deg,rgba(129,167,199,.11) 0,rgba(129,167,199,.11) 1px,transparent 1px,transparent 12.5%)}
+.cc-scene .cc-animation-playhead{position:absolute;top:0;bottom:0;border-left:2px solid #82e5f0;z-index:2;pointer-events:none}
+.cc-scene .cc-animation-keyframe{
+  position:absolute;top:0;transform:translateX(-50%);z-index:3;height:20px;
+  padding:0 5px;background:transparent;border:0;color:#d6ad6b;
+  font-size:18px;cursor:ew-resize;touch-action:none;text-shadow:0 0 2px #111;
+}
+.cc-scene .cc-animation-keyframe.selected{color:#8fe2f4;filter:drop-shadow(0 0 5px #56b6d4)}
+.cc-scene .cc-animation-motion-clip{
+  position:absolute;top:2px;height:17px;line-height:17px;overflow:hidden;
+  background:#3c667f;border:1px solid #80b5d3;border-radius:3px;
+  color:#e6f4fb;text-align:center;font-size:9px;letter-spacing:.04em;white-space:nowrap;pointer-events:none;
+}
+.cc-scene .cc-animation-motion-clip.is-turn{background:#806545;border-color:#d8b477}
+.cc-scene .cc-animation-motion-clip.is-hold{background:#3c4a55;border-color:#687c8a}
+.cc-scene .cc-animation-key-inspector{display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-width:0}
+.cc-scene .cc-animation-key-inspector>strong{font-size:10px;letter-spacing:.08em;color:#8dc6df}
+.cc-scene .cc-animation-key-inspector>span{min-width:75px;max-width:125px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cc-scene .cc-animation-key-inspector>label{display:flex;align-items:center;gap:4px;white-space:nowrap;font-size:10px}
+.cc-scene .cc-animation-key-inspector>label input{width:65px}
+.cc-scene .cc-animation-key-inspector>small{margin-left:auto;color:#92aaba;font-size:9px}
+.cc-scene .cc-animation-error{font-size:10px;color:#ffb4aa}
+@media(max-width:850px){
+  .cc-scene .cc-animation-preset-toolbar,.cc-scene .cc-animation-transport{flex-wrap:wrap}
+  .cc-scene .cc-animation-preset-toolbar>label{min-width:130px}
+}
+/* Bottom-left SIMULATE split-button controls workflow mode. */
+/* Animation deliberately focuses a single 3D canvas. Print Layout instead
+   preserves CLO's live 3D + Print Layout split and separate Property Editor. */
+.app-shell[data-focus-workspace="animation"] .main-layout.clo-adjustable-panels{
+  grid-template-columns:0 0 0 minmax(0,1fr) 0!important;
+  --exo-tool-width:0px!important;
+  --effective-library-width:0px!important;
+  --effective-inspector-width:0px!important;
+}
+.app-shell[data-focus-workspace="animation"] .main-layout> :is(.clo-edge-tabs,.asset-browser,.tool-rail,.clo-inspector,.exo-panel-edge-toggle){
+  display:none!important;
+}
+.app-shell[data-focus-workspace="animation"] .main-layout>.workspaces{
+  grid-column:4!important;min-width:0;width:100%;max-width:none;
+}
+.app-shell[data-focus-workspace="print"] .main-layout.clo-adjustable-panels{
+  grid-template-columns:0 0 0 minmax(0,1fr) minmax(285px,var(--inspector-width,392px))!important;
+  --exo-tool-width:0px!important;
+  --effective-library-width:0px!important;
+  --effective-inspector-width:var(--inspector-width,392px)!important;
+}
+.app-shell[data-focus-workspace="print"] .main-layout> :is(.clo-edge-tabs,.asset-browser,.tool-rail,.exo-panel-edge-toggle){
+  display:none!important;
+}
+.app-shell[data-focus-workspace="print"] .main-layout>.workspaces{
+  grid-column:4!important;grid-row:1;min-width:0;width:100%;max-width:none;
+}
+.app-shell[data-focus-workspace="print"] .main-layout>.clo-inspector{
+  grid-column:5!important;grid-row:1;min-width:0;display:flex!important;
+}
+.app-shell[data-focus-workspace="print"] .workspaces.workspace-layout-split>.viewport-shell{
+  grid-column:1;grid-row:1;min-width:0;min-height:0;
+}
+.app-shell[data-focus-workspace="print"] .workspaces>.pattern-editor-shell{display:none!important}
+.app-shell[data-focus-workspace="print"] .workspaces>.exo-legacy-print-viewport{
+  grid-column:2;grid-row:1;position:relative;min-width:0;min-height:0;overflow:hidden;
+  border-left:1px solid #55595d;background:#d0d0d0;
+}
+.app-shell[data-focus-workspace="print"] .clo-inspector-content{display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.app-shell[data-focus-workspace="print"] .clo-property-panel[hidden]{display:none!important}
+.app-shell[data-focus-workspace="print"] .exo-object-browser-toggle{display:none!important}
+.exo-print-layout-property-host{display:flex;flex:1 1 auto;min-height:0;min-width:0;overflow:hidden;background:#282c30}
+.app-shell[data-focus-workspace="print"] .workspaces>.studio-custom-toolbar{
+  display:none!important;
+}
+/* Print mode should not show simulation diagnostics or a floating hand control
+   over the fabric roll. The 3D garment renderer itself stays mounted and live. */
+.cc-rust-embedded .cc-print-layout-workspace-active :is(.cc-embedded-bottom,.cc-embedded-footer),
+.cc-rust-embedded .cc-print-layout-workspace-active .cc-embedded-main>.cc-camera-hand-panel{
+  display:none!important;
+}
+.cc-rust-embedded .cc-print-layout-workspace-active .cc-embedded-main>.exo-print-viewport{
+  min-height:0;min-width:0;padding:0;border-left:1px solid #555a5e;background:#c8c8c8;
+}
+.cc-scene.cc-animation-workspace{background:#202225!important}
+.cc-scene.cc-animation-workspace .cc-walk-panel{display:none!important}
+.cc-scene.cc-animation-workspace .cc-scene-render-surface{bottom:var(--cc-animation-timeline-height,204px)}
+.cc-scene.cc-animation-workspace .cc-walk-timeline{
+  gap:3px;padding:6px 11px 7px;background:#242629;color:#e7eaec;
+  border-top:1px solid #4f5559;box-shadow:0 -3px 10px #0004;
+}
+.cc-scene.cc-animation-workspace .cc-animation-timeline-resizer{
+  min-height:7px;height:7px;margin:-6px -11px 0;background:#33383b;border-color:#4b5359;
+}
+.cc-scene.cc-animation-workspace .cc-animation-timeline-heading{
+  min-height:19px;justify-content:flex-start;gap:10px;
+}
+.cc-scene.cc-animation-workspace .cc-animation-timeline-heading strong{
+  letter-spacing:.05em;font-size:11px;color:#e5eaed;
+}
+.cc-scene.cc-animation-workspace .cc-animation-timeline-heading span{
+  font-size:9px;color:#aab3b9;margin-right:auto;
+}
+.cc-scene.cc-animation-workspace .cc-animation-timeline-heading button{
+  color:#ced8dd;background:#343b3e;border:1px solid #5b676d;
+  padding:3px 9px;border-radius:3px;font-size:10px;cursor:pointer;
+}
+.cc-scene.cc-animation-workspace .cc-animation-preset-toolbar{
+  align-items:center;gap:9px;flex-wrap:nowrap;
+}
+.cc-scene.cc-animation-workspace .cc-animation-preset-toolbar>label{
+  flex:0 1 265px;display:flex;flex-direction:row;align-items:center;gap:6px;
+  min-width:0;white-space:nowrap;color:#b2bdc3;font-size:10px;
+}
+.cc-scene.cc-animation-workspace .cc-animation-preset-toolbar select{
+  max-width:100%;height:23px;background:#303539;border-color:#5b6368;color:#eef1f2;
+}
+.cc-scene.cc-animation-workspace .cc-animation-transport{
+  gap:8px;min-height:26px;
+}
+.cc-scene.cc-animation-workspace .cc-animation-play-actions>button,
+.cc-scene.cc-animation-workspace .cc-animation-key-inspector>button{
+  border-radius:3px;min-height:23px;padding:2px 7px;background:#353b3f;
+  border-color:#5b646b;color:#e1e8eb;
+}
+.cc-scene.cc-animation-workspace .cc-animation-play-actions>.cc-animation-play{background:#446170}
+.cc-scene.cc-animation-workspace .cc-animation-transport select,
+.cc-scene.cc-animation-workspace .cc-animation-transport input[type=number]{
+  background:#303539;border-color:#5b6368;max-height:23px;
+}
+.cc-scene.cc-animation-workspace .cc-animation-tracks{
+  grid-template-columns:120px minmax(0,1fr);grid-template-rows:18px repeat(3,19px);
+  min-height:75px;background:#2a2e31;border-color:#464c50;
+}
+.cc-scene.cc-animation-workspace .cc-animation-track-label{
+  font-size:9px;padding:0 7px;border-color:#41484c;color:#bdc7cb;
+}
+.cc-scene.cc-animation-workspace .cc-animation-track-header{color:#d3dde1}
+.cc-scene.cc-animation-workspace .cc-animation-ruler{background:#313538;border-color:#41484c}
+.cc-scene.cc-animation-workspace .cc-animation-track-lane{
+  border-color:#41484c;background:repeating-linear-gradient(90deg,rgba(203,212,216,.10) 0,rgba(203,212,216,.10) 1px,transparent 1px,transparent 12.5%);
+}
+.cc-scene.cc-animation-workspace .cc-animation-motion-clip{
+  background:#455b65;border-color:#83a7b7;height:15px;line-height:15px;
+}
+.cc-scene.cc-animation-workspace .cc-animation-keyframe{height:18px;line-height:18px;font-size:15px}
+.cc-scene.cc-animation-workspace .cc-animation-key-inspector{flex-wrap:nowrap;gap:5px;min-height:23px}
+.cc-scene.cc-animation-workspace .cc-animation-key-inspector>strong{color:#c2cdd2}
+.cc-scene.cc-animation-workspace .cc-animation-key-inspector>span{
+  font-size:10px;min-width:65px;max-width:125px;
+}
+@media(max-width:1100px){
+  .cc-scene.cc-animation-workspace .cc-animation-preset-toolbar{flex-wrap:wrap}
+  .cc-scene.cc-animation-workspace .cc-animation-transport{flex-wrap:wrap}
+  .cc-scene.cc-animation-workspace .cc-animation-key-inspector{flex-wrap:wrap}
+}
+.simulation-bar{position:relative;z-index:80;overflow:visible!important}
+.sim-footer-mode-switch{position:relative;display:flex;align-items:center;flex:none}
+.sim-footer-mode-switch .sim-play{border-radius:5px 0 0 5px}
+.sim-footer-mode-switch .sim-mode-arrow{
+  height:30px;width:25px;display:flex;justify-content:center;align-items:center;
+  background:#1c2733;color:#b6deef;border:1px solid #425466;border-left:0;
+  border-radius:0 5px 5px 0;cursor:pointer;
+}
+.sim-footer-mode-switch .sim-mode-arrow[aria-expanded="true"]{background:#35546a;color:#fff}
+.sim-footer-mode-menu{
+  position:absolute;left:0;bottom:calc(100% + 8px);z-index:10000;
+  width:270px;padding:8px;display:flex;flex-direction:column;gap:3px;
+  border-radius:9px;border:1px solid #66829a;background:#1d2935;
+  box-shadow:0 10px 30px #000b;
+}
+.sim-footer-mode-menu button{
+  display:flex;align-items:center;gap:9px;padding:10px 8px;
+  border:0;border-radius:5px;background:transparent;color:#e4f2f9;
+  text-align:left;font-size:11px;cursor:pointer;
+}
+.sim-footer-mode-menu button:hover,.sim-footer-mode-menu button:focus-visible{background:#35536b}
+.simulation-bar .sim-left{min-width:0}
+.simulation-bar .sim-copy{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+/* VectorCraft-derived Pen/Anchor affordances live inside the actual native
+   metric 2D board; draft buttons don't write Rust until Enter/Apply. */
+.cc-rust-embedded .cc-vector-anchor-actions{
+  position:absolute;z-index:22;top:50px;left:52px;max-width:calc(100% - 68px);
+  display:flex;align-items:center;flex-wrap:wrap;gap:5px;padding:5px;
+  border:1px solid #7896a9;border-radius:8px;background:rgba(28,43,55,.94);
+  color:#f0f8fb;box-shadow:0 7px 17px #0004;font-size:10px;
+}
+.cc-rust-embedded .cc-vector-anchor-actions>button{
+  display:flex;gap:5px;align-items:center;justify-content:center;
+  border-radius:5px;padding:5px 8px;min-height:29px;
+  background:#35526a;color:#f3fbff;border:1px solid #7193a7;
+  font-size:14px;line-height:1;cursor:pointer;
+}
+.cc-rust-embedded .cc-vector-anchor-actions>button>span{font-size:10px}
+.cc-rust-embedded .cc-vector-anchor-actions>button:hover:not(:disabled),
+.cc-rust-embedded .cc-vector-anchor-actions>button[aria-pressed="true"]{background:#477b99}
+.cc-rust-embedded .cc-vector-anchor-actions>button:disabled{opacity:.4;cursor:default}
+.cc-rust-embedded .cc-vector-anchor-actions>[data-draft-point-progress]{color:#b6d2e5;font-size:9px;white-space:nowrap}
+/* Contextual native Pen-family controls. The SVG foreignObject anchors this
+   compact surface to a real draft/native pattern corner at every zoom level. */
+.cc-rust-embedded .cc-vector-anchor-actions.cc-anchor-liquid-glass,
+.cc-board .cc-vector-anchor-actions.cc-anchor-liquid-glass{
+  position:absolute!important;z-index:25;
+  max-width:none!important;width:218px;height:43px;box-sizing:border-box;
+  display:flex;align-items:center;justify-content:center;flex-wrap:nowrap;
+  gap:4px;padding:5px;border:1px solid rgba(255,255,255,.68);
+  border-radius:13px;background:linear-gradient(145deg,rgba(243,250,255,.54),rgba(182,209,236,.22));
+  -webkit-backdrop-filter:blur(20px) saturate(190%);backdrop-filter:blur(20px) saturate(190%);
+  box-shadow:inset 0 1px rgba(255,255,255,.72),0 7px 22px rgba(12,32,49,.25);
+  color:#102f48;
+}
+.cc-rust-embedded .cc-anchor-liquid-glass>button,.cc-board .cc-anchor-liquid-glass>button{
+  flex:1;min-width:0;min-height:30px;padding:3px 5px;
+  background:rgba(255,255,255,.49);border:1px solid rgba(255,255,255,.70);
+  border-radius:9px;color:#153b56;font-weight:700;font-size:15px;
+  box-shadow:inset 0 1px rgba(255,255,255,.68);
+}
+.cc-anchor-liquid-glass>button>span{font-weight:600;font-size:9px!important}
+.cc-rust-embedded .cc-anchor-liquid-glass>button:hover:not(:disabled),
+.cc-rust-embedded .cc-anchor-liquid-glass>button[aria-pressed="true"]{
+  color:#063f77;background:rgba(255,255,255,.80);border-color:rgba(119,185,241,.75)
+}
+@media(prefers-reduced-transparency:reduce){
+  .cc-board .cc-vector-anchor-actions.cc-anchor-liquid-glass{background:rgba(235,247,253,.97);backdrop-filter:none;-webkit-backdrop-filter:none}
+}
+/* Precise pattern drafting lives beside the Illustrator-style pen actions,
+   with physical units and a readable, zoom-independent on-canvas readout. */
+.cc-rust-embedded .cc-pen-dimensions{
+  position:absolute;z-index:22;top:96px;left:52px;
+  width:min(395px,calc(100% - 68px));box-sizing:border-box;
+  display:grid;gap:7px;padding:9px 10px;
+  border:1px solid #7896a9;border-radius:8px;
+  background:rgba(28,43,55,.94);color:#f0f8fb;
+  font:11px/1.35 -apple-system,BlinkMacSystemFont,sans-serif;
+  box-shadow:0 7px 17px #0004;
+}
+.cc-rust-embedded .cc-pen-dimensions-header,
+.cc-rust-embedded .cc-pen-dimensions-fields,
+.cc-rust-embedded .cc-pen-dimensions-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.cc-rust-embedded .cc-pen-dimensions-header{justify-content:space-between}
+.cc-rust-embedded .cc-pen-dimensions-header label{display:flex;align-items:center;gap:3px;font-size:10px}
+.cc-rust-embedded .cc-pen-dimensions-fields label{display:flex;align-items:center;gap:4px;font-size:10px}
+.cc-rust-embedded .cc-pen-dimensions-fields input,
+.cc-rust-embedded .cc-pen-dimensions-fields select{
+  width:65px;min-width:0;box-sizing:border-box;padding:5px;
+  border:1px solid #829bab;border-radius:4px;
+  background:#eaf1f5;color:#162e3a;font-size:11px;
+}
+.cc-rust-embedded .cc-pen-dimensions-fields select{width:54px}
+.cc-rust-embedded .cc-pen-dimensions-actions button{
+  padding:5px 7px;min-height:26px;border:1px solid #7697ae;
+  border-radius:5px;background:#35526a;color:#f3fbff;cursor:pointer;font-size:10px;
+}
+.cc-rust-embedded .cc-pen-dimensions-actions button:disabled{opacity:.45;cursor:default}
+.cc-rust-embedded .cc-pen-dimensions-actions span{color:#bddbe9;font-size:10px}
+.cc-rust-embedded .cc-pen-dimensions small{color:#c1d5df;font-size:9px}
+.cc-rust-embedded .cc-pen-dimensions .cc-pen-dimensions-error{color:#ffd6bd}
+@media(max-width:600px){.cc-rust-embedded .cc-pen-dimensions{top:90px;padding:7px}}
+/* Only the SECOND arrow opens real full-window 3D. Override the parent split
+   grid (not only its column count) so all EXO chrome is behind the live canvas.
+   The renderer remains mounted and its ResizeObserver handles the new size. */
+.cc-rust-embedded .cc-embedded-root.cc-3d-studio-focus{
+  position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;
+  min-width:0!important;min-height:0!important;z-index:100010!important;
+  display:flex!important;flex-direction:column!important;background:#25292d!important;
+}
+.cc-rust-embedded .cc-3d-studio-focus .cc-embedded-top,
+.cc-rust-embedded .cc-3d-studio-focus .cc-embedded-disclosure,
+.cc-rust-embedded .cc-3d-studio-focus .cc-embedded-bottom,
+.cc-rust-embedded .cc-3d-studio-focus .cc-embedded-footer,
+.cc-rust-embedded .cc-3d-studio-focus .cc-viewport-2d,
+.cc-rust-embedded .cc-3d-studio-focus .cc-embedded-main>.cc-camera-hand-panel{display:none!important}
+.cc-rust-embedded .cc-3d-studio-focus .cc-embedded-main{
+  display:block!important;width:100%!important;flex:1 1 auto!important;min-height:0!important;
+  padding:0!important;overflow:hidden!important;
+}
+.cc-rust-embedded .cc-3d-studio-focus .cc-embedded-main>.cc-viewport-3d{
+  display:flex!important;width:100%!important;height:100%!important;border:0!important;
+}
+/* Standalone EXO workspace uses the same full-window viewport behavior. */
+.cc-workspace.cc-exo-shell.cc-3d-studio-focus .cc-header,
+.cc-workspace.cc-exo-shell.cc-3d-studio-focus .cc-project-bar,
+.cc-workspace.cc-exo-shell.cc-3d-studio-focus .cc-toolbar,
+.cc-workspace.cc-exo-shell.cc-3d-studio-focus .cc-status,
+.cc-workspace.cc-exo-shell.cc-3d-studio-focus .cc-body>.cc-pieces,
+.cc-workspace.cc-exo-shell.cc-3d-studio-focus .cc-body>.cc-inspector,
+.cc-workspace.cc-exo-shell.cc-3d-studio-focus .cc-body>.cc-exo-rail,
+.cc-workspace.cc-exo-shell.cc-3d-studio-focus .cc-body>.cc-viewport-2d,
+.cc-workspace.cc-exo-shell.cc-3d-studio-focus .cc-body>.cc-viewport-3d>h2{display:none!important}
+.cc-workspace.cc-exo-shell.cc-3d-studio-focus{z-index:100010!important;background:#25292d!important}
+.cc-workspace.cc-exo-shell.cc-3d-studio-focus .cc-body{display:flex!important;flex:1!important;min-width:0!important;min-height:0!important;padding:0!important}
+.cc-workspace.cc-exo-shell.cc-3d-studio-focus .cc-body>.cc-viewport-3d{display:flex!important;flex:1!important;width:100%!important;height:100%!important;border:0!important}
+/* At narrower desktop widths the corner tools overlap the glass studio switch.
+   Keep both hit targets usable by placing the corner tools below the top strip. */
+@media (max-width:1400px){
+  .app-shell .cc-board .cc-corner-tool-host{top:52px!important}
+}
+/* EXO 2D anchor commands now live on a small freely draggable top utility
+   strip, never on top of the selected material-space corner. */
+.cc-board .cc-vector-anchor-actions.cc-anchor-liquid-glass,
+.cc-rust-embedded .cc-vector-anchor-actions.cc-anchor-liquid-glass{
+ top:49px;right:15px;left:auto;
+ width:252px;height:40px;max-width:calc(100% - 82px)!important;
+ gap:3px;padding:4px;border-radius:8px;
+}
+.cc-board .cc-anchor-liquid-glass>button,
+.cc-rust-embedded .cc-anchor-liquid-glass>button{
+ min-height:28px;height:29px;padding:2px 4px;border-radius:5px;
+}
+.cc-board .cc-anchor-liquid-glass>.cc-anchor-toolbar-grip,
+.cc-rust-embedded .cc-anchor-liquid-glass>.cc-anchor-toolbar-grip{
+ flex:0 0 22px;min-width:22px;height:29px;
+ display:grid;place-items:center;cursor:grab;touch-action:none;
+ font-size:18px;line-height:1;color:#234258;
+}
+.cc-board .cc-anchor-liquid-glass>.cc-anchor-toolbar-grip:active{cursor:grabbing}
+.cc-board svg[data-native-tool="remove-anchor"] [data-anchor-remove-target="true"]:hover,
+.cc-board svg [data-anchor-remove-target="true"][data-anchor-hovered="true"]{
+ fill:#ffcd66!important;stroke:#a53822!important;stroke-width:2.6!important;
+ filter:drop-shadow(0 0 3px #f4a432);
+}
+.cc-board svg[data-native-tool="split"] [data-anchor-add-preview] circle{
+ vector-effect:non-scaling-stroke;
+}

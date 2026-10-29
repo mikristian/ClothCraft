@@ -1,0 +1,11 @@
+.studio-settings-dialog .studio-index-total{color:var(--studio-muted,#bbc3cf);font-size:11px;margin:4px 0 12px;letter-spacing:.02em}
+.studio-settings-dialog .studio-tool-index-section{padding-top:15px;padding-bottom:12px;border-top:1px solid var(--studio-border,#4b5059)}
+.studio-settings-dialog .studio-index-list{grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr));gap:8px}
+.studio-settings-dialog .studio-index-tool{min-height:66px;border-radius:7px;transition:border-color .15s ease;background:color-mix(in srgb,var(--studio-sidebar,#292d35) 88%,var(--studio-panel,#333842))}
+.studio-settings-dialog .studio-index-tool:hover{border-color:var(--studio-accent,#aabbcc)}
+.studio-settings-dialog .studio-index-description strong{overflow-wrap:anywhere;font-size:11px}
+.studio-settings-dialog .studio-index-description small{line-height:1.35}
+.studio-settings-dialog .studio-index-tool>button{min-width:55px}
+.studio-settings-dialog .studio-index-library-status{flex:none;font-size:10px;color:var(--studio-muted,#bbc3cf);white-space:nowrap}
+@media(max-width:720px){.studio-settings-dialog .studio-index-list{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){.studio-settings-dialog .studio-index-tool{transition:none}}

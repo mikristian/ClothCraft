@@ -1,0 +1,6 @@
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import {inspectModarisNativeIntake20261028 as inspect} from './modarisNativeFormatIntake20261028.mjs'
+test('opaque Modaris model is recognized but never misrepresented as editable',()=>{const bytes=Uint8Array.from([3,0,1,2,5]);const original=[...bytes];const r=inspect({fileName:'model.mdl',bytes,companionNames:['model.vet','model.iba']});assert.equal(r.ok,true);assert.equal(r.status,'UNSUPPORTED_NATIVE_FORMAT');assert.deepEqual(r.companionExtensions,['iba','vet']);assert.equal(r.nativeCompatible,false);assert.equal(r.importEnabled,false);assert.deepEqual([...bytes],original)})
+test('legacy vet/iba and DXF/RUL are discovered without fabricating receiver acceptance',()=>{for(const name of ['g.vet','g.iba','g.dxf','g.rul']){const r=inspect({fileName:name,bytes:new TextEncoder().encode('0\nSECTION\n')});assert.equal(r.ok,true);assert.equal(r.externalReceiverAccepted,false);assert.equal(r.exportEnabled,false)}})
+test('invalid bytes and unsupported extensions fail closed',()=>{assert.equal(inspect({fileName:'a.mdl',bytes:new Uint8Array(0)}).code,'INVALID_FILE_BYTES');assert.equal(inspect({fileName:'a.exe',bytes:Uint8Array.from([1,2,3,4])}).code,'UNSUPPORTED_EXTENSION');assert.equal(inspect({fileName:'../a.mdl',bytes:Uint8Array.from([1,2,3,4])}).code,'INVALID_FILE_NAME')})

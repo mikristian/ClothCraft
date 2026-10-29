@@ -1,0 +1,21 @@
+{
+  "pass": true,
+  "isolated": true,
+  "binary": "/Users/mikylecouto/Chat On Steroids Workspace/exo-clothcraft-v2/research/oss/clothcraft/target/debug/exo-session",
+  "requestScheme": "fitGate optional, CPU-only",
+  "invalidThresholdRejected": true,
+  "multiStepSeamRejectionRestoresWholeBatch": true,
+  "missingDartRejected": true,
+  "seamRejection": "Fit gate rejected Maximum seam separation: observed 447.494415 mm > limit 0.000000 mm; state unchanged",
+  "strainRejection": "Fit gate rejected P95 material extension: observed 18.513921 % > limit 5.000000 %; state unchanged",
+  "materialStretchP95PercentAfterOneStep": 18.513921329172977,
+  "nativeContactMinimumDistanceMm": 6,
+  "perFrameTriangleGuard": {
+    "accepted": true,
+    "error": null,
+    "statePreservedOnRejection": false
+  },
+  "originalRevision": 0,
+  "permissiveRevision": 1,
+  "reopened": true
+}

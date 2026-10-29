@@ -1,0 +1,19 @@
+.exo-pattern-intelligence{margin:7px 5px 10px;padding:9px;border:1px solid #555b64;border-radius:6px;background:#272c31;color:#e9ecef;font-size:11px;line-height:1.45;min-width:0;overflow-wrap:anywhere}
+.exo-pattern-intelligence p{margin:7px 0;color:#cbd2da}
+.exo-pi-heading{display:flex;flex-direction:column;gap:2px;letter-spacing:.04em}
+.exo-pi-heading strong{font-size:11px;color:#f1f5fa}
+.exo-pi-heading span{font-size:9px;color:#aeb6c1}
+.exo-pattern-intelligence select{width:100%;background:#1c2228;color:#e7ebef;border:1px solid #5d6672;border-radius:4px;padding:6px;font-size:11px}
+.exo-pi-filter-label{display:block;margin:9px 0 4px;font-size:10px;color:#b4c0cc}
+.exo-pi-list{max-height:335px;overflow:auto;border:1px solid #434b54;border-radius:4px;background:#1e242a}
+.exo-pi-entry{width:100%;display:flex;flex-direction:column;align-items:flex-start;padding:7px 8px;color:#dbe4ed;background:transparent;border:0;border-bottom:1px solid #38414b;text-align:left;cursor:pointer;gap:2px}
+.exo-pi-entry strong{font-weight:550;font-size:11px}
+.exo-pi-entry small{font-size:10px;color:#9eacbc}
+.exo-pi-entry:hover,.exo-pi-entry.selected{background:#394551}
+.exo-pi-detail{padding:8px;background:#303943;border-bottom:1px solid #59636b}
+.exo-pi-detail p{margin:3px 0 7px}
+.exo-pi-detail b{color:#f3f5f8}
+.exo-pi-detail code{display:block;margin-top:3px;padding:4px;white-space:normal;word-break:break-all;color:#e5ecf4;background:#222a30;border-radius:3px}
+.exo-pi-detail a{color:#a6d1fd;text-decoration:underline}
+.exo-pi-results,.exo-pi-overflow,.exo-pi-disclaimer,.exo-pi-usage{font-size:10px}
+.exo-pi-empty{padding:10px}

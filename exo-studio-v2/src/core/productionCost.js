@@ -1,5 +1,6 @@
 import { gradeProject } from './grading.js'
 import { buildFabricMarkers } from './marker.js'
+import { calculateFabricCosts } from './rustFabricCostKernel.js'
 
 function suppliedPrice(fabric) {
   const value = fabric?.pricePerMeter
@@ -14,7 +15,10 @@ export function buildFabricCostRun(project) {
   const sizes = project.grading?.sizes?.length ? project.grading.sizes : [project.grading?.baseSize || 'M']
   const currency = project.productionSpec?.currency || 'USD'
   const rows = []
+  const inputs = []
+  const groups = []
   for (const size of sizes) {
+    const start = rows.length
     const graded = gradeProject(project, size)
     const markers = buildFabricMarkers(graded,
       Number(project.markerSettings?.fabricWidthCm ?? 150),
@@ -22,23 +26,22 @@ export function buildFabricCostRun(project) {
     for (const [fabricId, marker] of Object.entries(markers)) {
       const fabric = project.fabrics?.[fabricId]
       const price = suppliedPrice(fabric)
-      const complete = marker.unusedPieces === 0 && marker.placements.length === marker.requestedPieces
       const lengthMeters = marker.length / 100
       rows.push({
         size, fabricId, material: fabric?.name || fabricId, currency,
         widthCm: marker.width, lengthMeters, efficiency: marker.efficiency,
         pricePerMeter: price, cutPiecesRequested: marker.requestedPieces,
-        cutPiecesPlaced: marker.placements.length, complete,
-        extendedCost: complete && price !== null ? Number((lengthMeters * price).toFixed(4)) : null,
-        status: !complete ? 'INCOMPLETE_MARKER' : price === null ? 'PRICE_NOT_SET' : 'ESTIMATED',
+        cutPiecesPlaced: marker.placements.length,
       })
+      inputs.push({ lengthMeters, price, requested: marker.requestedPieces,
+        placed: marker.placements.length, unused: marker.unusedPieces })
     }
+    groups.push({ start, count: rows.length - start })
   }
-  const totals = sizes.map((size) => {
-    const entries = rows.filter((row) => row.size === size)
-    const ready = entries.length > 0 && entries.every((row) => row.status === 'ESTIMATED')
-    return { size, currency, ready, materialCost: ready ? Number(entries.reduce((sum, row) => sum + row.extendedCost, 0).toFixed(4)) : null }
-  })
+  const result = calculateFabricCosts(inputs, groups)
+  rows.forEach((row, index) => Object.assign(row, result.calculated[index]))
+  const totals = sizes.map((size, index) => ({ size, currency,
+    ready: result.totals[index].ready, materialCost: result.totals[index].materialCost }))
   return { currency, rows, totals, basis: 'one cut-piece set per size; fabric only; excludes waste allowance beyond marker and labor, shipping, dyeing, taxes and trim costs', factoryCertified: false }
 }
 

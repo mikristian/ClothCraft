@@ -1,0 +1,27 @@
+{
+  "id": "EXO-STAGE01-RUNWAY-CHAMBER-CLEAN-V3-REVIEW",
+  "projectRoot": "/Users/mikylecouto/Chat On Steroids Workspace/exo-clothcraft-v2/concepts/stages/studio-01-runway",
+  "cameras": [
+    "hero",
+    "front",
+    "overview",
+    "side"
+  ],
+  "meshObjectsExported": 466,
+  "oldAuditoriumChairsRemoved": 372,
+  "renderedViews": [
+    "hero",
+    "front"
+  ],
+  "avatarFeetOrigin": [
+    0,
+    0,
+    0
+  ],
+  "runwaySurfaceTopZ_m": -0.002,
+  "stageSurfaceTopZ_m": 0,
+  "previewActorIncludedInGlb": false,
+  "installedInEXO": false,
+  "approvedByUser": false,
+  "sourceCLOProjectModified": false
+}

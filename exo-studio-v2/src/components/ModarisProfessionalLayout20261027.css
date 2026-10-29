@@ -1,0 +1,133 @@
+/* Applied exclusively to the native full-width 2D viewport. The shared split viewport is untouched. */
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus){--exo-pattern-dock-width:clamp(288px,25vw,410px);position:relative}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .cc-pattern-focus-dock{position:absolute;top:76px;right:0;bottom:0;width:var(--exo-pattern-dock-width);z-index:140;background:#202b36;border-left:1px solid #536778;box-shadow:-9px 0 30px #08152230}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .cc-embedded-main{margin-right:var(--exo-pattern-dock-width);min-width:0;min-height:0}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .cc-pattern-focus-heading{background:#162331;padding:10px 12px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .cc-pattern-focus-section{padding:10px 12px;border-bottom-color:#425568}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .cc-pattern-focus-section h3{color:#8fd1ef}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .cc-pattern-focus-section [role=group]{display:flex;gap:5px;flex-wrap:wrap}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .cc-pattern-focus-section [role=group]>button{background:#2a3b4b;color:#dbeaf6;border:1px solid #516f82;border-radius:5px;padding:7px 8px;cursor:pointer}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .cc-pattern-focus-section [role=group]>button[aria-pressed=true]{background:#17618a;border-color:#78cbf8;color:white}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-command-studio{padding:9px;border-radius:5px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-command-studio__results{grid-template-columns:minmax(0,1fr);max-height:330px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) [data-modaris-2d-quick-access]{z-index:2;flex:none}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) [data-modaris-2d-status-strip]{z-index:2;flex:none;overflow-x:auto;white-space:nowrap}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) [data-modaris-2d-status-strip] button{border:1px solid #6297b5;background:#335b74;color:#fff;border-radius:4px;padding:6px 9px;cursor:pointer}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) [data-modaris-2d-status-strip] button:disabled{opacity:.48;cursor:not-allowed}
+@media(max-width:780px){.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus){--exo-pattern-dock-width:260px}}
+/* Independent inspector sits on the left; Modaris tool families remain on the right. */
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus){--exo-pattern-inspector-width:clamp(260px,22vw,350px)}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) [data-modaris-professional-panels]{position:absolute;z-index:139;left:0;top:76px;bottom:0;width:var(--exo-pattern-inspector-width);height:auto;max-height:none}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .cc-embedded-main{margin-left:var(--exo-pattern-inspector-width)}
+@media(max-width:1040px){.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus){--exo-pattern-inspector-width:230px;--exo-pattern-dock-width:260px}}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-side-tabs{position:absolute;left:0;top:76px;z-index:150;display:flex;gap:2px;width:var(--exo-pattern-inspector-width);padding:4px;background:#111e2c;border:1px solid #526d80}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-side-tabs button{flex:1;min-width:0;font-size:10px;padding:7px 3px;color:#d6e5f2;background:#263b4d;border:1px solid #446179;border-radius:3px;cursor:pointer}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-side-tabs button[aria-pressed=true]{color:#fff;background:#17648c;border-color:#90d6f8}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) [data-modaris-professional-panels],.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) [data-modaris-geometry-navigator],.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-cad-hotkeys{position:absolute;left:0;top:114px;bottom:0;width:var(--exo-pattern-inspector-width);height:auto;max-height:none;z-index:139;overflow:auto}
+
+/* Consolidated full-width CAD chrome: ribbon consumes its own height, not canvas overlays. */
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus){--exo-cad-chrome-height:192px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .cc-pattern-focus-dock{top:var(--exo-cad-chrome-height)}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-side-tabs{top:var(--exo-cad-chrome-height)}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) [data-modaris-professional-panels],.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) [data-modaris-geometry-navigator],.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-cad-hotkeys{top:calc(var(--exo-cad-chrome-height) + 38px)}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) [data-modaris-2d-quick-access]{font-size:11px;padding:4px 10px!important}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) [data-modaris-2d-quick-access] button{background:#2d526c;color:#f1f8ff;border:1px solid #80a6bd;border-radius:4px;padding:4px 8px;cursor:pointer}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .cc-embedded-main{position:relative}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-side-tabs button{font-size:9px;padding:7px 2px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) [data-modaris-precision-inspector]{position:absolute;left:0;top:calc(var(--exo-cad-chrome-height) + 38px);bottom:0;width:var(--exo-pattern-inspector-width);height:auto;max-height:none;z-index:139;overflow:auto}
+/* Third right-side tool palette: existing Pattern Studio actions and native popups. */
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-toolbar{background:#172532;border-left:1px solid #496377;box-shadow:-6px 0 22px #0814203a}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-toolbar .cc-pattern-focus-heading{padding:8px 10px;background:#0f1d29}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-toolbar .cc-pattern-focus-section{padding:7px 9px;gap:6px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-toolbar .cc-pattern-focus-section>button{font-size:10px;padding:6px 8px;min-height:29px;background:#253849!important;border:1px solid #3e5a70!important}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-toolbar .cc-pattern-focus-section>button:hover:not(:disabled){background:#346582!important;border-color:#75bcdf!important}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-toolbar .cc-pattern-focus-section [role=group]>button{min-height:27px;padding:5px 6px}
+/* One compact header row for the F1-F8 ribbon and quick library buttons. */
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head{display:flex;align-items:stretch;flex:none;min-width:0;max-height:92px;overflow:hidden;background:#101e2b;border-bottom:1px solid #597084}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head>.mrw27{flex:1;min-width:0;max-height:92px;box-shadow:none}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head .mrw27-tabs{min-height:25px;padding:0 5px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head .mrw27-tabs button{font-size:10px;padding:3px 6px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head .mrw27-brand{font-size:9px;margin-right:5px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head .mrw27-tools{gap:5px;min-height:39px;padding:3px 6px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head .mrw27-family-label{min-width:54px;max-width:70px;font-size:9px;padding-right:5px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head .mrw27-tool-actions{gap:3px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head .mrw27-action{min-width:46px;max-width:65px;font-size:9px;padding:2px 4px;gap:2px;flex-direction:row}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head .mrw27-action svg{width:14px;height:14px;flex:none}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head .mrw27-status{min-height:20px;font-size:9px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head .mrw27-status>span{padding:2px 6px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head>[data-modaris-2d-quick-access]{flex:0 0 225px;display:grid!important;align-content:center;gap:3px!important;max-width:225px;padding:4px 7px!important;border-bottom:0!important;border-left:1px solid #496377}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head>[data-modaris-2d-quick-access] strong{display:none}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head>[data-modaris-2d-quick-access] button{padding:3px 5px;font-size:9px;text-align:left}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head>[data-modaris-2d-quick-access] span{display:none}
+@media(max-width:1100px){.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head>[data-modaris-2d-quick-access]{flex-basis:165px;max-width:165px}}
+/* Ultra-compact full-width 2D top ribbon; keep quick tools in their existing F1-F8 group. */
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus){--exo-cad-chrome-height:105px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head{max-height:64px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head>.mrw27{max-height:64px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head .mrw27-tabs{min-height:20px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head .mrw27-tabs button{padding:2px 5px;font-size:9px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head .mrw27-tools{min-height:29px;padding:2px 4px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head .mrw27-action{min-width:39px;max-width:62px;font-size:8px;padding:1px 3px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head .mrw27-action svg{width:12px;height:12px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head .mrw27-status{min-height:15px;font-size:8px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) [data-modaris-2d-status-strip]{min-height:24px;font-size:10px!important;padding:2px 6px!important}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) [data-modaris-2d-status-strip] button{padding:2px 5px;font-size:9px}
+/* Third toolbar uses the same tab and action primitives as the primary 2D CAD ribbon. */
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-toolbar .exo-pattern-third-tabs{position:sticky;top:44px;z-index:2;display:flex;gap:1px;background:#0f1d29;border-bottom:1px solid #42586a;padding:3px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-toolbar .exo-pattern-third-tabs button{flex:1;min-width:0;background:transparent;color:#b5c9d7;border:0;border-bottom:2px solid transparent;padding:6px 2px;font:600 10px Inter,system-ui,sans-serif;cursor:pointer}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-toolbar .exo-pattern-third-tabs button[aria-selected=true]{background:#243f53;color:#f4faff;border-bottom-color:#62baf1}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-toolbar .cc-pattern-focus-section>button{display:inline-flex;width:calc(50% - 3px);min-width:0;vertical-align:top;min-height:40px;text-align:left;justify-content:flex-start;font-size:9px!important;padding:5px!important;margin-right:3px;white-space:normal;line-height:1.25}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-toolbar .cc-pattern-focus-section{display:block}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-toolbar .cc-pattern-focus-section h3{margin:4px 0 9px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-toolbar .cc-pattern-focus-pieces{display:grid;grid-template-columns:1fr 1fr;max-height:240px;gap:4px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-toolbar .cc-pattern-focus-pieces button{font-size:9px;min-width:0;padding:5px}
+/* Pattern Studio is an icon-only toolbar beside the existing 2D ribbon, never a fixed sidebar. */
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus){--exo-pattern-dock-width:0px;--exo-cad-chrome-height:92px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .cc-embedded-main{margin-right:0!important}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head{max-height:64px;overflow:visible}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-iconbar{position:absolute;right:4px;top:0;z-index:155;height:64px;display:flex;align-items:center;gap:2px;padding:3px 5px;background:#101e2b;border-left:1px solid #42586a;color:#a9cde2}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-iconbar-label{font-size:9px;letter-spacing:.08em;font-weight:750;padding:0 3px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-iconbar>button{display:grid;place-items:center;width:26px;height:28px;min-width:26px;border:1px solid #3e5a70;border-radius:3px;background:#253849;color:#8dd0fa;cursor:pointer;padding:0}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-iconbar>button:hover:not(:disabled){background:#346582;border-color:#75bcdf}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-iconbar>button:disabled{opacity:.35;cursor:not-allowed}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-iconbar-popover{position:absolute;top:62px;right:0;width:340px;max-height:calc(100dvh - 130px);overflow-y:auto;z-index:175;display:flex;flex-wrap:wrap;gap:5px;padding:8px;background:#172532;border:1px solid #536778;box-shadow:0 15px 28px #0008}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-iconbar-popover>button{flex:1;padding:6px 5px;background:#253849;color:#dbeafa;border:1px solid #3e5a70;border-radius:3px;font-size:10px;cursor:pointer}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-iconbar-popover>button[aria-pressed=true]{background:#185d85;border-color:#7dc7f1}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-iconbar-popover .exo-pattern-third-toolbar{position:relative!important;top:auto!important;bottom:auto!important;right:auto!important;width:100%!important;min-height:0;max-height:calc(100dvh - 190px);box-shadow:none}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-iconbar-popover .exo-pattern-third-tabs{display:none}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-iconbar-popover .cc-pattern-focus-heading{display:none}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-iconbar-popover .cc-pattern-focus-warning{font-size:9px}
+/* 2026-10-27 explicit correction: KEEP the panel as the third permanent icon toolbar,
+   inline to the right of the other toolbar, never as an overlay replacing a panel. */
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-inline{position:absolute;top:0;right:0;height:64px;z-index:158;display:flex;align-items:center;gap:3px;background:#101e2b;border-left:1px solid #52687a;padding:3px 6px;color:#b8cbd9}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-inline__label{font:700 9px Inter,system-ui,sans-serif;letter-spacing:.08em;white-space:nowrap;margin-right:3px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-inline>button{display:grid;place-items:center;flex:none;width:27px;height:29px;padding:0;background:#253849;color:#8dd0fa;border:1px solid #3e5a70;border-radius:4px;cursor:pointer}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-inline>button:hover:not(:disabled){background:#346582;border-color:#75bcdf}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-inline>button:disabled{opacity:.36;cursor:not-allowed}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-inline-drawer{position:absolute;top:64px;right:0;width:350px;max-height:calc(100dvh - 115px);overflow-y:auto;z-index:160;display:block;padding:7px;background:#172532;border:1px solid #52687a;box-shadow:0 15px 30px #0007}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-inline-drawer__tabs{display:flex;gap:3px;margin-bottom:5px}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-inline-drawer__tabs button{flex:1;padding:6px 2px;background:#253849;color:#dbeaf5;border:1px solid #42586a;border-radius:3px;font-size:10px;cursor:pointer}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-inline-drawer__tabs button[aria-pressed=true]{background:#185d85;border-color:#7dc7f1}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-inline-drawer .exo-pattern-third-toolbar{position:static!important;inset:auto!important;display:block;width:100%!important;min-height:0;max-height:calc(100dvh - 200px);box-shadow:none;overflow:auto}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-inline-drawer .exo-pattern-third-tabs,.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-pattern-third-inline-drawer .cc-pattern-focus-heading{display:none}
+/* Compact header: remove the redundant F1–F8 category/folder row without
+   hiding the actual CAD action buttons. Preserve all command interactions. */
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head .mrw27-tabs{display:none!important}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-compact-head .mrw27-family-label{display:none!important}
+/* EXO CAD top aligns with 2D viewport chrome and runs to the bottom. */
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) :is([data-modaris-professional-panels],[data-modaris-geometry-navigator],.exo-cad-hotkeys,[data-modaris-precision-inspector]){top:var(--exo-cad-chrome-height,92px)!important;bottom:0!important;height:auto!important;max-height:none!important}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-side-tabs{top:var(--exo-cad-chrome-height,92px)!important}
+/* Never leave a residual EXO CAD strip when hidden. Independent restore
+   arrow overlays the viewport edge and does not reserve canvas width. */
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d[data-exo-cad-collapsed="true"]:not(.cc-3d-studio-focus){--exo-pattern-inspector-width:0px!important}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d[data-exo-cad-collapsed="true"]:not(.cc-3d-studio-focus) [data-modaris-professional-panels]{width:0!important;min-width:0!important;border:0!important;background:transparent!important;overflow:visible!important;pointer-events:none!important}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d[data-exo-cad-collapsed="true"]:not(.cc-3d-studio-focus) .mpp27--collapsed .mpp27-rail-expand{pointer-events:auto!important;position:absolute;left:3px;top:6px;z-index:200;width:24px;height:27px;border:1px solid #364658;background:#111821;color:#e8f3fb}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d[data-exo-cad-collapsed="true"]:not(.cc-3d-studio-focus) .exo-modaris-side-tabs{display:none!important}
+/* CAD tabs must never cover the panel's independent collapse button. */
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) .exo-modaris-side-tabs{top:calc(var(--exo-cad-chrome-height,92px) + 46px)!important;z-index:139!important}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) [data-modaris-professional-panels] .mpp27-top{position:relative;z-index:160!important}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d:not(.cc-3d-studio-focus) [data-modaris-professional-panels] .mpp27-collapse-button{position:relative;z-index:170!important}
+/* Fully reclaim the CAD width when collapsed. The reopen button is an overlay,
+   not an in-flow residual rail or a permanent black vertical bar. */
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d[data-exo-cad-collapsed="true"]:not(.cc-3d-studio-focus) [data-modaris-professional-panels].mpp27--collapsed{width:0!important;min-width:0!important;max-width:0!important;padding:0!important;overflow:visible!important;box-sizing:border-box!important}
+.cc-rust-embedded .cc-embedded-root.cc-embedded-2d[data-exo-cad-collapsed="true"]:not(.cc-3d-studio-focus) [data-modaris-professional-panels].mpp27--collapsed .mpp27-rail-expand{left:0!important;top:5px!important}

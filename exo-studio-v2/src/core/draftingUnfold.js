@@ -3,9 +3,46 @@
 // This is an independent geometry implementation. It does NOT implement
 // CLO's proprietary parametric linked-symmetry data model.
 import { mirrorPointAcrossLine } from './draftingConstructions.js'
+import { unfoldWalkIndex, unfoldMirroredEdge, unfoldGradeVector, unfoldNotchParameter } from './rustUnfoldKernel.js'
 import { inspectDraftTopology } from './draftingTopology.js'
 
 const near = (a,b) => Math.hypot(a.x-b.x,a.y-b.y) < .001
+
+// Grading metadata is not checked by cutline topology. Invalid deltas must
+// never survive a visually valid unfold as nonfinite factory size offsets.
+const gradeDelta = value => {
+  if (value == null || value === '') return 0
+  if (typeof value === 'number' && Number.isFinite(value)) return value
+  if (typeof value === 'string') {
+    const decimal = value.trim()
+    if (!decimal) return 0
+    if (/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(decimal)) {
+      const parsed = Number(decimal)
+      if (Number.isFinite(parsed)) return parsed
+    }
+  }
+  throw new RangeError('Unfold grade delta must be a finite decimal measurement')
+}
+
+// Internal construction lines are not part of the cutline topology check.
+// Validate and normalize their endpoints before retaining or mirroring them:
+// Number('0x2'), booleans and arrays must not become authored CAD positions.
+const internalLineCoordinate = value => {
+  const decimal = typeof value === 'string' && value.length <= 64 &&
+    /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(value.trim())
+  const number = typeof value === 'number' ? value : decimal ? Number(value) : NaN
+  if (!Number.isFinite(number) || Math.abs(number) > 100000) {
+    throw new RangeError('Internal line coordinate must be a finite decimal length in centimeters')
+  }
+  return number
+}
+
+const internalLinePoint = point => {
+  if (!point || typeof point !== 'object' || Array.isArray(point)) {
+    throw new RangeError('Internal line endpoint must contain X and Y coordinates')
+  }
+  return { ...point, x: internalLineCoordinate(point.x), y: internalLineCoordinate(point.y) }
+}
 
 export function unfoldDraftPiece(piece, foldEdgeIndex) {
   const points = piece?.points || []
@@ -19,34 +56,40 @@ export function unfoldDraftPiece(piece, foldEdgeIndex) {
   if (near(a,b)) throw new Error('Fold edge must have a nonzero length')
   const dx=b.x-a.x, dy=b.y-a.y
   const norm=Math.hypot(dx,dy), ux=dx/norm,uy=dy/norm
-  const reflectVector = v => {
-    const projection=2*(ux*v.x+uy*v.y)
-    return {x:projection*ux-v.x, y:projection*uy-v.y}
+  // Fold endpoints are retained rather than reflected. Validate their grade
+  // rules too, or an invalid authored offset could survive the unfold.
+  for (const vertex of points) {
+    if (vertex?.gradeRule?.enabled) {
+      gradeDelta(vertex.gradeRule.dxPerSize)
+      gradeDelta(vertex.gradeRule.dyPerSize)
+    }
   }
   const reflect = vertex => {
     const next=mirrorPointAcrossLine(vertex,a,b)
     const copy={...vertex,x:next.x,y:next.y}
     if (vertex.gradeRule?.enabled) {
-      const vector=reflectVector({
-        x:Number(vertex.gradeRule.dxPerSize||0),
-        y:Number(vertex.gradeRule.dyPerSize||0),
-      })
+      const vector=unfoldGradeVector({
+        x:gradeDelta(vertex.gradeRule.dxPerSize),
+        y:gradeDelta(vertex.gradeRule.dyPerSize),
+      },ux,uy)
+      if (!Number.isFinite(vector.x) || !Number.isFinite(vector.y)) {
+        throw new RangeError('Unfold grade vector must remain finite after reflection')
+      }
       copy.gradeRule={...vertex.gradeRule,dxPerSize:vector.x,dyPerSize:vector.y}
     }
     if (copy.id) copy.id=String(copy.id)+'-unfold'
     return copy
   }
-  const walk=Array.from({length:n},(_,i)=>(foldEdgeIndex+1+i)%n)
+  const walk=Array.from({length:n},(_,i)=>unfoldWalkIndex(n,foldEdgeIndex,i))
   const reflected=walk.slice(1,-1).reverse().map(index=>reflect(points[index]))
   const newPoints=[...walk.map(index=>({...points[index]})),...reflected]
-  const newCount=newPoints.length
   const edgeMap={}
   const mirroredEdgeMap={}
   const newCurves={}
   const newAllowances={}
   for(let k=0;k<n-1;k++){
     const oldEdge=walk[k]
-    const reflectedEdge=newCount-1-k
+    const reflectedEdge=unfoldMirroredEdge(n,k)
     edgeMap[oldEdge]=k
     mirroredEdgeMap[oldEdge]=reflectedEdge
     const curve=piece.curves?.[oldEdge]
@@ -61,19 +104,51 @@ export function unfoldDraftPiece(piece, foldEdgeIndex) {
       newAllowances[reflectedEdge]=allowance
     }
   }
-  const foldNotch=(piece.notches||[]).find(notch=>notch.edgeIndex===foldEdgeIndex)
-  if(foldNotch) throw new Error('Remove notches from the fold edge before unfolding')
+  // Every authored notch must reference an actual source edge. Silently
+  // dropping a malformed reference loses manufacturing marks during unfold.
+  const notchEdges=(piece.notches||[]).map(notch=>{
+    const raw=notch?.edgeIndex
+    const edge=typeof raw==='string' && /^(0|[1-9]\d*)$/.test(raw) ? Number(raw) : raw
+    if(!Number.isSafeInteger(edge)||edge<0||edge>=n){
+      throw new RangeError('Notch edge index must reference a valid pattern edge')
+    }
+    return edge
+  })
+  if(notchEdges.includes(foldEdgeIndex)) throw new Error('Remove notches from the fold edge before unfolding')
   const newNotches=[]
-  for(const notch of piece.notches||[]){
-    const mapped=edgeMap[notch.edgeIndex]
-    if(!Number.isInteger(mapped)) continue
+  for(const [i,notch] of (piece.notches||[]).entries()){
+    const sourceEdge=notchEdges[i]
+    const mapped=edgeMap[sourceEdge]
+    if(!Number.isInteger(mapped)) throw new Error('Notch edge index has no unfolded mapping')
+    // Topology validates the cutline, not authored notch stations. Do not
+    // mirror an invalid station into a NaN or out-of-edge physical mark.
+    const authoredStation=notch.t??.5
+    // Number('0x1') / Number('0b1') are valid JS numbers but not decimal
+    // CAD station measurements. Reject alternate bases before mirroring.
+    const decimalString=typeof authoredStation==='string' && authoredStation.length<=64 &&
+      /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(authoredStation.trim())
+    const station=typeof authoredStation==='number' ? authoredStation :
+      decimalString ? Number(authoredStation) : NaN
+    if(!Number.isFinite(station)||station<0||station>1){
+      throw new RangeError('Notch station must be a finite fraction from 0 to 1')
+    }
     newNotches.push({...notch,edgeIndex:mapped})
     newNotches.push({...notch,id:String(notch.id||'notch')+'-unfold',
-      edgeIndex:mirroredEdgeMap[notch.edgeIndex],t:1-Number(notch.t??.5),
+      edgeIndex:mirroredEdgeMap[sourceEdge],t:unfoldNotchParameter(station),
       matchGroupId:null,matchedSeamId:null})
   }
-  const newInternal=[...(piece.internalLines||[]).map(line=>({...line}))]
-  for(const line of piece.internalLines||[]){
+  const authoredInternal=piece.internalLines??[]
+  if (!Array.isArray(authoredInternal)) throw new RangeError('Internal lines must be an array')
+  // Array.from visits holes too; Array.map would silently preserve them and
+  // later crash during mirroring with an unhelpful TypeError.
+  const sourceInternal=Array.from(authoredInternal,line=>{
+    if (!line || typeof line !== 'object' || Array.isArray(line)) {
+      throw new RangeError('Internal line must contain two endpoints')
+    }
+    return {...line,a:internalLinePoint(line.a),b:internalLinePoint(line.b)}
+  })
+  const newInternal=sourceInternal.map(line=>({...line}))
+  for(const line of sourceInternal){
     const left=mirrorPointAcrossLine(line.a,a,b)
     const right=mirrorPointAcrossLine(line.b,a,b)
     if(near(left,line.a)&&near(right,line.b)) continue

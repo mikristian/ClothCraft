@@ -57,7 +57,18 @@ export function buildNativeSimulationPayload(project, options = {}) {
   // strain for tee/hoodie. Keep topology optimization opt-in for research;
   // default native production-development meshes retain their original faces.
   const optimizeMesh = options.experimentalOptimizeMesh === true || project.simulation?.experimentalNativeMeshOptimization === true
-  const simulation = buildSimulation(project, {optimizeMesh})
+  if(options.experimentalProtectedHingeAxesByPiece && !optimizeMesh)
+    throw new Error('Protected material hinges require experimental mesh optimization')
+  if(options.experimentalSmoothInteriorMesh && !optimizeMesh)
+    throw new Error('Interior mesh smoothing requires experimental mesh optimization')
+  if(options.experimentalCertifiedPoorFaceFlips && !optimizeMesh)
+    throw new Error('Certified poor-face flips require experimental mesh optimization')
+  if(options.experimentalCertifiedPoorFaceFlips && options.experimentalSmoothInteriorMesh)
+    throw new Error('Certified poor-face flips cannot be combined with material-moving smoothing')
+  const simulation = buildSimulation(project, {optimizeMesh,
+    protectedHingeAxesByPiece:options.experimentalProtectedHingeAxesByPiece||null,
+    experimentalSmoothInteriorMesh:options.experimentalSmoothInteriorMesh===true,
+    experimentalCertifiedPoorFaceFlips:options.experimentalCertifiedPoorFaceFlips===true})
   const particles = []
   const particleIndex = new Map()
   const simIndexToNative = new Map()

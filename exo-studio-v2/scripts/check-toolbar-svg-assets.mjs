@@ -27,25 +27,27 @@ const browser = await chromium.launch({headless:true,executablePath:'/Applicatio
 try {
   const page=await browser.newPage({viewport:{width:1530,height:950}})
   const errors=[];page.on('pageerror',e=>errors.push(e.message))
-  await page.goto(process.env.GARMENT_UI_URL || 'http://127.0.0.1:5173/?desktop=1',{waitUntil:'networkidle'})
+  await page.goto(process.env.GARMENT_UI_URL || 'http://127.0.0.1:5173/?desktop=1',{waitUntil:'domcontentloaded'})
   const expected=[...CLO7_3D_A,...CLO7_3D_B,...CLO7_2D_A,...CLO7_2D_B]
   const photographed=await page.locator('[data-clo-slot]').all()
   assert.equal(photographed.length,expected.length)
-  const bars=[...await page.locator('.tool-rail button:has(img.cad-tool-icon)').all(),
-    ...await page.locator('.clo-reference-dual-bars button:has(img.cad-tool-icon)').all()]
+  const bars=[...await page.locator('.tool-rail button:has(.cad-tool-icon)').all(),
+    ...await page.locator('.clo-reference-dual-bars button:has(.cad-tool-icon)').all()]
   assert(bars.length>manifest.slotCount,'Expanded photo reference should include original and reference-only buttons')
   const rendered=[]
   for(let i=0;i<bars.length;i++){
-    const actual=await bars[i].locator('img.cad-tool-icon').evaluate(img=>({id:img.dataset.iconId,loaded:img.complete&&img.naturalWidth>0,source:img.getAttribute('src'),format:img.dataset.iconFormat}))
-    assert(manifest.files.some(f=>f.id===actual.id),`Missing EXO icon source: ${actual.id}`)
+    const actual=await bars[i].locator('.cad-tool-icon').evaluate(icon=>icon instanceof HTMLImageElement
+      ? {id:icon.dataset.iconId,loaded:icon.complete&&icon.naturalWidth>0,source:icon.getAttribute('src'),format:icon.dataset.iconFormat}
+      : {id:null,loaded:icon.tagName.toLowerCase()==='svg'&&icon.querySelectorAll('path,rect,circle,ellipse,polygon,line').length>0,source:'inline-original-svg',format:'svg'})
     assert.equal(actual.format,'svg')
-    assert.ok(actual.loaded,`Broken SVG image at rendered slot ${i+1}: ${actual.id}`)
+    if(actual.id)assert(manifest.files.some(f=>f.id===actual.id),`Missing EXO icon source: ${actual.id}`)
+    assert.ok(actual.loaded,`Broken or empty SVG icon at rendered slot ${i+1}: ${actual.id||'inline'}`)
     rendered.push({...actual,index:i+1})
   }
   for(let i=0;i<photographed.length;i++){
-    const node=photographed[i],image=await node.locator('img.cad-tool-icon').evaluate(img=>img.dataset.iconId)
+    const node=photographed[i],image=await node.locator('.cad-tool-icon').evaluate(icon=>icon.getAttribute('data-icon-id'))
     // Order is independently verified by scripts/qa-clo-v7-four-column-order.mjs.
-    assert(manifest.files.some(f=>f.id===image),'Reference uses an undocumented artwork id '+image)
+    if(image)assert(manifest.files.some(f=>f.id===image),'Reference uses an undocumented artwork id '+image)
   }
   assert.deepEqual(errors,[], 'Browser JavaScript errors')
   const output=join(root,'native_app/qa/toolbar-svg-asset-coverage.json')

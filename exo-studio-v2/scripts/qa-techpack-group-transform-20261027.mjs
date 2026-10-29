@@ -1,0 +1,47 @@
+import assert from 'node:assert/strict'
+import {chromium} from 'playwright-core'
+
+const origin=process.env.EXO_TECHPACK_QA_ORIGIN||'http://127.0.0.1:5174'
+const browser=await chromium.launch({headless:true,executablePath:process.env.EXO_CHROME_PATH||'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',args:['--no-sandbox','--disable-gpu']})
+const context=await browser.newContext({viewport:{width:1600,height:980}})
+const page=await context.newPage()
+const errors=[]
+page.on('pageerror',error=>errors.push(error.message))
+const node=id=>page.locator(`[data-board-page="overview"][data-board-object="${id}"]`)
+const state=async id=>node(id).evaluate(element=>{
+  const match=element.style.transform.match(/translate\(([-\d.]+)px,\s*([-\d.]+)px\) scale\(([-\d.]+),\s*([-\d.]+)\)/)
+  return match?.slice(1).map(Number)
+})
+try{
+  await page.goto(`${origin}/?engine=clothcraft&techpackWorkspace=1`,{waitUntil:'domcontentloaded',timeout:30000})
+  await node('render-front').waitFor({timeout:30000})
+  await page.getByRole('button',{name:'Layout edit mode'}).first().click()
+  await node('render-front').locator('.tpws-object-transform-cover').click({force:true})
+  await node('render-back').locator('.tpws-object-transform-cover').click({force:true,modifiers:['Shift']})
+  const beforeSide=await state('render-side')
+  await page.getByRole('button',{name:'Group layers',exact:true}).click()
+  await page.getByRole('button',{name:'Larger 10%'}).click()
+  const scaledFront=await state('render-front'),scaledBack=await state('render-back')
+  assert(scaledFront[2]>1&&scaledBack[2]>1,'both grouped renders must scale')
+  assert.deepEqual(await state('render-side'),beforeSide,'unselected render must remain unchanged')
+  await page.reload({waitUntil:'domcontentloaded'})
+  await node('render-front').waitFor({timeout:30000})
+  assert.deepEqual(await state('render-front'),scaledFront,'first object scale must persist')
+  assert.deepEqual(await state('render-back'),scaledBack,'second object scale must persist')
+  await page.getByRole('button',{name:'Layout edit mode'}).first().click()
+  await node('render-front').locator('.tpws-object-transform-cover').click({force:true})
+  assert.equal(await node('render-back').locator('.tpws-object-bounding-box').count(),1,'saved group must select together')
+  const beforeHandle=await state('render-back')
+  const handle=node('render-front').locator('[data-object-handle="se"]')
+  await handle.scrollIntoViewIfNeeded()
+  const rect=await handle.boundingBox()
+  await page.mouse.move(rect.x+rect.width/2,rect.y+rect.height/2)
+  await page.mouse.down()
+  await page.mouse.move(rect.x+rect.width/2+30,rect.y+rect.height/2+20,{steps:6})
+  await page.mouse.up()
+  const resized=await state('render-back')
+  assert(resized[2]>beforeHandle[2]||resized[3]>beforeHandle[3],'dragging a group handle must resize another member')
+  assert.deepEqual(await state('render-side'),beforeSide,'unselected render must remain untouched by handle resize')
+  assert.deepEqual(errors,[])
+  console.log('PASS selected group scales, persists after reload and resizes with handles; unselected render unchanged')
+}finally{await browser.close()}

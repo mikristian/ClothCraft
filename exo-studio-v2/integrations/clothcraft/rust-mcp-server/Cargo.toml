@@ -1,0 +1,9 @@
+[package]
+name = "exo-rust-mcp-server"
+version = "0.1.0"
+edition = "2021"
+description = "Stdio MCP facade for the existing localhost EXO ClothCraft agent API"
+
+[dependencies]
+serde_json = "1"
+

@@ -1,0 +1,17 @@
+.accumark-grade-actions{display:flex;flex-direction:column;gap:9px;padding:10px;color:#e9eff2;font-size:11px;background:#292f35;border:1px solid #53626d;border-radius:6px;min-width:0}
+.accumark-grade-title{display:flex;justify-content:space-between;gap:8px;align-items:center;border-bottom:1px solid #50616c;padding-bottom:8px}
+.accumark-grade-title strong{font-size:11px;letter-spacing:.11em;color:#d4e7f0}
+.accumark-grade-title span,.accumark-grade-actions small{font-size:10px;color:#afc1ca}
+.accumark-grade-actions label{font-size:10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.accumark-grade-row,.accumark-grade-clipboard{display:flex;flex-direction:column;gap:9px}
+.accumark-grade-actions select{background:#20272c;color:#f0f5f8;border:1px solid #667986;border-radius:4px;padding:6px;min-width:0;max-width:65%}
+.accumark-grade-nest{justify-content:flex-start!important}
+.accumark-grade-nest input{accent-color:#b8dbea}
+.accumark-grade-buttons{display:flex;gap:7px}
+.accumark-grade-buttons button{flex:1;min-width:0;padding:7px 5px;background:#4b6472;border:1px solid #7896a6;border-radius:4px;color:#eaf5fa;cursor:pointer;font-size:10px}
+.accumark-grade-actions button:disabled{opacity:.45;cursor:not-allowed}
+.accumark-grade-actions .industrial-grade-workbench{margin:0;padding:10px}
+.accumark-grade-workbench-wrapper{min-width:0;margin:0;padding:0;border:0}
+.accumark-grade-workbench-wrapper:disabled{opacity:.55;pointer-events:none}
+.accumark-grade-notice{font-size:10px;line-height:1.35;margin:0;color:#d6e7ee}
+.accumark-grade-actions small{line-height:1.5}

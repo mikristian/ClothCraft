@@ -18,6 +18,10 @@ for(const gap of [.02999,.03,.03001,.08]){const p=copy(base);p.particles[1].posi
 for(const edge of [1,1.2,1.2001,1.7]){const p=copy(base);p.particles[2].position[1]=edge*.1;cases.push({payload:p})}
 for(const opts of [{maximumInitialSeamGapMm:50},{maximumInitialEdgeStrainPercent:5},{maximumInitialSeamGapMm:0,maximumInitialEdgeStrainPercent:0}])cases.push({payload:base,options:opts})
 for(const virtualGap of [.01,.12]){const p=copy(base);p.constraints=[];p.virtualSeams=[{sourceIndices:[0,2],sourceWeights:[.5,.5],targetIndices:[1],targetWeights:[1],seamId:'virtual'}];p.particles[1].position[0]=virtualGap;cases.push({payload:p})}
+for(const brokenWeights of [[],[1],[.5,.6],[-.5,1.5],[null,1],[0,0],[.5,'0.5']]){
+  const p=copy(base);p.constraints=[];p.virtualSeams=[{sourceIndices:[0,2],sourceWeights:brokenWeights,targetIndices:[1],targetWeights:[1],seamId:'virtual'}];cases.push({payload:p})
+}
+for(const opts of [{maximumInitialSeamGapMm:-1},{maximumInitialEdgeStrainPercent:-1},{maximumInitialSeamGapMm:null}])cases.push({payload:base,options:opts})
 for(const broken of [null,{}, {particles:[],pieces:[]},(()=>{const p=copy(base);p.particles[0].position=[null,0,0];return p})(),(()=>{const p=copy(base);p.constraints[0].b=99;return p})(),(()=>{const p=copy(base);p.pieces[0].faces=[[0,1,77]];return p})(),(()=>{const p=copy(base);p.virtualSeams=[{sourceIndices:[77],sourceWeights:[1],targetIndices:[0],targetWeights:[1]}];return p})()])cases.push({payload:broken})
 try{const tee=createTemplateProject('tee');const payload=buildNativeSimulationPayload(tee);if(payload?.particles?.length)cases.push({payload})}catch(e){console.log('Tee build fixture unavailable: '+e.message)}
 const snapshot=JSON.stringify(cases)

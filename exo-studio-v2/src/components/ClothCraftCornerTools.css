@@ -8,6 +8,9 @@
   z-index:48;
   pointer-events:auto;
 }
+.cc-scene .cc-camera-hand-bottom-toolbar{position:absolute;left:8px;bottom:12px;z-index:49;display:flex;align-items:center;padding:3px;border:1px solid #67696b;border-radius:4px;background:rgba(40,42,45,.94);box-shadow:0 4px 12px #0004}
+.cc-scene .cc-camera-hand-bottom-toolbar .cc-camera-hand-launch{position:relative;width:32px;height:32px;display:grid;place-items:center;background:#414347;color:#d5d9dd;border:1px solid transparent;border-radius:2px;cursor:pointer}
+.cc-scene .cc-camera-hand-bottom-toolbar .cc-camera-hand-launch:hover,.cc-scene .cc-camera-hand-bottom-toolbar .cc-camera-hand-launch.active{background:#344950;color:#83d9f2;border-color:#5b8da3}
 .cc-corner-tool-host .clo-corner-toolkit {
   position:relative;
   /* Original global .canvas-tool-flyouts is top:50px/left:8px. Our wrapper
@@ -24,6 +27,25 @@
   border-radius:4px;
   background:rgba(40,42,45,.94);
   box-shadow:0 4px 12px #0004;
+}
+/* Place the two DISTINCT drafting buttons in the SAME explicit grid row.
+   Their visual order is Direct Selection (LEFT), Pen/Pencil (RIGHT), with
+   Polygon on the following row. Do not depend on auto-flow or a hover flyout. */
+.cc-corner-tool-host .clo-corner-toolkit-2d.exo-viewport-inline-tools{
+  display:grid!important;grid-template-columns:30px 30px!important;
+  column-gap:3px!important;row-gap:2px!important;align-content:start!important;
+}
+.cc-corner-tool-host .clo-corner-toolkit-2d.exo-viewport-inline-tools > .clo-corner-tool-group{
+  grid-column:1;min-width:30px;
+}
+.cc-corner-tool-host .clo-corner-toolkit-2d.exo-viewport-inline-tools > [data-tool-family="direct-select"]{
+  grid-row:5!important;grid-column:1!important;
+}
+.cc-corner-tool-host .clo-corner-toolkit-2d.exo-viewport-inline-tools > [data-tool-family="vector-pen"]{
+  grid-row:5!important;grid-column:2!important;
+}
+.cc-corner-tool-host .clo-corner-toolkit-2d.exo-viewport-inline-tools > [data-tool-family="polygon"]{
+  grid-row:6!important;grid-column:1!important;
 }
 .cc-corner-tool-host .clo-corner-tool-group {position:relative;display:block}
 .cc-corner-tool-host .clo-corner-tool-group > button {
@@ -100,3 +122,144 @@
 .cc-corner-tool-host .clo-corner-tool-options > button:disabled {opacity:.4;cursor:not-allowed}
 .cc-corner-tool-host .cad-tool-icon {flex-shrink:0}
 .cc-corner-tool-host .clo-corner-tool-group > button .cad-tool-icon {width:21px;height:21px}
+/* Pattern Display is the last family in the same vertical rail. Its four
+   visibility toggles use the *same* shared horizontal glass option row. */
+.cc-corner-tool-host .clo-corner-toolkit.exo-viewport-inline-tools .cc-2d-display-host {
+  width:30px;
+  margin-top:5px;
+}
+.cc-corner-tool-host .clo-corner-toolkit.exo-viewport-inline-tools .cc-2d-display-host > .cc-2d-display-trigger {
+  width:30px;
+  min-width:30px;
+  height:30px;
+}
+.cc-corner-tool-host .clo-corner-toolkit.exo-viewport-inline-tools .cc-2d-display-host:not([data-dismissed="true"])[data-open="true"] > .cc-2d-display-menu {
+  display:flex;
+  flex-direction:row;
+}
+/* The shared hover/focus rule above the Pattern Display rules otherwise
+   reopens this menu immediately after Escape while the trigger still has focus.
+   A dismissed or genuinely closed menu must stay out of the canvas and tab flow. */
+.cc-corner-tool-host .clo-corner-toolkit.exo-viewport-inline-tools .cc-2d-display-host[data-open="false"] > .cc-2d-display-menu,
+.cc-corner-tool-host .clo-corner-toolkit.exo-viewport-inline-tools .cc-2d-display-host[data-dismissed="true"] > .cc-2d-display-menu {
+  display:none;
+}
+.cc-corner-tool-host .clo-corner-toolkit.exo-viewport-inline-tools .cc-2d-display-menu > button {
+  flex:0 0 30px;
+  width:30px;
+  min-width:30px;
+  height:30px;
+  display:grid;
+  place-items:center;
+}
+.cc-2d-display-menu > button svg,
+.cc-2d-display-trigger > svg {display:block;flex:none;stroke:currentColor;stroke-width:1.8}
+.cc-2d-display-host .cc-2d-display-details {
+  display:none;
+  position:absolute;
+  top:33px;
+  left:calc(100% - 1px);
+  z-index:101;
+  box-sizing:border-box;
+  width:235px;
+  padding:10px;
+  border:1px solid rgba(234,253,255,.37);
+  border-radius:9px;
+  background:rgba(22,39,57,.83);
+  color:#f1f7fb;
+  box-shadow:0 8px 20px rgba(4,14,27,.27);
+  backdrop-filter:blur(17px) saturate(155%);
+  -webkit-backdrop-filter:blur(17px) saturate(155%);
+  font-size:11px;
+}
+.cc-2d-display-host[data-open="true"]:not([data-dismissed="true"]) > .cc-2d-display-details {display:block}
+.cc-2d-display-width {display:flex;align-items:center;justify-content:space-between;gap:9px}
+.cc-2d-display-width input {width:70px;background:rgba(215,242,255,.12);color:#fff;padding:5px;border-radius:5px;border:1px solid rgba(238,252,255,.38)}
+.cc-2d-display-selection {display:grid;gap:6px;margin-top:7px;padding-top:8px;border-top:1px solid rgba(222,244,255,.22);text-transform:capitalize}
+.cc-2d-display-selection:first-child {margin-top:0;padding-top:0;border-top:0}
+.cc-2d-display-selection button {background:rgba(211,239,255,.11);color:#f7fafc;border:1px solid rgba(231,249,255,.24);border-radius:5px;padding:6px;cursor:pointer;text-align:left}
+.cc-2d-display-selection button:hover:not(:disabled),.cc-2d-display-selection button:focus-visible {background:rgba(211,239,255,.20);border-color:rgba(235,251,255,.6)}
+.cc-2d-display-selection button:disabled {opacity:.4;cursor:not-allowed}
+@media(prefers-reduced-transparency:reduce){
+  .cc-2d-display-host .cc-2d-display-details {background:#34414b;backdrop-filter:none;-webkit-backdrop-filter:none}
+}
+
+/* The left 3D toolbar is a single glass sheet. The upper-right 2D toolbar
+   has an additional palette/scroll/workflow hierarchy; keep those inner
+   wrappers optically clear so its chrome matches the left rail. */
+.app-shell[data-studio-liquid-glass="true"][data-studio-customized="true"]:not([data-glass-toolbars="false"]) .clo-right-tool-palette {
+  background:linear-gradient(140deg,rgba(242,253,255,.10),rgba(224,239,255,.025) 34%,rgba(4,13,23,.045) 85%),color-mix(in srgb,var(--studio-panel) var(--studio-glass-fill,51%),transparent)!important;
+  border-color:var(--studio-glass-rim)!important;
+  border-radius:10px;
+  backdrop-filter:blur(var(--studio-glass-blur,17px)) saturate(148%)!important;
+  -webkit-backdrop-filter:blur(var(--studio-glass-blur,17px)) saturate(148%)!important;
+  box-shadow:inset 0 1px 0 rgba(245,252,255,.19),0 5px 18px rgba(4,10,18,.15)!important;
+}
+.app-shell[data-studio-liquid-glass="true"][data-studio-customized="true"]:not([data-glass-toolbars="false"]) .clo-right-tool-palette :is(.clo-palette-scroll,.clo-palette-workflows,.clo-reference-dual-bars,.clo-reference-column,.clo-right-tool-grid,.clo-tool-palette-group-divider) {
+  background:transparent!important;
+  background-color:transparent!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  box-shadow:none!important;
+}
+.app-shell[data-studio-liquid-glass="true"][data-studio-customized="true"]:not([data-glass-toolbars="false"]) .clo-right-tool-palette :is(.clo-reference-column,.clo-palette-workflows) button:not(:hover):not(:focus-visible):not(.active):not([aria-pressed="true"]) {
+  background:transparent!important;
+  border-color:transparent!important;
+  box-shadow:none!important;
+}
+@media(prefers-reduced-transparency:reduce){
+  .app-shell[data-studio-liquid-glass="true"][data-studio-customized="true"] .clo-right-tool-palette {
+    background:var(--studio-panel)!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+}
+
+/* Both fixed side rails should keep the same liquid-glass lens even if the
+   overall Studio material is Solid. This is deliberately scoped to toolbars;
+   changing their appearance must not switch the Library or Property Editor
+   away from a user's chosen opaque theme. */
+.app-shell[data-studio-customized="true"][data-studio-liquid-glass="false"]
+  :is(.tool-rail,.clo-left-3d-double-bars,.clo-right-tool-palette) {
+  background:linear-gradient(140deg,rgba(242,253,255,.10),rgba(224,239,255,.03) 34%,rgba(4,13,23,.05) 85%),
+    color-mix(in srgb,var(--studio-sidebar) 60%,transparent)!important;
+  /* Other Studio theme rules set the longhand background-image to none;
+     asserting both parts individually ensures the glass actually looks
+     translucent rather than just reporting a blur in computed styles. */
+  background-image:linear-gradient(140deg,rgba(242,253,255,.10),rgba(224,239,255,.03) 34%,rgba(4,13,23,.05) 85%)!important;
+  background-color:color-mix(in srgb,var(--studio-sidebar) 60%,transparent)!important;
+  border-color:color-mix(in srgb,var(--studio-border) 70%,rgba(236,249,255,.58))!important;
+  backdrop-filter:blur(17px) saturate(148%)!important;
+  -webkit-backdrop-filter:blur(17px) saturate(148%)!important;
+  box-shadow:inset 0 1px 0 rgba(245,252,255,.18),0 5px 18px rgba(4,10,18,.15)!important;
+}
+.app-shell[data-studio-customized="true"][data-studio-liquid-glass="false"]
+  :is(.clo-right-tool-palette,.clo-left-3d-double-bars)
+  :is(.clo-palette-scroll,.clo-palette-workflows,.clo-reference-dual-bars,.clo-reference-column,.clo-right-tool-grid,.clo-left-3d-column,.clo-tool-palette-group-divider) {
+  background:transparent!important;
+  background-color:transparent!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  box-shadow:none!important;
+}
+.app-shell[data-studio-liquid-glass="true"][data-studio-customized="true"]:not([data-glass-toolbars="false"])
+  .clo-right-tool-palette {
+  background-image:linear-gradient(140deg,rgba(242,253,255,.10),rgba(224,239,255,.025) 34%,rgba(4,13,23,.045) 85%)!important;
+  background-color:color-mix(in srgb,var(--studio-panel) var(--studio-glass-fill,51%),transparent)!important;
+}
+@media(prefers-reduced-transparency:reduce){
+  .app-shell[data-studio-customized="true"][data-studio-liquid-glass="false"]
+    :is(.tool-rail,.clo-left-3d-double-bars,.clo-right-tool-palette) {
+    background:var(--studio-sidebar)!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+}
+/* Pen's side options open only on a deliberate hold/tap or keyboard arrow.
+   Generic :hover flyout rules otherwise stole the first pen click on canvas
+   near the pen icon, which could silently drop an authored anchor. */
+.cc-corner-tool-host .clo-corner-toolkit-2d.exo-viewport-inline-tools
+  > [data-tool-family="vector-pen"]:not([data-touch-open="true"])
+  > .clo-corner-tool-options{
+  display:none!important;
+}

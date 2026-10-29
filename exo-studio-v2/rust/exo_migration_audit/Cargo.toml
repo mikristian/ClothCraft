@@ -1,0 +1,5 @@
+[package]
+name = "exo-migration-audit"
+version = "0.1.0"
+edition = "2021"
+

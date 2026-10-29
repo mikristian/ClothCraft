@@ -1,0 +1,301 @@
+.exo-builder-livebar{position:absolute;z-index:170;display:flex;flex-direction:column;width:max-content;max-width:250px;background:#0b0e13;border:1px solid #405061;box-shadow:0 7px 22px #0009;color:#dce6f1;border-radius:4px;overflow:hidden}.exo-builder-livebar--floating{position:absolute}.exo-builder-livebar--top{top:40px;left:50%;transform:translateX(-50%)}.exo-builder-livebar--bottom{bottom:12px;left:50%;transform:translateX(-50%)}.exo-builder-livebar--left{top:75px;left:5px}.exo-builder-livebar--right{top:75px;right:5px}.exo-builder-livebar__header{display:flex;align-items:center;gap:3px;min-height:26px;padding:2px 3px;border-bottom:1px solid #3a4651;background:#151c25;cursor:grab}.exo-builder-livebar__header span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:600 10px system-ui;max-width:142px}.exo-builder-livebar__header button{border:0;background:transparent;color:#b9cad8;cursor:pointer;min-width:20px;min-height:21px}.exo-builder-livebar__tools{display:grid;grid-template-columns:repeat(var(--bar-cols),36px);gap:0;padding:3px;justify-content:start}.exo-builder-livebar__tools button{display:grid;place-items:center;width:35px;height:35px;border:1px solid transparent;border-radius:3px;color:#d4e0ed;background:#101721;cursor:pointer}.exo-builder-livebar__tools button:hover{background:#293a4b;border-color:#5e829a}
+
+.exo-builder-livebar__tools{grid-template-columns:var(--bar-cols-layout,repeat(var(--bar-cols),36px));grid-template-rows:var(--bar-rows,none);grid-auto-flow:var(--bar-flow,row)}
+
+/* A reference command can be arranged now, but its physical CAD operation
+   still needs an implementation. The small corner mark remains legible in
+   compact two- and three-column Modaris palettes. */
+.exo-builder-livebar__tools button[data-implementation="reference"]{position:relative;color:#a4b1bf}
+.exo-builder-livebar__tools button[data-implementation="reference"]::after{content:"";position:absolute;right:3px;bottom:3px;width:5px;height:5px;border:1px solid #a4b1bf;border-radius:50%;opacity:.85}
+.exo-builder-livebar__tools button[data-implementation="reference"]:hover{border-color:#a4b1bf}
+
+/* Horizontal Modaris palettes wrap their complete command list into rows,
+   so 32–64 tools remain reachable without being clipped offscreen. */
+.exo-builder-livebar[data-orientation="horizontal"]{max-width:min(520px,calc(100vw - 24px))}
+.exo-builder-livebar__header button[aria-expanded]{font-size:13px;line-height:1;color:#d7e4ef}
+.exo-builder-livebar[data-orientation="vertical"] .exo-builder-livebar__tools{max-height:calc(100vh - 125px);overflow-y:auto}
+@media(max-width:600px){
+  .exo-builder-livebar[data-orientation="horizontal"] .exo-builder-livebar__tools{grid-template-columns:repeat(4,36px)!important}
+}
+
+/* The four persistent in-workspace dock rails share a blue insertion target.
+   Toolbars remain real interactive elements after a drop. */
+.exo-custom-toolbar-docking{
+ position:absolute;inset:0;pointer-events:none;z-index:100190;
+}
+.exo-custom-toolbar-dock-region{
+ position:absolute;display:flex;gap:5px;min-width:0;max-width:calc(100% - 12px);
+ max-height:calc(100% - 12px);pointer-events:none;box-sizing:border-box;
+}
+.exo-custom-toolbar-dock-region--left,
+.exo-custom-toolbar-dock-region--right{
+ top:63px;bottom:9px;flex-direction:column;align-items:flex-start;
+ overflow-y:auto;scrollbar-width:thin;
+}
+.exo-custom-toolbar-dock-region--left{left:5px}
+.exo-custom-toolbar-dock-region--right{right:5px;align-items:flex-end}
+.exo-custom-toolbar-dock-region--top,
+.exo-custom-toolbar-dock-region--bottom{
+ left:50%;width:max-content;transform:translateX(-50%);
+ flex-direction:row;justify-content:center;align-items:flex-start;
+ flex-wrap:wrap;overflow:auto;max-width:calc(100% - 18px);
+}
+.exo-custom-toolbar-dock-region--top{top:8px}
+.exo-custom-toolbar-dock-region--bottom{bottom:8px;align-items:flex-end}
+.exo-custom-toolbar-dock-region>.exo-builder-livebar{
+ position:relative;inset:auto;top:auto;right:auto;bottom:auto;left:auto;
+ transform:none;flex:none;max-height:none;pointer-events:auto;
+}
+.exo-custom-toolbar-dock-region--panel{
+ position:relative;order:-1;inset:auto;left:auto;right:auto;top:auto;bottom:auto;
+ display:flex;flex:0 0 auto;box-sizing:border-box;
+ width:100%;max-width:100%;max-height:45%;min-height:0;
+ gap:4px;padding:4px 2px;overflow:auto;scrollbar-width:thin;
+ border-bottom:1px solid #52738b;pointer-events:auto;
+}
+.exo-custom-toolbar-dock-region--panel>.exo-builder-livebar{
+ position:relative;top:auto;left:auto;right:auto;bottom:auto;transform:none;
+ max-width:100%;width:100%;margin:0;pointer-events:auto;
+}
+.tool-rail .exo-custom-toolbar-dock-region--panel{
+ align-items:center;flex-direction:column;
+}
+.tool-rail .exo-custom-toolbar-dock-region--panel .exo-builder-livebar__header{
+ flex-wrap:wrap;justify-content:center;
+}
+.tool-rail .exo-custom-toolbar-dock-region--panel .exo-builder-livebar__header span{
+ max-width:100%;flex:1 0 100%;text-align:center;
+}
+.tool-rail .exo-custom-toolbar-dock-region--panel .exo-builder-livebar__header select{
+ max-width:100%;width:100%;
+}
+.tool-rail .exo-custom-toolbar-dock-region--panel .exo-builder-livebar__tools{
+ grid-template-columns:repeat(1,minmax(0,36px))!important;
+ justify-content:center;
+}
+.tool-rail .exo-custom-toolbar-dock-region--panel .exo-builder-livebar__tools button{
+ width:34px;height:34px;
+}
+.exo-custom-toolbar-docking>.exo-builder-livebar--floating{pointer-events:auto}
+.exo-custom-toolbar-context-menu{position:fixed;z-index:2147483000;width:204px;display:flex;flex-direction:column;gap:2px;padding:6px;background:#142130;color:#e4f0fb;border:1px solid #60849d;border-radius:7px;box-shadow:0 16px 35px #000a;font:12px/1.3 system-ui}
+.exo-custom-toolbar-context-menu strong{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:5px 7px 7px;border-bottom:1px solid #40576b}
+.exo-custom-toolbar-context-menu button{display:block;text-align:left;cursor:pointer;padding:8px 9px;color:#e4f0fb;background:transparent;border:0;border-radius:4px;font:inherit}
+.exo-custom-toolbar-context-menu button:hover,.exo-custom-toolbar-context-menu button:focus-visible{background:#255477;outline:1px solid #77c4ed}
+.exo-custom-toolbar-context-menu__remove{border-top:1px solid #40576b!important;color:#ffcece!important}
+.exo-custom-toolbar-dock-region--left>.exo-builder-livebar,.exo-custom-toolbar-dock-region--right>.exo-builder-livebar{max-width:min(215px,100%);width:max-content}
+.exo-custom-toolbar-dock-region--left .exo-builder-livebar__header,.exo-custom-toolbar-dock-region--right .exo-builder-livebar__header{flex-wrap:wrap;min-width:0}
+.exo-custom-toolbar-dock-region--left .exo-builder-livebar__header span,.exo-custom-toolbar-dock-region--right .exo-builder-livebar__header span{min-width:0;max-width:100%;flex-basis:100%}
+.exo-custom-toolbar-dock-region--left .exo-builder-livebar__tools,.exo-custom-toolbar-dock-region--right .exo-builder-livebar__tools{grid-template-columns:repeat(min(var(--bar-cols),3),36px)}
+.exo-custom-toolbar-dock-region--top>.exo-builder-livebar,.exo-custom-toolbar-dock-region--bottom>.exo-builder-livebar{max-width:min(520px,calc(100vw - 30px))}
+.exo-builder-livebar__header{touch-action:none;user-select:none}
+.exo-builder-livebar__header[role=button]:focus-visible{
+ outline:2px solid #76c6ff;outline-offset:-2px;
+}
+.exo-builder-livebar__header select{
+ max-width:75px;min-width:0;padding:2px 1px;
+ background:#243849;border:1px solid #49667e;border-radius:3px;
+ color:#d3e5f4;font:9px/1.2 system-ui;cursor:pointer;
+}
+.exo-builder-livebar__header select:hover,.exo-builder-livebar__header select:focus-visible{
+ border-color:#7bc8ff;outline:1px solid #54a8e7;
+}
+.exo-custom-toolbar-drop-indicator{
+ position:absolute;pointer-events:none;z-index:1000;display:grid;place-items:center;
+ border:2px solid #5dbaff;border-radius:4px;background:rgba(43,121,190,.26);
+ box-shadow:inset 0 0 30px rgba(70,169,255,.35),0 0 16px rgba(33,132,237,.6);
+ color:#f5fbff;text-shadow:0 1px 5px #071e38;
+ font:700 11px/1.3 Inter,system-ui,sans-serif;
+}
+.exo-custom-toolbar-drop-indicator span{
+ padding:6px 9px;background:#1d486bea;border:1px solid #88ccff;
+ border-radius:4px;white-space:nowrap;
+}
+.exo-custom-toolbar-drop-indicator--left{top:42px;bottom:8px;left:4px;width:min(110px,18%)}
+.exo-custom-toolbar-drop-indicator--right{top:42px;bottom:8px;right:4px;width:min(110px,18%)}
+.exo-custom-toolbar-drop-indicator--top{top:4px;left:8px;right:8px;height:66px}
+.exo-custom-toolbar-drop-indicator--bottom{bottom:4px;left:8px;right:8px;height:66px}
+/* The same visible blue highlight also marks the real side panels when the
+   pointer is inside one of those panels. */
+.main-layout .tool-rail[data-exo-custom-toolbar-dock-hover="true"],
+.main-layout .clo-inspector[data-exo-custom-toolbar-dock-hover="true"]{
+ outline:3px solid #5dbaff;outline-offset:-3px;
+ box-shadow:inset 0 0 22px rgba(65,162,244,.3);
+}
+@media(max-width:680px){
+ .exo-custom-toolbar-dock-region--left,.exo-custom-toolbar-dock-region--right{
+  top:48px;bottom:8px
+ }
+ .exo-custom-toolbar-dock-region>.exo-builder-livebar{
+  max-width:min(190px,45vw)
+ }
+ .exo-custom-toolbar-drop-indicator span{white-space:normal;text-align:center}
+}
+
+/* Shared footprint policy for every user-authored toolbar. Side docks stay
+   vertical; horizontal docks pack controls into compact shallow ribbons. */
+.exo-custom-toolbar-dock-region--left>.exo-builder-livebar,.exo-custom-toolbar-dock-region--right>.exo-builder-livebar{max-width:min(170px,100%)}
+.exo-custom-toolbar-dock-region--left .exo-builder-livebar__tools,.exo-custom-toolbar-dock-region--right .exo-builder-livebar__tools{
+ grid-template-columns:repeat(min(var(--bar-cols),3),32px)!important;grid-auto-flow:row!important;
+ gap:2px;justify-content:center;padding:3px;
+}
+.exo-custom-toolbar-dock-region--top>.exo-builder-livebar,.exo-custom-toolbar-dock-region--bottom>.exo-builder-livebar{
+ width:max-content;max-width:min(480px,calc(100vw - 30px));
+}
+.exo-custom-toolbar-dock-region--top .exo-builder-livebar__header,.exo-custom-toolbar-dock-region--bottom .exo-builder-livebar__header{
+ min-height:23px;padding:1px 4px;
+}
+.exo-custom-toolbar-dock-region--top .exo-builder-livebar__tools,.exo-custom-toolbar-dock-region--bottom .exo-builder-livebar__tools{
+ display:flex!important;flex-flow:row wrap!important;gap:2px;padding:3px 5px;
+}
+.exo-custom-toolbar-dock-region--top .exo-builder-livebar__tools button,.exo-custom-toolbar-dock-region--bottom .exo-builder-livebar__tools button{
+ width:29px;min-width:29px;height:27px;min-height:27px;
+}
+.exo-custom-toolbar-dock-region--left .exo-builder-livebar__tools button,.exo-custom-toolbar-dock-region--right .exo-builder-livebar__tools button{
+ width:32px;height:32px;min-width:32px;
+}
+
+/* All custom side palettes: one vertical rail, no nested scrolling. */
+.exo-custom-toolbar-dock-region--left,.exo-custom-toolbar-dock-region--right{
+ overflow:visible!important;max-height:none!important;
+}
+.exo-custom-toolbar-dock-region--left>.exo-builder-livebar,.exo-custom-toolbar-dock-region--right>.exo-builder-livebar{
+ width:48px!important;max-width:48px!important;max-height:none!important;overflow:visible!important;
+}
+.exo-custom-toolbar-dock-region--left .exo-builder-livebar__tools,.exo-custom-toolbar-dock-region--right .exo-builder-livebar__tools{
+ display:flex!important;flex-direction:column!important;flex-wrap:nowrap!important;
+ width:46px!important;max-height:none!important;overflow:visible!important;
+ scrollbar-width:none!important;padding:3px!important;gap:2px!important;
+}
+.exo-custom-toolbar-dock-region--left .exo-builder-livebar__tools button,.exo-custom-toolbar-dock-region--right .exo-builder-livebar__tools button{
+ flex:0 0 34px!important;width:34px!important;height:34px!important;
+}
+.exo-custom-toolbar-dock-region--panel{max-height:none!important;overflow:visible!important}
+
+/* Match workspace widgets: consistent icon/button rhythm on side rails. */
+.exo-custom-toolbar-dock-region:is(.exo-custom-toolbar-dock-region--left,.exo-custom-toolbar-dock-region--right)>.exo-builder-livebar{
+ border:1px solid #465463!important;border-radius:7px!important;background:#171e27!important;
+ box-shadow:0 5px 16px #0005!important;
+}
+.exo-custom-toolbar-dock-region:is(.exo-custom-toolbar-dock-region--left,.exo-custom-toolbar-dock-region--right) .exo-builder-livebar__header{
+ display:flex!important;flex-direction:column!important;align-items:center!important;
+ gap:3px!important;padding:4px 2px!important;background:#232d38!important;
+ border-bottom:1px solid #475665!important;
+}
+.exo-custom-toolbar-dock-region:is(.exo-custom-toolbar-dock-region--left,.exo-custom-toolbar-dock-region--right) .exo-builder-livebar__header :is(select,button){
+ width:36px!important;max-width:36px!important;min-width:0!important;
+ min-height:23px!important;height:23px!important;padding:1px 2px!important;
+ background:#2d3946!important;color:#f0f4f8!important;border:1px solid #536577!important;border-radius:4px!important;
+}
+.exo-custom-toolbar-dock-region:is(.exo-custom-toolbar-dock-region--left,.exo-custom-toolbar-dock-region--right) .exo-builder-livebar__header span{
+ font-size:0!important;line-height:12px!important;height:12px!important;flex:0 0 12px!important;
+}
+.exo-custom-toolbar-dock-region:is(.exo-custom-toolbar-dock-region--left,.exo-custom-toolbar-dock-region--right) .exo-builder-livebar__tools{
+ align-items:center!important;gap:3px!important;padding:4px 3px!important;
+}
+.exo-custom-toolbar-dock-region:is(.exo-custom-toolbar-dock-region--left,.exo-custom-toolbar-dock-region--right) .exo-builder-livebar__tools button{
+ border:1px solid #43505f!important;border-radius:5px!important;background:#242f3b!important;color:#e8edf4!important;
+}
+.exo-custom-toolbar-dock-region:is(.exo-custom-toolbar-dock-region--left,.exo-custom-toolbar-dock-region--right) .exo-builder-livebar__tools button:is(:hover,:focus-visible){
+ background:#3b4c5e!important;border-color:#9cb0c2!important;outline:2px solid #a4b5c5!important;outline-offset:0!important;
+}
+
+/* Stable modular docking: keep user-authored palettes out of the inspector's
+   Object Browser flex row. Preserve panel materials and prevent blackout. */
+.exo-custom-toolbar-dock-region--panel{flex:0 0 auto!important;width:100%!important;max-width:100%!important;min-height:0!important;max-height:38%!important;overflow:auto!important;contain:layout!important;background:var(--studio-sidebar,#252f3a)!important}
+.exo-custom-toolbar-dock-region--panel>.exo-builder-livebar{flex:0 0 auto!important;max-height:none!important;background:var(--studio-panel,#25303b)!important;color:var(--studio-text,#eaf3fa)!important;box-shadow:none!important}
+.exo-custom-toolbar-dock-region--panel .exo-builder-livebar__tools{max-height:min(48vh,440px)!important;overflow-y:auto!important}
+.exo-custom-toolbar-dock-region--panel .exo-builder-livebar__header{background:var(--studio-sidebar,#2e3a46)!important;color:var(--studio-text,#eaf3fa)!important}
+.exo-custom-toolbar-drop-indicator{border-color:#54b7ff!important;background:rgba(41,136,224,.20)!important;box-shadow:inset 0 0 0 1px #85d5ff,0 0 18px #308be577!important}
+/* A full-width horizontal docking lane, for both top and bottom.  Toolbar
+   headers span their own controls rather than leaving unused gray strips. */
+.exo-custom-toolbar-dock-region--top,.exo-custom-toolbar-dock-region--bottom{
+ left:6px!important;right:6px!important;transform:none!important;width:auto!important;
+ max-width:none!important;justify-content:stretch!important;align-items:stretch!important;
+ flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;
+}
+.exo-custom-toolbar-dock-region--top>.exo-builder-livebar,.exo-custom-toolbar-dock-region--bottom>.exo-builder-livebar{
+ width:auto!important;max-width:none!important;min-width:min(240px,100%)!important;flex:1 1 auto!important;
+}
+.exo-custom-toolbar-dock-region--top .exo-builder-livebar__header,.exo-custom-toolbar-dock-region--bottom .exo-builder-livebar__header{
+ width:100%!important;box-sizing:border-box!important;min-height:26px!important;
+}
+.exo-custom-toolbar-dock-region--top .exo-builder-livebar__tools,.exo-custom-toolbar-dock-region--bottom .exo-builder-livebar__tools{
+ width:100%!important;box-sizing:border-box!important;display:grid!important;
+ grid-template-columns:repeat(auto-fit,minmax(32px,1fr))!important;
+ justify-content:stretch!important;gap:3px!important;
+}
+.exo-custom-toolbar-dock-region--top .exo-builder-livebar__tools button,.exo-custom-toolbar-dock-region--bottom .exo-builder-livebar__tools button{
+ width:100%!important;min-width:0!important;min-height:30px!important;height:30px!important;
+}
+.exo-custom-toolbar-dock-region--top .exo-builder-livebar__header span,.exo-custom-toolbar-dock-region--bottom .exo-builder-livebar__header span{
+ max-width:none!important;flex:1 1 auto!important;
+}
+
+/* Restored optical Nest button, independent of global theme preference. */
+.exo-builder-livebar:has(.exo-liquid-glass-nest-action){background:rgba(222,245,255,.13);border:1px solid rgba(235,250,255,.55);backdrop-filter:blur(17px) saturate(1.65);-webkit-backdrop-filter:blur(17px) saturate(1.65);box-shadow:inset 0 1px #ffffff65,0 6px 23px #0005}
+.exo-builder-livebar .exo-liquid-glass-nest-action{border:1px solid #d7efff77!important;background:linear-gradient(145deg,#d9f8ff44,#7dc1e522)!important;color:#e7faff!important;box-shadow:inset 0 1px #ffffff73,0 1px 7px #0004;border-radius:9px!important}
+.exo-builder-livebar .exo-liquid-glass-nest-action[aria-pressed="true"]{background:linear-gradient(145deg,#8bf3c477,#54c8ab44)!important;border-color:#a8f5d5!important;color:#fff!important}
+.exo-builder-livebar[data-bar-finish="glass"]{background:color-mix(in srgb,var(--custom-bar-color,#8bdcff) 28%,transparent)!important;backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);border-color:#ffffff88;box-shadow:inset 0 1px #ffffff75,0 6px 22px #0005}
+.exo-builder-livebar[data-bar-finish="solid"]{background:var(--custom-bar-color,#253d57)!important}
+.exo-builder-livebar[data-bar-finish] .exo-builder-livebar__header{background:color-mix(in srgb,var(--custom-bar-color,#253d57) 65%,#0d1018)!important}
+/* Single-action saved Nest preset: the visible control IS the toolbar.
+   No floating window chrome, title, blue wrapper, placement dropdown, or
+   separate opaque tile behind its interactive liquid-glass button. */
+.exo-custom-toolbar-docking .exo-builder-livebar--button-only,
+.exo-custom-toolbar-dock-region .exo-builder-livebar--button-only,
+.exo-builder-livebar--button-only:has(.exo-liquid-glass-nest-action){
+ display:block!important;width:max-content!important;min-width:0!important;max-width:max-content!important;
+ height:auto!important;min-height:0!important;max-height:none!important;
+ padding:0!important;margin:0!important;border:0!important;border-radius:0!important;
+ background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+ box-shadow:none!important;overflow:visible!important;
+}
+.exo-builder-livebar--button-only>.exo-builder-livebar__tools,
+.exo-custom-toolbar-dock-region .exo-builder-livebar--button-only>.exo-builder-livebar__tools{
+ display:flex!important;flex-flow:row nowrap!important;align-items:center!important;
+ width:max-content!important;max-width:max-content!important;height:auto!important;
+ padding:0!important;margin:0!important;gap:4px!important;
+ background:transparent!important;border:0!important;box-shadow:none!important;overflow:visible!important;
+}
+.exo-builder-livebar--button-only .exo-liquid-glass-nest-action{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;
+ width:auto!important;min-width:104px!important;max-width:none!important;
+ height:34px!important;min-height:34px!important;max-height:none!important;
+ padding:5px 11px!important;border-radius:12px!important;
+ border:1px solid color-mix(in srgb,var(--custom-bar-color,#8bdcff) 45%,#ffffff)!important;
+ background:linear-gradient(145deg,color-mix(in srgb,var(--custom-bar-color,#8bdcff) 44%,transparent),#ffffff14)!important;
+ backdrop-filter:blur(16px) saturate(155%)!important;-webkit-backdrop-filter:blur(16px) saturate(155%)!important;
+ box-shadow:inset 0 1px #ffffffb0,0 3px 11px #0004!important;
+ color:#f5fcff!important;text-shadow:0 1px 2px #17202b99!important;
+ cursor:grab!important;touch-action:none!important;user-select:none!important;
+}
+.exo-builder-livebar--button-only .exo-liquid-glass-nest-action:active{cursor:grabbing!important}
+.exo-builder-livebar--button-only .exo-liquid-glass-nest-action[aria-pressed="true"]{
+ border-color:#9ef2d5!important;box-shadow:inset 0 1px #fff9,0 0 0 2px #64e9ac44,0 4px 14px #0004!important;
+}
+.exo-builder-livebar--button-only .exo-nest-button-label{font-size:10px;font-weight:750;letter-spacing:.055em;white-space:nowrap;line-height:1.05}
+.exo-builder-livebar--button-only .exo-nest-button-label small{font-size:8px;font-weight:650;opacity:.9}
+.exo-builder-livebar--button-only .exo-liquid-glass-nest-action:focus-visible{outline:2px solid #bdeaff!important;outline-offset:3px!important}
+/* Nest has a tiny handle attached directly to its button — not a window.
+   Its appearance is fully driven by the saved per-toolbar color. */
+.exo-builder-livebar--button-only .exo-builder-livebar__tools{position:relative!important}
+.exo-builder-livebar--button-only .exo-nest-drag-handle{
+ display:grid!important;place-items:center!important;position:relative!important;right:auto!important;top:auto!important;
+ flex:0 0 21px!important;width:21px!important;height:30px!important;border-radius:7px!important;
+ background:color-mix(in srgb,var(--custom-bar-color,#8bdcff) 22%,transparent)!important;
+ border:1px solid #ffffff50!important;color:#edf9ff!important;cursor:grab!important;
+ font:700 15px system-ui!important;touch-action:none!important;user-select:none!important;
+ pointer-events:auto!important;z-index:2!important;
+}
+.exo-builder-livebar--button-only .exo-nest-drag-handle:active{cursor:grabbing!important}
+.exo-builder-livebar--button-only .exo-liquid-glass-nest-action[aria-pressed="true"]{
+ background:linear-gradient(145deg,color-mix(in srgb,var(--custom-bar-color,#8bdcff) 44%,transparent),#ffffff14)!important;
+ border-color:color-mix(in srgb,var(--custom-bar-color,#8bdcff) 45%,#ffffff)!important;
+ box-shadow:inset 0 1px #ffffffb0,0 3px 11px #0004!important;
+}
+/* Explicit center/wide extent in the actual workspace coordinate system. */
+.exo-custom-toolbar-dock-region--top,.exo-custom-toolbar-dock-region--bottom{
+ left:var(--exo-custom-dock-left,0px)!important;right:auto!important;
+ width:var(--exo-custom-dock-width,100%)!important;max-width:none!important;
+ transform:none!important;box-sizing:border-box!important;
+}

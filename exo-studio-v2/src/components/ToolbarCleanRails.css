@@ -1,0 +1,26 @@
+/* EXO tool rails: groups remain spaced and labeled, without drawn dividers.
+   Keep outer rail boundaries, tool active states and focus outlines intact. */
+.tool-rail > .rail-divider {
+  background: transparent;
+  border: 0;
+}
+
+.tool-rail .clo-left-3d-column button[data-clo-group-end="true"]::before,
+.tool-rail .clo-left-3d-double-bars.clo-observed-3d-bars > .clo-observed-3d-column button[data-clo-group-end="true"]::before,
+.clo-right-tool-palette .clo-reference-dual-bars.clo-observed-bars > .clo-observed-column button[data-clo-divider-after="true"]::after {
+  content: none;
+}
+
+.tool-rail .clo-left-3d-double-bars > .clo-left-3d-column,
+.tool-rail .clo-left-3d-double-bars > .clo-left-3d-column:nth-child(2),
+.clo-right-tool-palette .clo-reference-dual-bars > .clo-reference-column,
+.clo-right-tool-palette .clo-reference-dual-bars > .clo-reference-column:nth-child(2) {
+  border-left: 0 !important;
+  border-right: 0 !important;
+}
+
+.clo-right-tool-palette .clo-palette-group + .clo-palette-group,
+.clo-right-tool-palette .clo-tool-palette-group-divider,
+.clo-right-tool-palette .clo-palette-count {
+  border-top: 0 !important;
+}

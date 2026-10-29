@@ -3,17 +3,11 @@
 // remain unchanged; only interior diagonals of valid convex quads can flip.
 // Does NOT guarantee a high-quality mesh: bad boundary sampling and needle
 // triangles still require constrained remeshing with interior points.
+import {rustConvexQuad,rustQualityFlipBetter} from '../rustQualityFlipKernel.js'
 
 const coordinates = value => Array.isArray(value) ? value : [value.x,value.y]
 const cross = (a,b,c) => (b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])
 const key = (a,b) => a<b ? `${a}:${b}` : `${b}:${a}`
-
-function triangleQuality(v,triangle) {
-  const [a,b,c]=triangle.map(i=>coordinates(v[i]))
-  const twiceArea=Math.abs(cross(a,b,c))
-  const longest=Math.max(Math.hypot(a[0]-b[0],a[1]-b[1]),Math.hypot(b[0]-c[0],b[1]-c[1]),Math.hypot(c[0]-a[0],c[1]-a[1]))
-  return twiceArea>1e-11 ? (longest*longest/twiceArea) : Infinity
-}
 
 function orientLike(vertices,original,proposed) {
   const sign=Math.sign(cross(...original.map(i=>coordinates(vertices[i]))))
@@ -21,9 +15,24 @@ function orientLike(vertices,original,proposed) {
   return nextSign===sign ? proposed : [proposed[0],proposed[2],proposed[1]]
 }
 
-export function optimizeTriangleQuality(mesh,{passes=8,minImprovement=0.01}={}) {
+// Optional research-only protected interior edges let a remesher retain a
+// physically meaningful material fold line. This does not improve collision
+// or fit by itself; default behavior is byte-for-byte unchanged.
+export function optimizeTriangleQuality(mesh,{passes=8,minImprovement=0.01,protectedEdges=[]}={}) {
   const vertices=mesh.vertices
   const faces=mesh.faces.map(face=>[...face])
+  if(!Array.isArray(protectedEdges))throw new TypeError('Protected edges must be index pairs')
+  const originalEdges=new Set(faces.flatMap(face=>[
+    key(face[0],face[1]),key(face[1],face[2]),key(face[2],face[0])]))
+  const protectedKeys=new Set()
+  for(const pair of protectedEdges){
+    if(!Array.isArray(pair)||pair.length!==2||pair[0]===pair[1]||
+      pair.some(i=>!Number.isInteger(i)||i<0||i>=vertices.length))
+      throw new RangeError('Invalid protected mesh edge')
+    const id=key(pair[0],pair[1])
+    if(!originalEdges.has(id))throw new RangeError('Protected edge not present in original mesh')
+    protectedKeys.add(id)
+  }
   let totalFlips=0
   for (let pass=0;pass<passes;pass++) {
     const edges=new Map()
@@ -43,21 +52,18 @@ export function optimizeTriangleQuality(mesh,{passes=8,minImprovement=0.01}={}) 
     for(const pair of edges.values()) {
       if(pair.length!==2)continue // keep every boundary and non-manifold edge
       const [left,right]=pair
+      if(protectedKeys.has(key(left.a,left.b)))continue
       if(usedFaces.has(left.index)||usedFaces.has(right.index))continue
       const a=left.a,b=left.b,c=left.opposite,d=right.opposite
       if(new Set([a,b,c,d]).size!==4)continue
       // A valid convex quadrilateral has c,d on opposite sides of AB and
       // a,b on opposite sides of its proposed replacement diagonal CD.
       const [pa,pb,pc,pd]=[a,b,c,d].map(i=>coordinates(vertices[i]))
-      const s1=cross(pa,pb,pc),s2=cross(pa,pb,pd)
-      const t1=cross(pc,pd,pa),t2=cross(pc,pd,pb)
-      if(s1*s2>=-1e-10 || t1*t2>=-1e-10)continue
+      if(!rustConvexQuad(pa,pb,pc,pd))continue
       // No triangle should flip orientation relative to the original mesh.
       const nextA=orientLike(vertices,faces[left.index],[c,d,a])
       const nextB=orientLike(vertices,faces[right.index],[d,c,b])
-      const originalWorst=Math.max(triangleQuality(vertices,faces[left.index]),triangleQuality(vertices,faces[right.index]))
-      const nextWorst=Math.max(triangleQuality(vertices,nextA),triangleQuality(vertices,nextB))
-      if(!(nextWorst<originalWorst*(1-minImprovement)))continue
+      if(!rustQualityFlipBetter(pa,pb,pc,pd,minImprovement))continue
       faces[left.index]=nextA
       faces[right.index]=nextB
       usedFaces.add(left.index)
@@ -68,4 +74,40 @@ export function optimizeTriangleQuality(mesh,{passes=8,minImprovement=0.01}={}) 
     if(!changed)break
   }
   return {vertices,faces,flips:totalFlips}
+}
+
+// Derive *all* internal mesh segments on an existing developable fold line,
+// not just the two vertices selected to identify that line. Preserving only
+// one short edge would allow the rest of the line to be triangulated away.
+export function materialHingeProtectedEdges(mesh,axisVertices,{tolerance=1e-8}={}){
+  const {vertices,faces}=mesh
+  if(!Array.isArray(vertices)||!Array.isArray(faces)||
+    !Array.isArray(axisVertices)||axisVertices.length!==2||
+    axisVertices[0]===axisVertices[1]||
+    axisVertices.some(i=>!Number.isInteger(i)||i<0||i>=vertices.length))
+    throw new RangeError('Invalid material hinge axis')
+  if(!Number.isFinite(tolerance)||tolerance<0||tolerance>1e-3)
+    throw new RangeError('Invalid material hinge tolerance')
+  const [a,b]=axisVertices.map(i=>coordinates(vertices[i]))
+  const dx=b[0]-a[0],dy=b[1]-a[1],length=Math.hypot(dx,dy)
+  if(!(length>1e-9))throw new RangeError('Degenerate material hinge axis')
+  const signed=vertices.map(value=>{
+    const p=coordinates(value)
+    return (dx*(p[1]-a[1])-dy*(p[0]-a[0]))/length
+  })
+  if(!signed.some(v=>v>tolerance)||!signed.some(v=>v< -tolerance)||
+    faces.some(face=>face.some(i=>signed[i]>tolerance)&&
+      face.some(i=>signed[i]< -tolerance)))
+    throw new RangeError('Material hinge axis cuts through a face or does not partition the panel')
+  const edges=new Map()
+  for(const face of faces)for(const [i,j] of [[face[0],face[1]],[face[1],face[2]],[face[2],face[0]]]){
+    const id=key(i,j),old=edges.get(id)
+    edges.set(id,{pair:i<j?[i,j]:[j,i],count:(old?.count||0)+1})
+  }
+  const protectedEdges=[...edges.values()].filter(item=>item.count===2&&
+    item.pair.every(i=>Math.abs(signed[i])<=tolerance)).map(item=>item.pair)
+  if(!protectedEdges.length||!protectedEdges.some(pair=>
+    key(...pair)===key(...axisVertices)))
+    throw new RangeError('Material hinge axis must include an internal mesh edge')
+  return protectedEdges
 }

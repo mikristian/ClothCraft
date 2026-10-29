@@ -1,0 +1,23 @@
+{
+  "file": "EXO-STAGE01-RUNWAY-CHAMBER-CLEAN-V2.blend",
+  "stageOnlyGlb": "EXO-STAGE01-RUNWAY-CHAMBER-CLEAN-V2-STAGE-ONLY.glb",
+  "inspiredBy": "user CLO Stage_01.zprj",
+  "geometryIsOriginal": true,
+  "sourceCloAssetIntact": true,
+  "avatarPreviewIsNotProductionGarment": true,
+  "avatarOrigin": [
+    0,
+    0,
+    0
+  ],
+  "runwaySurfaceTopMetres": -0.002,
+  "mainStageSurfaceTopMetres": 0,
+  "originalStageMeshObjects": 836,
+  "fourStudioCameras": [
+    "hero",
+    "front",
+    "overview",
+    "side"
+  ],
+  "appIntegrationPendingApproval": true
+}

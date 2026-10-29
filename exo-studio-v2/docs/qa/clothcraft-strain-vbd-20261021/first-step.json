@@ -1,0 +1,59 @@
+{
+  "pass": true,
+  "feature": "CPU VBD per-vertex spectral material-strain constraint",
+  "fixture": "T-shirt preset; identical rest state; 1 physics step(s), two Rayon workers",
+  "userProjectUnchanged": true,
+  "installedAppUnchanged": true,
+  "runs": [
+    {
+      "label": "interactive",
+      "accepted": true,
+      "completedSteps": 1,
+      "trace": [
+        {
+          "step": 1,
+          "seamGapMm": 447.4944147470859,
+          "principalExtension": null,
+          "fiberMax": 70.97100403959679,
+          "rigidPanelShiftMm": 0,
+          "contacts": 0
+        }
+      ],
+      "p95StretchPercent": 18.513921329172977,
+      "maxFiberStretchPercent": 70.97100403959679,
+      "maxPrincipalExtensionPercent": null,
+      "strainClampedVertices": 0,
+      "rigidPanelShiftMm": 0,
+      "nativeStepMs": 426.701708,
+      "seamGapMm": 447.4944147470859,
+      "contactCount": 0,
+      "simulatedSeconds": 0.016666666666666666,
+      "positions": 2454
+    },
+    {
+      "label": "strainLimited5",
+      "accepted": true,
+      "completedSteps": 1,
+      "trace": [
+        {
+          "step": 1,
+          "seamGapMm": 512.4708756093521,
+          "principalExtension": 5.000000009999983,
+          "fiberMax": 4.999709849443401,
+          "rigidPanelShiftMm": 1.1718750000000246,
+          "contacts": 0
+        }
+      ],
+      "p95StretchPercent": 2.594984930656996,
+      "maxFiberStretchPercent": 4.999709849443401,
+      "maxPrincipalExtensionPercent": 5.000000009999983,
+      "strainClampedVertices": 3109,
+      "rigidPanelShiftMm": 1.1718750000000246,
+      "nativeStepMs": 485.123208,
+      "seamGapMm": 512.4708756093521,
+      "contactCount": 0,
+      "simulatedSeconds": 0.016666666666666666,
+      "positions": 2454
+    }
+  ]
+}

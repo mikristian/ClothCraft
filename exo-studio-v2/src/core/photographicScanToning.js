@@ -1,5 +1,6 @@
 import { createWashMultiplierLut, sampleWashMultiplierLut, washPixelColorWithMultiplier } from './clothWashImage.js'
 import { normalizeWashSpec } from './clothWashProcedurals.js'
+import { rustRegradeScannedPixel } from './rustScanColorKernel.js'
 
 const clip=(n,min,max)=>Math.min(max,Math.max(Number.isFinite(n)?n:min,min))
 const targetRgb=hex=>/^#[\da-f]{6}$/i.test(hex||'')
@@ -12,6 +13,8 @@ const norm=(n)=>Math.round(clip(n,0,255))
  * appearance matches a physical factory sample or alters scan normals.
  */
 export function regradeScannedPixel(rgb, averageLuminance, desiredRgb) {
+ const native=rustRegradeScannedPixel(rgb,averageLuminance,desiredRgb)
+ if(native)return native
  const mean=clip(averageLuminance,.06,.94)
  const brightness=luminance(rgb)
  const ratio=clip(Math.pow((brightness+.075)/(mean+.075),.88),.45,1.65)

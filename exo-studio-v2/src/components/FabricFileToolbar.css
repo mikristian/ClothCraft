@@ -1,0 +1,16 @@
+.app-shell .clo-inspector .clo-fabric-file-toolbar{position:relative;background:#353638;padding:7px 9px;border-bottom:1px solid #48494b}
+.app-shell .clo-inspector .clo-fabric-file-row{display:flex;align-items:center;gap:6px;min-width:0}
+.app-shell .clo-inspector .clo-fabric-file-search{display:flex;align-items:center;gap:5px;flex:1;min-width:0;position:relative;color:#aeb1b5}
+.app-shell .clo-inspector .clo-fabric-file-search>svg{flex-shrink:0}
+.app-shell .clo-inspector .clo-fabric-file-search input[type=search]{appearance:none;min-width:0;width:100%;height:28px;padding:4px 2px;border:0;border-bottom:1px solid transparent;border-radius:0;background:transparent;color:#e3e4e5;font-size:11px;box-shadow:none;outline:none}
+.app-shell .clo-inspector .clo-fabric-file-search input:focus{border-bottom-color:#8d969e}
+.app-shell .clo-inspector .clo-fabric-file-actions{display:flex;align-items:center;gap:2px;flex-shrink:0}
+.app-shell .clo-inspector .clo-fabric-file-actions button{display:inline-flex;align-items:center;justify-content:center;gap:3px;min-height:27px;padding:3px 5px;background:transparent;border:0;border-radius:3px;color:#dedfe1;font-size:10px;cursor:pointer}
+.app-shell .clo-inspector .clo-fabric-file-actions button:hover:not(:disabled),.app-shell .clo-inspector .clo-fabric-file-actions button:focus-visible{background:#4a4b4e;outline:1px solid #b5bcc1}
+.app-shell .clo-inspector .clo-fabric-file-actions button:disabled{opacity:.35;cursor:default}
+.app-shell .clo-inspector .clo-fabric-file-matches{position:absolute;top:calc(100% + 2px);left:0;right:-7px;z-index:120;max-height:190px;overflow:auto;background:#36373a;border:1px solid #626469;box-shadow:0 5px 15px #0007;border-radius:3px}
+.app-shell .clo-inspector .clo-fabric-file-matches button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:5px;padding:8px;border:0;background:transparent;color:#eceeef;text-align:left;font-size:11px;cursor:pointer}
+.app-shell .clo-inspector .clo-fabric-file-matches button:hover,.app-shell .clo-inspector .clo-fabric-file-matches button[aria-selected=true]{background:#505257}
+.app-shell .clo-inspector .clo-fabric-file-matches small{color:#b6b7b9;font-size:9px}
+.app-shell .clo-inspector .clo-fabric-file-no-results{display:block;padding:9px;color:#a9afb6;font-size:10px}
+.app-shell .clo-inspector .clo-fabric-file-status{padding-top:5px;font-size:10px;color:#bcdbe2;line-height:1.35}

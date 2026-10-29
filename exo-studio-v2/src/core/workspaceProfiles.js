@@ -4,8 +4,17 @@
 export const WORKSPACE_PROFILE_KEY = 'garment-studio-workspace-profile-v1'
 export const WORKSPACE_VIEW_KEY = 'garment-studio-workspace-windows-v1'
 export const VIEWPORT_LAYOUTS = Object.freeze({ split: '3D + 2D', stack: '3D over 2D', '3d': '3D only', '2d': '2D only' })
+// A view-only filter. Never write this list into the user's saved toolbar ids.
+export const PATTERN_FOCUS_TOOLS = Object.freeze(['select-2d','points','split','curve','internal','notch','measure','mirror'])
+export const patternFocusToolbarIds = ids => ids.filter(id => PATTERN_FOCUS_TOOLS.includes(id.replace(/^2d:/,'')))
 
 export const WORKSPACE_PROFILES = Object.freeze({
+  gradingStudio: Object.freeze({ name: '2D Grading + Production', section: 'Production', tab: 'Grading', tool: 'select', viewportTool: 'transform',
+    libraryWidth: 190, inspectorWidth: 510, objectBrowserHeight: 290, objectBrowserVisible: true,
+    topTabsVisible: true, libraryVisible: false, inspectorVisible: true, viewportLayout: '2d', viewportSplit: 50 }),
+  patternFocus: Object.freeze({ name: 'Pattern Focus · 2D', section: 'Pattern', tab: 'Scene', tool: 'point', viewportTool: 'transform',
+    libraryWidth: 190, inspectorWidth: 430, objectBrowserHeight: 306, objectBrowserVisible: true, topTabsVisible: true, libraryVisible: true, inspectorVisible: true,
+    viewportLayout: '2d', viewportSplit: 50, patternFocus: true }),
   drafting: Object.freeze({ name: '2D Pattern + 3D', section: 'Pattern', tab: 'Scene',
     tool: 'point', viewportTool: 'transform', libraryWidth: 196, inspectorWidth: 432,
     objectBrowserHeight: 306, objectBrowserVisible: true, topTabsVisible: true, libraryVisible: true, inspectorVisible: true,
@@ -53,5 +62,6 @@ export function normalizeWorkspaceProfile(value) {
     inspectorVisible: value.inspectorVisible !== false,
     viewportLayout: pick(value.viewportLayout, VIEWPORT_LAYOUT_IDS, 'split'),
     viewportSplit: size(value.viewportSplit, 20, 80, 50),
+    patternFocus: value.patternFocus === true,
   }
 }

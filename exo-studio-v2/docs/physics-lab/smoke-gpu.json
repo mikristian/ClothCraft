@@ -1,0 +1,158 @@
+{
+  "schema": "exo.physics-lab.v2",
+  "phase": "initial_assembly_transient",
+  "equilibriumEstablished": false,
+  "fitDefectEstablished": false,
+  "releaseGate": false,
+  "interpretation": "Separated panels start with large initial seam gaps. Three steps cannot establish equilibrium, converged garment fit, a defective seam solver, or a release failure.",
+  "backendClaim": "Native exo-session snapshot backend field; GPU selection is not independently attested",
+  "requestedBackend": "gpu",
+  "actualBackendReported": [
+    "ClothCraft GPU VBD + CPU OGC"
+  ],
+  "execution": "GPU requested (--gpu), single garment smoke",
+  "binary": "/Users/mikylecouto/Applications/EXO ClothCraft Studio V2.app/Contents/Resources/research/oss/clothcraft/target/debug/exo-session",
+  "avatar": "/Users/mikylecouto/Chat On Steroids Workspace/exo-clothcraft-v2/research/oss/clothcraft/assets/makehuman/mannequin.obj",
+  "binarySha256": "008222d311eadcc5b6b604ea8ce4569a9c5d7830a47b7d36fc3310b9334e6513",
+  "sourceSha256": "f60332c94f3abf9d5ce3e065bdb9b1164b9be43284db108d031e08744497ae3b",
+  "sourceHashNote": "Current working-tree source fingerprint only; provenance of prebuilt executable cannot be independently established",
+  "avatarSha256": "f10b3f9d169c9ec6c2503e6e2f66d3800996bfa7650890b7885e0010d3184867",
+  "crossBackendSpeedComparison": "prohibited_without_verified_same_source_build_fixture_settings_and_executable",
+  "thresholds": {
+    "max_seam_gap_m": 0.025,
+    "extension_p95_percent": 15,
+    "extension_max_percent": 60,
+    "minimum_distance_m": 0
+  },
+  "thresholdPolicy": "Provisional engineering screening thresholds for future settled-state runs only. Transient exceedances are diagnostic observations, not release failures, fit certification, or evidence of faulty seam enforcement.",
+  "cases": [
+    {
+      "id": "tshirt-gpu-smoke",
+      "preset": "tshirt",
+      "status": "initial_assembly_transient_measured",
+      "equilibriumEstablished": false,
+      "fitDefectEstablished": false,
+      "initial": {
+        "vertices": 2454,
+        "triangles": 4570,
+        "seams": 8,
+        "backend": "ClothCraft GPU VBD + CPU OGC",
+        "time_s": 0,
+        "max_seam_gap_m": 0.53
+      },
+      "steps": 1,
+      "final_time_s": 0.016666666666666666,
+      "timeTrajectory": [
+        {
+          "step": 0,
+          "time_s": 0,
+          "max_seam_gap_m": 0.53,
+          "phase": "initial_separated_assembly"
+        },
+        {
+          "step": 1,
+          "time_s": 0.016666666666666666,
+          "max_seam_gap_m": 0.5246099531827559,
+          "solver_max_seam_gap_m": 0.5246099531827559,
+          "extension_p95_percent": 1.8724156811805504,
+          "contacts": 0
+        }
+      ],
+      "metrics": {
+        "max_seam_gap_m": {
+          "value": 0.5246099531827559,
+          "threshold": 0.025,
+          "status": "fail"
+        },
+        "extension_p95_percent": {
+          "value": 1.8724156811805504,
+          "threshold": 15,
+          "status": "pass"
+        },
+        "extension_max_percent": {
+          "value": 3.6427600451922393,
+          "threshold": 60,
+          "status": "pass"
+        },
+        "minimum_distance_m": {
+          "value": 0.006,
+          "threshold": 0,
+          "status": "pass"
+        },
+        "contact_penetration_m": {
+          "value": null,
+          "status": "inconclusive",
+          "reason": "VBD session reports minimum_distance_m but no independently evaluated penetration depth"
+        }
+      },
+      "lastStep": {
+        "broad_phase_rebuilds": 1,
+        "contact_profile": {
+          "candidate_pairs": 30222,
+          "candidates_ms": 3.8443330000000002,
+          "narrow_ms": 0.7399169999999999,
+          "refit_ms": 0.189417
+        },
+        "contact_terms": 0,
+        "contacts": 0,
+        "detection_ms": 5.166958999999999,
+        "detection_updates": 1,
+        "dt_s": 0.016666666666666666,
+        "extension_max_percent": 3.6427600451922393,
+        "extension_p95_percent": 1.8724156811805504,
+        "gpu_compute_ms": null,
+        "iterations": 16,
+        "max_seam_gap_m": 0.5246099531827559,
+        "minimum_distance_m": 0.006,
+        "residual_rms_n": null,
+        "solve_ms": 23.374875,
+        "step_ms": 28.541833999999998,
+        "time_s": 0.016666666666666666,
+        "truncated_vertices": 0
+      },
+      "trajectory": [
+        {
+          "step": 1,
+          "broad_phase_rebuilds": 1,
+          "contact_profile": {
+            "candidate_pairs": 30222,
+            "candidates_ms": 3.8443330000000002,
+            "narrow_ms": 0.7399169999999999,
+            "refit_ms": 0.189417
+          },
+          "contact_terms": 0,
+          "contacts": 0,
+          "detection_ms": 5.166958999999999,
+          "detection_updates": 1,
+          "dt_s": 0.016666666666666666,
+          "extension_max_percent": 3.6427600451922393,
+          "extension_p95_percent": 1.8724156811805504,
+          "gpu_compute_ms": null,
+          "iterations": 16,
+          "max_seam_gap_m": 0.5246099531827559,
+          "minimum_distance_m": 0.006,
+          "residual_rms_n": null,
+          "solve_ms": 23.374875,
+          "step_ms": 28.541833999999998,
+          "time_s": 0.016666666666666666,
+          "truncated_vertices": 0
+        }
+      ]
+    }
+  ],
+  "repeatability": {
+    "status": "not_applicable",
+    "reason": "Single-case GPU smoke does not measure repeatability"
+  },
+  "screeningObservations": [
+    {
+      "case": "tshirt-gpu-smoke",
+      "transientExceedances": [
+        "max_seam_gap_m"
+      ],
+      "assessment": "transient_only"
+    }
+  ],
+  "overall": "transient_observed_equilibrium_inconclusive",
+  "fitCertified": false
+}

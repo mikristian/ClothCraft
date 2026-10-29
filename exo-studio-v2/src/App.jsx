@@ -1,4 +1,18 @@
+import PatternDesignToolPanel from './components/PatternDesignToolPanel.jsx'
+import AccuMark2DLibrary from './components/AccuMark2DLibrary.jsx'
+import {offsetGradePoint,distributeGradePoint,smoothGradePoint,redistributeSizeLine} from './core/accumarkGradeRuleOperations20261023.js'
+import {applyAccuMarkPatternOperation} from './core/accumarkPatternOperations20261023.js'
+import {applyAccuMarkPointLineOperation} from './core/accumarkPointLineTools20261023.js'
+import {applyAccuMarkGradeAxisOperation} from './core/accumarkGradeAxisOperations20261023.js'
+import {editAccuMarkGradeDelta} from './core/accumarkNumericGradeDelta20261023.js'
+import {buildAccuMarkGradePointDragProposal} from './core/accumarkGradePointDrag20261023.js'
+import {applyAccuMarkGradeBatch} from './core/accumarkGradeBatch20261023.js'
+import {applyAccuMarkJoinedEndGradeRule} from './core/accumarkJoinedEndGrading20261023.js'
+import {applyAccuMarkGradedNotchDistance} from './core/accumarkGradedNotchDistance20261023.js'
+import {applyAccuMarkGradeConstraint} from './core/accumarkGradeConstraints20261023.js'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import ExoUniversalPanelHandles20261028 from './components/ExoUniversalPanelHandles20261028.jsx'
+import './patternFocusExpanded.css'
 import {
   Activity,
   Hand,
@@ -6,11 +20,13 @@ import {
   Rotate3d,
   FolderOpen,
   ChevronDown,
+  ChevronLeft,
   Box,
   Cpu,
   Download,
   Eye,
   FileDown,
+  FileSpreadsheet,
   Link2,
   Lock,
   MapPin,
@@ -37,6 +53,7 @@ import {
   EyeOff,
   Focus,
   Grid3X3,
+  Table2,
   LayoutPanelTop,
   Layers3,
   Maximize2,
@@ -52,55 +69,139 @@ import {
 } from 'lucide-react'
 import PatternEditor from './components/PatternEditor.jsx'
 import GarmentViewport from './components/GarmentViewport.jsx'
+import FoamPaddingEditor from './components/FoamPaddingEditor.jsx'
+import FoamMaterialPropertyEditor from './components/FoamMaterialPropertyEditor.jsx'
 import ClothCraftWorkspace from './components/ClothCraftWorkspace.jsx'
+import {readPatternReferences,savePatternReferences,validatePatternReferences} from './core/nativePatternReferences20261025.js'
+import PrintLayoutStudio from './components/PrintLayoutStudio.jsx'
 import ClothCraftPreview from './components/ClothCraftPreview.jsx'
 import FabricMaterialPreview from './components/FabricMaterialPreview.jsx'
 import ZozoReferenceDressViewer from './components/ZozoReferenceDressViewer.jsx'
 import WorkspaceCommandPalette from './components/WorkspaceCommandPalette.jsx'
+import StudioSettingsDialog from './components/StudioSettingsDialog.jsx'
+import StudioCustomToolbar from './components/StudioCustomToolbar.jsx'
+import StudioCustomToolbarCollection from './components/StudioCustomToolbarCollection.jsx'
+import StudioWorkspaceWidgets from './components/StudioWorkspaceWidgets.jsx'
+import CloFinishingToolWidgets from './components/CloFinishingToolWidgets.jsx'
+import {STUDIO_CUSTOMIZATION_KEY,DEFAULT_STUDIO_CUSTOMIZATION,loadStudioCustomization,normalizeStudioCustomization,saveStudioCustomization} from './core/studioCustomization.js'
+import {getModarisExoRoute20261028} from './core/modarisCustomToolbarRoute20261028.js'
+import {nativeSolverBadge20261028} from './core/nativeSolverBadge20261028.js'
+import {checkModarisToolbarPreconditions20261028} from './core/modarisToolbarPreconditions20261028.js'
+import {studioResolvedPalette} from './core/studioThemePresets.js'
+import {resolveExoGradeChartThemes20261028} from './core/exoSettingsColorPresets20261028.js'
+import {resolveExoPatternCrystalSurface20261029} from './core/exoPatternCrystalGlass20261029.js'
+import {STUDIO_THEME_IDS} from './core/studioThemePresets.js'
+import {initializeRustThemeKernel,rustThemeKernelReady,rustThemeGlowEnabled,rustThemeNestVisible,rustThemeColorTokens} from './core/rustThemeKernel.js'
+import {readableUiInk} from './core/interfaceColorContrast.js'
+import {contrastRatio} from './core/interfaceColorContrast.js'
+import {cadAutoContrastColors} from './core/cadAutoContrast.js'
+import {loadThemeSchedule,resolveScheduledTheme,applySavedThemePreset} from './core/themePresetManager.js'
+import {APP_AUTOMATION_ACTIONS,installAppAutomation} from './core/clothcraftAppAutomation.js'
 import { loadZozoDressReference } from './core/zozoReferenceDress.js'
+import { readSavedProject, validateSavedProject, writeSavedProject } from './core/projectRestore.js'
+import {finalizeIndustrialAllowanceMutation20261027} from './core/industrialAllowanceMutationTransaction20261027.js'
+import {applyModarisSizeLinkedGradeMutation} from './core/modarisSizeLinkedGradeMutation20261027.js'
+import {reapplyIndustrialAllowanceGraph} from './core/industrialAllowanceGraph20261027.js'
+import {recoverFactorySourceFromZip} from './core/factorySourceRecovery.js'
 import { CLO_MENUS, GarmentSilhouette, LibraryChrome, ObjectBrowser } from './components/CloUI.jsx'
+import FabricCatalog from './components/FabricCatalog.jsx'
+import HardwareLibrary from './components/HardwareLibrary.jsx'
+import ImportedHardwareInspector from './components/ImportedHardwareInspector.jsx'
+import SceneEnvironmentPropertyEditor from './components/SceneEnvironmentPropertyEditor.jsx'
+import {normalizeCloImportedHardwareManifest,CLO_IMPORT_MANIFEST_URL} from './data/cloImportedHardwareCatalog.js'
+import {importedCloHardwareDimensions} from './core/importedCloHardwareDimensions.js'
+import LibraryAssetHover from './components/LibraryAssetHover.jsx'
+import GarmentLibraryPreview from './components/GarmentLibraryPreview.jsx'
+import ProjectFileLibrary from './components/ProjectFileLibrary.jsx'
+import DigitalTechPackStudio from './components/DigitalTechPackStudio.jsx'
+import TechPackWorkspace from './components/TechPackWorkspace.jsx'
+import {loadNativeTechPackWorkspace,saveNativeTechPackWorkspace} from './core/nativeTechPackWorkspaceStorage.js'
+import {buildTraditionalTechPackHTML} from './core/digitalTechPack.js'
+import {buildPortableTechPackHTML,buildMarketplaceTechPackListing} from './core/techPackHtmlExport.js'
+import WorkspaceSharingPanel,{WorkspaceSharingHeader} from './components/WorkspaceSharingPanel.jsx'
+import {PHOTO_SHOOT_SETS,getPhotoShootSet} from './data/photoShootSets.js'
+import {collaboration,followProjectEvents,leaveProjectPresence,readSharedProjectMapping,updateSharedProjectMapping} from './core/projectCollaborationClient.js'
+import CloTopMenuDropdown from './components/CloTopMenuDropdown.jsx'
+import {listProjects as listLibraryProjects,listCollections as listLibraryCollections,createCollection as createLibraryCollection,saveProject as saveLibraryProject,getProject as getLibraryProject,getRevision as getLibraryRevision,listRevisions as listLibraryRevisions,listAttachments as listLibraryAttachments,addRevision as addLibraryRevision,saveAttachment as saveLibraryAttachment,deleteAttachment as deleteLibraryAttachment,downloadAttachment as retrieveLibraryAttachment,exportLibraryBackup,importLibraryBackup} from './core/projectFileLibrary.js'
+import {requestNativeLibraryProject} from './core/nativeProjectLibraryBridge.js'
+import {ensurePreservedGarmentsInLibrary,PRESERVED_DENIM_LIBRARY_ID,PRESERVED_TSHIRT_LIBRARY_ID} from './core/preservedGarmentExamples.js'
+import {projectPatternPreview,captureVisibleCanvasPreview} from './core/projectLibraryPreview.js'
+import Library3DAssetPreview from './components/Library3DAssetPreview.jsx'
+import StageCatalog from './components/StageCatalog.jsx'
+import StagePropertyPanel from './components/StagePropertyPanel.jsx'
+import { listStagePresets, normalizeStageId } from './data/stagePresets.js'
 import RightToolPalette from './components/RightToolPalette.jsx'
-import CloToolActionPanel from './components/CloToolActionPanel.jsx'
+import Clo3DReferenceToolbar from './components/Clo3DReferenceToolbar.jsx'
 import {getClo7NativeCapability} from './core/clo7NativeToolCapabilities.js'
+import {getCloNativeMenuRoute} from './core/cloNativeMenuBridge.js'
+import {applyDraftHardwareAction} from './core/clo7NativeHardwareActions.js'
 import CloPropertyEditorAccordion from './components/CloPropertyEditorAccordion.jsx'
-import {applyCloDraftProperty,validateCloDraftProperty} from './core/cloPropertyCommands.js'
+import {applyCloDraftProperty,validateCloDraftProperty,resolveCloDraftTarget} from './core/cloPropertyCommands.js'
 import PatternLibraryThumbnail from './components/PatternLibraryThumbnail.jsx'
+import PatternIntelligenceLibrary from './components/PatternIntelligenceLibrary.jsx'
+import PatternFlatSheetPreview from './components/PatternFlatSheetPreview.jsx'
+import {parseSvgPattern} from './core/svgPatternImport.js'
+import {interpretAssistantIntent,ASSISTANT_ACTIONS} from './core/assistantActions.js'
 import CadToolIcon from './components/CadToolIcon.jsx'
 import MarkerPreview from './components/MarkerPreview.jsx'
 import SeamWalkPreview from './components/SeamWalkPreview.jsx'
+import SewingAssemblyInspector20261024 from './components/SewingAssemblyInspector20261024.jsx'
+import {applySewingAssemblyAction20261024} from './core/sewingAssemblyWorkflow20261024.js'
 import { createDefaultProject, FABRIC_PRESETS, FABRIC_SCAN_COVERAGE } from './data/defaultProject.js'
 import { WASH_EFFECTS, normalizeWashSpec } from './core/clothWashProcedurals.js'
 import { digitalWashSuitability } from './core/fabricWashSuitability.js'
 import { clo7FabricReadout } from './core/clo7FabricReadout.js'
 import { calibrateFabricEvidence } from './core/fabricEvidenceCalibration.js'
+import { FABRIC_REALISM_SHOWCASE } from './core/fabricRealismShowcase.js'
 import { fabricSwatchStyle } from './core/fabricSwatchStyle.js'
 import { groupApparelPresets } from './data/apparelMaterialExpansion.js'
 import { listHardwarePresets, getHardwarePreset, hardwareToPatternAnnotation } from './data/hardwarePresets.js'
-import { CLOTHCRAFT_FABRICS } from './core/clothcraftFabrics.js'
+import {resolveHardwareStyle,validateHardwareStyleEdit} from './core/hardwareStyleProperties.js'
 import { createTemplateProject, GARMENT_TEMPLATES } from './data/templates.js'
-import {CLO7_3D_A,CLO7_3D_B} from './data/clo7ToolbarOrder.js'
+import { arrangePatternProject, inferPatternBodyRole } from './core/patternBodyArrangement.js'
+import { prepareNativePatternExport } from './core/nativePatternExportPreparation.js'
+import {templateMatchesFolder} from './data/libraryFolderTree.js'
 import { cloneProject, closestEdgeFraction, edgeLength, getEdgeSeamAllowance, makeRectanglePiece, pieceArea, projectArea, samplePieceBoundary, seamLengthReport, seamWalkReport, touchProject, uniqueId } from './core/project.js'
 import { auditSewingConstruction, validateNewSeam } from './core/sewingConstruction.js'
 import { draftingSplitFractions, splitParameterAtArcFraction } from './core/draftingSplit.js'
 import { isDraftEditValid } from './core/draftingTopology.js'
+import { deletedPointEdgeIndex, planDraftPointDeletion } from './core/draftingPointDeletion.js'
 import { unfoldDraftPiece } from './core/draftingUnfold.js'
 import { pieceCenter } from './core/trims.js'
 import { buildSizeRun, gradePointForPiece, gradeProject, sizeOffset } from './core/grading.js'
+import IndustrialGradeWorkbench from './components/IndustrialGradeWorkbench.jsx'
+import { gradeRulesToCsv, parseGradeRulesCsv } from './core/gradeRuleCsv.js'
+import { exportIndustrialGradeCsv, parseIndustrialGradeCsv } from './core/industrialGradeCsv.js'
 import { buildFabricMarkers, buildMarker } from './core/marker.js'
+import {inspectIndustrialCadInterchange20261028} from './core/industrialCadRoundtripGate20261028.mjs'
+import {inspectIndustrialMarkerCutWorkflow20261028} from './core/industrialMarkerCutWorkflow20261028.mjs'
 import { parseDxfPatterns, projectToDxf } from './core/dxf.js'
+import { inspectModarisNativeIntake20261028 } from './core/modarisNativeFormatIntake20261028.mjs'
+import { CAD_FORMAT_AVAILABILITY_20261028 } from './core/cadFormatAvailability20261028.mjs'
 import { buildMeasurementSizeRun, buildTechPack, measurementRunToCSV } from './core/measurements.js'
 import { parseSeamlyMeasurements, applySeamlyMeasurements } from './core/seamlyMeasurements.js'
 import { parseSeamlyConstructionReference } from './core/seamlyConstructionReference.js'
-import { WORKSPACE_PROFILES, WORKSPACE_PROFILE_KEY, WORKSPACE_VIEW_KEY, VIEWPORT_LAYOUTS, normalizeWorkspaceProfile } from './core/workspaceProfiles.js'
+import SeamlyNativeEngineStudio20261023 from './components/SeamlyNativeEngineStudio20261023.jsx'
+import { parseSeamlyUpstreamDxfReference } from './core/seamlyUpstreamDxfReference20261023.js'
+import { createSeamlyAamaExoDraft20261023 } from './core/seamlyAamaToExoDraft20261023.js'
+import { WORKSPACE_PROFILES, WORKSPACE_PROFILE_KEY, WORKSPACE_VIEW_KEY, VIEWPORT_LAYOUTS, normalizeWorkspaceProfile, patternFocusToolbarIds } from './core/workspaceProfiles.js'
 import { indexWorkspaceCommands } from './core/workspaceCommandIndex.js'
 import { buildFactoryPackageZip } from './core/factoryPackage.js'
+import { downloadAccuMarkGuardedFactoryPackage20261023 } from './core/accumarkGuardedFactoryDownload20261023.js'
 import { projectToBomXml } from './core/bomXml.js'
 import { markerToPdf, markerToSvg } from './core/markerArtifacts.js'
+import {prepareNativeProductionOrderRequest,summarizeNativeVerifiedOrder} from './core/nativeVerifiedProductionOrderClient20261029.js'
 import { inspectProduction } from './core/productionPreflight.js'
+import { inspectIndustrialPatterns } from './core/industrialPatternQA.js'
+import { inspectGradedCutlines } from './core/industrialCutlineQA.js'
+import {auditGradedSizeRunGeometry} from './core/gradedSizeRunGeometryAudit.js'
+import {inspectGradedSeamJunctions,JEANS501_YOKE_JUNCTIONS} from './core/gradedSeamJunctionQA.js'
+import {resolveGradePreviewSize} from './core/gradePreviewSize.js'
 import { buildFabricCostRun } from './core/productionCost.js'
 import { listSimulationBackends } from './core/backends/registry.js'
 import { NATIVE_QUALITY_PROFILES } from './core/backends/nativePayload.js'
 import { garmentCodeToProject, projectToGarmentCode } from './core/garmentCode.js'
+import { assertGarmentCodeImportable } from './core/garmentCodeImportPreflight.js'
 import { getNativeServiceHealth } from './core/backends/nativeServiceClient.js'
 import { getPpfServiceHealth, getPpfJob, getPpfJobPreview, submitPpfFinalSolve } from './core/backends/ppfServiceClient.js'
 import { generateFabricPbrFromImage } from './core/fabricPbrGenerator.js'
@@ -111,28 +212,135 @@ import { classifyFabricPbrFilename } from './core/fabricPbrFileNaming.js'
 const TEE_TEST_SESSION = new URLSearchParams(window.location.search).get('testSession') === 'tee'
 // Public builds must not advertise optional private or unbundled avatar assets.
 const PUBLIC_DISTRIBUTION = import.meta.env.VITE_PUBLIC_DISTRIBUTION === '1'
+const STUDIO_SAVED_WORKSPACE_KEY='exo.savedDesignerWorkspace.v1'
 const FABRIC_PRESET_GROUPS = groupApparelPresets(FABRIC_PRESETS)
+const buttonValuesFromPreset = (preset,style=null) => ({
+  name:preset?.name||'Custom Button',hardwarePresetId:preset?.id||'four-hole-shirt-button',
+  diameterCm:(style?.widthMm??preset?.dimensionsMm.diameter??preset?.dimensionsMm.capDiameter??18)/10,
+  widthMm:style?.widthMm??preset?.dimensionsMm.width??preset?.dimensionsMm.diameter??preset?.dimensionsMm.capDiameter??18,
+  heightMm:style?.heightMm??preset?.dimensionsMm.height??preset?.dimensionsMm.diameter??preset?.dimensionsMm.capDiameter??18,
+  thicknessMm:style?.thicknessMm??preset?.dimensionsMm.thickness??preset?.dimensionsMm.frontThickness??preset?.dimensionsMm.capHeight??2,
+  weightGrams:preset?.dimensionsMm.weightGrams??1,
+  holes:preset?.holes??0,holeDiameterMm:preset?.dimensionsMm.holeDiameter??1.4,
+  holeSpacingMm:preset?.dimensionsMm.holeSpacing??4,
+  color:style?.color??preset?.pbr.baseColor??'#222222',roughness:style?.roughness??preset?.pbr.roughness??.5,
+  metalness:style?.metalness??preset?.pbr.metalness??0,reflectionIntensity:style?.reflectionIntensity??1,clearcoat:style?.clearcoat??.12,
+  materialType:style?.materialType??preset?.material??'Custom',
+  angleDeg:0,threadLengthMm:2,threadType:'Cross',threadColor:'#e5e5e5',
+})
+const zipperValuesFromPreset = preset => {
+  const d=preset?.dimensionsMm||{}
+  const isInvisible=preset?.zipperType==='invisible-coil'
+  const isMetal=preset?.zipperType==='metal'
+  return {
+    name:preset?.name||'Zipper',hardwarePresetId:preset?.id||'coil-zipper-5',
+    widthCm:(d.tapeWidthEachSide??14)/10,tapeWidthMm:d.tapeWidthEachSide??14,
+    chainWidthMm:d.nominalChainWidth??5,tapeThicknessMm:0.55,
+    toothPitchMm:isMetal?2.8:2.2,
+    toothThicknessMm:isMetal?1.5:0.8,
+    sliderWidthMm:d.sliderWidth??Math.max(5,(d.nominalChainWidth??5)*1.38),
+    sliderLengthMm:d.sliderLength??Math.max(6,(d.nominalChainWidth??5)*1.85),
+    sliderThicknessMm:1.8,
+    pullerWidthMm:d.pullWidth??Math.max(4,(d.nominalChainWidth??5)*.84),
+    pullerLengthMm:d.pullLength??Math.max(6,(d.nominalChainWidth??5)*2.7),
+    pullerThicknessMm:0.8,stopperThicknessMm:1.65,
+    weightGrams:d.weightGrams??undefined,
+    type:preset?.zipperType||'coil',separating:Boolean(preset?.separating),
+    offsetCm:0,startExtensionMm:0,endExtensionMm:0,
+    twoWay:Boolean(preset?.twoWay),sliderFraction:1,bottomSliderFraction:0,fastened:true,openFrom:'end',
+    tapeColor:isInvisible?'#d8d1c6':'#282c32',
+    teethColor:isInvisible?'#d4cec5':isMetal?'#c29a58':(preset?.pbr.baseColor||'#899096'),
+    sliderColor:isMetal?'#b99351':'#a4a9ae',pullerColor:isMetal?'#c4a164':'#b8bdc2',
+    stopperColor:isMetal?'#b08b4c':'#7a8188',
+    tapeMaterialType:'polyester',
+    teethMaterialType:isMetal?'metal':'nylon',sliderMaterialType:'metal',
+    metalness:preset?.pbr.metalness??0.65,roughness:preset?.pbr.roughness??0.38,
+    tapeRoughness:.89,teethRoughness:isMetal?.28:.56,
+    sliderRoughness:.27,pullerRoughness:.3,stopperRoughness:.33,
+    reflectionIntensity:1,clearcoat:.12,tapeSheen:.55,
+    color:preset?.pbr.baseColor||'#777777',
+  }
+}
+const zipperCompatibleSeams=(project,pieceId,edgeIndex)=> (project?.seams||[]).filter(seam=>
+  ['normal','zipper',undefined].includes(seam.type) && [seam.a,seam.b].some(edge=>edge?.pieceId===pieceId&&edge.edgeIndex===edgeIndex))
+const syncPairedZipperSeam=(project,zipper)=>{
+  const seam=(project.seams||[]).find(item=>item.id===zipper.pairedSeamId)
+  if(!seam)return
+  seam.type='zipper'
+  seam.openFrom=zipper.openFrom||'end'
+  const primaryOpen=zipper.fastened===false?1:1-Math.max(0,Math.min(1,Number(zipper.sliderFraction??1)))
+  if(zipper.twoWay){
+    const oppositeOpen=zipper.fastened===false?0:Math.max(0,Math.min(1,Number(zipper.bottomSliderFraction??0)))
+    seam.openStartFraction=zipper.openFrom==='start'?primaryOpen:oppositeOpen
+    seam.openEndFraction=zipper.openFrom==='start'?oppositeOpen:primaryOpen
+    // Keep the original field as informational compatibility only. The Draft
+    // physics solver consumes the two explicit ends when both exist.
+    seam.openFraction=primaryOpen
+  }else{
+    delete seam.openStartFraction
+    delete seam.openEndFraction
+    seam.openFraction=primaryOpen
+  }
+}
+const restoreZipperSeamIfUnused=(project,zipper)=>{
+  if(!zipper?.pairedSeamId||zipper.pairedSeamPreviousType==='zipper')return
+  const stillUsed=(project.pieces||[]).some(piece=>(piece.zippers||[]).some(item=>item.pairedSeamId===zipper.pairedSeamId&&item.id!==zipper.id))
+  if(stillUsed)return
+  const seam=(project.seams||[]).find(item=>item.id===zipper.pairedSeamId)
+  if(seam?.type!=='zipper')return
+  seam.type=zipper.pairedSeamPreviousType||'normal'
+  delete seam.openFraction
+  delete seam.openFrom
+  delete seam.openStartFraction
+  delete seam.openEndFraction
+}
 const AVAILABLE_AVATARS = PUBLIC_DISTRIBUTION ? [{ name: 'MakeHuman', model: 'makehuman-base' }] : [
+  { name: 'CLO Thomas', model: 'clo-thomas' },
   { name: 'Theo', model: 'theo' },
   { name: 'Nora', model: 'nora' },
   { name: 'MakeHuman', model: 'makehuman-base' },
 ]
+const HANGER_LIBRARY = [
+  {id:'wood',name:'Tailored Wood Hanger',construction:'Imported Innerscene 3D shoulder-form GLB',finish:'Wood body · steel hook · source CC0'},
+  {id:'trouser-clip',name:'Trouser Clip Rail',construction:'Imported Innerscene 3D clip-rail GLB',finish:'Brushed steel · wood · source CC0'},
+]
+const STAGE_LIBRARY = [
+  {id:'studio',name:'Classic Studio',type:'Photographic studio',light:'Neutral key, bounced fill'},
+  {id:'softbox',name:'Softbox',type:'Product photography',light:'Large diffused source'},
+  {id:'neutral',name:'Neutral White',type:'White infinity backdrop',light:'Even color-reference lighting'},
+  {id:'dramatic',name:'Dramatic Contrast',type:'Editorial presentation',light:'Directional key, dark fill'},
+]
+const FEATURED_STAGE_IDS = ['EXO01', 'R02', 'R03', 'S01', 'S10']
 const OPTIONAL_AVATAR_URLS = {
+  'clo-thomas': '/avatars/clo-thomas.glb',
   theo: '/avatars/opensew/theo.glb',
   nora: '/avatars/opensew/nora.glb',
 }
 const STORAGE_KEY = TEE_TEST_SESSION ? 'garment-studio-tee-first-fit-project-v2' : 'garment-studio-project-v1'
+const BACKUP_STORAGE_KEY = `${STORAGE_KEY}-last-good`
+let projectRestoreNotice = ''
+let projectRestoreBlocked = false
+const DESKTOP_THOMAS_BOOTSTRAP_KEY = TEE_TEST_SESSION ? 'garment-studio-tee-test-thomas-bootstrap-v1' : 'garment-studio-desktop-thomas-bootstrap-v1'
 const MAX_HISTORY = 60
 const SIMULATION_BACKENDS = listSimulationBackends()
 
-const SECTIONS = ['Pattern', 'Sewing', 'Fabric', 'Avatar', 'Fit', 'Production', 'Render']
+const SECTIONS = ['Pattern', 'Sewing', 'Fabric', 'Avatar', 'Fit', 'Production', 'Render', 'Animation']
 const STUDIO_COMMANDS = indexWorkspaceCommands(CLO_MENUS)
 
 function loadProject() {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored) {
-      const parsed = JSON.parse(stored)
+    const desktopThomas = !PUBLIC_DISTRIBUTION && new URLSearchParams(window.location.search).get('defaultAvatar') === 'clo-thomas'
+    const restored = readSavedProject(localStorage, STORAGE_KEY, BACKUP_STORAGE_KEY)
+    if (restored.status === 'failed') {
+      projectRestoreBlocked = true
+      projectRestoreNotice = `Saved project could not be restored (${restored.error}). Original data was preserved. Import a project or export the backup before saving.`
+    }
+    if (restored.status === 'backup') {
+      projectRestoreBlocked = true
+      projectRestoreNotice = `Recovered last good project backup. ${restored.error === 'Primary saved project is missing' ? 'The primary save was missing.' : 'The damaged original was preserved.'} Use Save to accept the recovered project.`
+    }
+    if (restored.project) {
+      const parsed = restored.project
       if ((parsed.version || 1) < 21) {
         parsed.version = 21
         parsed.pieces = (parsed.pieces || []).map((piece) => ({
@@ -243,18 +451,27 @@ function loadProject() {
         turbulence: parsed.simulation.wind?.turbulence ?? 0.18,
         response: parsed.simulation.wind?.response ?? 0.025,
       }
-      // This distributed fork deliberately excludes the private CLO avatar.
-      // Preserve the garment, but load a documented neutral mannequin instead.
-      if (parsed.avatar?.model === 'clo-thomas') parsed.avatar = { ...parsed.avatar, name: 'MakeHuman', model: 'makehuman-base' }
+      // When opening a private desktop build containing the user's own CLO
+      // export, select Thomas once without replacing or discarding the project.
+      if (desktopThomas && !localStorage.getItem(DESKTOP_THOMAS_BOOTSTRAP_KEY)) {
+        parsed.avatar = { ...parsed.avatar, name: 'CLO Thomas', model: 'clo-thomas' }
+        localStorage.setItem(DESKTOP_THOMAS_BOOTSTRAP_KEY, '1')
+      }
       if (PUBLIC_DISTRIBUTION && !['makehuman-base', 'custom-export'].includes(parsed.avatar?.model)) {
         parsed.avatar = { ...parsed.avatar, model: 'makehuman-base', name: 'MakeHuman' }
       }
-      return parsed
+      return validateSavedProject(parsed)
     }
   } catch (error) {
     console.warn('Could not restore garment project', error)
+    projectRestoreBlocked = true
+    projectRestoreNotice = `Project restoration failed (${error.message}). Existing saved data remains untouched until you explicitly save or import a project.`
   }
   const initial = TEE_TEST_SESSION ? createTemplateProject('tee') : createDefaultProject()
+  if (!PUBLIC_DISTRIBUTION && new URLSearchParams(window.location.search).get('defaultAvatar') === 'clo-thomas') {
+    initial.avatar = { ...initial.avatar, name: 'CLO Thomas', model: 'clo-thomas' }
+    try { localStorage.setItem(DESKTOP_THOMAS_BOOTSTRAP_KEY, '1') } catch { /* private mode */ }
+  }
   return initial
 }
 
@@ -594,6 +811,13 @@ function buildLinkedMirror(source, target) {
     x: centerX - (graphic.x - centerX),
     rotationDeg: -(graphic.rotationDeg || 0),
   }))
+  next.foamPads = (source.foamPads || []).map(pad=>({
+    ...cloneProject(pad),
+    id:`${target.id}-${pad.id}`,
+    x:centerX-(Number(pad.x||0)-centerX),
+    rotationDeg:-(Number(pad.rotationDeg)||0),
+    points:(pad.points||[]).map(point=>({...point,x:-point.x})).reverse(),
+  }))
   next.notches = (source.notches || []).map((notch) => ({
     ...cloneProject(notch),
     id: `${target.id}-${notch.id}`,
@@ -655,11 +879,207 @@ export default function App() {
   // asset library, both tool rails, object browser and property editor. Only
   // the dual 3D/2D center is replaced with the native ClothCraft workspace.
   const clothcraftHybrid = new URLSearchParams(window.location.search).get('engine') === 'clothcraft'
+  const appAutomationHandlersRef = useRef({})
+  const [studioCustomization,setStudioCustomization] = useState(loadStudioCustomization)
+  const lastAutoThemeRef=useRef(null)
+  useEffect(()=>{
+    const media=window.matchMedia?.('(prefers-color-scheme: dark)')
+    const refresh=()=>{
+      const selected=resolveScheduledTheme(loadThemeSchedule(),{prefersDark:media?.matches===true,now:new Date()})
+      if(!selected){lastAutoThemeRef.current=null;return}
+      const key=`${selected.scheme}:${selected.themeId}`
+      if(lastAutoThemeRef.current===key)return
+      lastAutoThemeRef.current=key
+      setStudioCustomization(previous=>selected.preset
+        ?applySavedThemePreset(previous,selected.preset)
+        :previous.appearance.theme===selected.themeId?previous:
+          normalizeStudioCustomization({...previous,appearance:{...previous.appearance,theme:selected.themeId}}))
+    }
+    refresh()
+    const minute=window.setInterval(refresh,60_000)
+    const changed=()=>refresh()
+    media?.addEventListener?.('change',changed)
+    window.addEventListener('visibilitychange',changed)
+    window.addEventListener('exo-theme-schedule-changed',changed)
+    window.addEventListener('storage',changed)
+    return ()=>{window.clearInterval(minute);media?.removeEventListener?.('change',changed);window.removeEventListener('visibilitychange',changed);window.removeEventListener('exo-theme-schedule-changed',changed);window.removeEventListener('storage',changed)}
+  },[])
+  const [previewStudioTheme,setPreviewStudioTheme] = useState(null)
+  const [previewIconColor,setPreviewIconColor]=useState(null)
+  const [previewTwoDPalette,setPreviewTwoDPalette]=useState(null)
+  const [previewTwoDPattern,setPreviewTwoDPattern]=useState(null)
+  const [previewGradeChartThemes,setPreviewGradeChartThemes]=useState({values:null,compare:null})
+  const previewGradeChart=useCallback((kind,preset)=>{
+    if(!['values','compare'].includes(kind))return
+    setPreviewGradeChartThemes(previous=>previous[kind]===preset?previous:{...previous,[kind]:preset})
+  },[])
+  const gradeChartThemeVars=useMemo(()=>Object.fromEntries(['values','compare'].flatMap(kind=>{
+    const themes=resolveExoGradeChartThemes20261028(
+      studioCustomization.preferences,
+      studioResolvedPalette(previewStudioTheme||studioCustomization.appearance.theme,studioCustomization.appearance.panelFinish),
+      previewGradeChartThemes)
+    const preset=themes[kind]
+    return [['paper','paper'],['header','header'],['stripe','stripe'],['line','line'],
+      ['ink','ink'],['muted','muted'],['selected','selected'],['field','field']]
+      .map(([role,key])=>[`--exo-${kind}-chart-${role}`,preset[key]])
+  })),[previewGradeChartThemes,studioCustomization.preferences,previewStudioTheme,studioCustomization.appearance.theme,studioCustomization.appearance.panelFinish])
+  const [themeHoveredTarget,setThemeHoveredTarget] = useState(null)
+  const [themePickRequestedKey,setThemePickRequestedKey] = useState(null)
+  const [themePickFocusKey,setThemePickFocusKey] = useState(null)
+  const appearancePalette=useMemo(()=>studioResolvedPalette(previewStudioTheme||studioCustomization.appearance.theme,studioCustomization.appearance.panelFinish),[previewStudioTheme,studioCustomization.appearance.theme,studioCustomization.appearance.panelFinish])
+  const [rustThemeReady,setRustThemeReady] = useState(rustThemeKernelReady)
+  useEffect(()=>{
+    let mounted=true
+    void initializeRustThemeKernel().then(ready=>{if(mounted)setRustThemeReady(ready)})
+    return ()=>{mounted=false}
+  },[])
+  const rustThemeTokens=useMemo(()=>rustThemeReady?rustThemeColorTokens(
+    studioCustomization.appearance,studioCustomization.preferences,
+    appearancePalette.textColor
+  ):null,[rustThemeReady,studioCustomization,appearancePalette.textColor])
+  const interfaceColorTokens=useMemo(()=>{
+    if(!rustThemeTokens)return null
+    const a=studioCustomization.appearance
+    const ink=rustThemeTokens['--exo-interface-ink']
+    const brightness=a.interfaceBrightness??1
+    const autoContrast=a.autoContrast!==false
+    const readable=(fore,bg)=>readableUiInk(fore,bg,{brightness,autoContrast})
+    const libraryBg=a.panelLibraryColor!=='auto'?rustThemeTokens['--exo-library-panel-color']:appearancePalette.sidebarColor
+    const objectBg=a.panelObjectBrowserColor!=='auto'?rustThemeTokens['--exo-object-panel-color']:appearancePalette.panelColor
+    const leftBg=a.leftRailColor!=='auto'?rustThemeTokens['--exo-left-rail-color']:appearancePalette.sidebarColor
+    const rightBg=a.rightRailColor!=='auto'?rustThemeTokens['--exo-right-rail-color']:appearancePalette.sidebarColor
+    const inherited=a.panelTextInheritsGlobal!==false?ink:appearancePalette.textColor
+    return {
+      '--exo-interface-ink':readable(ink,appearancePalette.panelColor),
+      '--exo-library-text-ink':readable(inherited,libraryBg),
+      '--exo-object-text-ink':readable(inherited,objectBg),
+      '--exo-left-rail-ink':readable(inherited,leftBg),
+      '--exo-right-rail-ink':readable(inherited,rightBg),
+      '--exo-library-panel-icon-ink':readable(a.libraryIconColor!=='auto'?rustThemeTokens['--exo-library-icon-color']:inherited,libraryBg),
+      '--exo-object-panel-icon-ink':readable(a.objectBrowserIconColor!=='auto'?rustThemeTokens['--exo-object-icon-color']:inherited,objectBg),
+      '--exo-ui-icon-ink':readable(a.globalToolbarIconColor!=='auto'?rustThemeTokens['--exo-ui-icon-ink']:ink,appearancePalette.sidebarColor),
+      '--exo-2d-horizontal-ink':readable(rustThemeTokens['--exo-2d-horizontal-ink'],studioCustomization.preferences.twoDCanvasColor!=='auto'?rustThemeTokens['--exo-2d-canvas-color']:'#c6c7c9'),
+      '--exo-2d-vertical-ink':readable(rustThemeTokens['--exo-2d-vertical-ink'],studioCustomization.preferences.twoDCanvasColor!=='auto'?rustThemeTokens['--exo-2d-canvas-color']:'#c6c7c9'),
+      '--exo-3d-horizontal-ink':readable(rustThemeTokens['--exo-3d-horizontal-ink'],'#2a343f'),
+      '--exo-3d-vertical-ink':readable(rustThemeTokens['--exo-3d-vertical-ink'],'#2a343f'),
+    }
+  },[rustThemeTokens,appearancePalette,studioCustomization.appearance,studioCustomization.preferences.twoDCanvasColor])
+  const rustUiPreferences=useMemo(()=>({
+    ...studioCustomization.preferences,
+    twoDAutoContrast:studioCustomization.preferences.twoDAutoContrast!==false,
+    twoDCanvasTheme:previewTwoDPalette?.theme??studioCustomization.preferences.twoDCanvasTheme,
+    twoDCanvasColor:previewTwoDPalette
+      ?previewTwoDPalette.canvas
+      :rustThemeTokens && studioCustomization.preferences.twoDCanvasColor!=='auto'
+      ?rustThemeTokens['--exo-2d-canvas-color']:'auto',
+    twoDGridColor:previewTwoDPalette
+      ?previewTwoDPalette.grid
+      :rustThemeTokens && studioCustomization.preferences.twoDGridColor!=='auto'
+      ?rustThemeTokens['--exo-2d-grid-color']:'auto',
+    twoDGridStyle:previewTwoDPalette?.style??studioCustomization.preferences.twoDGridStyle,
+    exoGradeChartThemes:resolveExoGradeChartThemes20261028(
+      studioCustomization.preferences,appearancePalette,previewGradeChartThemes),
+    ...(previewTwoDPattern?.point?{twoDPointColor:previewTwoDPattern.point}:{}),
+    ...(previewTwoDPattern?.edge?{twoDEdgeColor:previewTwoDPattern.edge}:{}),
+    ...(previewTwoDPattern?.selection?{twoDSelectionColor:previewTwoDPattern.selection}:{}),
+    ...(previewTwoDPattern?.notch?{twoDNotchColor:previewTwoDPattern.notch}:{}),
+    ...(previewTwoDPattern?.paper?{twoDPatternColor:previewTwoDPattern.paper}:{}),
+    twoDPatternSurfaceStyle:resolveExoPatternCrystalSurface20261029(
+      studioCustomization.appearance,studioCustomization.preferences,previewTwoDPattern),
+    twoDRulerMarkColor:rustThemeTokens && studioCustomization.preferences.twoDRulerMarkColor!=='auto'
+      ?rustThemeTokens['--exo-2d-ruler-mark-color']:'auto',
+    twoDRulerGlassColor:rustThemeTokens && studioCustomization.preferences.twoDRulerGlassColor!=='auto'
+      ?rustThemeTokens['--exo-2d-ruler-glass-color']:'auto',
+    twoDRulerGlow:!!rustThemeTokens&&rustThemeGlowEnabled(studioCustomization.preferences.twoDRulerGlow),
+  }),[studioCustomization.preferences,rustThemeTokens,previewTwoDPalette,previewTwoDPattern,previewGradeChartThemes,appearancePalette])
+  const themeContrastAudit=useMemo(()=>{
+    const a=studioCustomization.appearance,p=studioCustomization.preferences
+    const palette=appearancePalette
+    const canvas=p.twoDCanvasColor!=='auto'?p.twoDCanvasColor:p.twoDCanvasTheme==='accumark-green'?'#174e39':'#c6c7c9'
+    const drafting=cadAutoContrastColors({canvas,paper:p.twoDPatternColor,grid:p.twoDGridColor,edge:p.twoDEdgeColor,
+      point:p.twoDPointColor,selection:p.twoDSelectionColor,notch:p.twoDNotchColor,ruler:p.twoDRulerMarkColor})
+    const auto=p.twoDAutoContrast!==false
+    const display=(adaptive,chosen,defaultColor)=>auto?adaptive:(chosen&&chosen!=='auto'?chosen:defaultColor)
+    const libraryBg=a.panelLibraryColor!=='auto'?a.panelLibraryColor:palette.sidebarColor
+    const objectBg=a.panelObjectBrowserColor!=='auto'?a.panelObjectBrowserColor:palette.panelColor
+    const cases=[
+      ['Library text and icons',interfaceColorTokens?.['--exo-library-text-ink']||palette.textColor,libraryBg],
+      ['Object Browser text and icons',interfaceColorTokens?.['--exo-object-text-ink']||palette.textColor,objectBg],
+      ['2D rulers and measurements',display(drafting.ruler,p.twoDRulerMarkColor,'#34434d'),canvas],
+      ['2D pattern outlines',display(drafting.edge,p.twoDEdgeColor,'#293642'),drafting.patternPaper],
+      ['Selected grading lines',display(drafting.gradeMain,p.twoDSelectionColor,'#c06d12'),canvas],
+      ['Base grading lines',display(drafting.gradeBase,p.twoDEdgeColor,'#284f6c'),canvas],
+      ['Pattern points',display(drafting.point,p.twoDPointColor,'#9d5a24'),drafting.patternPaper],
+      ['Pattern notches',display(drafting.notch,p.twoDNotchColor,'#ac2940'),drafting.patternPaper],
+    ]
+    return cases.map(([label,foreground,background])=>({label,foreground,background,ratio:contrastRatio(foreground,background),pass:contrastRatio(foreground,background)>=4.5}))
+  },[studioCustomization,appearancePalette,interfaceColorTokens])
+  const fixThemeContrast=useCallback(()=>setStudioCustomization(prev=>normalizeStudioCustomization({...prev,appearance:{...prev.appearance,autoContrast:true},preferences:{...prev.preferences,twoDAutoContrast:true}})),[])
+  const hadStoredStudioCustomization=useRef((()=>{
+    try{return Boolean(localStorage.getItem(STUDIO_CUSTOMIZATION_KEY))}catch{return false}
+  })())
+  const [studioSettingsOpen,setStudioSettingsOpen] = useState(false)
+  const [studioSettingsTab,setStudioSettingsTab] = useState('workspace')
+  const closeStudioSettings=useCallback(()=>{setPreviewStudioTheme(null);setThemeHoveredTarget(null);setStudioSettingsOpen(false)},[])
+  const beginThemePick=useCallback(key=>{setPreviewStudioTheme(null);setThemeHoveredTarget(null);setThemePickRequestedKey(key||'globalToolbarIconColor');setStudioSettingsOpen(false)},[])
+  const pickThemePart=useCallback(event=>{
+    if(!themePickRequestedKey)return
+    const target=event.target
+    if(target?.closest?.('.exo-theme-pick-cancel')){setThemePickRequestedKey(null);return}
+    const closest=(selector)=>Boolean(target?.closest?.(selector))
+    let key=themePickRequestedKey
+    if(closest('.cc-board .cc-v2-board-orientation,.pattern-editor-shell .cc-v2-board-orientation'))key='twoDViewerHorizontalColor'
+    else if(closest('.cc-viewport-2d .clo-corner-toolkit,.cc-board .clo-corner-toolkit,.pattern-editor-shell .clo-corner-toolkit'))key='twoDViewerVerticalColor'
+    else if(closest('.cc-viewport-3d .cc-v2-orientation,.cc-scene .cc-v2-orientation'))key='threeDViewerHorizontalColor'
+    else if(closest('.cc-viewport-3d .clo-corner-toolkit,.cc-scene .clo-corner-toolkit'))key='threeDViewerVerticalColor'
+    else if(closest('.asset-browser,.clo-library-top,.clo-library-search'))key='panelLibraryColor'
+    else if(closest('.clo-object-browser,.clo-inspector,.clo-property-panel'))key='panelObjectBrowserColor'
+    else if(closest('.tool-rail,.clo-left-3d-column'))key='leftRailColor'
+    else if(closest('.clo-right-tool-palette,.clo-right-tool-grid'))key='rightRailColor'
+    event.preventDefault();event.stopPropagation()
+    setThemePickRequestedKey(null);setThemePickFocusKey(key)
+    setStudioSettingsTab('theme');setStudioSettingsOpen(true)
+  },[themePickRequestedKey])
+  useEffect(()=>{saveStudioCustomization(studioCustomization)},[studioCustomization])
   const [project, setProject] = useState(loadProject)
+  const [techPackOpen,setTechPackOpen]=useState(()=>new URLSearchParams(window.location.search).get('techpack')==='1')
+  const [techPackWorkspaceOpen,setTechPackWorkspaceOpen]=useState(()=>new URLSearchParams(window.location.search).get('techpackWorkspace')==='1')
+  const [nativeTechPackSnapshot,setNativeTechPackSnapshot]=useState(null)
+  const [nativeTechPackDraft,setNativeTechPackDraft]=useState(null)
+  const [nativeTechPackLoading,setNativeTechPackLoading]=useState(false)
+  const [nativeTechPackSaveError,setNativeTechPackSaveError]=useState('')
+  const [techPackInitialTab,setTechPackInitialTab]=useState('traditional')
+  const techPackPrintableHTML=useMemo(()=>{
+    if(!techPackOpen)return ''
+    try{return buildTraditionalTechPackHTML(project,project.techPackStudio)}
+    catch(error){console.warn('Tech Pack document preview unavailable',error);return ''}
+  },[project,techPackOpen])
+  const [fileLibraryOpen,setFileLibraryOpen] = useState(false)
+  const [fileLibraryStartSave,setFileLibraryStartSave] = useState(false)
+  const [fileLibraryEntries,setFileLibraryEntries] = useState([])
+  const [fileLibraryCollections,setFileLibraryCollections] = useState([])
+  const [fileLibraryCurrentId,setFileLibraryCurrentId] = useState('')
+  const [fileLibraryError,setFileLibraryError] = useState('')
+  const [fileLibraryLoading,setFileLibraryLoading] = useState(false)
+  const [fileCollaboration,setFileCollaboration] = useState({online:false,profile:null,teams:[],projects:[],shares:[],comments:[],presence:[],members:[],revisionHistory:[],activity:[],activeTeamId:'',selectedLocalId:'',error:''})
+  const collaborationRoomAbort=useRef(null)
+  const collaborationRoomId=useRef('')
+  const collaborationSessionId=useRef('')
   const sewingConstructionAudit = useMemo(() => auditSewingConstruction(project), [project])
   const [selectedPieceId, setSelectedPieceId] = useState('front')
   const [activeSection, setActiveSection] = useState('Pattern')
+  const [patternFocusActive, setPatternFocusActive] = useState(() => { try { return localStorage.getItem('exo.patternFocusWorkspace.v1') === 'true' } catch { return false } })
+  const patternFocusReturnRef = useRef(null)
+  useEffect(() => { try { localStorage.setItem('exo.patternFocusWorkspace.v1', String(patternFocusActive)) } catch {} }, [patternFocusActive])
   const [tool, setTool] = useState('select')
+  // Floating CLO-style tool controls belong to the workspace session, not the
+  // saved garment document. Both dialogs can remain open while the tool changes.
+  const [activeFinishingTool,setActiveFinishingTool] = useState(null)
+  useEffect(()=>{
+    const onGradingClosed=()=>setTool(current=>['grading-edit','grading-auto'].includes(current)?'select':current)
+    window.addEventListener('exo-clothcraft-grading-panel-closed',onGradingClosed)
+    return ()=>window.removeEventListener('exo-clothcraft-grading-panel-closed',onGradingClosed)
+  },[])
   // Selected flat fabric starts with an on-garment unified XYZ + rotation
   // gizmo, not a camera-orientation circle floating in the corner.
   const [viewportTool, setViewportTool] = useState('transform')
@@ -669,32 +1089,230 @@ export default function App() {
   const [showSewingGuides, setShowSewingGuides] = useState(true)
   const [arrangementSpread, setArrangementSpread] = useState(0)
   const [assetCategory, setAssetCategory] = useState('Garment')
+  const [libraryFolder,setLibraryFolder] = useState('all')
   const [librarySearch, setLibrarySearch] = useState('')
   const [libraryThumbnails, setLibraryThumbnails] = useState(true)
   const [objectTab, setObjectTab] = useState('Scene')
   const [openMenu, setOpenMenu] = useState(null)
+  useEffect(()=>{
+    if(!openMenu)return
+    const closeOutside=event=>{if(!event.target.closest?.('.clo-menu-group'))setOpenMenu(null)}
+    const closeOnEscape=event=>{if(event.key==='Escape')setOpenMenu(null)}
+    document.addEventListener('pointerdown',closeOutside)
+    document.addEventListener('keydown',closeOnEscape)
+    return()=>{
+      document.removeEventListener('pointerdown',closeOutside)
+      document.removeEventListener('keydown',closeOnEscape)
+    }
+  },[openMenu])
   const [simulationMenuOpen, setSimulationMenuOpen] = useState(false)
   const [leftSimulationMenuOpen, setLeftSimulationMenuOpen] = useState(false)
+  const [animationWorkspaceActive, setAnimationWorkspaceActive] = useState(false)
+  const [printLayoutActive, setPrintLayoutActive] = useState(false)
+  const [animationPlaying, setAnimationPlaying] = useState(false)
+  const animationReturnLayoutRef = useRef('split')
+  const animationReturnSectionRef = useRef('Pattern')
+  const focusReturnPanelsRef = useRef(null)
+  const focusWorkspace = (kind) => {
+    setTechPackWorkspaceOpen(false)
+    if (!animationWorkspaceActive && !printLayoutActive) {
+      animationReturnLayoutRef.current = viewportLayout
+      animationReturnSectionRef.current = activeSection
+      focusReturnPanelsRef.current = {libraryVisible,inspectorVisible,leftToolsCollapsed,rightToolsCollapsed,showObjectBrowser,objectTab}
+    }
+    if (visibleRunning) simForVisibleEngine()
+    if (animationWorkspaceActive && kind !== 'animation') window.dispatchEvent(new Event('exo-clothcraft-animation-stop'))
+    setAnimationPlaying(false)
+    setAnimationWorkspaceActive(kind === 'animation')
+    setPrintLayoutActive(kind === 'print')
+    setLibraryVisible(false)
+    setInspectorVisible(kind === 'print')
+    setLeftToolsCollapsed(true)
+    setRightToolsCollapsed(true)
+    setViewportLayout(kind === 'print' ? 'split' : '3d')
+    if(kind === 'print') {
+      setShowObjectBrowser(false)
+      setObjectTab('Fabric')
+    }
+    setActiveSection(kind === 'animation' ? 'Animation' : 'Production')
+    setLeftSimulationMenuOpen(false)
+    setSimulationMenuOpen(false)
+  }
+  const enterAnimationWorkspace = () => {
+    focusWorkspace('animation')
+  }
+  const enterPrintLayoutWorkspace = () => focusWorkspace('print')
+  const enterTechPackWorkspace = () => {
+    if (printLayoutActive || animationWorkspaceActive) exitFocusedWorkspace()
+    setTechPackOpen(false)
+    setTechPackWorkspaceOpen(true)
+    setSimulationMenuOpen(false)
+    setLeftSimulationMenuOpen(false)
+    setOpenMenu(null)
+    setLibraryVisible(true)
+    setInspectorVisible(true)
+    setShowObjectBrowser(true)
+    setLeftToolsCollapsed(false)
+    setRightToolsCollapsed(false)
+    setSidebarView('library')
+    if(clothcraftHybrid)window.dispatchEvent(new Event('exo-clothcraft-techpack-request'))
+  }
+  const exitFocusedWorkspace = () => {
+    setAnimationWorkspaceActive(false)
+    setPrintLayoutActive(false)
+    setAnimationPlaying(false)
+    setViewportLayout(animationReturnLayoutRef.current)
+    setActiveSection(animationReturnSectionRef.current)
+    if (focusReturnPanelsRef.current) {
+      const {libraryVisible,inspectorVisible,leftToolsCollapsed,rightToolsCollapsed,showObjectBrowser,objectTab} = focusReturnPanelsRef.current
+      setLibraryVisible(libraryVisible)
+      setInspectorVisible(inspectorVisible)
+      setLeftToolsCollapsed(leftToolsCollapsed)
+      setRightToolsCollapsed(rightToolsCollapsed)
+      setShowObjectBrowser(showObjectBrowser)
+      setObjectTab(objectTab)
+    }
+    focusReturnPanelsRef.current = null
+    setLeftSimulationMenuOpen(false)
+    window.dispatchEvent(new Event('exo-clothcraft-animation-stop'))
+  }
+  const exitAnimationWorkspace = exitFocusedWorkspace
+  useEffect(()=>{
+    const update=event=>setAnimationPlaying(Boolean(event.detail?.playing))
+    window.addEventListener('exo-clothcraft-animation-playback',update)
+    return()=>window.removeEventListener('exo-clothcraft-animation-playback',update)
+  },[])
   const [show2DGrid, setShow2DGrid] = useState(true)
   const [show2DSeams, setShow2DSeams] = useState(false)
   const [layout2DSignal, setLayout2DSignal] = useState(0)
   const [compactTools, setCompactTools] = useState(false)
-  // Default to actions that actually work. The complete 70-slot CLO
-  // reference remains opt-in as an audit map, not the daily editing toolbar.
-  // The verified CLO7 A/B physical order is always visible by default.
-  // Unsupported actions are disabled, not hidden or attached to wrong tools.
-  const [show3DToolMap, setShow3DToolMap] = useState(true)
-  const [selectedCloTool, setSelectedCloTool] = useState(null)
+  const [leftToolsCollapsed,setLeftToolsCollapsed] = useState(false)
+  const [rightToolsCollapsed,setRightToolsCollapsed] = useState(false)
+  // Restore the original full Object Browser rather than honoring a stale saved
+  // collapsed setting from previous layout experiments.
   const [showObjectBrowser, setShowObjectBrowser] = useState(true)
   const [libraryVisible, setLibraryVisible] = useState(true)
   const [inspectorVisible, setInspectorVisible] = useState(true)
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false)
   const [viewportLayout, setViewportLayout] = useState(() => {
-    try { const value = JSON.parse(localStorage.getItem(WORKSPACE_VIEW_KEY) || '{}').layout; return Object.hasOwn(VIEWPORT_LAYOUTS, value) ? value : 'split' } catch { return 'split' }
+    try {
+      const value = JSON.parse(localStorage.getItem(WORKSPACE_VIEW_KEY) || '{}').layout
+      // A previous drafting-only session must not reopen with the entire 3D
+      // viewport missing. The 2D-only focus still works when chosen explicitly.
+      return value === '2d' ? 'split' : Object.hasOwn(VIEWPORT_LAYOUTS, value) ? value : 'split'
+    } catch { return 'split' }
   })
+  const prior2DModeRef = useRef(false)
   const [viewportSplit, setViewportSplit] = useState(() => {
-    try { return clamp(JSON.parse(localStorage.getItem(WORKSPACE_VIEW_KEY) || '{}').split ?? 50, 20, 80) } catch { return 50 }
+    try {
+      const value = Number(JSON.parse(localStorage.getItem(WORKSPACE_VIEW_KEY) || '{}').split ?? 50)
+      return Number.isFinite(value) ? clamp(value, 20, 80) : 50
+    } catch { return 50 }
   })
+  // viewportLayout must be initialized before the transition effect is evaluated.
+  useEffect(()=>{
+    const in2D=viewportLayout==='2d'||patternFocusActive
+    // Apply the compact 2D starting layout only on entry. Subsequent renders
+    // must respect a user's manual expansion of the inspector.
+    if(in2D&&!prior2DModeRef.current){setShowObjectBrowser(true);setRightToolsCollapsed(false);setInspectorVisible(false)}
+    prior2DModeRef.current=in2D
+  },[viewportLayout,patternFocusActive])
+  useEffect(()=>{
+    if(!clothcraftHybrid)return
+    const onGraphicPicked=()=>{
+      setObjectTab('Graphic')
+      setActiveSection('Fabric')
+      setShowObjectBrowser(true)
+      // 2D graphics can be selected and dragged without opening the inspector.
+      if(viewportLayout!=='2d'&&!patternFocusActive)setInspectorVisible(true)
+    }
+    window.addEventListener('exo-clothcraft-graphic-picked',onGraphicPicked)
+    return()=>window.removeEventListener('exo-clothcraft-graphic-picked',onGraphicPicked)
+  },[clothcraftHybrid,viewportLayout,patternFocusActive])
+  const collapsed3DReturnLayoutRef = useRef('split')
+  const collapse3DForPatterns = () => {
+    if (viewportLayout === '2d') return
+    collapsed3DReturnLayoutRef.current = viewportLayout
+    setViewportLayout('2d')
+    setActiveSection('Production')
+    setObjectTab('Grading')
+    setShowObjectBrowser(true)
+    setInspectorVisible(false)
+    setLeftToolsCollapsed(false)
+    setRightToolsCollapsed(false)
+    setSidebarView('library')
+    setLibraryVisible(false)
+    setLayout2DSignal(signal => signal + 1)
+  }
+  const restoreCollapsed3D = () => {
+    setViewportLayout(collapsed3DReturnLayoutRef.current === '2d' ? 'split' : collapsed3DReturnLayoutRef.current)
+    setLayout2DSignal(signal => signal + 1)
+  }
+  // Two distinct 3D actions: the main chevron expands ONLY the workspace's
+  // 3D pane; the adjacent expand arrow enters full-window/native fullscreen.
+  // Neither operation remounts the live Rust/WebGL scene.
+  const [studio3DFullscreen, setStudio3DFullscreen] = useState(false)
+  const expanded3DReturnLayoutRef = useRef('split')
+  const fullscreen3DReturnLayoutRef = useRef('split')
+  const owned3DFullscreenRef = useRef(false)
+  const exit3DStudio = () => {
+    setStudio3DFullscreen(false)
+    setViewportLayout(fullscreen3DReturnLayoutRef.current)
+    window.webkit?.messageHandlers?.exoStudioFullscreen?.postMessage('exit')
+    if (document.fullscreenElement === document.documentElement) {
+      document.exitFullscreen?.().catch(() => {})
+    }
+    owned3DFullscreenRef.current = false
+  }
+  const toggle3DStudio = () => {
+    if (studio3DFullscreen) {
+      exit3DStudio()
+      setViewportLayout(expanded3DReturnLayoutRef.current)
+    } else if (viewportLayout === '3d') {
+      setViewportLayout(expanded3DReturnLayoutRef.current === '3d' ? 'split' : expanded3DReturnLayoutRef.current)
+    } else {
+      expanded3DReturnLayoutRef.current = viewportLayout === '2d' ? 'split' : viewportLayout
+      setViewportLayout('3d')
+    }
+  }
+  const toggle3DStudioFullscreen = () => {
+    if (studio3DFullscreen) {
+      exit3DStudio()
+    } else {
+      fullscreen3DReturnLayoutRef.current = viewportLayout
+      setStudio3DFullscreen(true)
+      setViewportLayout('3d')
+      // Browser fullscreen where supported; fixed full-window CSS also works
+      // in the installed macOS WKWebView where the API may be unavailable.
+      const nativeFullscreen = window.webkit?.messageHandlers?.exoStudioFullscreen
+      if (nativeFullscreen) nativeFullscreen.postMessage('enter')
+      else if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen?.().then(() => {
+          owned3DFullscreenRef.current = document.fullscreenElement === document.documentElement
+        }).catch(() => {})
+      }
+    }
+  }
+  useEffect(() => {
+    if (!studio3DFullscreen) return
+    const onFullscreenChange = () => {
+      if (!document.fullscreenElement && owned3DFullscreenRef.current) exit3DStudio()
+    }
+    const onKeyDown = event => {
+      if (event.key === 'Escape' && !document.fullscreenElement && !event.defaultPrevented) {
+        event.preventDefault()
+        exit3DStudio()
+      }
+    }
+    document.addEventListener('fullscreenchange', onFullscreenChange)
+    window.addEventListener('keydown', onKeyDown)
+    window.addEventListener('exo-native-3d-fullscreen-exited', exit3DStudio)
+    return () => {
+      document.removeEventListener('fullscreenchange', onFullscreenChange)
+      window.removeEventListener('keydown', onKeyDown)
+      window.removeEventListener('exo-native-3d-fullscreen-exited', exit3DStudio)
+    }
+  }, [studio3DFullscreen])
   const viewportResizeRef = useRef(null)
   // Workspace chrome has its own preferences; changing panel dimensions must
   // never alter the stored garment or the physics history.
@@ -715,12 +1333,56 @@ export default function App() {
   const [fitCameraSignal, setFitCameraSignal] = useState(0)
   const [running, setRunning] = useState(false)
   const [clothcraftLive, setClothcraftLive] = useState(null)
+  const [nativePatternReferences,setNativePatternReferences] = useState([])
+  const [referenceLoadedKey,setReferenceLoadedKey] = useState(null)
+  const [selectedNativeReferenceId,setSelectedNativeReferenceId] = useState(null)
+  const referenceProjectKey = clothcraftHybrid ? clothcraftLive?.referenceKey || null : null
+  useEffect(()=>{
+    let valid=true
+    setReferenceLoadedKey(null)
+    setNativePatternReferences([])
+    setSelectedNativeReferenceId(null)
+    if(!referenceProjectKey)return()=>{valid=false}
+    readPatternReferences(referenceProjectKey).then(items=>{
+      if(!valid)return
+      setNativePatternReferences(items)
+      setReferenceLoadedKey(referenceProjectKey)
+    }).catch(error=>{
+      if(!valid)return
+      setCommandResult(`Could not open saved tracing references: ${error.message}`)
+      setReferenceLoadedKey(referenceProjectKey)
+    })
+    return()=>{valid=false}
+  },[referenceProjectKey])
+  const updateNativePatternReferences=next=>{
+    if(!referenceProjectKey||referenceLoadedKey!==referenceProjectKey)return
+    try{setNativePatternReferences(validatePatternReferences(next))}
+    catch(error){setCommandResult(`Reference update blocked: ${error.message}`)}
+  }
+  useEffect(()=>{
+    if(!referenceProjectKey||referenceLoadedKey!==referenceProjectKey)return undefined
+    const timer=window.setTimeout(()=>{
+      savePatternReferences(referenceProjectKey,nativePatternReferences).catch(error=>
+        setCommandResult(`Could not save tracing references: ${error.message}`))
+    },350)
+    return()=>window.clearTimeout(timer)
+  },[nativePatternReferences,referenceProjectKey,referenceLoadedKey])
+  const [graphicMeasurementsVisible,setGraphicMeasurementsVisible] = useState(()=>{
+    try{return localStorage.getItem('exo-v2-show-2d-graphic-measurements')!=='false'}catch{return true}
+  })
   const [selectedDraftEdge, setSelectedDraftEdge] = useState(null)
   const [hasSimulated, setHasSimulated] = useState(false)
   const [wireframe, setWireframe] = useState(false)
   const [analysisMode, setAnalysisMode] = useState('surface')
   const [selectedFabricId, setSelectedFabricId] = useState('main')
   const [selectedObjectForProperties, setSelectedObjectForProperties] = useState(null)
+  const [foamPropertySelection,setFoamPropertySelection]=useState(null)
+  const [environmentSelection,setEnvironmentSelection] = useState(null)
+  // The first Camera selection must show the actual factory viewport lens and
+  // orbit, not arbitrary UI defaults that suddenly move the model on edit.
+  const initialSceneCamera=clothcraftHybrid
+    ?{name:'Default Camera',fieldOfView:34,viewType:'spherical',distanceMm:3982,horizontalAngle:37.7,verticalAngle:10.1,nearClipMm:5,farClipMm:150000,physicalCamera:false,focalLengthMm:50,sensorWidthMm:36}
+    :{name:'Default Camera',fieldOfView:34,viewType:'spherical',distanceMm:4276,horizontalAngle:12.2,verticalAngle:6.7,nearClipMm:20,farClipMm:30000,physicalCamera:false,focalLengthMm:50,sensorWidthMm:36}
   const onDraftEdgeSelection=useCallback(value=>{
     setSelectedDraftEdge(previous=>previous?.pieceId===value?.pieceId&&previous?.edgeIndex===value?.edgeIndex?previous:value)
     if(value)setSelectedObjectForProperties(null)
@@ -732,8 +1394,24 @@ export default function App() {
   const [hardwareChoice, setHardwareChoice] = useState({
     button:'four-hole-shirt-button', buttonhole:'horizontal-buttonhole', zipper:'coil-zipper-5',
   })
-  const [gradePreviewSize, setGradePreviewSize] = useState('M')
-  const [showGradeNest, setShowGradeNest] = useState(false)
+  const [requestedGradePreviewSize, setGradePreviewSize] = useState('M')
+  // Project imports, History and Undo can replace XS–XXL with a completely
+  // different grading size run. Guard on the FIRST render, before effects and
+  // before the Production viewport calls gradeProject; do not crash at "M"
+  // after restoring a W28–W38 factory ZIP.
+  const gradePreviewSize=resolveGradePreviewSize(project,requestedGradePreviewSize)
+  const [showGradeNest, setShowGradeNest] = useState(true)
+  const [nativeNestVisible,setNativeNestVisible]=useState(false)
+  useEffect(()=>{
+    if(!clothcraftHybrid)return undefined
+    const receive=event=>setNativeNestVisible(Boolean(event.detail?.visible))
+    window.addEventListener('exo-native-nest-state',receive)
+    window.dispatchEvent(new CustomEvent('exo-native-nest-state-request'))
+    return()=>window.removeEventListener('exo-native-nest-state',receive)
+  },[clothcraftHybrid])
+  const [focusedGradePoint,setFocusedGradePoint] = useState(null)
+  const [gradeWorkbenchSection,setGradeWorkbenchSection]=useState('rules')
+  const [gradeRuleClipboard, setGradeRuleClipboard] = useState(null)
   const [exportSelectedPatternOnly, setExportSelectedPatternOnly] = useState(false)
   const [meshExportSignal, setMeshExportSignal] = useState(0)
   const [glbExportSignal, setGlbExportSignal] = useState(0)
@@ -764,10 +1442,12 @@ export default function App() {
   const [resetSignal, setResetSignal] = useState(0)
   const [undoStack, setUndoStack] = useState([])
   const [redoStack, setRedoStack] = useState([])
-  const [saveState, setSaveState] = useState('saved')
+  const [saveState, setSaveState] = useState(projectRestoreBlocked ? 'modified' : 'saved')
   const [stats, setStats] = useState({ vertices: 0, constraints: 0, seams: 0, fasteners: 0, treatments: 0, trims: 0, anchors: 0, manualPins: 0, internal: 0, elapsed: 0, averageStrain: 0, maxStrain: 0, averageEaseCm: 0, averagePressureIndex: 0, maxPressureIndex: 0, contactRatio: 0, tightRatio: 0, looseRatio: 0, backendId: 'browser-pbd', backendFrame: 0, backendElapsedMs: 0, backendError: null })
   const [command, setCommand] = useState('')
-  const [commandResult, setCommandResult] = useState('Ready for garment commands')
+  const [araiOpen, setAraiOpen] = useState(false)
+  const [araiLastPrompt, setAraiLastPrompt] = useState('')
+  const [commandResult, setCommandResult] = useState(projectRestoreNotice || 'Ready for garment commands')
   const [avatarAvailability, setAvatarAvailability] = useState({ 'makehuman-base': true })
   const [clothCraftBusy, setClothCraftBusy] = useState(false)
   const [clothCraftMeshPreview, setClothCraftMeshPreview] = useState(null)
@@ -797,10 +1477,28 @@ export default function App() {
     })
     setCommandResult(`${selected} model is not installed in this build. Restored MakeHuman without changing the garment or measurements.`)
   }, [avatarAvailability, project.avatar?.model])
+  useEffect(() => {
+    if (!clothcraftHybrid) return undefined
+    const nativeApplied = event => {
+      const model = event.detail?.model
+      if (!['makehuman-base', 'clo-thomas'].includes(model)) return
+      mutateProject(next => {
+        next.avatar.model = model
+        next.avatar.name = model === 'clo-thomas' ? 'CLO Thomas' : 'MakeHuman Base'
+      })
+      setCommandResult(`${model === 'clo-thomas' ? 'CLO Thomas' : 'MakeHuman'} now renders in the native 2D and 3D views.`)
+    }
+    window.addEventListener('exo-clothcraft-native-avatar-applied', nativeApplied)
+    return () => window.removeEventListener('exo-clothcraft-native-avatar-applied', nativeApplied)
+  }, [clothcraftHybrid])
   const [transformDraft, setTransformDraft] = useState({ scaleX: 100, scaleY: 100, rotateDeg: 0, slashCm: 4 })
   const importInputRef = useRef(null)
+  const factoryDxfReferenceInputRef = useRef(null)
+  const gradeRuleCsvInputRef = useRef(null)
+  const industrialGradeCsvInputRef = useRef(null)
   const seamlyMeasureInputRef = useRef(null)
   const seamlyPatternInputRef = useRef(null)
+  const svgPatternInputRef = useRef(null)
   const graphicInputRef = useRef(null)
   const fabricTextureInputRef = useRef(null)
   const fabricEvidenceInputRef = useRef(null)
@@ -863,6 +1561,68 @@ export default function App() {
   }
   const endPanelResize = () => { panelDragRef.current = null }
 
+  const updateStudioCustomization = (nextValue,{applyTheme=true}={}) => {
+    const next=normalizeStudioCustomization(nextValue)
+    if(applyTheme){
+      const palette=studioResolvedPalette(next.appearance.theme,next.appearance.panelFinish)
+      next.appearance={...next.appearance,accent:palette.accent,sidebarColor:palette.sidebarColor,panelColor:palette.panelColor}
+    }
+    if(next.appearance.studioColor!==studioCustomization.appearance.studioColor
+      &&next.appearance.backgroundMode===studioCustomization.appearance.backgroundMode){
+      next.appearance.backgroundMode='color'
+    }
+    const workspace=next.workspace
+    const existing=studioCustomization.workspace
+    if(workspace.libraryWidth!==existing.libraryWidth)setLibraryWidth(workspace.libraryWidth)
+    if(workspace.inspectorWidth!==existing.inspectorWidth)setInspectorWidth(workspace.inspectorWidth)
+    if(workspace.objectBrowserHeight!==existing.objectBrowserHeight)setObjectBrowserHeight(workspace.objectBrowserHeight)
+    if(workspace.viewportLayout!==existing.viewportLayout)setViewportLayout(workspace.viewportLayout)
+    if(workspace.viewportSplit!==existing.viewportSplit)setViewportSplit(workspace.viewportSplit)
+    if(workspace.topTabsVisible!==existing.topTabsVisible)setShowTopWorkspaceTabs(workspace.topTabsVisible)
+    if(workspace.objectBrowserVisible!==existing.objectBrowserVisible)setShowObjectBrowser(workspace.objectBrowserVisible)
+    if(next.preferences.showGrid!==studioCustomization.preferences.showGrid)setShow2DGrid(next.preferences.showGrid)
+    if(next.preferences.showGuides!==studioCustomization.preferences.showGuides)setShowSewingGuides(next.preferences.showGuides)
+    setStudioCustomization(next)
+  }
+
+  const resetStudioCustomization = () => {
+    const defaults=normalizeStudioCustomization(DEFAULT_STUDIO_CUSTOMIZATION)
+    updateStudioCustomization(defaults,{applyTheme:false})
+    setLibraryVisible(true)
+    setInspectorVisible(true)
+    setCommandResult('Restored original EXO 3D studio gradient, default lighting and positions, toolbar layout and preferences. Garment geometry unchanged.')
+  }
+  const resetEnvironmentCustomization = () => {
+    const d=DEFAULT_STUDIO_CUSTOMIZATION.appearance
+    updateStudioCustomization({
+      ...studioCustomization,
+      appearance:{...studioCustomization.appearance,
+        backgroundMode:'default',floorMode:'default',environmentPreset:'studio',
+        studioColor:d.studioColor,floorColor:d.floorColor,lightColor:d.lightColor,lightIntensity:d.lightIntensity,
+        lightPositionX:d.lightPositionX,lightPositionY:d.lightPositionY,lightPositionZ:d.lightPositionZ,
+      },
+    },{applyTheme:false})
+    setCommandResult('Restored original gray-gradient studio, key light and neutral illumination. Garment fabric and geometry unchanged.')
+  }
+  useEffect(()=>{
+    try{
+      if(!hadStoredStudioCustomization.current)return
+      const stored=studioCustomization
+      setLibraryWidth(stored.workspace.libraryWidth)
+      setInspectorWidth(stored.workspace.inspectorWidth)
+      setObjectBrowserHeight(stored.workspace.objectBrowserHeight)
+      setViewportLayout(stored.workspace.viewportLayout)
+      setViewportSplit(stored.workspace.viewportSplit)
+      setShowTopWorkspaceTabs(stored.workspace.topTabsVisible)
+      setShowObjectBrowser(true)
+      // Saved workspace preferences must not reopen the shared inspector when
+      // restoring directly into 2D or an active full 2D drafting session.
+      setInspectorVisible(stored.workspace.viewportLayout === '2d' || patternFocusActive ? false : true)
+      setShow2DGrid(stored.preferences.showGrid)
+      setShowSewingGuides(stored.preferences.showGuides)
+    }catch{/* no access to local workspace preferences */}
+  },[])
+
   // Resizable 3D/2D divider is a workspace preference, not garment geometry.
   const beginViewportResize = event => {
     if (event.button !== 0 || !['split','stack'].includes(viewportLayout)) return
@@ -882,6 +1642,7 @@ export default function App() {
 
   const applyWorkspaceProfile = (source, { announce = true } = {}) => {
     const profile = normalizeWorkspaceProfile(source)
+    setPatternFocusActive(profile.patternFocus)
     setActiveSection(profile.section)
     setObjectTab(profile.tab)
     setTool(profile.tool)
@@ -895,6 +1656,12 @@ export default function App() {
     setInspectorVisible(profile.inspectorVisible)
     setViewportLayout(profile.viewportLayout)
     setViewportSplit(profile.viewportSplit)
+    setStudioCustomization(previous=>normalizeStudioCustomization({...previous,workspace:{
+      ...previous.workspace,libraryWidth:profile.libraryWidth,inspectorWidth:profile.inspectorWidth,
+      objectBrowserHeight:profile.objectBrowserHeight,viewportLayout:profile.viewportLayout,
+      viewportSplit:profile.viewportSplit,topTabsVisible:profile.topTabsVisible,
+      objectBrowserVisible:profile.objectBrowserVisible,
+    }}))
     if (announce) setCommandResult(`Applied ${profile.name}. Garment geometry, saved physics and editing history remain unchanged.`)
     return profile
   }
@@ -909,7 +1676,13 @@ export default function App() {
     })
     try {
       localStorage.setItem(WORKSPACE_PROFILE_KEY, JSON.stringify(profile))
-      setCommandResult('Saved custom workspace layout and tool focus separately from the garment document.')
+      const complete=normalizeStudioCustomization({...studioCustomization,workspace:{
+        ...studioCustomization.workspace,libraryWidth,inspectorWidth,objectBrowserHeight,
+        viewportLayout,viewportSplit,topTabsVisible:showTopWorkspaceTabs,
+        objectBrowserVisible:showObjectBrowser,
+      }})
+      localStorage.setItem(STUDIO_SAVED_WORKSPACE_KEY,JSON.stringify(complete))
+      setCommandResult('Saved panel layout, custom toolbar and appearance as a designer workspace snapshot. Garment unchanged.')
     } catch {
       setCommandResult('Could not store this workspace layout; check local browser storage permissions.')
     }
@@ -920,6 +1693,8 @@ export default function App() {
       const source = localStorage.getItem(WORKSPACE_PROFILE_KEY)
       if (!source) throw new Error('No custom layout has been saved')
       applyWorkspaceProfile(JSON.parse(source))
+      const saved=localStorage.getItem(STUDIO_SAVED_WORKSPACE_KEY)
+      if(saved)updateStudioCustomization(JSON.parse(saved),{applyTheme:false})
     } catch (error) {
       setCommandResult(`Unable to restore saved workspace: ${error.message}`)
     }
@@ -953,8 +1728,47 @@ export default function App() {
     }
   }
 
-  const applyGarmentTemplate = (templateId) => {
+  const applyGarmentTemplate = async (templateId, { unsewn = false } = {}) => {
     const next = createTemplateProject(templateId)
+    if (unsewn) {
+      next.name = `${next.name} · Draft outlines`
+      next.seams=[];next.fasteners=[];next.trims=[];next.topstitches=[]
+      for (const piece of next.pieces || []) {
+        piece.notches=[];piece.buttonholes=[];piece.seamAllowance=0
+        piece.edgeSeamAllowances={};piece.internalLines=[];piece.bindings=[]
+      }
+    }
+    if (clothcraftHybrid) {
+      setCommandResult(`Preparing ${next.name} panels and sewing edges for the native 3D workspace…`)
+      try {
+        const prepared=prepareNativePatternExport(next)
+        if(prepared.report.removedSeams)throw Error(`Cannot export: ${prepared.report.removedSeams} sewing relationships touch microscopic cutline edges. Inspect those seams in 2D before converting.`)
+        const bridgeUrl = window.location.port === '5486' ? 'http://127.0.0.1:5485' : window.location.port === '5386' ? 'http://127.0.0.1:5385'
+          : (import.meta.env.VITE_CLOTHCRAFT_BRIDGE_URL || 'http://127.0.0.1:5193')
+        const response = await fetch(`${bridgeUrl}/export`, {
+          method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({document:prepared.document}),
+        })
+        const conversion = await response.json()
+        if (!response.ok || !conversion.ok || !conversion.template?.panels?.length)
+          throw new Error(conversion.error || 'The native converter rejected these pattern pieces')
+        // Capture the authoritative, locally saved native document to retain
+        // its required FittingProject fields and the selected collision avatar.
+        const saved = await requestNativeLibraryProject('capture')
+        await requestNativeLibraryProject('open', {
+          ...saved.project,template:conversion.template,state:null,mesh_signature:null,
+          print_graphics:[],imported_hardware:[],
+        })
+        setViewportLayout('split')
+        setActiveSection('Pattern');setObjectTab('Pattern')
+        const prepNote=prepared.report.reversed.length||prepared.report.removed.length
+          ? ` Normalized ${prepared.report.reversed.length} reversed outlines and ${prepared.report.removed.length} microscopic cutline edges in the exported copy.`:''
+        setCommandResult(`Opened ${next.name} in native 2D + 3D: ${conversion.template.panels.length} editable panels, ${conversion.template.seams.length} sewn-edge relationships.${prepNote} Source drafts remain unchanged; simulate and validate physical fit.`)
+      } catch(error) {
+        setCommandResult(`Could not load ${next.name} into the native editor: ${error.message}`)
+      }
+      return
+    }
     pushUndo(cloneProject(project))
     setProject(next)
     setSelectedPieceId(next.pieces[0]?.id || null)
@@ -964,10 +1778,56 @@ export default function App() {
     setSeamWalkProgress(0.5)
     setGradePreviewSize(next.grading?.baseSize || 'M')
     setTool('select')
+    // Start a newly selected garment in a clean 3D inspection pose. The
+    // transform gizmo appears again as soon as Move/Rotate is chosen.
+    setViewportTool('orbit')
     setRunning(false)
     setAnalysisMode('surface')
     setResetSignal((signal) => signal + 1)
     setCommandResult(`Loaded ${next.name} foundation with ${next.pieces.length} pattern${next.pieces.length === 1 ? '' : 's'} and ${next.seams.length} sewing relationship${next.seams.length === 1 ? '' : 's'}`)
+  }
+  const arrangeCurrentPatternsIn3D = () => {
+    const arranged = arrangePatternProject(project)
+    const classified = arranged.pieces.filter(p=>inferPatternBodyRole(p,arranged)).length
+    if (!classified) {
+      setCommandResult('Name each pattern by position (for example Left Front Leg, Right Back Leg, Front, Back or Sleeve Left), or select a 3D placement role in Pattern properties.')
+      return
+    }
+    mutateProject(next=>{next.pieces=arranged.pieces})
+    setRunning(false);setHasSimulated(false);setArrangementSpread(0)
+    setResetSignal(signal=>signal+1)
+    setViewportLayout('split');setActiveSection('Pattern')
+    setCommandResult(`Arranged ${classified} pattern panels around the avatar with their authored cutlines, ${project.seams.length} sewing edges and assigned fabrics preserved.`)
+  }
+  const openUnsewnPatternTemplate=(templateId)=>{
+    if (clothcraftHybrid) {void applyGarmentTemplate(templateId,{unsewn:true});return}
+    const next=createTemplateProject(templateId)
+    next.name=`${next.name} · Draft outlines`
+    next.seams=[]
+    next.fasteners=[]
+    next.trims=[]
+    next.topstitches=[]
+    next.grading?.sizeLabels&& (next.grading.sizeLabels=[...next.grading.sizeLabels])
+    for(const piece of next.pieces||[]){
+      piece.notches=[]
+      piece.buttonholes=[]
+      piece.seamAllowance=0
+      piece.edgeSeamAllowances={}
+      piece.internalLines=[]
+      piece.bindings=[]
+    }
+    pushUndo(cloneProject(project))
+    touchProject(next)
+    setProject(next)
+    setSelectedPieceId(next.pieces[0]?.id||null)
+    setActiveSection('Pattern')
+    setObjectTab('Pattern')
+    setTool('select')
+    setViewportLayout('2d')
+    setRunning(false)
+    setHasSimulated(false)
+    setLayout2DSignal(n=>n+1)
+    setCommandResult(`Opened ${next.pieces.length} editable, unsewn 2D pattern outlines. Sewing and seam allowance are available later as separate steps.`)
   }
   const correctTeeArmholes = () => {
     const reference = createTemplateProject('tee')
@@ -991,7 +1851,11 @@ export default function App() {
         if (piece.id === 'front' || piece.id === 'back') piece.bindings = cloneProject(corrected.bindings)
         for (const notch of piece.notches || []) {
           const correction = corrected.notches?.find(item => item.id === notch.id)
-          if (correction) { notch.matchGroupId = correction.matchGroupId; notch.matchedSeamId = correction.matchedSeamId }
+          if (correction) {
+            notch.matchGroupId = correction.matchGroupId
+            notch.matchedSeamId = correction.matchedSeamId
+            notch.t = correction.t // physical seam-walk position, not a visual-only group ID
+          }
         }
       }
       next.productionSpec = cloneProject(reference.productionSpec)
@@ -1003,6 +1867,26 @@ export default function App() {
   const gestureStartRef = useRef(null)
 
   const selectedPiece = project.pieces.find((piece) => piece.id === selectedPieceId) || null
+  const importedSelection=selectedObjectForProperties?.source==='imported'||selectedObjectForProperties?.source==='imported-library'
+    ?selectedObjectForProperties:null
+  const importedPlacedRecord=importedSelection?.source==='imported'
+    ?(clothcraftHybrid
+      ?(clothcraftLive?.importedHardware||[]).find(entry=>entry.id===importedSelection.itemId)
+      :project.pieces.find(piece=>piece.id===importedSelection.pieceId)?.importedHardwarePlacements?.find(entry=>entry.id===importedSelection.itemId))
+    :null
+  const importedPlacement=importedPlacedRecord&&clothcraftHybrid?{
+    ...importedPlacedRecord,
+    x:(importedPlacedRecord.positionMm?.[0]||0)/10,
+    y:(importedPlacedRecord.positionMm?.[1]||0)/10,
+    liftMm:importedPlacedRecord.positionMm?.[2]||1,
+    rotationDeg:importedPlacedRecord.rotationDegrees?.[2]||0,
+    widthMm:(importedPlacedRecord.dimensionsMm?.[0]||10)*(importedPlacedRecord.scale?.[0]||1),
+    heightMm:(importedPlacedRecord.dimensionsMm?.[1]||10)*(importedPlacedRecord.scale?.[1]||1),
+    depthMm:(importedPlacedRecord.dimensionsMm?.[2]||3)*(importedPlacedRecord.scale?.[2]||1),
+  }:importedPlacedRecord
+  const importedPanelName=clothcraftHybrid
+    ?clothcraftLive?.panelRefs?.find(item=>item.id===(importedPlacedRecord?.panel||clothcraftLive?.selection?.panelId))?.name||clothcraftLive?.panelRefs?.[0]?.name||''
+    :project.pieces.find(item=>item.id===importedSelection?.pieceId)?.name||selectedPiece?.name||''
   const draftLine = selectedDraftEdge&&project.pieces.find(piece=>piece.id===selectedDraftEdge.pieceId)
   const draftLineSelection = draftLine&&selectedDraftEdge.edgeIndex<draftLine.points.length
     ? {kind:'line',source:'exo',panelId:draftLine.id,panelName:draftLine.name,
@@ -1017,12 +1901,43 @@ export default function App() {
     [project, gradePreviewSize],
   )
   const productionPreflight = useMemo(() => inspectProduction(project), [project])
+  // Run this heavier, independent all-size audit only in production mode.
+  // An ordinary structural preflight may pass while stitch lengths diverge
+  // across XS–XXL; neither audit alone is manufacturer certification.
+  const industrialPatternAudit = useMemo(() => activeSection === 'Production' ? inspectIndustrialPatterns(project) : null, [project,activeSection])
+  const industrialCutlineAudit = useMemo(() => activeSection === 'Production' ? inspectGradedCutlines(project) : null, [project,activeSection])
+  const [deepProductionAudit,setDeepProductionAudit]=useState(null)
+  const [deepProductionBusy,setDeepProductionBusy]=useState(false)
+  useEffect(()=>{setDeepProductionAudit(null)},[project])
+  const runDeepProductionAudit=async()=>{
+    if(deepProductionBusy)return
+    setDeepProductionBusy(true)
+    // Yield a frame for the status UI before running bounded verification.
+    await new Promise(resolve=>window.setTimeout(resolve,25))
+    try{
+      const cad=inspectIndustrialCadInterchange20261028(project)
+      const marker=inspectIndustrialMarkerCutWorkflow20261028(project,{maxCandidates:30000})
+      setDeepProductionAudit({cad,marker,revision:project.revision??null})
+    }catch(error){setDeepProductionAudit({error:String(error?.message||error),revision:project.revision??null})}
+    finally{setDeepProductionBusy(false)}
+  }
+  const gradedGeometryAudit = useMemo(() => activeSection === 'Production' ? auditGradedSizeRunGeometry(project) : null, [project,activeSection])
+  const gradedJunctionAudit = useMemo(() => {
+    if(activeSection!=='Production')return null
+    if(project.templateId!=='jeans-501'&&!project.gradingJunctionConstraints?.length)return null
+    try{return inspectGradedSeamJunctions(project,{
+      junctions:project.templateId==='jeans-501'?JEANS501_YOKE_JUNCTIONS:project.gradingJunctionConstraints,
+    })}catch(error){return {status:'blocked',blockers:1,checks:[],issues:[{code:'JUNCTION_AUDIT_FAILED',scope:'Grading',message:error.message}]}}
+  },[project,activeSection])
   const productionCosts = useMemo(() => buildFabricCostRun(project), [project])
   const displayProject = activeSection === 'Production' ? productionProject : project
   const gradeNestProjects = useMemo(() => {
-    if (activeSection !== 'Production' || !showGradeNest) return []
+    // The full on-canvas 2D nest owns its own graded geometry cache; avoid
+    // grading every piece twice (once for the old selected-only nest).
+    if (viewportLayout === '2d') return []
+    if ((activeSection !== 'Production' && viewportLayout !== '2d') || !showGradeNest) return []
     return (project.grading?.sizes || []).map((size) => gradeProject(project, size))
-  }, [activeSection, showGradeNest, project])
+  }, [activeSection, viewportLayout, showGradeNest, project])
   const fabricMarkers = useMemo(() => buildFabricMarkers(
     productionProject,
     productionProject.markerSettings?.fabricWidthCm ?? 150,
@@ -1060,14 +1975,28 @@ export default function App() {
     setRedoStack([])
   }
 
-  const mutateProject = (mutator, { record = true } = {}) => {
+  const mutateProject = (mutator, { record = true, verifiedAllowanceReapply = null } = {}) => {
     const before = cloneProject(project)
-    const next = cloneProject(project)
-    mutator(next)
-    syncLinkedMirrors(next)
-    touchProject(next)
+    const draft = cloneProject(project)
+    mutator(draft)
+    syncLinkedMirrors(draft)
+    let finished
+    try {
+      // Reconcile source-linked size rules while this edit is still only a
+      // candidate. Either grade or allowance failure aborts the whole Undo
+      // transaction, including the original source edit.
+      const graded=applyModarisSizeLinkedGradeMutation(before,draft)
+      finished=finalizeIndustrialAllowanceMutation20261027(before,graded.project,{
+        verifiedAllowanceReapply,verifiedGradeDraft:graded.validation.linked?draft:null,
+      })
+    } catch (error) {
+      setCommandResult(`Linked 2D dependency edit blocked: ${error.message}. The source garment and Undo history remain unchanged.`)
+      throw error
+    }
+    if(finished.reactivelyReapplied)
+      setCommandResult(`Regenerated seam-value targets from ${finished.changedSources.length} linked source edge(s). Review size-run cutlines before production.`)
     if (record) pushUndo(before)
-    setProject(next)
+    setProject(finished.project)
     setSaveState('modified')
   }
 
@@ -1075,11 +2004,64 @@ export default function App() {
   // allowlist. Unknown fields, wrong object IDs and out-of-range inputs
   // are rejected *before* the undoable garment transaction is created.
   const editCloObjectProperty=(selection,field,value)=>{
-    if(clothcraftHybrid)return{ok:false,error:'Native garment properties use the separate Rust API'}
+    // V2's EXO draft hardware annotations retain their own typed editor while
+    // Rust runs cloth physics. These edits never masquerade as Rust commands.
+    const draftHardware=['button','buttonhole','zipper','binding','fastener','topstitch','puckering']
+    if(clothcraftHybrid && !(selection?.source==='draft'&&draftHardware.includes(String(selection.type).toLowerCase())))
+      return{ok:false,error:'Native garment properties use the separate Rust API'}
     const result=validateCloDraftProperty(project,selection,field,value)
     if(!result.ok){setCommandResult(result.error);return result}
-    mutateProject(next=>applyCloDraftProperty(next,selection,field,result.value))
+    mutateProject(next=>{
+      applyCloDraftProperty(next,selection,field,result.value)
+      if(selection.type?.toLowerCase()==='button'&&field==='hardwarePresetId'){
+        const preset=getHardwarePreset(result.value)
+        const target=resolveCloDraftTarget(next,selection)
+        if(target&&preset)Object.assign(target,buttonValuesFromPreset(preset,resolveHardwareStyle(next,preset.id)))
+      }
+      if(selection.type?.toLowerCase()==='buttonhole'&&field==='hardwarePresetId'){
+        const preset=getHardwarePreset(result.value)
+        const target=resolveCloDraftTarget(next,selection)
+        if(target&&preset)Object.assign(target,{
+          lengthCm:Number(preset.dimensionsMm?.length??18)/10,
+          widthCm:Number(preset.dimensionsMm?.openingWidth??preset.dimensionsMm?.stitchedWidth??2)/10,
+          openingShape:preset.openingShape==='keyhole'?'keyhole':'horizontal',
+          eyeDiameterMm:Number(preset.dimensionsMm?.eyeDiameter??5),
+          stitchBorderWidthMm:Number(preset.dimensionsMm?.stitchBorderWidth??preset.dimensionsMm?.stitchedWidth??2.4),
+          threadColor:preset.pbr?.baseColor||'#575757',
+        })
+      }
+      if(selection.type?.toLowerCase()==='zipper'){
+        const target=resolveCloDraftTarget(next,selection)
+        if(target&&field==='hardwarePresetId'){
+          const preset=getHardwarePreset(result.value)
+          if(preset){
+            const retained={id:target.id,edgeIndex:target.edgeIndex,offsetCm:target.offsetCm,
+              pairedSeamId:target.pairedSeamId,pairedSeamPreviousType:target.pairedSeamPreviousType,sliderFraction:target.sliderFraction,
+              bottomSliderFraction:preset.twoWay?(target.bottomSliderFraction??0):0,
+              startExtensionMm:target.startExtensionMm,endExtensionMm:target.endExtensionMm,
+              fastened:target.fastened,openFrom:target.openFrom}
+            Object.assign(target,zipperValuesFromPreset(preset),retained)
+          }
+        }
+        if(target&&field==='edgeIndex'&&target.pairedSeamId&&!zipperCompatibleSeams(next,selection.pieceId,target.edgeIndex).some(seam=>seam.id===target.pairedSeamId)){
+          restoreZipperSeamIfUnused(next,target)
+          delete target.pairedSeamId
+          delete target.pairedSeamPreviousType
+        }
+        if(target)syncPairedZipperSeam(next,target)
+      }
+    })
     setCommandResult(`${selection.name||selection.type} · ${field} updated. Undo is available.`)
+    return result
+  }
+  const editHardwareLibraryStyle=(presetId,field,value)=>{
+    const result=validateHardwareStyleEdit(project,presetId,field,value)
+    if(!result.ok){setCommandResult(result.error);return result}
+    mutateProject(next=>{
+      next.hardwareStyles={...(next.hardwareStyles||{}),
+        [presetId]:{...resolveHardwareStyle(next,presetId),[field]:result.value}}
+    },{record:false})
+    setCommandResult(`${getHardwarePreset(presetId)?.name||'Button'} · ${field} updated in project library style.`)
     return result
   }
   const editNativeProperty=({kind,id,field,value,revision})=>{
@@ -1102,6 +2084,38 @@ export default function App() {
       window.dispatchEvent(new CustomEvent('exo-clothcraft-edit-property',{
         detail:{requestId,kind,id,field,value,revision}
       }))
+    })
+  }
+  // A single-fabric preset is distinct from the native whole-garment JSON.
+  // A draft import changes one existing fabric and remains undoable; native
+  // physical parameters are delegated to the Rust command boundary.
+  const importFabricPreset=({kind,id,entry})=>{
+    if(!id||!entry)return Promise.resolve({ok:false,error:'Select a fabric before opening a preset'})
+    if(kind==='draft'){
+      if(clothcraftHybrid)return Promise.resolve({ok:false,error:'Draft fabric import is unavailable in native mode'})
+      if(!Object.hasOwn(project.fabrics||{},id))return Promise.resolve({ok:false,error:'Selected fabric no longer exists'})
+      mutateProject(next=>{next.fabrics[id]={...next.fabrics[id],...entry,id}})
+      setSelectedFabricId(id)
+      setCommandResult(`Imported ${entry.name} into selected fabric; Undo restores its previous values.`)
+      return Promise.resolve({ok:true})
+    }
+    if(!clothcraftHybrid||kind!=='native')return Promise.resolve({ok:false,error:'Unknown fabric file target'})
+    return new Promise(resolve=>{
+      const requestId='exo-fabric-import-'+Date.now()+'-'+Math.random().toString(36).slice(2)
+      const receive=event=>{
+        if(event.detail?.requestId!==requestId)return
+        window.clearTimeout(timer)
+        window.removeEventListener('exo-clothcraft-fabric-preset-result',receive)
+        if(event.detail?.ok){
+          const nextId=event.detail.fabricId||id
+          setSelectedObjectForProperties({source:'native',type:'fabric',id:nextId,name:entry.name})
+          setCommandResult(`Imported ${entry.name} into native cloth fabric; garment undo is available.`)
+        }else setCommandResult(event.detail?.error||'Native fabric import failed')
+        resolve({ok:Boolean(event.detail?.ok),error:event.detail?.error})
+      }
+      window.addEventListener('exo-clothcraft-fabric-preset-result',receive)
+      const timer=window.setTimeout(()=>receive({detail:{requestId,ok:false,error:'Fabric import timed out; check native workspace state'}}),30000)
+      window.dispatchEvent(new CustomEvent('exo-clothcraft-import-fabric-preset',{detail:{requestId,id,entry}}))
     })
   }
 
@@ -1151,27 +2165,481 @@ export default function App() {
   }
 
   const saveProject = () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(project))
-    setSaveState('saved')
+    try {
+      writeSavedProject(localStorage, STORAGE_KEY, BACKUP_STORAGE_KEY, project)
+      projectRestoreBlocked = false
+      setSaveState('saved')
+      setCommandResult('Project saved. Previous valid revision kept as recovery backup.')
+    } catch (error) {
+      setSaveState('modified')
+      setCommandResult(`Save failed: ${error.message}`)
+    }
   }
 
+  // The File Library stores complete, editable snapshots separately from the
+  // current autosave and from Rust's live workspace. Save operations never
+  // overwrite unrelated named projects.
+  const remoteLibraryEntries = projects => (projects||[]).map(item=>({
+    id:`team:${item.id}`,sharedProjectId:item.id,name:item.name||'Shared project',
+    category:'garment',status:'working',createdAt:item.updatedAt,updatedAt:item.updatedAt,
+    description:'Team project · shared versioned snapshot',currentVersion:item.revision,
+    revisions:[],attachments:[],collection:'',tags:['Shared'],
+  }))
+  const refreshFileLibrary = async () => {
+    const [records,collections] = await Promise.all([listLibraryProjects(),listLibraryCollections()])
+    const entries = await Promise.all(records.map(async record => {
+      const [revisions,attachments]=await Promise.all([listLibraryRevisions(record.id),listLibraryAttachments(record.id)])
+      return {...record,collectionId:record.collection||'',revisions,attachments,
+        measurements:record.metadata?.measurements||{},previewUrl:record.previewUrl||''}
+    }))
+    setFileLibraryEntries([...entries,...remoteLibraryEntries(fileCollaboration.projects)])
+    setFileLibraryCollections(collections)
+    return entries
+  }
+  const refreshFileCollaboration = async () => {
+    try {
+      const state=await collaboration.state()
+      let profile=state.profile
+      const designerName=studioCustomization.profile.displayName||studioCustomization.profile.brandName
+      const personalAvatar=studioCustomization.profile.avatarDataUrl
+      const syncLocalName=designerName&&(!profile?.displayName||profile.displayName===profile.userId)
+      const syncLocalAvatar=personalAvatar&&personalAvatar.length<=180000&&personalAvatar!==profile?.avatarDataUrl
+      if(syncLocalName||syncLocalAvatar) {
+        profile=(await collaboration.updateProfile({displayName:syncLocalName?designerName:profile?.displayName||designerName||'Designer',bio:studioCustomization.profile.bio||'',...(syncLocalAvatar?{avatarDataUrl:personalAvatar}:{})})).profile
+      }
+      const teams=state.teams||[],projects=state.projects||[]
+      setFileCollaboration(previous=>({...previous,online:true,error:'',profile,teams,projects,
+        shares:state.shares||[],activeTeamId:previous.activeTeamId&&teams.some(team=>team.id===previous.activeTeamId)
+          ?previous.activeTeamId:teams[0]?.id||''}))
+      setFileLibraryEntries(previous=>[
+        ...previous.filter(entry=>!entry.sharedProjectId),...remoteLibraryEntries(projects),
+      ])
+      return state
+    } catch(error) {
+      setFileCollaboration(previous=>({...previous,online:false,error:'Collaboration server unavailable. Your personal files remain accessible.'}))
+      return null
+    }
+  }
+  const openFileLibrary = async () => {
+    setOpenMenu(null)
+    setFileLibraryOpen(true)
+    setFileLibraryError('')
+    setFileLibraryLoading(true)
+    try { await ensurePreservedGarmentsInLibrary();await refreshFileLibrary(); await refreshFileCollaboration() }
+    catch(error){setFileLibraryError(error.message||'Unable to read saved projects')}
+    finally{setFileLibraryLoading(false)}
+  }
+  const captureCurrentLibraryDocument = async () => {
+    const engine=clothcraftHybrid?'native':'legacy'
+    const data=clothcraftHybrid?await requestNativeLibraryProject('capture'):null
+    const snapshot=clothcraftHybrid?data.project:cloneProject(project)
+    if(engine==='legacy')validateSavedProject(snapshot)
+    if(engine==='native'&&!snapshot?.template?.panels)throw Error('The native editor returned an incomplete save')
+    const name=clothcraftHybrid?data.name:project.name
+    // Prefer a live camera frame when WebGL supports readback. Fall back to
+    // authored 2D geometry: every preview remains grounded in saved patterns.
+    const previewUrl=captureVisibleCanvasPreview()||projectPatternPreview(snapshot,engine)
+    return {engine,snapshot,name,previewUrl}
+  }
+  const archiveCurrentProject = async ({name,status='working',category='garment',collectionId='',notes=''}) => {
+    const data=await captureCurrentLibraryDocument()
+    const details=data.engine==='native'?data.snapshot.template:data.snapshot
+    const panels=data.engine==='native'?details.panels:details.pieces
+    const fabrics=data.engine==='native'?details.fabrics:Object.values(details.fabrics||{})
+    const saved=await saveLibraryProject({name:name||data.name,status,category,collection:collectionId||'',notes,
+      snapshot:data.snapshot,snapshotFormat:data.engine,previewUrl:data.previewUrl,
+      metadata:{panels:panels?.length||0,seams:(details.seams||[]).length,
+        measurements:details.measurements||details.customMeasurements||{},sourceEngine:data.engine},
+      fabricBOM:(Array.isArray(fabrics)?fabrics:[]).map(f=>({id:f.id,name:f.name||f.id,composition:f.composition||'',color:f.color||''})),
+      specs:{size:details.grading?.baseSize||'',sourceProjectId:details.id||''}})
+    setFileLibraryCurrentId(saved.id)
+    await refreshFileLibrary()
+    return saved
+  }
+  const openSavedFileRecord = async (entry,overrideSnapshot=null,overrideFormat=null) => {
+    try {
+      const sharedId=entry.sharedProjectId||(String(entry.id).startsWith('team:')?String(entry.id).slice(5):null)
+      const shared=sharedId?await collaboration.snapshot(sharedId):null
+      const record=sharedId?{id:entry.id,name:entry.name||'Shared garment',
+        snapshot:shared?.snapshot?.project,snapshotFormat:shared?.snapshot?.snapshotFormat,currentVersion:shared?.revision}:await getLibraryProject(entry.id)
+      if(!record?.snapshot)throw Error('This file has no saved garment snapshot')
+      const format=overrideFormat||record.snapshotFormat||'legacy'
+      const snapshot=overrideSnapshot||record.snapshot
+      if((format==='native')!==clothcraftHybrid){
+        if(overrideSnapshot)throw Error('Open this project in its matching editor first, then select the earlier revision')
+        sessionStorage.setItem('exo.fileLibrary.pendingOpen',record.id)
+        const url=new URL(window.location.href)
+        url.searchParams.set('engine',format==='native'?'clothcraft':'legacy')
+        window.location.assign(url.toString())
+        return
+      }
+      if(format==='native')await requestNativeLibraryProject('open',snapshot)
+      else {
+        validateSavedProject(snapshot)
+        pushUndo(cloneProject(project))
+        setProject(cloneProject(snapshot))
+        setSelectedPieceId(snapshot.pieces?.[0]?.id||null)
+        setRunning(false)
+        projectRestoreBlocked=false
+      }
+      setFileLibraryCurrentId(record.id)
+      if(sharedId) setFileCollaboration(previous=>({...previous,activity:[{action:`Opened shared revision ${shared.revision}`,createdAt:new Date().toISOString()},...previous.activity].slice(0,25)}))
+      setFileLibraryOpen(false)
+      setFileLibraryError('')
+      setCommandResult(`Opened ${record.name} from File Library · V${record.currentVersion||1}`)
+      return true
+    }catch(error){setFileLibraryError(error.message||'Saved project could not be opened');return false}
+  }
+  const previousTeeMigrationRef=useRef(false)
+  useEffect(()=>{
+    // One-time local handoff requested for this desktop workspace: preserve
+    // the exact live 501 before reopening the user's previous T-shirt. Never
+    // do this to a different garment or repeat after the first successful run.
+    if(!clothcraftHybrid||previousTeeMigrationRef.current||!clothcraftLive?.name||clothcraftLive.busy)return
+    if(!/501|denim|jeans/i.test(clothcraftLive.name)||Number(clothcraftLive.panels)<20)return
+    const key='exo.techpack-preserved-denim-switched-to-tee.20261025'
+    try{if(localStorage.getItem(key)==='done')return}catch{return}
+    previousTeeMigrationRef.current=true
+    void (async()=>{
+      await ensurePreservedGarmentsInLibrary()
+      const captured=await captureCurrentLibraryDocument()
+      const live=captured.snapshot
+      if(captured.engine!=='native'||!Array.isArray(live?.template?.panels)||live.template.panels.length<20||
+        !/501|denim|jeans/i.test(live.template.name||''))throw Error('The active garment changed; preserved backup retained, no switch performed')
+      const record=await getLibraryProject(PRESERVED_DENIM_LIBRARY_ID)
+      if(!record||record.snapshotFormat!=='native')throw Error('Preserved denim record is missing')
+      // New revision of the preserved 501 project; never replace the earlier
+      // archived version or an unrelated saved user project.
+      await saveLibraryProject({id:PRESERVED_DENIM_LIBRARY_ID,snapshot:live,snapshotFormat:'native',
+        notes:'Captured actual active 501 denim project immediately before opening the previous T-shirt',
+        label:'Live denim handoff',previewUrl:captured.previewUrl})
+      const tee=await getLibraryProject(PRESERVED_TSHIRT_LIBRARY_ID)
+      if(!tee?.snapshot?.template?.panels||tee.snapshotFormat!=='native')throw Error('Previous T-shirt snapshot unavailable; denim is safely stored')
+      await requestNativeLibraryProject('open',tee.snapshot)
+      localStorage.setItem(key,'done')
+      setFileLibraryCurrentId(PRESERVED_TSHIRT_LIBRARY_ID)
+      setCommandResult('Preserved 501 denim as a reopenable project in File Library. Opened the previous EXO T-shirt.')
+      await refreshFileLibrary()
+    })().catch(error=>{
+      setFileLibraryError(`T-shirt handoff was not completed; original garment unchanged: ${error.message}`)
+    }).finally(()=>{previousTeeMigrationRef.current=false})
+  },[clothcraftHybrid,clothcraftLive?.name,clothcraftLive?.panels,clothcraftLive?.busy])
+  const updateSavedFileRecord = async (id,changes) => {
+    await saveLibraryProject({id,...changes,...('collectionId'in changes?{collection:changes.collectionId||''}:{})})
+    await refreshFileLibrary()
+  }
+  const saveFileRevision = async (id,{label='',notes=''}) => {
+    if(fileLibraryCurrentId!==id)throw Error('Open this saved project before creating its next sample version')
+    const capture=await captureCurrentLibraryDocument()
+    const record=await getLibraryProject(id)
+    if(record?.snapshotFormat!==capture.engine)throw Error('The current editor does not match this saved project')
+    await addLibraryRevision(id,{snapshot:capture.snapshot,snapshotFormat:capture.engine,notes,label})
+    await saveLibraryProject({id,previewUrl:capture.previewUrl})
+    await refreshFileLibrary()
+  }
+  const restoreSavedFileRevision = async (entry,revision) => {
+    try {
+      const saved=await getLibraryRevision(revision.id)
+      if(!saved||saved.projectId!==entry.id)throw Error('That revision is missing')
+      const opened=await openSavedFileRecord(entry,saved.snapshot,saved.snapshotFormat)
+      if(opened)setCommandResult(`Opened ${revision.label||'saved revision'} from ${entry.name}. Save a new version to retain these changes.`)
+    }catch(error){setFileLibraryError(error.message||'Unable to restore version')}
+  }
+  const uploadFileToLibrary = async (id,file,{category='other'}={}) => {
+    await saveLibraryAttachment(id,{blob:file,name:file.name,category,mimeType:file.type})
+    await refreshFileLibrary()
+  }
+  const removeLibraryAttachment = async (id,attachmentId) => {
+    if(!window.confirm('Remove this linked file from the project archive?'))return
+    await deleteLibraryAttachment(attachmentId)
+    await refreshFileLibrary()
+  }
+  const downloadLibraryFile = async (id,attachment) => {
+    const item=await retrieveLibraryAttachment(attachment.id)
+    const url=URL.createObjectURL(item.blob),a=document.createElement('a')
+    a.href=url;a.download=item.name;a.click()
+    window.setTimeout(()=>URL.revokeObjectURL(url),10000)
+  }
+  const exportFileLibrary = async () => {
+    const backup=await exportLibraryBackup()
+    const url=URL.createObjectURL(new Blob([JSON.stringify(backup)],{type:'application/json'})),a=document.createElement('a')
+    a.href=url;a.download=`exo-file-library-${new Date().toISOString().slice(0,10)}.json`;a.click()
+    window.setTimeout(()=>URL.revokeObjectURL(url),10000)
+  }
+  const importFileLibrary = async file => {
+    const backup=JSON.parse(await file.text())
+    await importLibraryBackup(backup,{conflict:'copy'})
+    await refreshFileLibrary()
+  }
+  const fileLibraryImportRef=React.useRef(null)
+  const chooseFileLibraryBackup=()=>fileLibraryImportRef.current?.click()
+  const importChosenFileLibraryBackup=async event=>{
+    const file=event.target.files?.[0]
+    event.target.value=''
+    if(!file)return
+    try{await importFileLibrary(file);setFileLibraryError('')}
+    catch(error){setFileLibraryError(error.message||'Library backup could not be imported')}
+  }
+  const sharedIdForLibraryItem=id=>String(id).startsWith('team:')?String(id).slice(5):readSharedProjectMapping()[id]?.remoteId||''
+  const makeTeamForSharing=async(name,existingTeamId='')=>{
+    if(existingTeamId)return existingTeamId
+    const current=await collaboration.teams()
+    if(current.teams?.[0])return current.teams[0].id
+    return (await collaboration.createTeam(name||'My design studio')).team.id
+  }
+  const publishLibraryRecordToTeam=async(id,teamId,{remember=true}={})=>{
+    const record=await getLibraryProject(id)
+    if(!record?.snapshot)throw Error('Save this project to File Library before sharing it')
+    const cached=remember?readSharedProjectMapping()[id]:null
+    if(cached?.remoteId&&cached.teamId===teamId)return cached.remoteId
+    const created=await collaboration.createProject({teamId,name:record.name||'Garment project'})
+    const remoteId=created.project.id
+    const published=await collaboration.publish(remoteId,0,{name:record.name,sourceLibraryId:id,
+      snapshotFormat:record.snapshotFormat||'legacy',project:record.snapshot})
+    if(remember)updateSharedProjectMapping(id,{remoteId,teamId,revision:published.revision})
+    return remoteId
+  }
+  const watchSharedLibraryProject=async localId=>{
+    const remoteId=sharedIdForLibraryItem(localId)
+    if(remoteId===collaborationRoomId.current && collaborationRoomAbort.current&&!collaborationRoomAbort.current.signal.aborted) {
+      setFileCollaboration(previous=>({...previous,selectedLocalId:localId}))
+      return
+    }
+    collaborationRoomAbort.current?.abort()
+    collaborationRoomId.current=''
+    setFileCollaboration(previous=>({...previous,selectedLocalId:localId,comments:[],presence:[],members:[],revisionHistory:[]}))
+    if(!remoteId||!fileCollaboration.online)return
+    if(!collaborationSessionId.current)collaborationSessionId.current=crypto.randomUUID()
+    const sessionId=collaborationSessionId.current
+    const controller=new AbortController()
+    collaborationRoomAbort.current=controller
+    collaborationRoomId.current=remoteId
+    controller.signal.addEventListener('abort',()=>{
+      window.clearInterval(heartbeat)
+      void leaveProjectPresence(remoteId,sessionId)
+      if(collaborationRoomId.current===remoteId)collaborationRoomId.current=''
+    },{once:true})
+    let heartbeat
+    const pullComments=async()=>{
+      const payload=await collaboration.comments(remoteId)
+      if(!controller.signal.aborted)setFileCollaboration(previous=>({...previous,
+        comments:(payload.comments||[]).map(item=>{
+          const author=previous.members.find(member=>member.userId===item.authorId)?.profile
+          return {...item,targetId:localId,body:item.text,
+            avatarDataUrl:author?.avatarDataUrl,
+            authorName:author?.displayName|| (item.authorId===previous.profile?.userId?previous.profile?.displayName||'You':item.authorId)}
+        })}))
+    }
+    await pullComments()
+    if(controller.signal.aborted)return
+    const pullPeopleAndHistory=async()=>{
+      const [members,history]=await Promise.all([collaboration.members(remoteId),collaboration.history(remoteId)])
+      if(controller.signal.aborted)return
+      setFileCollaboration(previous=>({...previous,
+        members:members.members||[],
+        comments:previous.comments.map(item=>{
+          const author=members.members?.find(person=>person.userId===item.authorId)?.profile
+          return author?{...item,authorName:author.displayName||item.authorName,avatarDataUrl:author.avatarDataUrl}:item
+        }),
+        revisionHistory:(history.history||[]).map(item=>({
+          ...item,authorProfile:members.members?.find(person=>person.userId===item.authorId)?.profile,
+        })),
+      }))
+    }
+    await pullPeopleAndHistory()
+    if(controller.signal.aborted)return
+    const onlineMembers=members=>(members||[]).filter(person=>person.online).map(person=>({id:person.userId,displayName:person.profile?.displayName||person.userId,avatarDataUrl:person.profile?.avatarDataUrl,role:person.role,online:true}))
+    const present=await collaboration.presence(remoteId,sessionId)
+    if(controller.signal.aborted){void leaveProjectPresence(remoteId,sessionId);return}
+    if(!controller.signal.aborted)setFileCollaboration(previous=>({...previous,presence:onlineMembers(present.members)}))
+    heartbeat=window.setInterval(()=>{if(!controller.signal.aborted)void collaboration.presence(remoteId,sessionId).catch(()=>{})},25000)
+    void followProjectEvents(remoteId,event=>{
+      if(controller.signal.aborted)return
+      if(event.type==='comment')void pullComments().catch(()=>{})
+      if(event.type==='presence')setFileCollaboration(previous=>({...previous,presence:onlineMembers(event.data.members),members:event.data.members||previous.members}))
+      if(event.type==='membership'||event.type==='revision')void pullPeopleAndHistory().catch(()=>{})
+      if(event.type==='revision')void refreshFileCollaboration()
+      if(event.type==='revision'||event.type==='comment')setFileCollaboration(previous=>({...previous,activity:[{action:event.type==='revision'?'New shared garment revision':'New comment',createdAt:new Date().toISOString()},...previous.activity].slice(0,25)}))
+    },controller.signal).catch(error=>{if(!controller.signal.aborted)setFileCollaboration(previous=>({...previous,error:`Live project updates disconnected: ${error.message}`}))})
+  }
+  const handleFileCollaborationAction=async(action,payload={})=>{
+    if(action==='profile.settings'){
+      setStudioSettingsTab('profile')
+      setStudioSettingsOpen(true)
+      return
+    }
+    if(action==='profile.update'){
+      const displayName=String(payload.displayName||'').trim()
+      if(!displayName)throw Error('Enter a designer name')
+      const avatarUpdate=typeof payload.avatarDataUrl==='string'&&payload.avatarDataUrl.startsWith('data:image/')?{avatarDataUrl:payload.avatarDataUrl}:{}
+      if(fileCollaboration.online)await collaboration.updateProfile({displayName,bio:studioCustomization.profile.bio||'',...avatarUpdate})
+      setStudioCustomization(previous=>normalizeStudioCustomization({...previous,profile:{...previous.profile,displayName,...avatarUpdate}}))
+      setFileCollaboration(previous=>({...previous,profile:{...previous.profile,displayName,...avatarUpdate}}))
+      return
+    }
+    if(!fileCollaboration.online)throw Error('Start the local collaboration service to share and comment with teammates')
+    if(action==='team.create'){
+      const result=await collaboration.createTeam(String(payload.name||'').trim())
+      setFileCollaboration(previous=>({...previous,activeTeamId:result.team.id}))
+    } else if(action==='team.select'){
+      if(!fileCollaboration.teams.some(team=>team.id===payload.teamId))throw Error('Team is not available')
+      setFileCollaboration(previous=>({...previous,activeTeamId:payload.teamId}))
+      return
+    } else if(action==='project.select'){
+      await watchSharedLibraryProject(payload.targetId)
+      return
+    } else if(action==='share.create'){
+      const kind=payload.targetType
+      let targetType='project',targetId=''
+      if(kind==='project'){
+        if(String(payload.targetId).startsWith('team:'))targetId=sharedIdForLibraryItem(payload.targetId)
+        else {
+          const preferred=fileCollaboration.activeTeamId
+          const teamId=await makeTeamForSharing(studioCustomization.profile.brandName||'My design studio',preferred)
+          targetId=await publishLibraryRecordToTeam(payload.targetId,teamId)
+        }
+      }else if(kind==='collection'||kind==='library'){
+        const collection=kind==='collection'?fileLibraryCollections.find(item=>item.id===payload.targetId):null
+        if(kind==='collection'&&!collection)throw Error('Select a collection to share')
+        const name=kind==='library'?'Shared File Library':`Shared collection · ${collection.name}`
+        const team=(await collaboration.createTeam(name)).team
+        const records=await listLibraryProjects()
+        const selected=kind==='collection'?records.filter(item=>item.collection===collection.id):records
+        for(const record of selected)await publishLibraryRecordToTeam(record.id,team.id,{remember:false})
+        targetType='team';targetId=team.id
+      }else throw Error('Choose a project, collection, or library')
+      const invite=await collaboration.share({targetType,targetId,email:payload.email,permission:payload.permission})
+      setFileCollaboration(previous=>({...previous,lastInviteToken:invite.inviteToken,
+        lastInviteEmail:payload.email,lastInviteTarget:kind,activity:[{action:`Invitation created for ${payload.email}. Copy the token to share it securely; no email was sent.`,createdAt:new Date().toISOString()},...previous.activity].slice(0,25)}))
+    } else if(action==='share.update')await collaboration.updateShare(payload.shareId,payload.permission)
+    else if(action==='share.revoke')await collaboration.revokeShare(payload.shareId)
+    else if(action==='share.redeem')await collaboration.redeemShare(String(payload.inviteToken||'').trim())
+    else if(action==='comment.create'){
+      let remoteId=sharedIdForLibraryItem(payload.targetId)
+      if(!remoteId){const teamId=await makeTeamForSharing(studioCustomization.profile.brandName||'My design studio',fileCollaboration.activeTeamId);remoteId=await publishLibraryRecordToTeam(payload.targetId,teamId)}
+      await collaboration.comment(remoteId,payload.body)
+      await watchSharedLibraryProject(payload.targetId)
+    } else if(action==='snapshot.publish'){
+      const id=payload.targetId,remoteId=sharedIdForLibraryItem(id)
+      if(!remoteId)throw Error('Share this saved project first to create a team copy')
+      const isRemote=String(id).startsWith('team:')
+      const localRecord=isRemote?null:await getLibraryProject(id)
+      const captured=fileLibraryCurrentId===id?await captureCurrentLibraryDocument():null
+      if(!captured&&!localRecord?.snapshot)throw Error('Open the shared project before publishing changes')
+      const mapping=readSharedProjectMapping()[id]
+      const expectedRevision=isRemote?(fileCollaboration.projects.find(p=>p.id===remoteId)?.revision??0):(mapping?.revision??0)
+      const published=await collaboration.publish(remoteId,expectedRevision,{name:captured?.name||localRecord?.name,
+        snapshotFormat:captured?.engine||localRecord.snapshotFormat,project:captured?.snapshot||localRecord.snapshot})
+      if(!isRemote)updateSharedProjectMapping(id,{revision:published.revision})
+      setFileCollaboration(previous=>({...previous,activity:[{action:`Published shared garment revision ${published.revision}`,createdAt:new Date().toISOString()},...previous.activity].slice(0,25)}))
+    } else if(action==='snapshot.open'){
+      const id=payload.targetId,remoteId=sharedIdForLibraryItem(id)
+      if(!remoteId)throw Error('This project has no team snapshot')
+      if(String(id).startsWith('team:'))await openSavedFileRecord({id,sharedProjectId:remoteId,name:fileCollaboration.projects.find(item=>item.id===remoteId)?.name})
+      else {
+        const shared=await collaboration.snapshot(remoteId)
+        if(!shared.snapshot?.project)throw Error('Shared project has no garment snapshot')
+        await openSavedFileRecord({id},shared.snapshot.project,shared.snapshot.snapshotFormat)
+        updateSharedProjectMapping(id,{revision:shared.revision})
+      }
+    }else throw Error(`Unknown collaboration action: ${action}`)
+    await refreshFileCollaboration()
+  }
+  useEffect(()=>{void refreshFileCollaboration()},[])
+  // Joining a garment also joins its live presence room, even when the user
+  // never opens the Sharing sidebar. The top-right avatar row follows the
+  // current garment rather than a previously selected library file.
+  useEffect(()=>{
+    if(!fileCollaboration.online)return
+    if(fileLibraryCurrentId)void watchSharedLibraryProject(fileLibraryCurrentId).catch(()=>{})
+  },[fileLibraryCurrentId,fileCollaboration.online])
+  useEffect(()=>{
+    const leave=()=>collaborationRoomAbort.current?.abort()
+    window.addEventListener('pagehide',leave)
+    return()=>{window.removeEventListener('pagehide',leave);leave()}
+  },[])
+  useEffect(()=>{
+    if(sidebarView!=='sharing')return
+    void Promise.all([refreshFileLibrary(),refreshFileCollaboration()])
+  },[sidebarView])
+  const selectFileLibraryAsset=(type,id)=>{
+    if(type==='photoShootSets'){
+      const preset=getPhotoShootSet(id)
+      if(!preset)return
+      setStudioCustomization(previous=>normalizeStudioCustomization({...previous,appearance:{...previous.appearance,
+        environmentPreset:preset.environmentPreset,backgroundMode:'color',studioColor:preset.background,
+        lightColor:preset.lightColor,lightIntensity:preset.lightIntensity,
+        lightPositionX:preset.lightPosition[0],lightPositionY:preset.lightPosition[1],lightPositionZ:preset.lightPosition[2]}}))
+      updateRenderSetting('environmentPreset',preset.environmentPreset)
+      setCommandResult(`Photo shoot set applied: ${preset.name}. Adjust backdrop and lighting in Studio Settings.`)
+      setFileLibraryOpen(false)
+      return
+    }
+    const folders={hardware:'Hardware and Trims',studioSets:'Stage',fabrics:'Fabric'}
+    const catalog={hardware:listHardwarePresets(),studioSets:listStagePresets(),fabrics:Object.values(FABRIC_PRESETS)}
+    const item=catalog[type]?.find(asset=>(asset.id||asset.name)===id)
+    const category=folders[type]
+    if(!category)return
+    setAssetCategory(category)
+    setLibraryFolder('all')
+    setLibrarySearch(item?.name||'')
+    setLibraryVisible(true)
+    setSidebarView('library')
+    setFileLibraryOpen(false)
+    setActiveSection(type==='studioSets'?'Render':type==='hardware'?'Sewing':'Fabric')
+  }
+  useEffect(()=>{
+    const id=sessionStorage.getItem('exo.fileLibrary.pendingOpen')
+    if(!id)return
+    sessionStorage.removeItem('exo.fileLibrary.pendingOpen')
+    const timer=window.setTimeout(()=>{void openSavedFileRecord({id})},1000)
+    return()=>window.clearTimeout(timer)
+  },[])
+
   useEffect(() => {
+    if(!studioCustomization.preferences.autoSave)return undefined
     const timer = window.setTimeout(() => {
+      if (projectRestoreBlocked) return
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(project))
+        writeSavedProject(localStorage, STORAGE_KEY, BACKUP_STORAGE_KEY, project)
         setSaveState('saved')
       } catch (error) {
         console.warn('Autosave failed', error)
+        setSaveState('modified')
+        setCommandResult(`Autosave failed: ${error.message}`)
       }
     }, 550)
     return () => window.clearTimeout(timer)
-  }, [project])
+  }, [project,studioCustomization.preferences.autoSave])
 
   useEffect(() => {
     const handler = (event) => {
       const editing = Boolean(event.target?.closest?.('input,textarea,select,[contenteditable="true"]'))
       // Let native text fields handle their own editing and undo shortcuts.
       if (editing) return
+      if (event.code === 'Space' && (animationWorkspaceActive || printLayoutActive)) {
+        event.preventDefault()
+        if (animationWorkspaceActive && !event.repeat) window.dispatchEvent(new Event('exo-clothcraft-animation-toggle'))
+        return
+      }
+      if (clothcraftHybrid) {
+        // The embedded Rust workspace owns shortcuts while it has focus. In
+        // V2 chrome (menus, sidebars, palettes) send global shortcuts to that
+        // same native document, never to the hidden legacy project.
+        if(event.defaultPrevented||event.target?.closest?.('.cc-embedded-root'))return
+        const modified=(event.metaKey||event.ctrlKey)&&!event.altKey
+        const key=event.key.toLowerCase()
+        let nativeCommand=null
+        if(modified&&key==='s')nativeCommand='save'
+        else if(modified&&key==='z')nativeCommand=event.shiftKey?'redo':'undo'
+        else if(modified&&key==='y')nativeCommand='redo'
+        else if(!event.metaKey&&!event.ctrlKey&&!event.altKey&&event.code==='Space'&&!event.target?.closest?.('button,[role="button"]'))nativeCommand='toggle-sim'
+        if(nativeCommand){
+          event.preventDefault()
+          window.dispatchEvent(new CustomEvent('exo-clothcraft-command',{detail:nativeCommand}))
+        }
+        return
+      }
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 's') {
         event.preventDefault()
         saveProject()
@@ -1288,7 +2756,11 @@ export default function App() {
       if (offset.rotation) {
         for (const axis of ['X', 'Y', 'Z']) {
           const value = Number(offset.rotation[axis.toLowerCase()])
-          if (Number.isFinite(value)) piece.arrangement3d[`stagingRotation${axis}`] = value
+          if (Number.isFinite(value)) {
+            if(Math.abs(value-Number(piece.arrangement3d[`stagingRotation${axis}`]||0))>1e-6)
+              piece.arrangement3d.userPlacementRotationEdited=true
+            piece.arrangement3d[`stagingRotation${axis}`] = value
+          }
         }
       }
     })
@@ -1310,6 +2782,8 @@ export default function App() {
       if (field.startsWith('stagingOffset')) {
         const manualField = `userPlacementDelta${field.at(-1)}`
         piece.arrangement3d[manualField] = clamp(Number(piece.arrangement3d[manualField] || 0) + (nextValue - previous), -2, 2)
+      } else if(Math.abs(nextValue-previous)>1e-6) {
+        piece.arrangement3d.userPlacementRotationEdited=true
       }
     })
   }
@@ -1324,6 +2798,7 @@ export default function App() {
         piece.arrangement3d[`stagingRotation${axis}`] = 0
         piece.arrangement3d[`userPlacementDelta${axis}`] = 0
       }
+      piece.arrangement3d.userPlacementRotationEdited=false
     })
   }
 
@@ -1360,7 +2835,15 @@ export default function App() {
     }
     mutateProject((next) => {
       const piece = next.pieces.find((item) => item.id === pieceId)
-      if (piece?.points?.[pointIndex] && !piece.locked) piece.points[pointIndex] = point
+      if (piece?.points?.[pointIndex] && !piece.locked) {
+        // A numeric XY edit must not erase persistent vertex metadata such as
+        // grading, source references or IDs when a caller supplies only XY.
+        piece.points[pointIndex] = {
+          ...piece.points[pointIndex],
+          x: point.x,
+          y: point.y,
+        }
+      }
     })
     return true
   }
@@ -1553,27 +3036,24 @@ export default function App() {
 
   const deletePatternPoint = (pieceId, pointIndex) => {
     const piece = project.pieces.find((item) => item.id === pieceId)
-    if (!piece || piece.points.length <= 3) {
-      setCommandResult('A closed pattern needs at least three points.')
+    let deletion
+    try {
+      deletion = planDraftPointDeletion(piece, pointIndex)
+    } catch (error) {
+      setCommandResult(error.message)
       return
     }
-    const count = piece.points.length
-    const previousEdge = (pointIndex - 1 + count) % count
+    const count = deletion.count
+    const previousEdge = deletion.previous
     const currentEdge = pointIndex
     if (edgeIsSewn(pieceId, previousEdge) || edgeIsSewn(pieceId, currentEdge)) {
       setCommandResult('Unsew the adjacent edge before deleting this point.')
       return
     }
-    if ((piece.notches || []).some((notch) => notch.edgeIndex === previousEdge || notch.edgeIndex === currentEdge)) {
-      setCommandResult('Move or remove the notch on an adjacent edge before deleting this point.')
-      return
-    }
-
     mutateProject((next) => {
       const target = next.pieces.find((item) => item.id === pieceId)
       if (!target || target.points.length <= 3) return
       const oldCount = target.points.length
-      const oldCurves = { ...(target.curves || {}) }
       const oldEdgeAllowances = { ...(target.edgeSeamAllowances || {}) }
       const oldPreviousEdge = (pointIndex - 1 + oldCount) % oldCount
       const oldCurrentEdge = pointIndex
@@ -1581,19 +3061,10 @@ export default function App() {
         getEdgeSeamAllowance(target, oldPreviousEdge),
         getEdgeSeamAllowance(target, oldCurrentEdge),
       )
+      // Geometry was validated before the undo transaction: keep every
+      // surviving point object (including grading IDs) and indexed curve.
       target.points.splice(pointIndex, 1)
-      const nextCurves = {}
-      for (const [rawIndex, value] of Object.entries(oldCurves)) {
-        const index = Number(rawIndex)
-        if (pointIndex === 0) {
-          if (index === 0 || index === oldCount - 1) continue
-          nextCurves[index - 1] = value
-        } else {
-          if (index === pointIndex - 1 || index === pointIndex) continue
-          nextCurves[index > pointIndex ? index - 1 : index] = value
-        }
-      }
-      target.curves = nextCurves
+      target.curves = { ...deletion.curves }
       const nextEdgeAllowances = {}
       const mergedEdgeIndex = pointIndex === 0 ? oldCount - 2 : pointIndex - 1
       for (const [rawIndex, value] of Object.entries(oldEdgeAllowances)) {
@@ -1619,6 +3090,14 @@ export default function App() {
         if (pointIndex === 0) return { ...notch, edgeIndex: notch.edgeIndex > 0 ? notch.edgeIndex - 1 : notch.edgeIndex }
         return { ...notch, edgeIndex: notch.edgeIndex > pointIndex ? notch.edgeIndex - 1 : notch.edgeIndex }
       })
+      // Hardware and finishing entities also refer to numeric outline edges.
+      // Deleting a non-adjacent vertex must retarget them to the same edge.
+      for (const collection of ['topstitches', 'bindings', 'zippers']) {
+        target[collection] = (target[collection] || []).map((item) => {
+          const mapped = deletedPointEdgeIndex(item.edgeIndex, pointIndex, oldCount)
+          return mapped === null ? item : { ...item, edgeIndex: mapped }
+        })
+      }
     })
     setCommandResult('Pattern point removed and edge indices repaired.')
   }
@@ -1673,25 +3152,19 @@ export default function App() {
 
   const createSeam = (a, b) => {
     const partial = [a, b].some((endpoint) => endpoint.startT !== undefined || endpoint.endT !== undefined)
-    const proposal = {
-      a, b,
-      // All Free Sewing ranges must be mapped to their *exact* cutline
-      // fractions; whole-edge sewing preserves the established solver mode.
-      ...(partial ? { useExactCorrespondence: true } : {}),
-    }
-    const verification = validateNewSeam(project, proposal)
-    if (!verification.ok) {
-      setCommandResult(verification.messages[0] || 'Invalid sewing selection')
+    const created = applySewingAssemblyAction20261024(project, {
+      kind:'seam.create', id:uniqueId('seam'),
+      name:`${partial ? 'Free sewing' : 'Segment sewing'} ${project.seams.length + 1}`,
+      a,b,reverseB:false,
+    })
+    if (!created.ok) {
+      setCommandResult(created.detail || 'Invalid sewing selection')
       return
     }
     mutateProject((next) => {
-      next.seams.push({
-        id: uniqueId('seam'),
-        name: `${partial ? 'Free sewing' : 'Segment sewing'} ${next.seams.length + 1}`,
-        ...proposal,
-      })
+      next.seams.push(created.seam)
     })
-    setCommandResult(verification.warning || `${partial ? 'Free' : 'Segment'} sewing created and linked to the 3D solver`)
+    setCommandResult(created.warning || `${partial ? 'Free' : 'Segment'} sewing created and linked to the 3D solver`)
   }
 
   const createFastener = (a, b) => {
@@ -1785,16 +3258,16 @@ export default function App() {
     setCommandResult('Created a 5-point clipped-corner polygon. Edit its nodes in the 2D window.')
   }
 
-  const deleteSelectedPiece = () => {
+  const deletePieceById = (pieceId) => {
     if (clothcraftHybrid) {
       window.dispatchEvent(new CustomEvent('exo-clothcraft-command',{detail:'delete-selected'}))
       return
     }
-    if (!selectedPiece) return
+    if (!pieceId || !project.pieces.some(piece => piece.id === pieceId)) return
     mutateProject((next) => {
-      const ids = new Set([selectedPiece.id])
+      const ids = new Set([pieceId])
       for (const piece of next.pieces) {
-        if (piece.liningForPieceId === selectedPiece.id || piece.interfacingForPieceId === selectedPiece.id) ids.add(piece.id)
+        if (piece.liningForPieceId === pieceId || piece.interfacingForPieceId === pieceId) ids.add(piece.id)
       }
       next.pieces = next.pieces.filter((piece) => !ids.has(piece.id))
       next.seams = next.seams.filter((seam) => !ids.has(seam.a?.pieceId) && !ids.has(seam.b?.pieceId))
@@ -1810,21 +3283,22 @@ export default function App() {
     })
     setSelectedPieceId(null)
   }
+  const deleteSelectedPiece = () => deletePieceById(selectedPiece?.id)
 
   const removeSeam = (seamId) => {
+    const deleted=applySewingAssemblyAction20261024(project,{kind:'seam.delete',seamId})
+    if(!deleted.ok){setCommandResult(deleted.detail);return}
     mutateProject((next) => {
       next.seams = next.seams.filter((seam) => seam.id !== seamId)
     })
   }
 
   const updateSeam = (seamId, field, value) => {
+    const edited=applySewingAssemblyAction20261024(project,{kind:'seam.update',seamId,field,value})
+    if(!edited.ok){setCommandResult(edited.detail);return}
     mutateProject((next) => {
-      const seam = next.seams.find((item) => item.id === seamId)
-      if (!seam) return
-      seam[field] = value
-      if (field === 'type' && value === 'gather' && seam.ratio === undefined) seam.ratio = 0.7
-      if (field === 'type' && value === 'elastic' && seam.ratio === undefined) seam.ratio = 0.85
-      if (field === 'type' && value === 'ease' && seam.ratio === undefined) seam.ratio = 0.96
+      const index=next.seams.findIndex((seam)=>seam.id===seamId)
+      if(index>=0)next.seams[index]=edited.seam
     })
   }
 
@@ -2096,7 +3570,7 @@ export default function App() {
         color: '#8d8d8d',
       })
     })
-    setCommandResult('Topstitch added; the edge is now visually and physically reinforced')
+    setCommandResult('EXO draft topstitch added with editable stitch rows and thread appearance; native Rust seam physics is unchanged')
   }
 
   const addBinding = (pieceId, edgeIndex) => {
@@ -2116,23 +3590,23 @@ export default function App() {
     setCommandResult('Edge binding added with a 96% stay ratio')
   }
 
-  const addZipper = (pieceId, edgeIndex) => {
-    const preset = getHardwarePreset(hardwareChoice.zipper)
+  const addZipper = (pieceId, edgeIndex, presetId = hardwareChoice.zipper) => {
+    const preset = getHardwarePreset(presetId)
+    const id=uniqueId('zipper')
+    // Reuse an existing zipper seam if present; converting a normal garment
+    // seam (e.g. a T-shirt shoulder) to a zipper requires explicit selection.
+    const seam=zipperCompatibleSeams(project,pieceId,edgeIndex).find(item=>item.type==='zipper')
     mutateProject((next) => {
       const piece = next.pieces.find((item) => item.id === pieceId)
       if (!piece) return
       piece.zippers = piece.zippers || []
-      piece.zippers.push({
-        id: uniqueId('zipper'),
-        edgeIndex,
-        widthCm: (preset?.dimensionsMm.tapeWidthEachSide ?? 12) / 10,
-        offsetCm: 0,
-        type: preset?.zipperType || 'coil',
-        color: preset?.pbr.baseColor || '#777777',
-        hardwarePresetId: preset?.id,
-      })
+      const inheritedPrevious=seam&&next.pieces.flatMap(p=>(p.zippers||[])).find(item=>item.pairedSeamId===seam.id)?.pairedSeamPreviousType
+      const zipper={id,edgeIndex,...zipperValuesFromPreset(preset),...(seam?{pairedSeamId:seam.id,pairedSeamPreviousType:inheritedPrevious||'zipper'}:{})}
+      piece.zippers.push(zipper)
+      if(seam)syncPairedZipperSeam(next,zipper)
     })
-    setCommandResult(`${preset?.name || 'Zipper'} annotation added; fastener mechanics require separate validation`)
+    setCommandResult(`${preset?.name || 'Zipper'} placed on edge ${edgeIndex+1}. ${seam?'The existing seam is paired for EXO draft zipper open/close.':'Pair a sewn edge in the right editor to control fabric closure.'}`)
+    return {id,pieceId,seamId:seam?.id||null}
   }
 
   const addButtonRow = (pieceId, count = 5) => {
@@ -2152,11 +3626,11 @@ export default function App() {
         const id = uniqueId('button')
         piece.buttons.push({
           id, x:center.x, y:top+(bottom-top)*t,
-          diameterCm:1.8, color:'#222222',
+          ...buttonValuesFromPreset(preset,resolveHardwareStyle(next,preset?.id)),
           ...(preset ? hardwareToPatternAnnotation(preset.id,{
             x:center.x,y:top+(bottom-top)*t,annotationId:id,
           }) : {}),
-          holes:preset?.holes ?? 4,
+          holes:preset?.holes ?? (preset?.mount==='shank'||preset?.mount==='tack'?0:4),
         })
       }
     })
@@ -2196,6 +3670,155 @@ export default function App() {
       }
     })
     setCommandResult(`${count} × ${preset?.name || 'buttonholes'} added to ${selectedPiece?.name || 'pattern'}`)
+  }
+
+  // A Library asset is inspected in the existing right panel. Placement is
+  // explicit, and the new scene object is immediately selected for editing.
+  const placeHardwarePreset = presetId => {
+    const preset=getHardwarePreset(presetId)
+    if(!preset||clothcraftHybrid||!selectedPiece)return
+    setHardwareChoice(current=>({...current,[preset.kind]:preset.id}))
+    if(preset.kind==='zipper'){
+      const placed=addZipper(selectedPiece.id,trimEdgeIndex,preset.id)
+      setObjectTab('Zipper')
+      setSelectedObjectForProperties({source:'draft',type:'zipper',id:`${selectedPiece.id}-${placed.id}`,
+        pieceId:selectedPiece.id,itemId:placed.id,name:preset.name})
+      setActiveSection('Sewing')
+      return
+    }
+    if(!['button','buttonhole'].includes(preset.kind))return
+    const itemId=uniqueId(preset.kind)
+    const position=pieceCenter(selectedPiece)
+    mutateProject(next=>{
+      const piece=next.pieces.find(item=>item.id===selectedPiece.id)
+      if(!piece)return
+      const object=hardwareToPatternAnnotation(preset.id,{...position,annotationId:itemId})
+      if(preset.kind==='button'){
+        piece.buttons=[...(piece.buttons||[]),{...object,...buttonValuesFromPreset(preset,resolveHardwareStyle(next,preset?.id)),id:itemId,x:position.x,y:position.y}]
+      }else{
+        piece.buttonholes=[...(piece.buttonholes||[]),{lengthCm:2.4,widthCm:.35,color:preset.pbr.baseColor,...object}]
+      }
+    })
+    setObjectTab(preset.kind==='button'?'Button':'Buttonhole')
+    setSelectedObjectForProperties({source:'draft',type:preset.kind,id:`${selectedPiece.id}-${itemId}`,pieceId:selectedPiece.id,itemId,name:preset.name})
+    setActiveSection('Sewing')
+    setCommandResult(`${preset.name} placed on ${selectedPiece.name}. Edit its dimensions and finish on the right.`)
+  }
+  const nativeImportedHardwareCommand=detail=>new Promise(resolve=>{
+    const requestId=`native-imported-${Date.now()}-${Math.random().toString(36).slice(2,8)}`
+    let timeout
+    const received=event=>{
+      if(event.detail?.requestId!==requestId)return
+      window.removeEventListener('exo-clothcraft-imported-hardware-result',received)
+      clearTimeout(timeout)
+      resolve(event.detail)
+    }
+    window.addEventListener('exo-clothcraft-imported-hardware-result',received)
+    timeout=window.setTimeout(()=>{window.removeEventListener('exo-clothcraft-imported-hardware-result',received);resolve({ok:false,error:'Native hardware update timed out'})},15000)
+    window.dispatchEvent(new CustomEvent('exo-clothcraft-imported-hardware-command',{detail:{...detail,requestId}}))
+  })
+  const placeImportedCloAsset=async asset=>{
+    const raw=asset?.original||asset
+    const model=asset?.model||raw?.glb
+    const assetId=raw?.id
+    if(typeof model!=='string'||!/^\/clo-hardware-converted\/models\/[a-z0-9-]+\.glb$/i.test(model)||!assetId){
+      setCommandResult('This hardware reference has no converted 3D mesh to place. Its source definition remains in the library.')
+      return
+    }
+    const id=uniqueId('clo-hardware')
+    if(clothcraftHybrid){
+      const panel=clothcraftLive?.selection?.panelId||clothcraftLive?.panelRefs?.[0]?.id
+      if(!panel){setCommandResult('Select a native pattern before placing imported hardware.');return}
+      const result=await nativeImportedHardwareCommand({action:'place',assetId,panel,id})
+      if(!result.ok){setCommandResult(result.error||'Could not place imported hardware in native garment');return}
+      setSelectedObjectForProperties({source:'imported',type:'imported-hardware',id:`imported-hardware:${id}`,itemId:id,pieceId:panel,name:asset.name||raw.name})
+    }else{
+      const piece=selectedPiece||project.pieces?.[0]
+      if(!piece){setCommandResult('Select a pattern before placing imported hardware.');return}
+      const bounds=importedCloHardwareDimensions(raw)
+      const center=pieceCenter(piece)
+      const placed={id,importedAssetId:assetId,assetId,glbUrl:model,name:asset.name||raw.name,
+        sourcePath:raw.sourcePath||'',thumbnail:asset.thumbnail||raw.thumbnail,
+        x:center.x,y:center.y,widthMm:clamp(Number(bounds[0])||10,.5,250),
+        heightMm:clamp(Number(bounds[1])||10,.5,250),depthMm:clamp(Number(bounds[2])||3,.1,80),
+        rotationDeg:0,liftMm:1,visible:true,color:'#ffffff',metalness:0,roughness:.5,opacity:1,
+        reflectionIntensity:1,clearcoat:0,weightGrams:0,materialType:'original'}
+      mutateProject(next=>{
+        const target=next.pieces.find(item=>item.id===piece.id)
+        if(target)target.importedHardwarePlacements=[...(target.importedHardwarePlacements||[]),placed]
+      })
+      setSelectedObjectForProperties({source:'imported',type:'imported-hardware',id:`imported-hardware:${id}`,itemId:id,pieceId:piece.id,name:placed.name})
+    }
+    setObjectTab('Trim');setShowObjectBrowser(true);setActiveSection('Sewing')
+    if(viewportLayout!=='2d'&&!patternFocusActive)setInspectorVisible(true)
+    setCommandResult(`Placed original 3D hardware: ${asset.name||raw.name}. ${viewportLayout==='2d'||patternFocusActive?'Expand the Property Editor when you want to edit dimensions and material.':'Edit dimensions and material in the right Property Editor.'}`)
+  }
+  const editImportedCloPlacement=async(field,value)=>{
+    const selection=selectedObjectForProperties
+    if(selection?.source!=='imported')return
+    const bounds={widthMm:[.5,250],heightMm:[.5,250],depthMm:[.1,80],x:[-500,500],y:[-500,500],rotationDeg:[-360,360],liftMm:[0,30],roughness:[0,1],metalness:[0,1],opacity:[0,1],reflectionIntensity:[0,3],clearcoat:[0,1],weightGrams:[0,500]}
+    if(Object.hasOwn(bounds,field)&&(!Number.isFinite(Number(value))||Number(value)<bounds[field][0]||Number(value)>bounds[field][1])){
+      setCommandResult(`${field} must be within ${bounds[field][0]}–${bounds[field][1]}`);return
+    }
+    if(field==='color'&&!/^#[0-9a-f]{6}$/i.test(String(value))){setCommandResult('Enter a six-digit hardware color');return}
+    if(field==='materialType'&&!['original','metal','plastic','nylon','textile','ceramic','glass'].includes(value)){setCommandResult('Choose a supported hardware material family');return}
+    if(!['visible','color','materialType',...Object.keys(bounds)].includes(field))return
+    if(clothcraftHybrid){
+      const result=await nativeImportedHardwareCommand({action:'update',id:selection.itemId,field,value})
+      if(!result.ok)setCommandResult(result.error||'Native hardware property update failed')
+    }else mutateProject(next=>{
+      const entry=next.pieces.find(piece=>piece.id===selection.pieceId)?.importedHardwarePlacements?.find(item=>item.id===selection.itemId)
+      if(entry)entry[field]=value
+    })
+  }
+  const removeImportedCloPlacement=async()=>{
+    const selected=selectedObjectForProperties
+    if(selected?.source!=='imported')return
+    if(clothcraftHybrid){const out=await nativeImportedHardwareCommand({action:'remove',id:selected.itemId});if(!out.ok){setCommandResult(out.error);return}}
+    else mutateProject(next=>{
+      const piece=next.pieces.find(item=>item.id===selected.pieceId)
+      if(piece)piece.importedHardwarePlacements=(piece.importedHardwarePlacements||[]).filter(item=>item.id!==selected.itemId)
+    })
+    setSelectedObjectForProperties(null)
+    setCommandResult('Imported hardware removed from garment. Original asset remains in the library.')
+  }
+  const duplicateImportedCloPlacement=async()=>{
+    const selected=selectedObjectForProperties
+    if(selected?.source!=='imported')return
+    if(clothcraftHybrid){const out=await nativeImportedHardwareCommand({action:'duplicate',id:selected.itemId});if(!out.ok)setCommandResult(out.error||'Could not duplicate hardware');return}
+    const id=uniqueId('clo-hardware')
+    mutateProject(next=>{
+      const piece=next.pieces.find(item=>item.id===selected.pieceId)
+      const source=piece?.importedHardwarePlacements?.find(item=>item.id===selected.itemId)
+      if(source)piece.importedHardwarePlacements.push({...source,id,x:source.x+1})
+    })
+    setSelectedObjectForProperties({...selected,itemId:id,id:`imported-hardware:${id}`})
+  }
+  const pairZipperToSeam=(pieceId,zipperId,seamId)=>{
+    const zipper=project.pieces.find(piece=>piece.id===pieceId)?.zippers?.find(item=>item.id===zipperId)
+    const available=zipper?zipperCompatibleSeams(project,pieceId,zipper.edgeIndex):[]
+    if(seamId&&!available.some(seam=>seam.id===seamId)){
+      setCommandResult('Choose a sewing relationship that uses the selected zipper edge.')
+      return
+    }
+    mutateProject(next=>{
+      const target=next.pieces.find(piece=>piece.id===pieceId)?.zippers?.find(item=>item.id===zipperId)
+      if(!target)return
+      if(target.pairedSeamId!==seamId)restoreZipperSeamIfUnused(next,target)
+      if(seamId){
+        const chosen=next.seams.find(seam=>seam.id===seamId)
+        if(chosen?.id!==target.pairedSeamId){
+          const inherited=next.pieces.flatMap(piece=>(piece.zippers||[])).find(item=>item.id!==target.id&&item.pairedSeamId===seamId)?.pairedSeamPreviousType
+          target.pairedSeamPreviousType=inherited||chosen?.type||'normal'
+        }
+        target.pairedSeamId=seamId
+        syncPairedZipperSeam(next,target)
+      }else{
+        delete target.pairedSeamId
+        delete target.pairedSeamPreviousType
+      }
+    })
+    setCommandResult(seamId?'Zipper paired with sewn edges; the slider now updates the draft seam opening.':'Zipper unpaired. Hardware remains visible without fabric-closure mechanics.')
   }
 
   const updateButtonhole = (pieceId, buttonholeId, field, value) => {
@@ -2799,8 +4422,84 @@ export default function App() {
   const removePieceTrim = (pieceId, collection, trimId) => {
     mutateProject((next) => {
       const piece = next.pieces.find((item) => item.id === pieceId)
-      if (piece) piece[collection] = (piece[collection] || []).filter((item) => item.id !== trimId)
+      if(piece){
+        const removed=piece[collection]?.find(item=>item.id===trimId)
+        if(!removed)return
+        if(collection==='buttons'||collection==='buttonholes'){
+          applyDraftHardwareAction(next,{kind:collection==='buttons'?'button':'buttonhole',pieceId,operation:'remove',itemId:trimId})
+        }else{
+          piece[collection]=(piece[collection]||[]).filter(item=>item.id!==trimId)
+          if(collection==='zippers')restoreZipperSeamIfUnused(next,removed)
+        }
+      }
     })
+  }
+
+  // Object Browser creation selects the new record immediately so the lower
+  // Property Editor exposes its true typed fields on the first click. In hybrid
+  // mode these are editable EXO draft annotations, never Rust hardware forces.
+  const createBrowserConstructionObject=(tab, requestedPieceId)=>{
+    const kind=String(tab||'').toLowerCase()==='trim'?'binding':String(tab||'').toLowerCase()
+    const collection={button:'buttons',buttonhole:'buttonholes',zipper:'zippers',binding:'bindings',topstitch:'topstitches',puckering:'puckerings'}[kind]
+    const piece=project.pieces.find(item=>item.id===requestedPieceId)||
+      selectedPiece||project.pieces.find(item=>/front/i.test(item.name+' '+item.id))||project.pieces[0]
+    if(!collection||!piece?.points?.length){setCommandResult('Select a draft pattern before creating an annotation');return}
+    const id=uniqueId(kind)
+    const center=pieceCenter(piece)
+    const edgeIndex=Math.min(Math.max(0,trimEdgeIndex),piece.points.length-1)
+    const preset=kind==='button'?getHardwarePreset(hardwareChoice.button):
+      kind==='zipper'?getHardwarePreset(hardwareChoice.zipper):
+      kind==='buttonhole'?getHardwarePreset(hardwareChoice.buttonhole):null
+    const created={id}
+    if(kind==='button')Object.assign(created,{x:center.x,y:center.y,...buttonValuesFromPreset(preset,resolveHardwareStyle(project,preset?.id))})
+    if(kind==='buttonhole')Object.assign(created,{x:center.x,y:center.y,lengthCm:Number(preset?.dimensionsMm?.length??24)/10,
+      widthCm:Number(preset?.dimensionsMm?.openingWidth??preset?.dimensionsMm?.stitchedWidth??3.5)/10,
+      orientationDeg:Number(preset?.orientationDeg??0),color:'#575757',hardwarePresetId:preset?.id,
+      openingShape:preset?.openingShape==='keyhole'?'keyhole':'horizontal',
+      eyeDiameterMm:Number(preset?.dimensionsMm?.eyeDiameter??5),
+      stitchBorderWidthMm:Number(preset?.dimensionsMm?.stitchBorderWidth??preset?.dimensionsMm?.stitchedWidth??2.4),
+      threadColor:preset?.pbr?.baseColor||'#575757',recessColor:'#08090c',
+      threadRoughness:.86,threadMetalness:0,reflectionIntensity:1})
+    if(kind==='zipper')Object.assign(created,{edgeIndex,...zipperValuesFromPreset(preset)})
+    if(kind==='binding')Object.assign(created,{edgeIndex,widthCm:1.8,ratio:.96,stiffness:.72,color:'#3b3b3b',
+      roughness:.85,metalness:0,reflectionIntensity:1})
+    if(kind==='topstitch')Object.assign(created,{edgeIndex,offsetCm:.7,rows:1,rowGapCm:.45,stitchLengthMm:3,color:'#aaaaaa'})
+    if(kind==='puckering')Object.assign(created,{edgeIndex,amplitudeMm:1.5,spacingMm:8,widthCm:1.2,strength:.4,color:'#adadad',visible:true})
+    mutateProject(next=>{
+      const target=next.pieces.find(item=>item.id===piece.id)
+      if(target)target[collection]=[...(target[collection]||[]),created]
+    })
+    setSelectedPieceId(piece.id)
+    setObjectTab(tab)
+    setActiveSection('Sewing')
+    setShowObjectBrowser(true)
+    // Adding a 2D annotation must not interrupt canvas dragging by
+    // automatically expanding Object Browser / Property Editor.
+    if(viewportLayout!=='2d'&&!patternFocusActive)setInspectorVisible(true)
+    setSelectedObjectForProperties({source:'draft',type:kind,id:`${piece.id}:${collection}:${id}`,
+      pieceId:piece.id,itemId:id,name:created.name||`${tab} · ${piece.name}`})
+    setCommandResult(`${tab} annotation created. ${viewportLayout==='2d'||patternFocusActive?'Expand the right Property Editor to edit its EXO draft properties.':'Edit its EXO draft properties below.'} Native Rust physics is unchanged.`)
+  }
+  const removeBrowserConstructionObject=selection=>{
+    if(selection?.type==='imported-hardware'){
+      setSelectedObjectForProperties({source:'imported',type:'imported-hardware',id:selection.id,itemId:selection.itemId,pieceId:selection.pieceId,name:'Imported hardware'})
+      if(clothcraftHybrid){nativeImportedHardwareCommand({action:'remove',id:selection.itemId}).then(result=>{if(!result.ok)setCommandResult(result.error||'Could not remove imported hardware')})}
+      else mutateProject(next=>{const piece=next.pieces.find(p=>p.id===selection.pieceId);if(piece)piece.importedHardwarePlacements=(piece.importedHardwarePlacements||[]).filter(item=>item.id!==selection.itemId)})
+      setSelectedObjectForProperties(null)
+      return
+    }
+    if(selection?.type==='fastener'&&selection.itemId!=null){
+      mutateProject(next=>{next.fasteners=(next.fasteners||[]).filter(item=>String(item.id)!==String(selection.itemId))})
+      setSelectedObjectForProperties(null)
+      setCommandResult('Fastener pair removed; Undo is available.')
+      return
+    }
+    if(!selection?.pieceId || !selection?.itemId)return
+    const collection=({button:'buttons',buttonhole:'buttonholes',zipper:'zippers',binding:'bindings',topstitch:'topstitches',puckering:'puckerings'})[String(selection.type).toLowerCase()]
+    if(!collection||!project.pieces.some(piece=>piece.id===selection.pieceId))return
+    removePieceTrim(selection.pieceId,collection,selection.itemId)
+    setSelectedObjectForProperties(null)
+    setCommandResult(`${selection.type} removed from EXO draft annotation. Undo is available.`)
   }
 
   const importGraphic = async (event) => {
@@ -2849,6 +4548,29 @@ export default function App() {
       if (piece) piece.graphics = (piece.graphics || []).filter((item) => item.id !== graphicId)
     })
   }
+
+  const addFoamPadding = (pieceId, shapes) => {
+    mutateProject(next=>{
+      const piece=next.pieces.find(item=>item.id===pieceId)
+      if(!piece)return
+      piece.foamPads=piece.foamPads||[]
+      const center=pieceCenter(piece)
+      for(const shape of (Array.isArray(shapes)?shapes:[shapes])){
+        piece.foamPads.push({...shape,x:center.x,y:center.y,id:uniqueId('foam-pad')})
+      }
+    })
+    setCommandResult('Foam shapes added. Position them on the garment, adjust depth, and enable stitch guides.')
+  }
+
+  const updateFoamPadding = (pieceId,id,fields,{record=true}={}) => mutateProject(next=>{
+    const pad=next.pieces.find(item=>item.id===pieceId)?.foamPads?.find(item=>item.id===id)
+    if(pad)Object.assign(pad,fields)
+  },{record})
+
+  const removeFoamPadding = (pieceId,id) => mutateProject(next=>{
+    const piece=next.pieces.find(item=>item.id===pieceId)
+    if(piece)piece.foamPads=(piece.foamPads||[]).filter(item=>item.id!==id)
+  })
 
   const updateSelectedPiece = (field, value) => {
     if (!selectedPiece) return
@@ -3309,7 +5031,12 @@ export default function App() {
       if (!target?.texture) return
       delete target.texture.src
       delete target.texture.name
-      if (!['normalSrc','roughnessSrc','metalnessSrc','opacitySrc','displacementSrc'].some(key => target.texture[key])) delete target.texture
+      // Keep any custom repeat/rotation settings when the final image is
+      // removed: those values should still apply to the next imported map.
+      const customMapping=Number(target.texture.repeatWidthCm??20)!==20||
+        Number(target.texture.repeatHeightCm??20)!==20||
+        Number(target.texture.rotationDeg??0)!==0
+      if (!customMapping&&!['normalSrc','roughnessSrc','metalnessSrc','opacitySrc','displacementSrc'].some(key => target.texture[key])) delete target.texture
     })
     setCommandResult('Fabric color texture removed; PBR detail maps were preserved')
   }
@@ -3326,6 +5053,84 @@ export default function App() {
       }
     })
     setSelectedFabricId(id)
+    setSelectedObjectForProperties({source:'draft',type:'fabric',id,name:project.fabrics?.[id]?.name||'New Fabric'})
+  }
+
+  // The Object Browser actions edit the same project records as the lower
+  // Property Editor. A copied swatch or trim receives a new persistent ID.
+  const copyObjectBrowserRow = row => {
+    if(!row)return
+    if(row.type==='fabric'){
+      if(clothcraftHybrid){setCommandResult('Native Rust currently edits existing fabric records. New native fabric IDs are not supported.');return}
+      const source=project.fabrics?.[row.id]
+      if(!source)return
+      const id=uniqueId('fabric')
+      const name=`${source.name||'Fabric'} Copy`
+      mutateProject(next=>{next.fabrics={...next.fabrics,[id]:{...cloneProject(source),id,name}}})
+      setSelectedFabricId(id)
+      setSelectedObjectForProperties({source:'draft',type:'fabric',id,name})
+      setCommandResult(`Copied ${source.name||'fabric'} into a separate, editable fabric swatch.`)
+      return
+    }
+    if(clothcraftHybrid&&row.type==='graphic'){
+      window.dispatchEvent(new CustomEvent('exo-clothcraft-copy-graphic',{detail:{id:row.id}}))
+      return
+    }
+    if(row.type==='imported-hardware'&&clothcraftHybrid){
+      nativeImportedHardwareCommand({action:'duplicate',id:row.itemId}).then(result=>{if(!result.ok)setCommandResult(result.error||'Could not copy imported hardware')})
+      return
+    }
+    if(row.type==='imported-hardware'&&!clothcraftHybrid){
+      const piece=project.pieces.find(item=>item.id===row.pieceId)
+      const source=piece?.importedHardwarePlacements?.find(item=>String(item.id)===String(row.itemId))
+      if(!source)return
+      const id=uniqueId('clo-hardware')
+      mutateProject(next=>{const target=next.pieces.find(item=>item.id===piece.id);target.importedHardwarePlacements=[...(target.importedHardwarePlacements||[]),{...cloneProject(source),id,x:Number(source.x||0)+1}]})
+      setSelectedObjectForProperties({source:'imported',type:'imported-hardware',id:`imported-hardware:${id}`,itemId:id,pieceId:piece.id,name:source.name})
+      setCommandResult('Copied original imported 3D hardware into a new editable placement.')
+      return
+    }
+    const collection=row.collection
+    const piece=project.pieces.find(item=>item.id===row.pieceId)
+    const source=piece?.[collection]?.find(item=>String(item.id)===String(row.itemId))
+    if(!collection||!source)return
+    const id=uniqueId(row.type||'object')
+    const copy={...cloneProject(source),id}
+    if(Number.isFinite(copy.x))copy.x+=1
+    if(Number.isFinite(copy.y))copy.y+=1
+    mutateProject(next=>{const target=next.pieces.find(item=>item.id===piece.id);target[collection]=[...(target[collection]||[]),copy]})
+    setSelectedObjectForProperties({source:'draft',type:row.type,id:row.type==='graphic'?id:`${piece.id}:${collection}:${id}`,itemId:id,pieceId:piece.id,collection,name:`${row.name} Copy`})
+    setCommandResult(`Copied ${row.name} on ${piece.name}.`)
+  }
+  const assignObjectBrowserRow = row => {
+    if(!row)return
+    if(row.type==='fabric'){
+      if(clothcraftHybrid){
+        window.dispatchEvent(new CustomEvent('exo-clothcraft-assign-fabric',{detail:{id:row.id}}))
+      }else if(selectedPieceId&&project.pieces.some(piece=>piece.id===selectedPieceId)){
+        assignFabric(row.id)
+      }else setCommandResult('Select a garment pattern before assigning this fabric.')
+      return
+    }
+    if(clothcraftHybrid&&row.type==='graphic'){
+      window.dispatchEvent(new CustomEvent('exo-clothcraft-assign-graphic',{detail:{id:row.id}}))
+      return
+    }
+    const target=project.pieces.find(piece=>piece.id===selectedPieceId)
+    if(!target){setCommandResult('Select the destination pattern before assigning an object.');return}
+    if(row.pieceId===target.id){setCommandResult(`${row.name} is already on ${target.name}.`);return}
+    const sourcePiece=project.pieces.find(piece=>piece.id===row.pieceId)
+    const collection=row.collection
+    const source=sourcePiece?.[collection]?.find(item=>String(item.id)===String(row.itemId))
+    if(!source){setCommandResult('Select an existing object to assign.');return}
+    const id=uniqueId(row.type||'object'),copy={...cloneProject(source),id}
+    if(Number.isFinite(copy.x)&&Number.isFinite(copy.y)){
+      const a=pieceCenter(sourcePiece),b=pieceCenter(target)
+      copy.x+=b.x-a.x;copy.y+=b.y-a.y
+    }
+    mutateProject(next=>{const piece=next.pieces.find(item=>item.id===target.id);piece[collection]=[...(piece[collection]||[]),copy]})
+    setSelectedObjectForProperties({source:'draft',type:row.type,id:row.type==='graphic'?id:`${target.id}:${collection}:${id}`,itemId:id,pieceId:target.id,collection,name:row.name})
+    setCommandResult(`Assigned ${row.name} to ${target.name} as a separate editable object.`)
   }
 
   const addFabricPresetSwatch = (presetId) => {
@@ -3358,23 +5163,45 @@ export default function App() {
     setObjectTab('Fabric')
     setCommandResult(`Applied ${project.fabrics[fabricId].name || fabricId} to ${allPieces ? 'all pattern pieces' : (selectedPiece?.name || 'the selected pattern')}. The 3D cloth material updates with the project.`)
   }
-  const addAndApplyFabricPreset = (presetId) => {
+  const addAndApplyFabricPreset = (presetId, {allPieces=false} = {}) => {
     const preset = FABRIC_PRESETS[presetId]
     if (!preset) return
-    const id = uniqueId('fabric')
+    // Double-clicking a fabric must change an actual garment panel. Keep an
+    // existing catalog swatch when it was previously imported, rather than
+    // creating identical swatches on every double-click.
+    const existing=Object.entries(project.fabrics||{}).find(([,item])=>item.catalogPresetId===presetId)
+    const id=existing?.[0]||uniqueId('fabric')
+    const selectedIsInGarment=project.pieces.some(piece=>piece.id===selectedPieceId)
+    const applyEveryPiece=allPieces||!selectedIsInGarment
     mutateProject((next) => {
       next.fabrics = next.fabrics || {}
-      next.fabrics[id] = { ...cloneProject(preset), id, catalogPresetId:presetId }
-      if (selectedPieceId) {
-        const piece = next.pieces.find(item => item.id === selectedPieceId)
-        if (piece) piece.fabricId = id
-      }
+      if(!existing)next.fabrics[id] = { ...cloneProject(preset), id, catalogPresetId:presetId }
+      for (const piece of next.pieces||[])if(applyEveryPiece||piece.id===selectedPieceId)piece.fabricId=id
     })
     setSelectedFabricId(id)
     setActiveSection('Fabric')
     setObjectTab('Fabric')
     setShowObjectBrowser(true)
-    setCommandResult(`Added ${preset.name} and applied it to ${selectedPiece?.name || 'the garment library'}.`)
+    setSelectedObjectForProperties({source:'draft',type:'fabric',id,name:preset.name})
+    setCommandResult(`Applied ${preset.name} to ${applyEveryPiece?'all garment panels':(selectedPiece?.name||'selected pattern')}. The 3D PBR maps now use the selected textile.`)
+  }
+
+  const activateFabricFromLibrary = (presetId, options={}) => {
+    const preset=FABRIC_PRESETS[presetId]
+    if(!preset)return
+    if(clothcraftHybrid){
+      // Rust's running garment is a separate authoritative document. Send the
+      // catalog choice through its active editor; editing project.fabrics here
+      // would silently change an unrelated draft instead.
+      window.dispatchEvent(new CustomEvent('exo-clothcraft-apply-preset',{
+        detail:{presetId,allPieces:Boolean(options.allPieces)},
+      }))
+      setActiveSection('Fabric')
+      setObjectTab('Fabric')
+      setShowObjectBrowser(true)
+      return
+    }
+    addAndApplyFabricPreset(presetId,options)
   }
 
   const deleteFabricSwatch = (fabricId) => {
@@ -3415,7 +5242,15 @@ export default function App() {
   }
 
   const setAvatarModel = (model) => {
-    if (model === 'clo-thomas') model = 'makehuman-base'
+    if (clothcraftHybrid) {
+      if (!['makehuman-base', 'clo-thomas'].includes(model)) {
+        setCommandResult('Native V2 currently supports MakeHuman and CLO Thomas fitting avatars. Select either to load its actual collision body.')
+        return
+      }
+      window.dispatchEvent(new CustomEvent('exo-clothcraft-select-avatar', {detail:{model}}))
+      setCommandResult(`Loading ${model === 'clo-thomas' ? 'CLO Thomas' : 'MakeHuman'} into the native 2D and 3D viewports…`)
+      return
+    }
     if (avatarAvailability[model] === false) {
       setCommandResult(`${model} model is not installed. Select an available avatar or import an OBJ / GLB file.`)
       return
@@ -3555,6 +5390,26 @@ export default function App() {
     })
   }
 
+  const updateStageSetting = (field, value) => {
+    mutateProject(next=>{
+      next.render=next.render||{}
+      next.render.stageSettings={...(next.render.stageSettings||{}),[field]:value}
+    })
+  }
+
+  const editSceneEnvironmentProperties=patch=>{
+    if(!patch||typeof patch!=='object')return
+    mutateProject(next=>{
+      next.render=next.render||{}
+      for(const [key,value] of Object.entries(patch)){
+        if(key==='camera'||key==='light'){
+          const target=key==='light'&&environmentSelection?.id==='light-2'?'light2':key
+          next.render[target]={...(key==='camera'?initialSceneCamera:{}),...(next.render[target]||{}),...value}
+        }else next.render[key]=value
+      }
+    })
+  }
+
   const updateRenderResolution = (widthPx, heightPx) => {
     mutateProject((next) => {
       next.render = next.render || { environmentPreset: 'studio', exposure: 1.1, showEnvironment: false, widthPx: 2048, heightPx: 2560 }
@@ -3617,7 +5472,7 @@ export default function App() {
     const previewSize = sizes[baseIndex + 1] || sizes[baseIndex - 1] || baseSize
     const offset = sizeOffset(project.grading, previewSize)
     if (!offset) return { dxPerSize: 0, dyPerSize: 0 }
-    const automaticPoint = gradePointForPiece(piece, project.grading, previewSize, { ...point, gradeRule: undefined })
+    const automaticPoint = gradePointForPiece(piece, project.grading, previewSize, { ...point, gradeRule: undefined, industrialGradeRule: undefined })
     return {
       dxPerSize: (automaticPoint.x - point.x) / offset,
       dyPerSize: (automaticPoint.y - point.y) / offset,
@@ -3629,6 +5484,7 @@ export default function App() {
       const piece = next.pieces.find((item) => item.id === pieceId)
       const point = piece?.points?.[pointIndex]
       if (!piece || !point) return
+      if(enabled)delete point.industrialGradeRule
       if (!enabled) {
         point.gradeRule = undefined
         return
@@ -3651,10 +5507,129 @@ export default function App() {
     mutateProject((next) => {
       const point = next.pieces.find((item) => item.id === pieceId)?.points?.[pointIndex]
       if (!point) return
+      delete point.industrialGradeRule
       point.gradeRule = point.gradeRule || { enabled: true, dxPerSize: 0, dyPerSize: 0 }
       point.gradeRule.enabled = true
       point.gradeRule[field] = value
     })
+  }
+
+  const copyPointGradeRule = (piece, pointIndex) => {
+    const point = piece?.points?.[pointIndex]
+    if (!point) return
+    if(point.industrialGradeRule){setCommandResult('This point uses individual size-break rules. Edit its full break table in Industrial Grading instead of copying one average increment.');return}
+    const automatic = automaticGradeDelta(piece, point)
+    const rule = point.gradeRule?.enabled ? point.gradeRule : automatic
+    setGradeRuleClipboard({
+      dxPerSize: Number(rule.dxPerSize) || 0,
+      dyPerSize: Number(rule.dyPerSize) || 0,
+    })
+  }
+
+  const pastePointGradeRule = (pieceId, pointIndex) => {
+    if (!gradeRuleClipboard) return
+    mutateProject((next) => {
+      const point = next.pieces.find((piece) => piece.id === pieceId)?.points?.[pointIndex]
+      if (!point) return
+      delete point.industrialGradeRule
+      point.gradeRule = { ...point.gradeRule, enabled: true, ...gradeRuleClipboard }
+    })
+  }
+
+  const pastePointGradeRuleToAll = (pieceId) => {
+    if (!gradeRuleClipboard) return
+    mutateProject((next) => {
+      const piece = next.pieces.find((item) => item.id === pieceId)
+      if (!piece) return
+      for (const point of piece.points || []) {
+        delete point.industrialGradeRule
+        point.gradeRule = { ...point.gradeRule, enabled: true, ...gradeRuleClipboard }
+      }
+    })
+    setCommandResult('Copied X/Y grade increments applied to every point in the selected piece. Undo is available.')
+  }
+
+  const resetPieceGradeRules = (pieceId) => {
+    mutateProject((next) => {
+      const piece = next.pieces.find((item) => item.id === pieceId)
+      if (!piece) return
+      for (const point of piece.points || []) { delete point.gradeRule; delete point.industrialGradeRule }
+    })
+    setCommandResult('Selected pattern points restored to automatic grading. Undo is available.')
+  }
+
+  const exportPieceGradeRules = () => {
+    if (!selectedPiece) return
+    try {
+      const blob = new Blob([gradeRulesToCsv(selectedPiece)], { type: 'text/csv;charset=utf-8' })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `${String(project.name || 'garment').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${selectedPiece.id}-grade-rules.csv`
+      link.click()
+      URL.revokeObjectURL(url)
+      setCommandResult(`Exported ${selectedPiece.points.length} point grade rules for ${selectedPiece.name}. Coordinates are centimeters per size.`)
+    } catch (error) { setCommandResult(`Grade-rule export failed: ${error.message}`) }
+  }
+
+  const exportPieceSizeBreaks = () => {
+    if (!selectedPiece) return
+    try {
+      const blob = new Blob([exportIndustrialGradeCsv(selectedPiece, project.grading)], {type: 'text/csv;charset=utf-8'})
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `${String(project.name || 'garment').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${String(selectedPiece.id).replace(/[^a-z0-9-]+/gi, '-')}-industrial-size-breaks.csv`
+      link.click()
+      URL.revokeObjectURL(url)
+      setCommandResult('Exported all authored industrial size breaks for the selected piece. Original pattern unchanged.')
+    } catch (error) { setCommandResult(`Industrial grade export rejected: ${error.message}`) }
+  }
+
+  const importPieceSizeBreaks = async (event) => {
+    const file = event.target.files?.[0]
+    event.target.value = ''
+    if (!file || !selectedPiece) return
+    try {
+      if (file.size > 1024 * 1024) throw new Error('Size-break CSV must be under 1 MB')
+      const source = await file.text()
+      const pieceId = selectedPiece.id
+      parseIndustrialGradeCsv(source, selectedPiece, project.grading)
+      mutateProject(next => {
+        const piece = next.pieces.find(p => p.id === pieceId)
+        if (!piece) throw new Error('Pattern piece no longer exists')
+        const rows = parseIndustrialGradeCsv(source, piece, next.grading)
+        for (const {pointIndex, rule} of rows) {
+          piece.points[pointIndex].industrialGradeRule = structuredClone(rule)
+          delete piece.points[pointIndex].gradeRule
+        }
+      })
+      setCommandResult('Imported validated individual size-break rules. Base geometry unchanged; undo is available. Factory approval still required.')
+    } catch (error) { setCommandResult(`Industrial grade import rejected without changes: ${error.message}`) }
+  }
+
+  const importPieceGradeRules = async (event) => {
+    const file = event.target.files?.[0]
+    event.target.value = ''
+    if (!file || !selectedPiece) return
+    try {
+      if (file.size > 1024 * 1024) throw new Error('Grade-rule CSV must be under 1 MB')
+      const text = await file.text()
+      const rules = parseGradeRulesCsv(text, selectedPiece)
+      const pieceId = selectedPiece.id
+      mutateProject(next => {
+        const target = next.pieces.find(piece => piece.id === pieceId)
+        if (!target) throw new Error('The selected pattern piece no longer exists')
+        // Revalidate within the undo transaction. An asynchronous file read
+        // must not apply an old grade table to a newly edited cutline.
+        parseGradeRulesCsv(text, target)
+        target.points.forEach((point, index) => {
+          if (rules[index]) point.gradeRule = { ...rules[index] }
+          else delete point.gradeRule
+        })
+      })
+      setCommandResult(`Imported ${rules.length} validated grading rules for ${selectedPiece.name}. Undo is available; base cutlines are unchanged.`)
+    } catch (error) { setCommandResult(`Grade-rule import rejected without changes: ${error.message}`) }
   }
 
   const updateMarkerSetting = (field, value) => {
@@ -3754,7 +5729,8 @@ export default function App() {
     setCommandResult('Sending current garment to local ClothCraft Rust tools…')
     try {
       const operation = bake ? 'bake' : 'validate'
-      const bridgeUrl = import.meta.env.VITE_CLOTHCRAFT_BRIDGE_URL || 'http://127.0.0.1:5193'
+      const bridgeUrl = window.location.port === '5486' ? 'http://127.0.0.1:5485' : window.location.port === '5386' ? 'http://127.0.0.1:5385'
+        : (import.meta.env.VITE_CLOTHCRAFT_BRIDGE_URL || 'http://127.0.0.1:5193')
       const response = await fetch(`${bridgeUrl}/${operation}`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ document: project }),
@@ -3790,7 +5766,8 @@ export default function App() {
     setClothCraftContactResult(null)
     setCommandResult('ClothCraft Rust VBD + OGC is testing your garment against the selected body mesh…')
     try {
-      const bridgeUrl = import.meta.env.VITE_CLOTHCRAFT_BRIDGE_URL || 'http://127.0.0.1:5193'
+      const bridgeUrl = window.location.port === '5486' ? 'http://127.0.0.1:5485' : window.location.port === '5386' ? 'http://127.0.0.1:5385'
+        : (import.meta.env.VITE_CLOTHCRAFT_BRIDGE_URL || 'http://127.0.0.1:5193')
       const response = await fetch(`${bridgeUrl}/contact-simulate`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ document: project, avatarModel: project.avatar?.model,
@@ -3854,18 +5831,22 @@ export default function App() {
       setCommandResult('Choose a pattern piece in the 2D workspace before exporting selected-pattern DXF.')
       return
     }
-    const exportedProject = exportSelectedPatternOnly
-      ? { ...productionProject, pieces: productionProject.pieces.filter((piece) => piece.id === selectedPiece.id) }
-      : productionProject
-    const dxf = projectToDxf(exportedProject, gradePreviewSize)
-    const blob = new Blob([dxf], { type: 'application/dxf' })
-    const url = URL.createObjectURL(blob)
-    const anchor = document.createElement('a')
-    anchor.href = url
-    anchor.download = `${project.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'garment'}-${gradePreviewSize.toLowerCase()}${exportSelectedPatternOnly ? `-${selectedPiece.id}` : ''}.dxf`
-    anchor.click()
-    URL.revokeObjectURL(url)
-    setCommandResult(`${exportSelectedPatternOnly ? `Selected pattern '${selectedPiece.name}'` : 'All garment patterns'} exported as standard layered DXF in millimeters. AAMA/ASTM conformity has not been independently verified.`)
+    try {
+      const exportedProject = exportSelectedPatternOnly
+        ? { ...productionProject, pieces: productionProject.pieces.filter((piece) => piece.id === selectedPiece.id) }
+        : productionProject
+      const dxf = projectToDxf(exportedProject, gradePreviewSize)
+      const blob = new Blob([dxf], { type: 'application/dxf' })
+      const url = URL.createObjectURL(blob)
+      const anchor = document.createElement('a')
+      anchor.href = url
+      anchor.download = `${project.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'garment'}-${gradePreviewSize.toLowerCase()}${exportSelectedPatternOnly ? `-${selectedPiece.id}` : ''}.dxf`
+      anchor.click()
+      URL.revokeObjectURL(url)
+      setCommandResult(`${exportSelectedPatternOnly ? `Selected pattern '${selectedPiece.name}'` : 'All garment patterns'} exported as standard layered DXF in millimeters. AAMA/ASTM conformity has not been independently verified.`)
+    } catch (error) {
+      setCommandResult(`DXF export blocked: ${error.message}`)
+    }
   }
 
   const exportBomXml = () => {
@@ -3885,8 +5866,8 @@ export default function App() {
       return
     }
     const data = format === 'pdf'
-      ? markerToPdf(marker, { size: gradePreviewSize, project: productionProject })
-      : markerToSvg(marker, { size: gradePreviewSize, fabricName: project.fabrics?.[marker.fabricId]?.name || marker.fabricId, project: productionProject })
+      ? markerToPdf(marker, { size: gradePreviewSize, project: productionProject, calibration: true })
+      : markerToSvg(marker, { size: gradePreviewSize, fabricName: project.fabrics?.[marker.fabricId]?.name || marker.fabricId, project: productionProject, calibration: true })
     const blob = new Blob([data], { type: format === 'pdf' ? 'application/pdf' : 'image/svg+xml' })
     const url = URL.createObjectURL(blob)
     const anchor = document.createElement('a')
@@ -3894,7 +5875,78 @@ export default function App() {
     anchor.download = `${project.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'garment'}-${gradePreviewSize.toLowerCase()}-${marker.fabricId || 'main'}-marker.${format}`
     anchor.click()
     URL.revokeObjectURL(url)
-    setCommandResult(`${format.toUpperCase()} marker exported at physical 1:1 scale. ${marker.unusedPieces ? `WARNING: ${marker.unusedPieces} requested cut pieces were NOT placed.` : 'Review scale and cutter compatibility with your factory.'} Print at 100%.`)
+    setCommandResult(`${format.toUpperCase()} DEVELOPMENT PREVIEW marker exported at intended physical 1:1 scale with a 100 mm verification ruler where the page fits. UNVERIFIED: this browser-side export is NOT a Rust-source-verified factory cutting release. ${marker.unusedPieces ? `WARNING: ${marker.unusedPieces} requested cut pieces were NOT placed.` : 'Review scale and cutter compatibility with your factory.'} Print at 100%, then measure the calibration ruler before cutting.`)
+  }
+
+  // Explicitly separate a source-verified native Rust production order from
+  // the legacy visual marker preview. This is not a cutter authorization.
+  const inspectVerifiedNativeProductionSource = async () => {
+    try {
+      const bridge = import.meta.env.VITE_CLOTHCRAFT_BRIDGE_URL || 'http://127.0.0.1:5193'
+      const reply = await fetch(`${bridge}/production/native-verified/v1/source`, {
+        method:'POST',headers:{'Content-Type':'application/json'},body:'{}',
+      })
+      const payload=await reply.json()
+      if(!reply.ok||payload.ok!==true||!payload.source)throw Error(payload.code||'Native source not available')
+      const source=payload.source
+      setCommandResult(`NATIVE VERIFIED ORDER SOURCE INSPECTED: Rust revision ${source.revision}; ${source.sizes.length} sizes and ${source.panels.length} source panels. No production order, marker export, or cutting authorization has been issued. Explicit per-size quantities and fabric declarations must be verified separately.`)
+    } catch (error) {
+      setCommandResult(`NATIVE PRODUCTION ORDER BLOCKED: ${error.message}. The legacy PDF/SVG marker buttons remain DEVELOPMENT PREVIEW ONLY.`)
+    }
+  }
+  const createVerifiedNativeProductionStudy = async () => {
+    try {
+      const bridge=import.meta.env.VITE_CLOTHCRAFT_BRIDGE_URL || 'http://127.0.0.1:5193'
+      const inspect=await fetch(`${bridge}/production/native-verified/v1/source`,{
+        method:'POST',headers:{'Content-Type':'application/json'},body:'{}',
+      })
+      const inspected=await inspect.json()
+      if(!inspect.ok||inspected.ok!==true||!inspected.source)throw Error(inspected.code||'NATIVE_SOURCE_UNAVAILABLE')
+      const source=inspected.source
+      // Deliberately uses a one-of-each, same-fabric development study only.
+      // Operators must use separately approved quantities/materials for manufacturing.
+      const quantities=Object.fromEntries(source.sizes.map(size=>[
+        size,Object.fromEntries(source.panels.map(panel=>[panel.id,1]))]))
+      const materials=Object.fromEntries(source.panels.map(panel=>[
+        panel.id,{fabricId:panel.sourceFabricId,groupId:panel.sourceFabricId}]))
+      const packet=prepareNativeProductionOrderRequest(source,quantities,materials)
+      const response=await fetch(`${bridge}/production/native-verified/v1/order`,{
+        method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(packet),
+      })
+      const answer=await response.json()
+      if(!response.ok||answer.ok!==true||!answer.result)throw Error(answer.code||'NATIVE_ORDER_REJECTED')
+      const study=summarizeNativeVerifiedOrder(answer.result)
+      setCommandResult(`NATIVE VERIFIED DEVELOPMENT STUDY: Rust revision ${study.sourceRevision}; ${study.sizeCount} graded sizes, ${study.placements} CUT placements; each panel quantity is 1 per size. NO factory approval, no cutting authorization and no production PDF/SVG released.`)
+    }catch(error){
+      setCommandResult(`NATIVE VERIFIED ORDER STUDY BLOCKED: ${error.message}. No factory cutting authorization or production artifact was issued.`)
+    }
+  }
+  const exportVerifiedNativeProductionStudy = async () => {
+    try {
+      const bridge=import.meta.env.VITE_CLOTHCRAFT_BRIDGE_URL || 'http://127.0.0.1:5193'
+      const inspect=await fetch(`${bridge}/production/native-verified/v1/source`,{
+        method:'POST',headers:{'Content-Type':'application/json'},body:'{}',
+      })
+      const inspected=await inspect.json()
+      if(!inspect.ok||inspected.ok!==true||!inspected.source)throw Error(inspected.code||'NATIVE_SOURCE_UNAVAILABLE')
+      const source=inspected.source
+      // Test-only one-per-panel order. Never use UI preview geometry as CUT authority.
+      const quantities=Object.fromEntries(source.sizes.map(size=>[
+        size,Object.fromEntries(source.panels.map(panel=>[panel.id,1]))]))
+      const materials=Object.fromEntries(source.panels.map(panel=>[
+        panel.id,{fabricId:panel.sourceFabricId,groupId:panel.sourceFabricId}]))
+      const packet=prepareNativeProductionOrderRequest(source,quantities,materials)
+      const response=await fetch(`${bridge}/production/native-verified/v1/export`,{
+        method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(packet),
+      })
+      const answer=await response.json()
+      if(!response.ok||answer.ok!==true||!answer.result)throw Error(answer.code||'NATIVE_EXPORT_BLOCKED')
+      const result=answer.result
+      if(result.factoryApproved!==false||result.cuttingAuthorized!==false)throw Error('INVALID_NATIVE_EXPORT_AUTHORIZATION')
+      setCommandResult(`NATIVE VERIFIED DEVELOPMENT ARTIFACTS GENERATED for Rust revision ${result.sourceRevision}. Review the source-verified manifest and linked marker studies in the local native bridge output. These remain UNAPPROVED and NOT authorized for physical cutting.`)
+    }catch(error){
+      setCommandResult(`NATIVE VERIFIED DEVELOPMENT EXPORT BLOCKED: ${error.message}. No physical cutting authorization granted.`)
+    }
   }
 
   const exportMeasurements = () => {
@@ -3921,16 +5973,86 @@ export default function App() {
     setCommandResult('Structured tech pack exported with POMs, materials, construction, grading, and marker data')
   }
 
+  const printTraditionalTechPack = (versionId) => {
+    // Print the complete embedded factory document directly whenever possible;
+    // opening the Editor must not require a separate web page.
+    if(!versionId){
+      const frame=document.querySelector('.dtp-paper-frame')
+      if(frame?.contentWindow){try{frame.contentWindow.focus();frame.contentWindow.print();return}catch{/* fallback below */}}
+    }
+    const html = buildTraditionalTechPackHTML(project,project.techPackStudio,{versionId})
+    const preview=window.open('','_blank')
+    if(!preview){setCommandResult('Please allow the printable Tech Pack pop-up, or download the editable JSON from Tech Pack Studio.');return}
+    preview.document.open();preview.document.write(html);preview.document.close()
+    preview.focus()
+    if(preview.document.readyState==='complete')preview.print()
+    else preview.addEventListener('load',()=>preview.print(),{once:true})
+  }
+  const exportDigitalTechPack = () => {
+    const payload={format:'exo-digital-tech-pack',schemaVersion:1,projectName:project.name,
+      source:buildTechPack(project),studio:project.techPackStudio||null}
+    const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'})
+    const url=URL.createObjectURL(blob),anchor=document.createElement('a')
+    anchor.href=url;anchor.download=`${(project.name||'garment').toLowerCase().replace(/[^a-z0-9]+/g,'-')}-digital-tech-pack.json`
+    anchor.click();window.setTimeout(()=>URL.revokeObjectURL(url),1000)
+    setCommandResult('Digital tech pack downloaded with working draft, immutable revision snapshots and local feedback; this does not publish it to a factory.')
+  }
+  const exportTechPackHTML = (versionId) => {
+    const html=buildPortableTechPackHTML(project,project.techPackStudio,{versionId})
+    const url=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}))
+    const anchor=document.createElement('a')
+    anchor.href=url;anchor.download=`${(project.name||'garment').toLowerCase().replace(/[^a-z0-9]+/g,'-')}-digital-tech-pack${versionId?'-'+versionId:''}.html`
+    anchor.click();window.setTimeout(()=>URL.revokeObjectURL(url),1000)
+    setCommandResult('Portable HTML tech pack exported. It can be hosted on Vercel as a read-only document. Hosting this file publicly exposes its contained factory specifications; secure collaborative editing requires authenticated backend access.')
+  }
+  const exportTechPackMarketplaceListing = () => {
+    const safeListing=buildMarketplaceTechPackListing(project,project.techPackStudio)
+    const url=URL.createObjectURL(new Blob([JSON.stringify(safeListing,null,2)],{type:'application/json'}))
+    const anchor=document.createElement('a')
+    anchor.href=url;anchor.download='exo-marketplace-tech-pack-listing-draft.json';anchor.click()
+    window.setTimeout(()=>URL.revokeObjectURL(url),1000)
+    setCommandResult('Created a private Marketplace Hub listing draft. No pattern measurements, supplier information, costs, production PDFs or team discussions were included; no listing was published.')
+  }
+  const openTechPackStudio=(tab='traditional')=>{
+    setTechPackInitialTab(tab)
+    setTechPackOpen(true)
+  }
+  useEffect(()=>{
+    if(!techPackWorkspaceOpen||!clothcraftHybrid)return
+    const receive=event=>setNativeTechPackSnapshot(event.detail||null)
+    window.addEventListener('exo-clothcraft-techpack-snapshot',receive)
+    window.dispatchEvent(new Event('exo-clothcraft-techpack-request'))
+    return()=>window.removeEventListener('exo-clothcraft-techpack-snapshot',receive)
+  },[techPackWorkspaceOpen,clothcraftHybrid,clothcraftLive?.revision])
+  useEffect(()=>{
+    if(!techPackWorkspaceOpen||!clothcraftHybrid)return
+    const key=String(clothcraftLive?.referenceKey||clothcraftLive?.name||'default')
+    let active=true
+    setNativeTechPackLoading(true)
+    setNativeTechPackSaveError('')
+    setNativeTechPackDraft(null)
+    void loadNativeTechPackWorkspace(key).then(value=>{
+      if(!active)return
+      if(value){setNativeTechPackDraft(value);return}
+      try{setNativeTechPackDraft(JSON.parse(localStorage.getItem(`exo-native-techpack-workspace-v1:${key}`)||'null'))}
+      catch{setNativeTechPackDraft(null)}
+    }).catch(error=>{
+      if(!active)return
+      setNativeTechPackSaveError(`Local tech pack storage: ${error.message}`)
+      try{setNativeTechPackDraft(JSON.parse(localStorage.getItem(`exo-native-techpack-workspace-v1:${key}`)||'null'))}
+      catch{setNativeTechPackDraft(null)}
+    }).finally(()=>{if(active)setNativeTechPackLoading(false)})
+    return()=>{active=false}
+  },[techPackWorkspaceOpen,clothcraftHybrid,clothcraftLive?.referenceKey,clothcraftLive?.name])
+
   const exportFactoryPackage = () => {
-    const zip = buildFactoryPackageZip(project)
-    const blob = new Blob([zip], { type: 'application/zip' })
-    const url = URL.createObjectURL(blob)
-    const anchor = document.createElement('a')
-    anchor.href = url
-    anchor.download = `${project.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'garment'}-factory-package.zip`
-    anchor.click()
-    URL.revokeObjectURL(url)
-    setCommandResult(`Factory package exported with graded DXFs, XML/CSV BOM, POMs, printable PDF/SVG markers, structural preflight, trims, construction and editable source. ${productionPreflight.blockers ? `IMPORTANT: ${productionPreflight.blockers} production blockers are documented in production-preflight.json.` : 'Not independently factory-certified.'}`)
+    try {
+      const result = downloadAccuMarkGuardedFactoryPackage20261023(project)
+      if (!result.ok) throw new Error(result.reason)
+      setCommandResult(`Guarded factory ZIP downloaded: ${result.filename}. Size DXFs and physical CUT outlines passed the guarded preflight. External receiver CAD and physical sample approval are still required.`)
+    } catch (error) {
+      setCommandResult(`Factory package blocked: ${error.message}`)
+    }
   }
 
   const downloadObj = (obj) => {
@@ -3972,32 +6094,68 @@ export default function App() {
 
   const requestRenderStill = () => setRenderSignal((signal) => signal + 1)
 
-  const importProject = async (event) => {
+  const importProject = async (event,{manufacturingImport=null}={}) => {
     const file = event.target.files?.[0]
     if (!file) return
     try {
-      const source = await file.text()
-      if (/\.dxf$/i.test(file.name)) {
-        const imported = parseDxfPatterns(source)
+      const source = /\.zip$/i.test(file.name) ? null : await file.text()
+      if (/\.zip$/i.test(file.name)) {
+        const recovered=recoverFactorySourceFromZip(await file.arrayBuffer())
+        // Validation and full source/grade parity run BEFORE mutating undo,
+        // currently open garment, or autosaved project state.
+        pushUndo(cloneProject(project))
+        setProject(recovered.project)
+        projectRestoreBlocked = false
+        setSelectedPieceId(recovered.project.pieces[0]?.id||null)
+        setRunning(false)
+        setHasSimulated(false)
+        setTool('select')
+        setCommandResult(`Restored editable factory source with all ${recovered.verifiedSizes.length} graded sizes and ${recovered.verifiedFiles} SHA-256-verified package files. External manufacturing approval is NOT inferred; previous garment can be restored with Undo.`)
+      } else if (/\.(mdl|vet|iba|rul)$/i.test(file.name)) {
+        const inspection=inspectModarisNativeIntake20261028({fileName:file.name,bytes:new Uint8Array(await file.arrayBuffer())})
+        setCommandResult(inspection.ok
+          ? `${inspection.format}: ${inspection.status}. ${inspection.reason} Current garment was NOT changed.`
+          : `CAD native intake refused: ${inspection.code}. Current garment was NOT changed.`)
+      } else if (/\.dxf$/i.test(file.name)) {
+        const imported = parseDxfPatterns(source,manufacturingImport?{manufacturingImport}:{})
         const next = cloneProject(project)
         next.id = uniqueId('project')
         next.name = file.name.replace(/\.dxf$/i, '') || 'Imported DXF'
         next.pieces = imported.pieces
         next.seams = []
+        if(imported.manufacturingReference){
+          const size=imported.referenceSize
+          next.grading={...next.grading,sizes:[size],baseSize:size,widthPerSizeCm:0,lengthPerSizeCm:0}
+          next.customMeasurements=[]
+          next.topstitches=[]
+          next.fasteners=[]
+          next.trims=[]
+          next.productionSpec=null
+          next.patternSource={type:'manufacturing-dxf-reference',fileName:file.name,size,
+            referenceOnly:true,profile:imported.referenceMode,factoryCertified:false}
+        }
         touchProject(next)
         pushUndo(cloneProject(project))
-        setProject(next)
+        setProject(arrangePatternProject(next))
+        projectRestoreBlocked = false
         setSelectedPieceId(next.pieces[0]?.id || null)
         setTool('select')
         setRunning(false)
-        setCommandResult(`Imported ${next.pieces.length} closed DXF pattern${next.pieces.length === 1 ? '' : 's'} at ${(imported.scaleToCm * 10).toFixed(2)} mm/unit. Sewing is intentionally left unassigned for review.`)
+        setCommandResult(imported.manufacturingReference
+          ? `Imported ${next.pieces.length} locked, CUT-only manufacturing reference shapes (${imported.referenceSize}). No new seam allowances or grading were inferred. This is NOT an editable factory-approved garment; factory ZIP export is disabled. Use garment-source.json to recover the authored project.`
+          : `Imported ${next.pieces.length} closed DXF pattern${next.pieces.length === 1 ? '' : 's'} at ${(imported.scaleToCm * 10).toFixed(2)} mm/unit. Sewing is intentionally left unassigned for review.`)
       } else {
         const parsed = JSON.parse(source)
         if (parsed?.pattern?.panels && Array.isArray(parsed?.pattern?.stitches)) {
+          // The broader PyGarment schema can express units, cubic controls and
+          // disconnected loops that our narrower editor cannot yet preserve.
+          // Reject unsupported imports before touching the active project.
+          assertGarmentCodeImportable(parsed)
           const imported = garmentCodeToProject(parsed, createDefaultProject())
           pushUndo(cloneProject(project))
           touchProject(imported)
           setProject(imported)
+          projectRestoreBlocked = false
           setSelectedPieceId(imported.pieces[0]?.id || null)
           setSelectedFabricId(Object.keys(imported.fabrics || {})[0] || 'main')
           setMarkerFabricId(Object.keys(imported.fabrics || {})[0] || 'main')
@@ -4005,10 +6163,11 @@ export default function App() {
           setResetSignal((signal) => signal + 1)
           setCommandResult(`Imported GarmentCode pattern with ${imported.pieces.length} panels and ${imported.seams.length} stitches`)
         } else {
-          if (!Array.isArray(parsed.pieces) || !parsed.fabrics || !parsed.simulation) throw new Error('Invalid garment document')
+          validateSavedProject(parsed)
           pushUndo(cloneProject(project))
           touchProject(parsed)
           setProject(parsed)
+          projectRestoreBlocked = false
           setSelectedPieceId(parsed.pieces[0]?.id || null)
           setCommandResult(`Loaded ${file.name}`)
         }
@@ -4017,6 +6176,31 @@ export default function App() {
       setCommandResult(`Import failed: ${error.message}`)
     } finally {
       event.target.value = ''
+    }
+  }
+  const importSvgPattern=async event=>{
+    const file=event.target.files?.[0]
+    event.target.value=''
+    if(!file)return
+    try{
+      if(!/\.svg$/i.test(file.name))throw new Error('Choose an SVG exported from Illustrator, Inkscape or vector CAD')
+      if(file.size>3*1024*1024)throw new Error('SVG pattern exceeds 3MB')
+      const outlines=parseSvgPattern(await file.text(),{fileName:file.name})
+      const next=cloneProject(project)
+      next.name=file.name.replace(/\.svg$/i,'')||'Imported SVG draft'
+      next.pieces=outlines.pieces
+      next.seams=[];next.fasteners=[];next.trims=[];next.topstitches=[]
+      next.patternSource={type:'svg',fileName:file.name,scaleToCm:outlines.scaleToCm}
+      touchProject(next)
+      pushUndo(cloneProject(project))
+      setProject(arrangePatternProject(next))
+      setSelectedPieceId(next.pieces[0]?.id||null)
+      setTool('select');setActiveSection('Pattern');setObjectTab('Pattern')
+      setViewportLayout('2d');setLayout2DSignal(v=>v+1)
+      setRunning(false);setHasSimulated(false)
+      setCommandResult(`Imported ${next.pieces.length} editable SVG cutlines from ${file.name} into 2D. Zero seams were created; add or generate sewing separately.`)
+    }catch(error){
+      setCommandResult(`SVG pattern import refused: ${error.message}`)
     }
   }
 
@@ -4063,10 +6247,73 @@ export default function App() {
     }
   }
 
+  const openSeamlyCalculatedDraft = (file, engine, {editable=false,unit}={}) => {
+    try {
+      const {project:next,semantic}=createSeamlyAamaExoDraft20261023(project,{file,engine,editable,unit})
+      pushUndo(cloneProject(project))
+      setProject(next)
+      setSelectedPieceId(next.pieces[0]?.id||null)
+      setRunning(false);setHasSimulated(false);setTool('select')
+      setActiveSection('Pattern');setObjectTab('Pattern');setViewportLayout('2d')
+      setLayout2DSignal(value=>value+1)
+      setCommandResult(`Opened ${next.pieces.length} upstream Seamly CUT pieces as ${editable?'editable UNAPPROVED draft':'locked references'} in EXO draft workspace. Layer 8 DRAW guides and notches/grainlines preserved in provenance, not duplicated as patterns. Native Rust session is unchanged. Sewing roles, allowance widths and grading remain unapproved; factory export blocked. Undo restores previous draft.`)
+    } catch(error){setCommandResult(`Seamly2D 2D import refused: ${error.message}`)}
+  }
+
   const runCommand = (event) => {
     event?.preventDefault?.()
     const raw = command.trim()
     if (!raw) return
+    setAraiLastPrompt(raw)
+    const intent=interpretAssistantIntent(raw,{
+      fabrics:FABRIC_PRESETS,
+      stages:listStagePresets(),
+      templates:GARMENT_TEMPLATES,
+      hangers:HANGER_LIBRARY,
+    })
+    if(intent){
+      const args=intent.args||{}
+      switch(intent.action){
+        case 'library.open':
+          setSidebarView('library');setLibraryVisible(true);setAssetCategory(args.category);setLibraryFolder('all')
+          setCommandResult(`Opened the ${args.category} library.`);break
+        case 'workspace.view':
+          setViewportLayout(args.layout);setCommandResult(`Viewing ${args.layout.toUpperCase()} workspace.`);break
+        case 'pattern.importSvg':
+          svgPatternInputRef.current?.click()
+          setCommandResult('Choose an SVG outline file. Import will add editable 2D patterns without sewing.');break
+        case 'pattern.loadOutline':openUnsewnPatternTemplate(args.templateId);break
+        case 'fabric.apply':
+          activateFabricFromLibrary(args.presetId)
+          break
+        case 'stage.select':
+          updateRenderSetting('stageId',args.stageId);setCommandResult(`Selected stage ${args.stageId}.`);break
+        case 'hanger.select':
+          updateRenderSetting('hangerPreset',args.hangerId);setCommandResult(`Selected hanger ${args.hangerId}.`);break
+        case 'simulation.start':
+          if(clothcraftHybrid)rustCommand('toggle-sim')
+          else toggleSimulation()
+          setCommandResult('Simulation command submitted to the current engine.');break
+        case 'simulation.reset':
+          if(clothcraftHybrid)rustCommand('reset-position')
+          else resetSimulation()
+          setCommandResult('Simulation reset requested.');break
+        case 'project.save':
+          if(clothcraftHybrid)rustCommand('save')
+          else saveProject()
+          setCommandResult('Save command submitted.');break
+        case 'history.undo':
+          undoForVisibleEngine();setCommandResult('Undo requested.');break
+        case 'history.redo':
+          redoForVisibleEngine();setCommandResult('Redo requested.');break
+        case 'render.exportStill':
+          if(clothcraftHybrid)setCommandResult('Native rendering export is not currently exposed through the assistant. Use the Render panel export.')
+          else requestRenderStill()
+          break
+      }
+      setCommand('')
+      return
+    }
     const lower = raw.toLowerCase()
     const percent = Number(lower.match(/(-?\d+(?:\.\d+)?)\s*%/)?.[1])
     const centimeters = Number(lower.match(/(-?\d+(?:\.\d+)?)\s*(?:cm|centimeter)/)?.[1])
@@ -4106,7 +6353,7 @@ export default function App() {
       setRunning(true)
       setCommandResult('Simulation started')
     } else {
-      setCommandResult('Command understood as a future AI action. Current local verbs: widen %, crop cm, seam allowance cm, heavier/lighter fabric, simulate, reset simulation.')
+      setCommandResult('I could not match that request to a verified action. Try: show fabrics, import SVG, use Foundation Tee pattern, 2D view, apply Rigid Denim, simulate, undo, or save. Other tools need an explicit capability implementation.')
     }
     setCommand('')
   }
@@ -4119,6 +6366,124 @@ export default function App() {
   const executeStudioAction = (action) => {
     setOpenMenu(null)
     setSimulationMenuOpen(false)
+    if(['file.techpack','file.techpack.print','file.techpack.references','file.techpack.html','file.techpack.marketplace'].includes(action)){
+      enterTechPackWorkspace();return
+    }
+    // Command search and native AppKit dispatch use this handler too. A draft
+    // file converter must never operate on the hidden React document in V2.
+    if(clothcraftHybrid&&[
+      'file.import.dxf','file.import.svg','file.export.obj','file.export.glb',
+      'file.export.dxf','file.export.pdf','file.export.svg',
+      'file.export.factory','file.export.bom','render.capture',
+    ].includes(action)){
+      setCommandResult('This file format or capture is available in the classic drafting workspace. Native Rust export is available through File → Export → Project / garment document.')
+      return
+    }
+    if(action==='file.library'){
+      void openFileLibrary()
+      return
+    }
+    if(action==='file.save-as'){
+      setFileLibraryStartSave(true)
+      void openFileLibrary()
+      return
+    }
+    if(action==='file.info'){
+      if(clothcraftHybrid){
+        setCommandResult(`Native garment: ${clothcraftLive?.name||'Current project'} · ${clothcraftLive?.panelRefs?.length??clothcraftLive?.panels?.length??'—'} panels. Open File Library to view stored revisions and metadata.`)
+      }else{
+        setCommandResult(`${project.name}: ${project.pieces.length} patterns · ${project.seams?.length||0} seams · ${Object.keys(project.fabrics||{}).length} fabrics · revision ${project.revision??0}.`)
+      }
+      return
+    }
+    if(action.startsWith('file.add.')){
+      const categories={garment:'Garment',pattern:'Patterns',avatar:'Avatar',fabric:'Fabric',stage:'Stage'}
+      setAssetCategory(categories[action.slice(9)]||'Garment')
+      setLibraryFolder('all')
+      setSidebarView('library')
+      setLibraryVisible(true)
+      return
+    }
+    if(action==='edit.properties'){
+      setInspectorVisible(true)
+      setShowObjectBrowser(true)
+      return
+    }
+    if(action==='edit.deselect'){
+      if(clothcraftHybrid)window.dispatchEvent(new CustomEvent('exo-clothcraft-command',{detail:'select:none'}))
+      else setSelectedPieceId(null)
+      return
+    }
+    if(action.startsWith('file.import.')){
+      if(action==='file.import.dxf')importInputRef.current?.click()
+      if(action==='file.import.svg')svgPatternInputRef.current?.click()
+      return
+    }
+    if(action.startsWith('file.export.')){
+      const exporters={
+        'file.export.obj':requestObjExport,
+        'file.export.glb':requestGlbExport,
+        'file.export.dxf':exportDxf,
+        'file.export.pdf':()=>exportMarker('pdf'),
+        'file.export.svg':()=>exportMarker('svg'),
+        'file.export.factory':exportFactoryPackage,
+        'file.export.bom':exportBomXml,
+      }
+      exporters[action]?.()
+      return
+    }
+    if(action==='edit.duplicate'){
+      if(clothcraftHybrid)window.dispatchEvent(new CustomEvent('exo-clothcraft-command',{detail:'duplicate-selected'}))
+      else duplicateSelectedPiece()
+      return
+    }
+    if(action==='display.background2d'){
+      window.dispatchEvent(new CustomEvent('exo-open-2d-background-image',{
+        detail:{editor:clothcraftHybrid?'native':'draft',action:'open'},
+      }))
+      return
+    }
+    if(['settings.workspace','settings.appearance','settings.profile','settings.preferences','settings.files','settings.plugins'].includes(action)){
+      setStudioSettingsTab(({ 'settings.files':'filesApi' })[action]||action.split('.')[1])
+      setStudioSettingsOpen(true)
+      return
+    }
+    // The CLO-style menus and macOS native menu must operate on the same Rust
+    // document visible in V2. Running legacy mutators here changes a hidden
+    // shadow project and makes Save/Undo/Draw appear broken to the user.
+    const nativeRoute=clothcraftHybrid?getCloNativeMenuRoute(action):null
+    if(nativeRoute){
+      if(nativeRoute.type==='command'){
+        if(action.startsWith('3d.')){
+          const native3dTool={'3d.orbit':'orbit','3d.transform':'transform','3d.move':'move','3d.rotate':'rotate','3d.hand':'hand'}[action]
+          if(native3dTool)setViewportTool(native3dTool)
+          if(action==='3d.seams')setShowSewingGuides(value=>!value)
+        }
+        if(action==='2d.add'){setTool('polygon');setActiveSection('Pattern')}
+        if(action==='2d.mirror')setActiveSection('Pattern')
+        window.dispatchEvent(new CustomEvent('exo-clothcraft-command',{detail:nativeRoute.command}))
+      }else if(nativeRoute.type==='tool'){
+        setTool(nativeRoute.tool)
+        setActiveSection(nativeRoute.section)
+        if(action==='sewing.segment'||action==='sewing.free'||action==='sewing.edit'){
+          const nativeAction={
+            'sewing.segment':'sewing.segmentSew',
+            'sewing.free':'sewing.freeSew',
+            'sewing.edit':'sewing.editExisting',
+          }[action]
+          window.dispatchEvent(new CustomEvent('exo-clothcraft-toolbar-activated',{detail:{nativeAction}}))
+          window.dispatchEvent(new CustomEvent('exo-clothcraft-command',{detail:action==='sewing.edit'?'mode:edit':'mode:sew'}))
+        }
+        window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:nativeRoute.tool}}))
+      }else if(nativeRoute.type==='fit'){
+        setActiveSection('Fit');setAnalysisMode('strain')
+      }else if(nativeRoute.type==='analysis'){
+        setAnalysisMode(nativeRoute.value)
+      }else if(nativeRoute.type==='unsupported'){
+        setCommandResult(nativeRoute.reason)
+      }
+      return
+    }
     switch (action) {
       case 'file.new': applyGarmentTemplate(GARMENT_TEMPLATES[0]?.id); break
       case 'file.open': importInputRef.current?.click(); break
@@ -4154,7 +6519,7 @@ export default function App() {
       case 'materials.edit': setActiveSection('Fabric'); break
       case 'materials.add': addFabricSwatch(); setObjectTab('Fabric'); setActiveSection('Fabric'); break
       case 'materials.graphic': graphicInputRef.current?.click(); break
-      case 'avatar.library': setAssetCategory('Avatar'); setActiveSection('Avatar'); break
+      case 'avatar.library': setAssetCategory('Avatar');setLibraryFolder('all'); setActiveSection('Avatar'); break
       case 'avatar.properties': setActiveSection('Avatar'); break
       case 'avatar.import': avatarMeshInputRef.current?.click(); break
       case 'workspace.production': setActiveSection('Production'); break
@@ -4171,7 +6536,8 @@ export default function App() {
       case 'display.wireframe': setWireframe(value => !value); break
       case 'display.strain': setAnalysisMode('strain'); break
       case 'display.grid': setShow2DGrid(value => !value); break
-      case 'settings.workspace': setCompactTools(value => !value); break
+      case 'settings.workspace': setStudioSettingsOpen(true); break
+      case 'workspace.profile.patternFocus': applyWorkspaceProfile(WORKSPACE_PROFILES.patternFocus); break
       case 'workspace.profile.drafting': applyWorkspaceProfile(WORKSPACE_PROFILES.drafting); break
       case 'workspace.profile.sewing': applyWorkspaceProfile(WORKSPACE_PROFILES.sewing); break
       case 'workspace.profile.materials': applyWorkspaceProfile(WORKSPACE_PROFILES.materials); break
@@ -4213,6 +6579,103 @@ export default function App() {
   const exportForVisibleEngine = () => clothcraftHybrid ? rustCommand('export') : exportProject()
   const undoForVisibleEngine = () => clothcraftHybrid ? rustCommand('undo') : undo()
   const redoForVisibleEngine = () => clothcraftHybrid ? rustCommand('redo') : redo()
+  const runCustomToolbarAction = id => {
+    if(id==='exo:add-anchor-point'){setTool('split');setActiveSection('Pattern');window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:'split'}}));return}
+    if(id==='exo:grade-nest-xs-xxl'){
+      if(clothcraftHybrid){
+        // The saved Liquid Glass button must control the actual Rust-backed
+        // 2D grading overlay, not the unrelated legacy PatternEditor state.
+        window.dispatchEvent(new CustomEvent('exo-clothcraft-pattern-studio-command',{detail:{command:'toggle-native-nest'}}))
+      }else setShowGradeNest(value=>!value)
+      return
+    }
+    if(typeof id==='string'&&id.startsWith('modaris:')){
+      const route=getModarisExoRoute20261028(id)
+      if(!route){
+        setCommandResult(`${id}: this Modaris catalog command has no verified EXO implementation yet. It can be saved to custom toolbars as a reference.`)
+        return
+      }
+      const readiness=checkModarisToolbarPreconditions20261028(route,{
+        nativeMode:clothcraftHybrid,full2D:viewportLayout==='2d',session:clothcraftLive,
+      })
+      if(!readiness.ok){setCommandResult(readiness.reason);return}
+      if(route.kind==='layout'){
+        setViewportLayout(route.action)
+        setCommandResult(`${route.tool.label}: switched to EXO ${route.action.toUpperCase()} layout.`)
+        return
+      }
+      if(route.kind==='settings'){
+        setStudioSettingsTab(route.action)
+        setStudioSettingsOpen(true)
+        return
+      }
+      if(route.kind==='panel'){
+        setShowObjectBrowser(true)
+        setInspectorVisible(true)
+        return
+      }
+      if(route.kind==='app'){
+        if(['select','point','grid'].includes(route.action)){runCustomToolbarAction(route.action);return}
+        if(route.action==='simulate')simForVisibleEngine()
+        else if(route.action==='undo')undoForVisibleEngine()
+        else if(route.action==='redo')redoForVisibleEngine()
+        else if(route.action==='save')saveForVisibleEngine()
+        else if(route.action==='export')exportForVisibleEngine()
+        return
+      }
+      if(route.kind==='native')rustCommand(route.action)
+      else if(route.kind==='canvas'){
+        setTool(route.action)
+        rustCommand('mode:edit')
+        window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:route.action}}))
+      }
+      else if(route.kind==='studio')window.dispatchEvent(new CustomEvent('exo-clothcraft-pattern-studio-command',{detail:{command:route.action}}))
+      else if(route.kind==='f7-size')window.dispatchEvent(new CustomEvent('exo-clothcraft-pattern-studio-command',{detail:{command:'f7-size-evolution',action:route.action}}))
+      else if(route.kind==='grade24')window.dispatchEvent(new CustomEvent('exo-clothcraft-pattern-studio-command',{detail:{command:'custom-grade-tool',toolId:route.action}}))
+      else if(route.kind==='tool')window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:route.action}}))
+      setCommandResult(`${route.tool.label}: sent the EXO command. Check the native tool's result and prerequisites before treating the operation as complete.`)
+      return
+    }
+    if(typeof id==='string'&&id.startsWith('grade24:')){window.dispatchEvent(new CustomEvent('exo-clothcraft-pattern-studio-command',{detail:{command:'custom-grade-tool',toolId:id.slice(8)}}));return}
+    if(id==='foam-padding'){
+      setActiveSection('Pattern')
+      if(clothcraftHybrid)window.dispatchEvent(new Event('exo-clothcraft-open-foam-padding'))
+      else requestAnimationFrame(()=>document.querySelector('[aria-label="Foam padding and trapunto tool"]')?.scrollIntoView({block:'nearest',behavior:'smooth'}))
+      return
+    }
+    if(id==='zipper'||id==='trim'){
+      setObjectTab(id==='zipper'?'Zipper':'Trim')
+      setShowObjectBrowser(true)
+      setInspectorVisible(true)
+      setActiveSection('Sewing')
+      return
+    }
+    if(id==='simulate'){simForVisibleEngine();return}
+    if(id==='reset'){resetForVisibleEngine();return}
+    if(id==='save'){saveForVisibleEngine();return}
+    if(id==='grid'){setShow2DGrid(value=>!value);return}
+    if(id==='seams'){setShowSewingGuides(value=>!value);return}
+    if(id==='library'){setLibraryVisible(value=>!value);return}
+    if(id==='properties'){setInspectorVisible(value=>!value);return}
+    if(id==='fit'){
+      if(clothcraftHybrid)window.dispatchEvent(new Event('exo-clothcraft-fit-camera'))
+      else setFitCameraSignal(value=>value+1)
+      return
+    }
+    if(id==='move3d'||id==='rotate3d'){
+      setViewportTool(id==='move3d'?'move':'rotate')
+      if(clothcraftHybrid)rustCommand(id==='move3d'?'mode:move3d':'mode:rotate3d')
+      return
+    }
+    if(!['select','point','sew'].includes(id))return
+    setTool(id)
+    setActiveSection(id==='sew'?'Sewing':'Pattern')
+    if(clothcraftHybrid){
+      rustCommand(id==='sew'?'mode:sew':'mode:edit')
+      window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:id==='point'?'point':id==='sew'?'sew':'select'}}))
+    }
+  }
+  useEffect(()=>{if(clothcraftHybrid)rustCommand(`analysis:${analysisMode==='strain'?'strain':'surface'}`)},[clothcraftHybrid,analysisMode])
   const visibleRunning = clothcraftHybrid ? Boolean(clothcraftLive?.running) : running
   const clo7ThreeDHandlers={
     simulate:simForVisibleEngine,
@@ -4227,16 +6690,107 @@ export default function App() {
     'trim-panel':()=>{setActiveSection('Sewing');setObjectTab('Trim');setShowObjectBrowser(true)},
     fastener:()=>setTool('fastener'),
   }
-  const enabledClo3D = slot => Boolean(slot.action && clo7ThreeDHandlers[slot.action] &&
+  const enabledClo3D = slot => clothcraftHybrid ? getClo7NativeCapability('3d',slot.id)?.mode==='native' : Boolean(slot.action && clo7ThreeDHandlers[slot.action] &&
     (!clothcraftHybrid || !['mesh-select','pin','fastener'].includes(slot.action)))
-  const activateCloTool = (slot,dimension,runOnly=false) => {
+  // The reference strip is a stable physical tool map: filtering out
+  // unavailable buttons collapses rows and makes entire CLO tool families
+  // appear missing. Keep all observed positions in the original order;
+  // execution eligibility is controlled by the individual capability.
+  const draftHardwareForCloSlot=slotId=>({
+    '3d:B11':'button',
+    '3d:B13':'zipper',
+    '3d:B17':'binding',
+    '2d:B11':'topstitch',
+  })[slotId]||null
+  const createCloDraftHardware=(slot,dimension)=>{
+    const kind=draftHardwareForCloSlot(`${dimension}:${slot.id}`)
+    if(clothcraftHybrid||!selectedPiece||!kind)return
+    try{
+      let result
+      mutateProject(next=>{
+        result=applyDraftHardwareAction(next,{
+          kind,pieceId:selectedPiece.id,edgeIndex:trimEdgeIndex,
+        })
+      })
+      setCommandResult(`${result.kind} saved on ${selectedPiece.name} as EXO draft construction. Undo is available; native Rust fabric/constraints were not modified.`)
+      setActiveSection('Sewing')
+    }catch(error){setCommandResult(`EXO draft construction refused: ${error.message}`)}
+  }
+  const editValidatedDraftHardware=(kind,pieceId,operation,itemId,options={})=>{
+    try{
+      let result
+      mutateProject(next=>{
+        result=applyDraftHardwareAction(next,{kind,pieceId,operation,itemId,...options})
+      })
+      setCommandResult(`${kind} ${operation === 'remove' ? 'removed' : operation === 'update' ? 'updated' : 'placed'} · ${result.id}`)
+      return result
+    }catch(error){
+      setCommandResult(`Hardware edit refused: ${error.message}`)
+      return null
+    }
+  }
+  const activateCloTool = (slot,dimension) => {
+    if(dimension==='2d'&&(slot.id==='B04'||slot.id==='B05')){
+      const widget=slot.id==='B04'?'sewing':'steam'
+      if(clothcraftHybrid)window.dispatchEvent(new CustomEvent('exo-clothcraft-toolbar-activated',{detail:{nativeAction:null}}))
+      setActiveFinishingTool(widget)
+      setTool(widget==='sewing'?'seam-measure':'steam-preview')
+      if(clothcraftHybrid){
+        // The movable tool-specific widget owns these controls; do not take
+        // over the Object Browser or create an unrelated bottom inspector.
+        rustCommand('mode:edit')
+        window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:'select'}}))
+        window.dispatchEvent(new CustomEvent('exo-clothcraft-3d-tool',{detail:{tool:'off'}}))
+        setViewportTool(current=>current==='mesh-select'?'orbit':current)
+      }
+      if(widget==='sewing'){
+        if(!clothcraftHybrid&&project.seams?.length){
+          setSeamWalkId(current=>current||project.seams[0].id)
+        }
+      }
+      return
+    }
+    setActiveFinishingTool(null)
     const capability=getClo7NativeCapability(dimension,slot.id)
-    // Native tools should immediately hand control to the drawing viewport:
-    // an explanatory overlay would obscure Save/Close Pattern and edit nodes.
-    // For missing or inspection-only tools retain the explicit help panel.
-    if(!runOnly)setSelectedCloTool(capability?.mode==='native'?null:
-      {slot,dimension,status:capability?.mode||'unavailable',reason:capability?.reason})
+    // A toolbar click activates the actual tool immediately. The old
+    // information-card/Run intermediary obstructed sewing and pattern editing.
+    // Unsupported commands remain explicitly non-operational and unobtrusive.
+    if(!capability||capability.mode==='unavailable'){
+      if(clothcraftHybrid){
+        window.dispatchEvent(new CustomEvent('exo-clothcraft-toolbar-activated',{detail:{nativeAction:null}}))
+        window.dispatchEvent(new CustomEvent('exo-clothcraft-3d-tool',{detail:{tool:'off'}}))
+        setTool(current=>['mesh-select','garment-measure','garment-measure-edit','avatar-measure','avatar-measure-edit','line-3d'].includes(current)?'select':current)
+        setViewportTool(current=>current==='mesh-select'?'orbit':current)
+      }
+      setCommandResult(`${slot.label}: ${capability?.reason||'No native implementation is available yet.'}`)
+      return
+    }
+    if(clothcraftHybrid && !(dimension==='3d'&&slot.id==='A03'))
+      setTool(current=>['mesh-select','garment-measure','garment-measure-edit','avatar-measure','avatar-measure-edit','line-3d'].includes(current)?'select':current)
+    // Tool-only actions retain their own canvas cursor. Inspector and popup
+    // actions release a previous drawing cursor as they are activated.
+    if(clothcraftHybrid&&dimension==='2d'&&!new Set([
+      'A01','A02','A04','A05','A08','A09','A11','A12','A13','A14','A15','B02','B03',
+    ]).has(slot.id)){
+      window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:'select'}}))
+    }
+    // Switching tool families dismisses a previous native construction form.
+    if(clothcraftHybrid && capability?.mode==='native')window.dispatchEvent(new CustomEvent('exo-clothcraft-toolbar-activated',{
+      detail:{nativeAction:capability?.nativeAction||null}
+    }))
+    // A transient 3D mesh-brush selection must not keep intercepting pointer
+    // events after the user picks another CLO 3D or 2D editing tool.
+    if(clothcraftHybrid && !(dimension==='3d'&&slot.id==='A03')){
+      window.dispatchEvent(new CustomEvent('exo-clothcraft-3d-tool',{detail:{tool:'off'}}))
+      setViewportTool(current=>current==='mesh-select'?'orbit':current)
+    }
+    // The tool strip is the control surface. Unavailable reference positions
+    // stay disabled; working actions and inspector navigation run in place.
     if(!clothcraftHybrid){
+      if(draftHardwareForCloSlot(`${dimension}:${slot.id}`)&&selectedPiece){
+        createCloDraftHardware(slot,dimension)
+        return
+      }
       if(dimension==='3d'&&enabledClo3D(slot))clo7ThreeDHandlers[slot.action]?.()
       else if(dimension==='2d'){
         const action={select:'select',point:'point',internal:'internal',sew:'sew'}[slot.action]
@@ -4250,69 +6804,148 @@ export default function App() {
     switch(capability?.nativeAction){
       case 'simulation.toggle':simForVisibleEngine();break
       case 'viewport3d.selectMove':
-        setViewportTool('transform');rustCommand('mode:move3d');setActiveSection('Pattern');break
+        setViewportTool('transform');rustCommand('mode:move3d');break
+      case 'dimensions.measureAvatar':
+      case 'dimensions.measureAvatarEdit':
+        setTool(capability.nativeAction==='dimensions.measureAvatar'?'avatar-measure':'avatar-measure-edit');
+        setViewportTool('orbit');rustCommand('mode:edit');
+        window.dispatchEvent(new CustomEvent('exo-clothcraft-3d-tool',{detail:{tool:capability.nativeAction==='dimensions.measureAvatar'?'avatar-measure':'avatar-measure-edit'}}));break
+      case 'dimensions.measureGarment':
+      case 'dimensions.measureGarmentEdit':
+        setTool(capability.nativeAction==='dimensions.measureGarment'?'garment-measure':'garment-measure-edit');
+        setViewportTool('orbit');rustCommand('mode:edit');
+        window.dispatchEvent(new CustomEvent('exo-clothcraft-3d-tool',{detail:{tool:capability.nativeAction==='dimensions.measureGarment'?'garment-measure':'garment-measure-edit'}}));break
+      case 'pattern3d.drawInternalLine':
+        setTool('line-3d');setViewportTool('orbit');rustCommand('mode:edit');
+        window.dispatchEvent(new CustomEvent('exo-clothcraft-3d-tool',{detail:{tool:'line-3d'}}));break
+      case 'sewing.editExisting':
+        // Edit Sewing is a direct picking tool, like Segment/Free Sewing.
+        // Do NOT switch the inspector to Sewing: that opens a bottom editor.
+        setTool('seam-edit');rustCommand('mode:edit');
+        window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:'seam-edit'}}));
+        break
+      case 'arrangement.reset2d':rustCommand('reset-2d');break
+      case 'simulation.redrape':rustCommand('redrape');break
       case 'arrangement.reset3d':
         resetForVisibleEngine();break
       case 'pattern2d.selectTransform':
-        setTool('select');setActiveSection('Pattern');rustCommand('mode:edit');
+        setTool('select');rustCommand('mode:edit');
         window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:'select'}}));break
       case 'pattern2d.editPoints':
-        setTool('point');setActiveSection('Pattern');rustCommand('mode:edit');
+        setTool('point');rustCommand('mode:edit');
         window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:'point'}}));break
+      case 'pattern2d.fullnessRuffle':
+        setTool('fullness');rustCommand('mode:edit');break
+      case 'pattern2d.pleatGuides':
+        // Pleat guides are placed by clicking the fabric with the tool cursor.
+        // No Property Editor takeover or bottom parameter dialog is needed.
+        setTool('pleat-guides');rustCommand('mode:edit');
+        window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:'pleat'}}));break
       case 'pattern2d.drawPolygon':
-        setTool('polygon');setActiveSection('Pattern');rustCommand('mode:pen');break
+        setTool('polygon');rustCommand('mode:pen');break
+      case 'pattern2d.basePolygon':
+        setTool('base-polygon');rustCommand('tool:base-polygon');break
+      case 'pattern2d.traceContour':
+        // Trace produces an independent Rust polygon with the exact authored
+        // straight contour/fabric, never a visual duplicate or a fake CLO
+        // shortcut. The native workspace owns selection and revision.
+        setTool('trace');rustCommand('trace-selected');break
+      case 'pattern2d.addAnnotation':
+        setTool('annotation');rustCommand('mode:edit');
+        window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:'annotation'}}));break
+      case 'pattern2d.editAnnotation':
+        setTool('annotation-edit');rustCommand('mode:edit');
+        window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:'editAnnotation'}}));break
+      case 'viewport3d.meshBrushSelect':
+        setTool('mesh-select');setViewportTool('mesh-select');rustCommand('mode:edit');
+        window.dispatchEvent(new CustomEvent('exo-clothcraft-3d-tool',{detail:{tool:'mesh-brush'}}));break
       case 'pattern2d.drawInternalLine':
-        setTool('internal');setActiveSection('Sewing');rustCommand('mode:line');
+        // Internal geometry is drawn inside the selected pattern directly.
+        // Selecting this tool must not replace the object/property inspector.
+        setTool('internal');rustCommand('mode:line');
         window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:'internal'}}));break
+      case 'pattern2d.placeNotch':
+        setTool('notch');rustCommand('mode:edit');
+        window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:'notch'}}));break
+      case 'pattern2d.setSeamAllowanceGuide':
+        setTool('allowance');rustCommand('mode:edit');
+        window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:'allowance'}}));break
+      case 'sewing.segmentSew':
       case 'sewing.freeSew':
-        setTool('sew');setActiveSection('Sewing');rustCommand('mode:sew');
+        setTool(capability.nativeAction==='sewing.segmentSew'?'segment-sew':'free-sew');rustCommand('mode:sew');
         window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:'sew'}}));break
+      case 'pattern2d.fillPanel':
+        // Configuration uses the same centered floating panel as Steam.
+        setTool('fill-panel');
+        rustCommand('mode:edit');break
+      case 'pattern2d.editGrading':
+      case 'pattern2d.autoGrading':
+        setTool(capability.nativeAction==='pattern2d.editGrading'?'grading-edit':'grading-auto');
+        rustCommand('mode:edit');break
+      case 'pattern2d.walkSeam':
+        setTool('walk-seam');
+        rustCommand('mode:edit');break
       default:
-        // A read-only inspector remains useful without claiming that the
-        // original CLO authoring command or solver has been implemented.
-        if(capability?.inspectionAction==='sewing.inspectSeams')setActiveSection('Sewing')
-        if(capability?.inspectionAction==='fabric.inspectProperties'){
-          setActiveSection('Fabric');setObjectTab('Fabric');setShowObjectBrowser(true)
+        // Toolbar tools never navigate or replace the Property Editor.
+        if(capability?.inspectionAction==='sewing.inspectSeams'){
+          setTool('seam-measure')
         }
-        if(capability?.inspectionAction==='dimensions.show')setActiveSection('Production')
         if(capability?.inspectionAction==='dimensions.measureTemporary'){
-          setActiveSection('Production');rustCommand('mode:edit');
-          window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:'measure'}}))
+          rustCommand('mode:edit');
+          setTool(slot.id==='A11'?'measure-edit':'measure')
+          window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:slot.id==='A11'?'measure-edit':'measure'}}))
         }
     }
   }
-  const renderClo7ThreeDSlot = slot => {
-    const capability=getClo7NativeCapability('3d',slot.id)
-    const handler=clothcraftHybrid?capability?.mode==='native':enabledClo3D(slot)
-    const pressed=slot.action==='simulate'?visibleRunning
-      :slot.action==='transform'?viewportTool==='transform'
-      :slot.action==='mesh-select'?viewportTool==='mesh-select'
-      :slot.action==='pin'?tool==='pin'
-      :slot.action==='fastener'?tool==='fastener'
-      :slot.action==='seams'?showSewingGuides:false
-    return <button key={slot.id} type="button" data-clo-slot={`3d:${slot.id}`}
-      title={`${slot.label} · ${handler?'Run native EXO action':'Click for tool details and implementation status'}`}
-      aria-label={slot.label} aria-pressed={Boolean(pressed||selectedCloTool?.dimension==='3d'&&selectedCloTool?.slot?.id===slot.id)}
-      data-clo-implementation={capability?.mode||'unavailable'}
-      className={`${pressed?'active':''} ${handler?'clo-supported-tool':'clo-tool-inquire'}`}
-      disabled={false}
-      style={slot.after?{marginBottom:9}:undefined}
-      onClick={()=>activateCloTool(slot,'3d')}><CadToolIcon id={slot.icon} size={20}/></button>
-  }
   useEffect(() => {
     if (!clothcraftHybrid) return undefined
-    const onStatus = event => {setClothcraftLive(event.detail);const mode={edit:'orbit',move3d:'move',rotate3d:'rotate',stretch3d:'hand'}[event.detail?.mode];if(mode)setViewportTool(mode)}
+    const onStatus = event => {
+      setClothcraftLive(event.detail)
+      if(typeof event.detail?.showGraphicMeasurements==='boolean')setGraphicMeasurementsVisible(event.detail.showGraphicMeasurements)
+      const mode={edit:'orbit',move3d:'move',rotate3d:'rotate',stretch3d:'hand'}[event.detail?.mode]
+      if(mode)setViewportTool(current=>current==='mesh-select'&&mode==='orbit'?current:mode)
+    }
     window.addEventListener('exo-clothcraft-status', onStatus)
     return () => window.removeEventListener('exo-clothcraft-status', onStatus)
   }, [clothcraftHybrid])
   useEffect(()=>{
+    if(!clothcraftHybrid){setFoamPropertySelection(null);return undefined}
+    const select=event=>{
+      const pad=event.detail?.pad
+      setFoamPropertySelection(pad||null)
+      if(pad){
+        setEnvironmentSelection(null)
+        setSelectedObjectForProperties(null)
+        setActiveSection('Pattern')
+        if(viewportLayout!=='2d'&&!patternFocusActive)setInspectorVisible(true)
+      }
+    }
+    window.addEventListener('exo-clothcraft-foam-selection',select)
+    return()=>window.removeEventListener('exo-clothcraft-foam-selection',select)
+  },[clothcraftHybrid,viewportLayout,patternFocusActive])
+  useEffect(()=>{
     if(!clothcraftHybrid)return undefined
     // Viewport selection supersedes any older Fabric/Trim/Object Browser
     // context, even when the user reselects the same physical edge.
-    const onNativePick=()=>{setSelectedObjectForProperties(null);setObjectTab('Scene');setActiveSection('Pattern')}
+    const onNativePick=event=>{setFoamPropertySelection(null);setSelectedObjectForProperties(null);setObjectTab('Scene');setActiveSection(event.detail?.avatar?'Avatar':event.detail?.kind==='sewing'?'Sewing':'Pattern')}
     window.addEventListener('exo-clothcraft-native-pick',onNativePick)
     return()=>window.removeEventListener('exo-clothcraft-native-pick',onNativePick)
   },[clothcraftHybrid])
+  useEffect(()=>{
+    if(!clothcraftHybrid)return undefined
+    const selectFabric=event=>{
+      const id=event.detail?.id
+      if(typeof id!=='string')return
+      const ref=clothcraftLive?.fabricRefs?.find(f=>f.id===id)
+      if(!ref)return
+      setSelectedObjectForProperties({...ref,source:'native',type:'fabric'})
+      setObjectTab('Fabric')
+      setActiveSection('Fabric')
+      setShowObjectBrowser(true)
+    }
+    window.addEventListener('exo-clothcraft-select-fabric',selectFabric)
+    return()=>window.removeEventListener('exo-clothcraft-select-fabric',selectFabric)
+  },[clothcraftHybrid,clothcraftLive?.fabricRefs])
   useEffect(() => {
     if (!clothcraftHybrid) return
     rustCommand(`set-wireframe:${wireframe}`)
@@ -4336,16 +6969,268 @@ export default function App() {
     rustCommand(`select:${selectedPieceId}`)
   }, [clothcraftHybrid,selectedPieceId,clothcraftLive?.name])
 
+  // Same-page automation covers interface features that live outside the
+  // native Rust agent: themes, scene presets, the File Library and catalogs.
+  // A queued, allowlisted event protocol accepts no arbitrary JavaScript or
+  // shell commands and always uses the same UI state transitions as clicks.
+  const automationFail=(code,message)=>{throw Object.assign(new Error(message),{code})}
+  const requiresString=(value,key)=>{
+    if(typeof value!=='string'||!value.trim()||value.length>180)automationFail('INVALID_ARGUMENTS',`${key} must be a nonempty string`)
+    return value.trim()
+  }
+  appAutomationHandlersRef.current={
+    'app.capabilities':()=>({version:1,scope:'current browser tab',actions:APP_AUTOMATION_ACTIONS}),
+    'app.status':()=>({engine:clothcraftHybrid?'native':'legacy',project:clothcraftHybrid?clothcraftLive?.name||null:project.name,
+      revision:clothcraftHybrid?clothcraftLive?.revision??null:project.revision,
+      section:activeSection,viewport:viewportLayout,activeTool:tool,libraryOpen:fileLibraryOpen,
+      nativeReady:clothcraftHybrid?Boolean(clothcraftLive):null}),
+    'app.project.summary':()=>clothcraftHybrid
+      ?{engine:'native',name:clothcraftLive?.name||null,revision:clothcraftLive?.revision??null,
+        panels:clothcraftLive?.panelRefs?.map(panel=>({id:panel.id,name:panel.name,fabric:panel.fabric}))||[],
+        seams:clothcraftLive?.seamRefs?.length||0,fabrics:clothcraftLive?.fabricRefs?.map(f=>({id:f.id,name:f.name}))||[],
+        graphics:clothcraftLive?.graphicRefs?.length||0,running:Boolean(clothcraftLive?.running)}
+      :{engine:'legacy',name:project.name,revision:project.revision,pieces:project.pieces?.map(piece=>({id:piece.id,name:piece.name}))||[],
+        seams:project.seams?.length||0,fabrics:Object.keys(project.fabrics||{}),renderStage:project.render?.stageId||'none'},
+    'app.project.save':async()=>{
+      if(clothcraftHybrid){const result=await requestNativeLibraryProject('capture');return{saved:true,engine:'native',name:result.name}}
+      writeSavedProject(localStorage,STORAGE_KEY,BACKUP_STORAGE_KEY,project)
+      setSaveState('saved')
+      return{saved:true,engine:'legacy',name:project.name,revision:project.revision}
+    },
+    'app.library.open':async()=>{await openFileLibrary();return{opened:true}},
+    'app.library.list':async()=>{
+      const records=await listLibraryProjects()
+      return{entries:records.map(({id,name,status,category,collection,currentVersion,updatedAt,createdAt})=>({id,name,status,category,collectionId:collection,currentVersion,updatedAt,createdAt}))}
+    },
+    'app.library.collections.list':async()=>({collections:await listLibraryCollections()}),
+    'app.library.collections.create':async({name})=>{
+      const label=requiresString(name,'name')
+      const saved=await createLibraryCollection({name:label})
+      await refreshFileLibrary()
+      return{id:saved.id,name:saved.name}
+    },
+    'app.library.capture':async({name,status='working',category='garment',collectionId='',notes=''})=>{
+      const label=requiresString(name,'name')
+      if(!['working','development','sample','finished','base-pattern'].includes(status))automationFail('INVALID_ARGUMENTS','Unknown project status')
+      if(!['garment','pattern','fabric','hardware','button','zipper','trim','studio-set','techpack','other'].includes(category))automationFail('INVALID_ARGUMENTS','Unknown project category')
+      if(typeof notes!=='string'||notes.length>3000)automationFail('INVALID_ARGUMENTS','Project notes exceed 3000 characters')
+      if(typeof collectionId!=='string')automationFail('INVALID_ARGUMENTS','Invalid collection ID')
+      const saved=await archiveCurrentProject({name:label,status,category,collectionId,notes})
+      return{id:saved.id,name:saved.name,status:saved.status,engine:saved.snapshotFormat}
+    },
+    'app.library.project.open':async({id})=>{
+      const identifier=requiresString(id,'id')
+      const saved=await getLibraryProject(identifier)
+      if(!saved)automationFail('NOT_FOUND','Saved library project not found')
+      const opened=await openSavedFileRecord(saved)
+      if(!opened)automationFail('OPEN_FAILED','Library editor could not open the selected project')
+      return{opened:true,id:identifier,name:saved.name}
+    },
+    'app.assets.list':({category})=>{
+      if(category==='studioSets')return{assets:listStagePresets().map(item=>({id:item.id,name:item.name,kind:item.kind}))}
+      if(category==='hardware')return{assets:listHardwarePresets().map(item=>({id:item.id,name:item.name,kind:item.kind}))}
+      if(category==='fabrics')return{assets:Object.entries(FABRIC_PRESETS).map(([id,item])=>({id,name:item.name||id}))}
+      if(category==='garments')return{assets:GARMENT_TEMPLATES.map(item=>({id:item.id,name:item.name}))}
+      return automationFail('INVALID_ARGUMENTS','category must be garments, fabrics, hardware or studioSets')
+    },
+    'app.appearance.get':()=>({theme:studioCustomization.appearance.theme,panelFinish:studioCustomization.appearance.panelFinish,
+      liquidGlass:studioCustomization.appearance.liquidGlass,workspace:{viewportLayout:studioCustomization.workspace.viewportLayout,
+        libraryWidth:studioCustomization.workspace.libraryWidth,inspectorWidth:studioCustomization.workspace.inspectorWidth}}),
+    'app.appearance.setTheme':({theme})=>{
+      if(!STUDIO_THEME_IDS.has(theme))automationFail('INVALID_ARGUMENTS','Unknown installed color theme')
+      updateStudioCustomization({...studioCustomization,appearance:{...studioCustomization.appearance,theme}})
+      return{theme,applied:true}
+    },
+    'app.workspace.setLayout':({layout})=>{
+      if(!['split','stack','3d','2d'].includes(layout))automationFail('INVALID_ARGUMENTS','Layout must be split, stack, 3d or 2d')
+      updateStudioCustomization({...studioCustomization,workspace:{...studioCustomization.workspace,viewportLayout:layout}})
+      return{layout,applied:true}
+    },
+    'app.scene.setStage':({id})=>{
+      if(!['none',...listStagePresets().map(stage=>stage.id)].includes(id))automationFail('INVALID_ARGUMENTS','Unknown installed studio stage')
+      updateRenderSetting('stageId',id)
+      return{stage:id,applied:true}
+    },
+  }
+  useEffect(()=>installAppAutomation(()=>appAutomationHandlersRef.current),[])
+
+  const togglePatternGradingStudio=()=>{
+    if(!patternFocusActive){
+      patternFocusReturnRef.current={layout:viewportLayout,section:activeSection}
+      setViewportLayout('2d');setActiveSection('Production');setObjectTab('Grading');setShowObjectBrowser(true);setInspectorVisible(false);setLeftToolsCollapsed(false);setRightToolsCollapsed(false);setPatternFocusActive(true)
+      if(!document.fullscreenElement)document.documentElement.requestFullscreen?.().catch(()=>{})
+    }else{
+      setPatternFocusActive(false)
+      setViewportLayout(patternFocusReturnRef.current?.layout||'split')
+      setActiveSection(patternFocusReturnRef.current?.section||'Pattern')
+      if(document.fullscreenElement===document.documentElement)document.exitFullscreen?.().catch(()=>{})
+    }
+  }
   return (
-    <div className={`app-shell ${showTopWorkspaceTabs ? '' : 'workspace-tabs-hidden'} ${clothcraftHybrid ? 'exo-v2-shell' : ''}`}>
+    <div id="exo-pattern-glass-shell" className={`app-shell ${showTopWorkspaceTabs ? '' : 'workspace-tabs-hidden'} ${clothcraftHybrid ? 'exo-v2-shell' : ''} ${patternFocusActive&&!clothcraftHybrid?'pattern-focus-expanded':''}`}
+      data-focus-workspace={techPackWorkspaceOpen?'techpack':animationWorkspaceActive?'animation':printLayoutActive?'print':'default'}
+      onClickCapture={pickThemePart} data-theme-picking={themePickRequestedKey?'true':'false'} data-theme-hover-target={themeHoveredTarget||''}
+      data-studio-customized="true" data-studio-theme={previewStudioTheme||studioCustomization.appearance.theme}
+      data-studio-theme-preview={previewStudioTheme?'true':'false'}
+      data-icon-color-preview={previewIconColor?'true':'false'}
+      data-2d-palette-preview={previewTwoDPalette?'true':'false'}
+      data-studio-liquid-glass={studioCustomization.appearance.liquidGlass?'true':'false'}
+      data-pattern-clear-glass={studioCustomization.appearance.patternClearGlass!==false?'true':'false'}
+      data-glass-icon-color={studioCustomization.appearance.glassIconColor}
+      data-glass-library={studioCustomization.appearance.glassLibrary?'true':'false'}
+      data-glass-inspector={studioCustomization.appearance.glassInspector?'true':'false'}
+      data-glass-toolbars={studioCustomization.appearance.glassToolbars?'true':'false'}
+      data-glass-menu={studioCustomization.appearance.glassMenu?'true':'false'}
+      data-glass-widgets={studioCustomization.appearance.glassWidgets?'true':'false'}
+      data-studio-theme-engine={rustThemeTokens?'rust-wasm':'unavailable'}
+      data-global-toolbar-glow={rustThemeTokens&&rustThemeGlowEnabled(studioCustomization.appearance.globalToolbarGlow)?'true':'false'}
+      data-2d-toolbar-glow={rustThemeTokens&&rustThemeGlowEnabled(studioCustomization.appearance.twoDToolbarGlow)?'true':'false'}
+      data-global-toolbar-color-custom={rustThemeTokens&&studioCustomization.appearance.globalToolbarIconColor!=='auto'?'true':'false'}
+      data-2d-toolbar-color-custom={rustThemeTokens&&studioCustomization.appearance.twoDToolbarIconColor!=='auto'?'true':'false'}
+      data-2d-glass-color-custom={rustThemeTokens&&studioCustomization.appearance.twoDToolbarGlassColor!=='auto'?'true':'false'}
+      data-2d-point-custom={previewTwoDPattern?.point||rustThemeTokens&&studioCustomization.preferences.twoDPointColor!=='auto'?'true':'false'}
+      data-2d-edge-custom={(previewTwoDPattern?.edge!==undefined?previewTwoDPattern.edge!=='auto':Boolean(rustThemeTokens&&studioCustomization.preferences.twoDEdgeColor!=='auto'))?'true':'false'}
+      data-2d-selection-custom={previewTwoDPattern?.selection||rustThemeTokens&&studioCustomization.preferences.twoDSelectionColor!=='auto'?'true':'false'}
+      data-2d-notch-custom={previewTwoDPattern?.notch||rustThemeTokens&&studioCustomization.preferences.twoDNotchColor!=='auto'?'true':'false'}
+      data-2d-pattern-custom={previewTwoDPattern?.paper||rustThemeTokens&&studioCustomization.preferences.twoDPatternColor!=='auto'?'true':'false'}
+      data-2d-horizontal-custom={rustThemeTokens&&studioCustomization.appearance.twoDViewerHorizontalColor!=='auto'?'true':'false'}
+      data-2d-vertical-custom={rustThemeTokens&&studioCustomization.appearance.twoDViewerVerticalColor!=='auto'?'true':'false'}
+      data-3d-horizontal-custom={rustThemeTokens&&studioCustomization.appearance.threeDViewerHorizontalColor!=='auto'?'true':'false'}
+      data-3d-vertical-custom={rustThemeTokens&&studioCustomization.appearance.threeDViewerVerticalColor!=='auto'?'true':'false'}
+      data-library-panel-custom={rustThemeTokens&&studioCustomization.appearance.panelLibraryColor!=='auto'?'true':'false'}
+      data-object-panel-custom={rustThemeTokens&&studioCustomization.appearance.panelObjectBrowserColor!=='auto'?'true':'false'}
+      data-left-rail-custom={rustThemeTokens&&studioCustomization.appearance.leftRailColor!=='auto'?'true':'false'}
+      data-right-rail-custom={rustThemeTokens&&studioCustomization.appearance.rightRailColor!=='auto'?'true':'false'}
+      data-library-icon-custom={rustThemeTokens&&studioCustomization.appearance.libraryIconColor!=='auto'?'true':'false'}
+      data-object-icon-custom={rustThemeTokens&&studioCustomization.appearance.objectBrowserIconColor!=='auto'?'true':'false'}
+      data-interface-ink-custom={rustThemeTokens&&(studioCustomization.appearance.interfaceInkColor!=='auto'||studioCustomization.appearance.interfaceBrightness!==1)?'true':'false'}
+      data-interface-auto-contrast={studioCustomization.appearance.autoContrast!==false?'true':'false'}
+      data-panel-text-inherits-global={studioCustomization.appearance.panelTextInheritsGlobal!==false?'true':'false'}
+      data-liquid-glass-glow={rustThemeTokens&&studioCustomization.appearance.liquidGlassGlow?'true':'false'}
+      data-toolbar-glow-selected-only={studioCustomization.appearance.toolbarGlowSelectedOnly?'true':'false'}
+      data-panel-glow-selected-only={studioCustomization.appearance.panelGlowSelectedOnly?'true':'false'}
+      data-studio-panel-order={studioCustomization.workspace.panelOrder}
+      data-studio-language={studioCustomization.preferences.language}
+      data-studio-theme-mode={appearancePalette.mode==='light'?'light':'dark'}
+      style={{'--studio-accent':appearancePalette.accent,
+        '--studio-glass-backdrop':studioCustomization.appearance.glassBackdrop,
+        '--studio-glass-fill':({clear:'37%',balanced:'51%',rich:'68%'})[studioCustomization.appearance.glassDensity]||'51%',
+        '--studio-glass-blur':({crisp:'0px',soft:'10px',smooth:'17px'})[studioCustomization.appearance.glassBlur]||'17px',
+        '--studio-sidebar':appearancePalette.sidebarColor,
+        '--studio-panel':appearancePalette.panelColor,
+        '--studio-text':appearancePalette.textColor,
+        '--studio-muted':appearancePalette.mutedColor,
+        '--studio-border':appearancePalette.borderColor,
+        '--exo-toolbar-glow-radius':`${Math.round((studioCustomization.appearance.toolbarGlowStrength||0)*13)}px`,
+        '--exo-panel-glow-radius':`${Math.round((studioCustomization.appearance.panelGlowStrength||0)*14)}px`,
+        '--exo-ruler-glow-radius':`${Math.round((studioCustomization.preferences.twoDRulerGlowStrength||0)*10)}px`,
+        '--exo-glass-glow-radius':`${Math.round((studioCustomization.appearance.liquidGlassGlowStrength||0)*24)}px`,
+        ...(rustThemeTokens||{}),...(interfaceColorTokens||{}),...gradeChartThemeVars,
+        '--exo-preview-icon-color':previewIconColor||'#ffffff',
+        ...(previewTwoDPattern?.point?{'--exo-2d-point-color':previewTwoDPattern.point}:null),
+        ...(previewTwoDPattern?.edge&&previewTwoDPattern.edge!=='auto'?{'--exo-2d-edge-color':previewTwoDPattern.edge}:null),
+        ...(previewTwoDPattern?.selection?{'--exo-2d-selection-color':previewTwoDPattern.selection}:null),
+        ...(previewTwoDPattern?.notch?{'--exo-2d-notch-color':previewTwoDPattern.notch}:null),
+        ...(previewTwoDPattern?.paper?{'--exo-2d-pattern-color':previewTwoDPattern.paper}:null),
+        ...(previewTwoDPalette?{
+          '--exo-2d-canvas-color':previewTwoDPalette.canvas==='auto'?(previewTwoDPalette.theme==='accumark-green'?'#174e39':'#c6c7c9'):previewTwoDPalette.canvas,
+          '--exo-2d-grid-color':previewTwoDPalette.grid==='auto'?(previewTwoDPalette.theme==='accumark-green'?'#b9e2cc':'#34434d'):previewTwoDPalette.grid,
+        }:null)}}>
+      <style>{Object.entries(studioCustomization.workspace.nativeToolIconColors||{}).filter(([key,color])=>/^((2d|3d):[AB][0-9]{2}|pattern:[a-z0-9-]+)$/.test(key)&&/^#[0-9a-f]{6}$/i.test(color)).map(([key,color])=>{
+        const selector=key.startsWith('pattern:')?`[data-pattern-design-tool="${key.slice(8)}"]`:`[data-clo-slot="${key}"]`
+        return `.app-shell[data-studio-customized="true"]:not([data-icon-color-preview="true"]) :is(.tool-rail,.clo-right-tool-palette,.exo-pattern-toolpanel,.clo-inspector) ${selector} svg{color:${color}!important;stroke:currentColor!important}.app-shell[data-studio-customized="true"]:not([data-icon-color-preview="true"]) :is(.tool-rail,.clo-right-tool-palette,.exo-pattern-toolpanel,.clo-inspector) ${selector} .cad-tool-icon-mask{color:${color}!important;background-color:currentColor!important}`
+      }).join('\n')}</style>
+      {themePickRequestedKey&&<div className="exo-theme-pick-banner" role="status">Select a toolbar or panel to customize its appearance <button className="exo-theme-pick-cancel" type="button" onClick={()=>setThemePickRequestedKey(null)}>Cancel</button></div>}
+      <input type="file" hidden ref={fileLibraryImportRef} accept=".json,application/json" aria-label="Import File Library backup" onChange={importChosenFileLibraryBackup}/>
+      <input type="file" hidden ref={gradeRuleCsvInputRef} accept=".csv,text/csv" aria-label="Import selected piece grading rules CSV" onChange={importPieceGradeRules}/>
+      <input type="file" hidden ref={industrialGradeCsvInputRef} accept=".csv,text/csv" aria-label="Import selected piece industrial size breaks CSV" onChange={importPieceSizeBreaks}/>
+      {!clothcraftHybrid&&techPackOpen&&<DigitalTechPackStudio key={techPackInitialTab} initialTab={techPackInitialTab}
+        project={project} value={project.techPackStudio} nativeMode={clothcraftHybrid}
+        onChange={nextState=>{setProject(current=>({...current,techPackStudio:nextState}));setSaveState('modified')}}
+        onClose={()=>setTechPackOpen(false)}
+        printableHTML={techPackPrintableHTML}
+        onPrint={printTraditionalTechPack} onExport={exportDigitalTechPack} onExportHTML={exportTechPackHTML}
+        profileName={studioCustomization.profile?.displayName||studioCustomization.profile?.brandName||'Designer'}
+        sharingAvailable={fileCollaboration.online}
+        onOpenSharing={()=>{setTechPackOpen(false);setLibraryVisible(true);setSidebarView('sharing')}}/>}
+      {fileLibraryOpen&&<>
+        <ProjectFileLibrary
+          initialDialog={fileLibraryStartSave?'save':undefined}
+          entries={fileLibraryEntries}
+          collections={fileLibraryCollections}
+          activeProjectId={fileLibraryCurrentId}
+          collaboration={{...fileCollaboration,profile:{...studioCustomization.profile,...fileCollaboration.profile}}}
+          onCollaborationAction={handleFileCollaborationAction}
+          currentProject={{name:clothcraftHybrid?clothcraftLive?.name||'Current Rust garment':project.name}}
+          currentTechPack={clothcraftHybrid?nativeTechPackDraft:project.nativeTechPackWorkspace}
+          onOpenTechPack={()=>{setFileLibraryOpen(false);enterTechPackWorkspace()}}
+          assetCatalog={{
+            hardware:listHardwarePresets().map(item=>({id:item.id,name:item.name,kind:item.kind,material:item.material,previewUrl:item.previewImage||`/hardware-thumbnails/${item.id}.png`})),
+            studioSets:listStagePresets().map(item=>({id:item.id,name:item.name,kind:item.kind,previewUrl:`/stage-posters/${item.id}.png`})),
+            photoShootSets:PHOTO_SHOOT_SETS.map(item=>({id:item.id,name:item.name,kind:item.kind,color:item.background,description:item.description})),
+            fabrics:Object.values(FABRIC_PRESETS).map(item=>({id:item.id||item.name,name:item.name,color:item.color})),
+          }}
+          onClose={()=>{setFileLibraryOpen(false);setFileLibraryStartSave(false);setFileLibraryError('')}}
+          onSaveCurrent={archiveCurrentProject}
+          onOpenProject={openSavedFileRecord}
+          onOpenRevision={restoreSavedFileRevision}
+          onCreateCollection={async values=>{await createLibraryCollection(values);await refreshFileLibrary()}}
+          onUpdateProject={updateSavedFileRecord}
+          onAddRevision={saveFileRevision}
+          onUploadFile={uploadFileToLibrary}
+          onDeleteAttachment={removeLibraryAttachment}
+          onDownloadAttachment={downloadLibraryFile}
+          onSelectAsset={selectFileLibraryAsset}
+          onExportBackup={exportFileLibrary}
+          onImportBackup={chooseFileLibraryBackup}
+        />
+        {(fileLibraryError||fileLibraryLoading)&&<div role={fileLibraryError?'alert':'status'} style={{position:'fixed',top:73,right:26,zIndex:16000,maxWidth:480,padding:'12px 16px',border:'1px solid #747a80',background:'#292c30',color:'#f0f2f3',borderRadius:7,boxShadow:'0 8px 28px #0008'}}>{fileLibraryError||'Loading saved projects and assets…'}{fileLibraryError&&<button type="button" style={{marginLeft:12}} onClick={()=>setFileLibraryError('')}>Dismiss</button>}</div>}
+      </>}
       <div className="clo-mac-menu" role="menubar" aria-label="EXO Sample 3D application menus">
         <div className="clo-app-menu-brand"><span className="clo-brand-dot">◈</span><strong>EXO Sample 3D</strong></div>
-        {CLO_MENUS.map(menu => <div className="clo-menu-group" key={menu.title}>
-          <button type="button" className={openMenu === menu.title ? 'active' : ''} aria-expanded={openMenu === menu.title} onClick={() => { setSimulationMenuOpen(false); setOpenMenu(openMenu === menu.title ? null : menu.title) }}>{menu.title}</button>
-          {openMenu === menu.title && <div className="clo-menu-popover" role="menu">{menu.commands.map(([label, action]) => <button key={label} role="menuitem" disabled={!action} onClick={() => executeStudioAction(action)}>{label}{!action && <small>PREVIEW</small>}</button>)}</div>}
+        {(studioCustomization.profile.brandName||studioCustomization.profile.displayName||studioCustomization.profile.logoDataUrl||studioCustomization.profile.avatarDataUrl)&&
+          <button type="button" className="studio-personal-brand" aria-label="Edit designer profile"
+            title="Edit designer identity" onClick={()=>{setStudioSettingsTab('profile');setStudioSettingsOpen(true)}}>
+            {(studioCustomization.profile.logoDataUrl||studioCustomization.profile.avatarDataUrl)&&<img src={studioCustomization.profile.logoDataUrl||studioCustomization.profile.avatarDataUrl} alt="" />}
+            <span>{studioCustomization.profile.brandName||studioCustomization.profile.displayName||'Designer'}</span>
+          </button>}
+        {CLO_MENUS.map(menu => <div className={`clo-menu-group ${['Preferences','Settings','Help'].includes(menu.title)?'flyout-left':''}`} key={menu.title}>
+          <button type="button" className={openMenu === menu.title ? 'active' : ''} aria-expanded={openMenu === menu.title} aria-haspopup="menu"
+            onMouseEnter={()=>{if(openMenu&&openMenu!==menu.title)setOpenMenu(menu.title)}}
+            onKeyDown={event=>{if(event.key==='Escape')setOpenMenu(null);if(event.key==='ArrowDown'){event.preventDefault();setOpenMenu(menu.title)}}}
+            onClick={() => { setSimulationMenuOpen(false); setOpenMenu(openMenu === menu.title ? null : menu.title) }}>{menu.title}</button>
+          {openMenu === menu.title && <CloTopMenuDropdown menu={menu} nativeMode={clothcraftHybrid} onAction={executeStudioAction} onDismiss={()=>setOpenMenu(null)}/>}
         </div>)}
         <div className="clo-menu-spacer"/>
-        <div className="file-actions clo-compact-file-actions">
+        <div className="clo-header-primary-actions" aria-label="Essential garment workspace actions">
+          <button type="button" className="clo-header-pattern-launch" aria-label="Open Pattern workspace" title="Open pattern editing workspace" onClick={()=>{setActiveSection('Pattern');setShowTopWorkspaceTabs(true);setOpenMenu(null)}}><Grid3X3 size={14}/><span>PATTERN</span></button>
+          <button type="button" className="clo-command-launch clo-header-search-launch" aria-label="Search commands" title="Find working commands · ⌘K" onClick={() => setCommandPaletteOpen(true)}><Search size={15}/><span>SEARCH</span></button>
+          <button type="button" className={`clo-command-launch clo-arai-launch ${araiOpen ? 'active' : ''}`} aria-label="Open ARAI assistant chat" aria-controls="clo-arai-chat" aria-expanded={araiOpen} title="Open ARAI garment assistant" onClick={() => { setOpenMenu(null); setAraiOpen(open => !open) }}><Sparkles size={14}/><span>AI</span></button>
+          <div className="clo-simulate-control">
+            <button className={`clo-simulate-main ${visibleRunning ? 'running' : ''}`} disabled={printLayoutActive} onClick={animationWorkspaceActive ? () => window.dispatchEvent(new Event('exo-clothcraft-animation-toggle')) : simForVisibleEngine} title={printLayoutActive?'Exit print layout to simulate':animationWorkspaceActive?'Animate or pause':'Simulate or pause visible garment · Space'}><ArrowDownToLine size={16}/><span>{printLayoutActive?'PRINT':animationWorkspaceActive?'ANIM':visibleRunning ? 'PAUSE' : 'SIM'}</span></button>
+            <button className="clo-simulate-arrow" title="Simulation and workspace modes" aria-label="Simulation and workspace modes" aria-haspopup="menu" aria-controls="exo-simulate-mode-dropdown" aria-expanded={simulationMenuOpen} onClick={() => { setLeftSimulationMenuOpen(false); setOpenMenu(null); setSimulationMenuOpen(value => !value) }}><ChevronDown size={13}/></button>
+            {simulationMenuOpen && <div id="exo-simulate-mode-dropdown" className="clo-simulation-popover exo-simulate-clear-glass" role="menu" aria-label="Simulation mode and workspace options" data-simulate-glass="clear" onKeyDown={event=>{if(event.key==='Escape'){event.stopPropagation();setSimulationMenuOpen(false)}}}>
+              <strong>Simulation mode</strong>
+              {!clothcraftHybrid&&<>
+              <button onClick={() => { applySimulationQuality('balanced'); setSimulationMenuOpen(false) }}><Check size={14}/> Normal · Balanced</button>
+              <button onClick={() => { applySimulationQuality('final'); setSimulationMenuOpen(false) }}><SlidersHorizontal size={14}/> Fitting · Quality</button>
+              <button onClick={() => { applySimulationQuality('draft'); setSimulationMenuOpen(false) }}><Activity size={14}/> Fast · Draft</button>
+              <button disabled title="GPU cloth simulation has not yet been implemented"><Cpu size={14}/> GPU simulation <small>PLANNED</small></button>
+              <button onClick={requestNativeSolve} disabled={nativeServiceStatus !== 'ready'} title={nativeServiceStatus === 'ready' ? 'Solve using connected native XPBD service' : 'Native solver service is offline'}><Box size={14}/> Native XPBD solve {nativeServiceStatus !== 'ready' ? <small>OFFLINE</small> : null}</button>
+              </>}
+              <button type="button" onClick={enterAnimationWorkspace}><Play size={14}/> Animation Studio</button>
+              <button type="button" onClick={enterPrintLayoutWorkspace}><Grid3X3 size={14}/> Print Layout</button>
+              <button type="button" onClick={enterTechPackWorkspace}><FileSpreadsheet size={14}/> Techpack Workspace</button>
+              <button type="button" onClick={()=>{setSimulationMenuOpen(false);setLeftSimulationMenuOpen(false);setFileLibraryStartSave(false);void openFileLibrary()}}><FolderOpen size={14}/> File Library · Saved garments</button>
+            </div>}
+          </div>
+          <button className={`save-button ${saveState}`} disabled={clothcraftHybrid&&clothcraftLive?.busy} onClick={saveForVisibleEngine}><Save size={15} />{clothcraftHybrid ? 'SAVE' : saveState === 'saved' ? 'SAVED' : 'SAVE'}</button>
+        </div>
+        <div className="clo-header-secondary-tools" aria-label="Additional garment tools">
+
+          <button type="button" className="clo-header-scroll-button" aria-label="Previous toolbar tools" title="Previous toolbar tools" onClick={event=>event.currentTarget.nextElementSibling?.scrollBy({left:-245,behavior:'smooth'})}><ChevronLeft size={14}/></button>
+          <div className="file-actions clo-compact-file-actions">
+          <button type="button" className="clo-command-launch" aria-label="Open Studio Settings" title="Customize workspace, toolbar, themes and profile" onClick={()=>{setStudioSettingsTab('workspace');setStudioSettingsOpen(true)}}><Settings2 size={16}/></button>
           <button type="button" className="clo-top-tabs-toggle" title="Show / hide top workspace tabs" aria-pressed={showTopWorkspaceTabs} onClick={() => setShowTopWorkspaceTabs(value => !value)}><LayoutPanelTop size={15}/></button>
           {showTopWorkspaceTabs && <select className="clo-workspace-select" aria-label="Workspace" value={activeSection} onChange={(event) => setActiveSection(event.target.value)}>{SECTIONS.map((section) => <option key={section} value={section}>{section}</option>)}</select>}
           <select className="clo-workspace-select clo-layout-preset-select" aria-label="CLO-style workspace layout presets" value="" onChange={(event) => {
@@ -4362,24 +7247,13 @@ export default function App() {
           <select className="clo-workspace-select clo-window-mode-select" aria-label="3D and 2D window arrangement" value={viewportLayout} onChange={event => setViewportLayout(event.target.value)}>
             {Object.entries(VIEWPORT_LAYOUTS).map(([id, label]) => <option key={id} value={id}>{label}</option>)}
           </select>
-          <button type="button" className="clo-command-launch" aria-label="Search commands" title="Find working commands · ⌘K" onClick={() => setCommandPaletteOpen(true)}><Search size={15}/><span>⌘K</span></button>
+          {!clothcraftHybrid&&<button type="button" className={`clo-command-launch ${patternFocusActive?'active':''}`} aria-label={patternFocusActive?'Exit full-screen 2D grading workspace':'Open full-screen 2D grading workspace'} aria-pressed={patternFocusActive} title="Separate full-window 2D pattern drafting with XS–XXL grading tools" onClick={togglePatternGradingStudio}><Grid3X3 size={15}/><span>{patternFocusActive?'EXIT 2D':'2D GRADE FULL'}</span></button>}
+          {viewportLayout === '2d' && <button type="button" className="clo-command-launch" aria-label="Restore 3D garment panel" title="Restore both 3D and 2D viewports" onClick={() => {setViewportLayout('split');setViewportSplit(50)}}><Box size={15}/><span>3D</span></button>}
           <button type="button" className="clo-command-launch clo-panel-toggle" aria-label="Toggle asset browser panel" aria-pressed={libraryVisible} title="Show / hide Library" onClick={() => setLibraryVisible(value => !value)}><PanelLeft size={15}/></button>
           <button type="button" className="clo-command-launch clo-panel-toggle" aria-label="Show or hide Property Editor" aria-pressed={inspectorVisible} title="Show / hide Property Editor" onClick={() => setInspectorVisible(value => !value)}><PanelRight size={15}/></button>
           {clothcraftHybrid && <div className="exo-v2-rust-engine" role="status" title="Actual ClothCraft Rust VBD + OGC engine · experimental fit">
             <span className="exo-v2-rust-dot"/><span>ClothCraft <strong>RUST</strong></span>
           </div>}
-          <div className="clo-simulate-control">
-            <button className={`clo-simulate-main ${visibleRunning ? 'running' : ''}`} onClick={simForVisibleEngine} title="Simulate or pause visible garment · Space"><ArrowDownToLine size={16}/><span>{visibleRunning ? 'PAUSE' : 'SIM'}</span></button>
-            {!clothcraftHybrid && <button className="clo-simulate-arrow" title="Simulation modes" aria-expanded={simulationMenuOpen} onClick={() => { setLeftSimulationMenuOpen(false); setOpenMenu(null); setSimulationMenuOpen(value => !value) }}><ChevronDown size={13}/></button>}
-            {simulationMenuOpen && <div className="clo-simulation-popover">
-              <strong>Simulation mode</strong>
-              <button onClick={() => { applySimulationQuality('balanced'); setSimulationMenuOpen(false) }}><Check size={14}/> Normal · Balanced</button>
-              <button onClick={() => { applySimulationQuality('final'); setSimulationMenuOpen(false) }}><SlidersHorizontal size={14}/> Fitting · Quality</button>
-              <button onClick={() => { applySimulationQuality('draft'); setSimulationMenuOpen(false) }}><Activity size={14}/> Fast · Draft</button>
-              <button disabled title="GPU cloth simulation has not yet been implemented"><Cpu size={14}/> GPU simulation <small>PLANNED</small></button>
-              <button onClick={requestNativeSolve} disabled={nativeServiceStatus !== 'ready'} title={nativeServiceStatus === 'ready' ? 'Solve using connected native XPBD service' : 'Native solver service is offline'}><Box size={14}/> Native XPBD solve {nativeServiceStatus !== 'ready' ? <small>OFFLINE</small> : null}</button>
-            </div>}
-          </div>
           {clothcraftHybrid && <button className="exo-v2-top-action" aria-label="Step ClothCraft Rust simulation" title="Advance ClothCraft Rust simulation one step" disabled={clothcraftLive?.busy||visibleRunning} onClick={() => rustCommand('step')}><Activity size={13}/> STEP</button>}
           {clothcraftHybrid && <button className="exo-v2-top-action" aria-label="Reset pattern position outside avatar" title="Restore the garment's original off-body arrangement without deleting patterns, seams or materials; recover an invalid saved drape if needed" onClick={() => rustCommand('reset-position')}><RotateCcw size={13}/> RESET PANELS</button>}
           <button className="icon-button" title="Undo" disabled={clothcraftHybrid ? clothcraftLive?.busy||!clothcraftLive?.canUndo : !undoStack.length} onClick={undoForVisibleEngine}><Undo2 size={17} /></button>
@@ -4387,8 +7261,9 @@ export default function App() {
           <span className="toolbar-divider" />
           <button className="icon-button" title="Import garment" onClick={() => importInputRef.current?.click()}><Upload size={17} /></button>
           <button className="icon-button" title="Export visible garment" disabled={clothcraftHybrid&&clothcraftLive?.busy} onClick={exportForVisibleEngine}><Download size={17} /></button>
-          <button className={`save-button ${saveState}`} disabled={clothcraftHybrid&&clothcraftLive?.busy} onClick={saveForVisibleEngine}><Save size={15} />{clothcraftHybrid ? 'SAVE RUST' : saveState === 'saved' ? 'SAVED' : 'SAVE'}</button>
-          <input ref={importInputRef} hidden type="file" accept=".json,.garment,.dxf" onChange={importProject} />
+          <input ref={importInputRef} hidden type="file" accept=".json,.garment,.dxf,.zip,.mdl,.vet,.iba,.rul" onChange={importProject} />
+          <input ref={factoryDxfReferenceInputRef} hidden type="file" accept=".dxf" onChange={event=>importProject(event,{manufacturingImport:'cut-reference'})}/>
+          <input ref={svgPatternInputRef} hidden type="file" accept=".svg,image/svg+xml" onChange={importSvgPattern}/>
           <input ref={seamlyMeasureInputRef} hidden type="file" accept=".smis,.smms" onChange={importSeamlyMeasurements} />
           <input ref={seamlyPatternInputRef} hidden type="file" accept=".sm2d" onChange={importSeamlyConstructionGraph} />
           <input ref={graphicInputRef} hidden type="file" accept="image/png,image/jpeg,image/webp" onChange={importGraphic} />
@@ -4402,33 +7277,60 @@ export default function App() {
           <input ref={fabricPbrSetInputRef} hidden type="file" accept="image/png,image/jpeg,image/webp" multiple onChange={importFabricPbrSet} />
           <input ref={avatarMeshInputRef} hidden type="file" accept=".obj,.glb" onChange={importAvatarMesh} />
           <input ref={hdriInputRef} hidden type="file" accept=".hdr,image/vnd.radiance" onChange={importHdri} />
+          </div>
+          <button type="button" className="clo-header-scroll-button" aria-label="More toolbar tools" title="Scroll to more toolbar controls" onClick={event=>event.currentTarget.previousElementSibling?.scrollBy({left:245,behavior:'smooth'})}><ChevronRight size={14}/></button>
         </div>
+        <WorkspaceSharingHeader
+          collaboration={fileCollaboration}
+          profile={studioCustomization.profile}
+          onOpenSharing={()=>{setLibraryVisible(true);setSidebarView('sharing');setOpenMenu(null)}}
+          onOpenProfile={()=>{setStudioSettingsTab('profile');setStudioSettingsOpen(true)}}
+          onSaveProfile={payload=>handleFileCollaborationAction('profile.update',payload)}
+        />
       </div>
 
-      <div className="project-strip">
-        <div className="project-name">
-          <span>PROJECT</span>
-          {clothcraftHybrid ? <input aria-label="Visible ClothCraft project name" title="Rust project name is managed by the native garment session" value={clothcraftLive?.name || 'ClothCraft native garment'} readOnly/> : <input value={project.name} onChange={(event) => mutateProject((next) => { next.name = event.target.value }, { record: false })}/>}
-          <select className="template-select" value={project.templateId || 'custom'} onChange={(event) => event.target.value !== 'custom' && applyGarmentTemplate(event.target.value)}>
-            <option value="custom">Custom</option>
-            {GARMENT_TEMPLATES.map((template) => <option key={template.id} value={template.id}>{template.name}</option>)}
-          </select>
+      {araiOpen && <section id="clo-arai-chat" className="clo-arai-popover" role="dialog" aria-label="ARAI garment assistant" onKeyDown={event => { if (event.key === 'Escape') setAraiOpen(false) }}>
+        <header className="clo-arai-header"><div><Sparkles size={16}/><strong>ARAI</strong><span>GARMENT ASSISTANT</span></div><button type="button" title="Close ARAI chat" aria-label="Close ARAI chat" onClick={() => setAraiOpen(false)}>×</button></header>
+        <div className="clo-arai-conversation" aria-live="polite">
+          {araiLastPrompt && <div className="clo-arai-message user"><small>YOU</small><p>{araiLastPrompt}</p></div>}
+          <div className="clo-arai-message assistant"><small>ARAI</small><p>{commandResult}</p></div>
         </div>
-        <div className="project-meta"><span>REV {clothcraftHybrid ? clothcraftLive?.revision ?? '—' : project.revision}</span><span>{clothcraftHybrid ? clothcraftLive?.panels ?? '—' : project.pieces.length} PATTERNS</span><span>{clothcraftHybrid ? clothcraftLive?.seams ?? '—' : project.seams.length} SEAMS</span></div>
         <form className="command-bar" onSubmit={runCommand}>
-          <Sparkles size={15} />
-          <input value={command} onChange={(event) => setCommand(event.target.value)} placeholder={clothcraftHybrid ? 'EXO draft commands (separate from the ClothCraft garment)…' : 'Tell the garment what to change…'} />
-          <button type="submit">RUN</button>
+          <Sparkles size={15}/>
+          <input autoFocus aria-label="EXO tool assistant" value={command} onChange={event => setCommand(event.target.value)} placeholder="Ask ARAI to edit, navigate or use a tool…"/>
+          <button type="submit" title={`${ASSISTANT_ACTIONS.length} verified assistant actions plus pattern editing verbs`}>SEND</button>
         </form>
-      </div>
+        <p className="clo-arai-hint">Commands execute through verified EXO tools. Use ⌘K to browse all commands.</p>
+      </section>}
 
-      <main className="main-layout clo-adjustable-panels" data-library-visible={libraryVisible} data-inspector-visible={inspectorVisible} style={{ '--library-width': `${libraryWidth}px`, '--inspector-width': `${inspectorWidth}px`, '--object-browser-height': `${objectBrowserHeight}px`, '--effective-library-width': libraryVisible ? `${libraryWidth}px` : '0px', '--effective-inspector-width': inspectorVisible ? `${inspectorWidth}px` : '0px' }}>
+      {studioSettingsOpen&&<StudioSettingsDialog value={studioCustomization} initialTab={studioSettingsTab}
+        onPreviewTheme={setPreviewStudioTheme} onPreviewIconColor={setPreviewIconColor} onPreviewTwoDPalette={setPreviewTwoDPalette} onPreviewTwoDPattern={setPreviewTwoDPattern} onPreviewGradeChart={previewGradeChart} onHoverTarget={setThemeHoveredTarget} onPickTarget={beginThemePick} focusKey={themePickFocusKey}
+        contrastAudit={themeContrastAudit} onFixContrast={fixThemeContrast}
+        onChange={updateStudioCustomization} onClose={closeStudioSettings}
+        onApplyWorkspace={updateStudioCustomization} onSaveWorkspace={saveCustomWorkspace}
+        onRestoreWorkspace={restoreCustomWorkspace} onReset={resetStudioCustomization}
+        onResetEnvironment={resetEnvironmentCustomization}/>}
+      <main className="main-layout clo-adjustable-panels" data-library-visible={libraryVisible} data-inspector-visible={inspectorVisible} data-left-tools-collapsed={leftToolsCollapsed} data-right-tools-collapsed={rightToolsCollapsed} data-pattern-workspace={viewportLayout==='2d'} style={{ '--library-width': `${libraryWidth}px`, '--inspector-width': `${inspectorWidth}px`, '--object-browser-height': `${objectBrowserHeight}px`, '--effective-library-width': libraryVisible ? `${libraryWidth}px` : '0px', '--effective-inspector-width': inspectorVisible ? `${inspectorWidth}px` : '0px' }}>
+        <ExoUniversalPanelHandles20261028 libraryVisible={libraryVisible} inspectorVisible={inspectorVisible} onInspectorVisibleChange={setInspectorVisible} leftVisible={!leftToolsCollapsed} rightVisible={!rightToolsCollapsed}/>
+        <button type="button" className="exo-panel-edge-toggle exo-library-edge-toggle" aria-label={libraryVisible?'Collapse library panel':'Expand library panel'} aria-expanded={libraryVisible} onClick={()=>setLibraryVisible(value=>!value)}>{libraryVisible?<ChevronLeft size={14}/>:<ChevronRight size={14}/>}</button>
+        <button type="button" className="exo-panel-edge-toggle exo-left-tools-edge-toggle" aria-label={leftToolsCollapsed?'Expand left tools panel':'Collapse left tools panel'} aria-expanded={!leftToolsCollapsed} onClick={()=>setLeftToolsCollapsed(value=>!value)}>{leftToolsCollapsed?<ChevronRight size={14}/>:<ChevronLeft size={14}/>}</button>
+        <button type="button" className="exo-panel-edge-toggle exo-right-independent-tools-arrow" aria-label={rightToolsCollapsed?'Expand right tools toolbar':'Collapse right tools toolbar'} aria-expanded={!rightToolsCollapsed} title={rightToolsCollapsed?'Expand right tools toolbar':'Collapse right tools toolbar'} onClick={()=>setRightToolsCollapsed(value=>!value)}>{rightToolsCollapsed?<ChevronLeft size={14}/>:<ChevronRight size={14}/>}</button>
+
         <nav className="clo-edge-tabs" aria-label="Workspace side panels">
           <button type="button" aria-pressed={sidebarView === 'library' && libraryVisible} className={sidebarView === 'library' && libraryVisible ? 'active' : ''} onClick={() => { setLibraryVisible(true); setSidebarView('library') }} title="Open asset library">LIBRARY</button>
           <button type="button" aria-pressed={sidebarView === 'history' && libraryVisible} className={sidebarView === 'history' && libraryVisible ? 'active' : ''} onClick={() => { setLibraryVisible(true); setSidebarView('history') }} title="Open undo and redo history">HISTORY</button>
+          <button type="button" aria-pressed={sidebarView === 'sharing' && libraryVisible} className={sidebarView === 'sharing' && libraryVisible ? 'active' : ''} onClick={() => {setLibraryVisible(true);setSidebarView('sharing')}} title="Open shared projects, collaborators and comments">SHARING</button>
         </nav>
         <aside className="asset-browser" hidden={!libraryVisible}>
-          {sidebarView === 'history' ? <section className="clo-history-browser">
+          <div id="exo-techpack-library-host" className="exo-techpack-library-host" hidden={!techPackWorkspaceOpen}/>
+          {sidebarView === 'sharing' ? <WorkspaceSharingPanel
+            collaboration={{...fileCollaboration,profile:{...studioCustomization.profile,...fileCollaboration.profile}}}
+            entries={fileLibraryEntries} collections={fileLibraryCollections}
+            onAction={handleFileCollaborationAction}
+            onRefresh={()=>Promise.all([refreshFileLibrary(),refreshFileCollaboration(),...(fileCollaboration.selectedLocalId?[watchSharedLibraryProject(fileCollaboration.selectedLocalId)]:[])])}
+            onOpenLibrary={()=>{setFileLibraryStartSave(false);void openFileLibrary()}}
+            onOpenProfile={()=>{setStudioSettingsTab('profile');setStudioSettingsOpen(true)}}
+          /> : sidebarView === 'history' ? <section className="clo-history-browser">
             <header>History</header>
             <p>Recorded garment snapshots · current session</p>
             <div className="clo-history-actions">
@@ -4444,107 +7346,295 @@ export default function App() {
             </div>
             <div className="clo-history-note">Select a revision to restore it. Skipped edits remain accessible through Redo. Session history is not a replacement for saving your project.</div>
           </section> : <>
-          <LibraryChrome category={assetCategory} setCategory={setAssetCategory} search={librarySearch} setSearch={setLibrarySearch} thumbnails={libraryThumbnails} setThumbnails={setLibraryThumbnails}>
-            {clothcraftHybrid && (assetCategory === 'Fabric' || assetCategory === 'Material') ? <div className="asset-placeholder"><Shirt size={26}/><strong>Native fabric library</strong><span>{CLOTHCRAFT_FABRICS.length} selectable textile examples, including uncalibrated apparel starting points.</span><button onClick={() => setActiveSection('Fabric')}>Open fabric library</button></div> : (assetCategory === 'Garment' || assetCategory === 'Patterns') ? GARMENT_TEMPLATES.filter(template => libraryItemMatches(template.name)).map((template) => (
-              <button className="asset-template garment-tile" key={template.id} onClick={() => applyGarmentTemplate(template.id)} title={`${template.name} · ${template.description}`}>
+          <LibraryChrome category={assetCategory} setCategory={setAssetCategory} folder={libraryFolder} setFolder={setLibraryFolder}
+            fabricGroups={FABRIC_PRESET_GROUPS} search={librarySearch} setSearch={setLibrarySearch} thumbnails={libraryThumbnails} setThumbnails={setLibraryThumbnails}>
+            {assetCategory==='Patterns'&&<div className="exo-pattern-import-bar">
+              <button type="button" className="wide-action" onClick={()=>svgPatternInputRef.current?.click()}><Upload size={13}/>IMPORT SVG / ILLUSTRATOR OUTLINES</button>
+              {!clothcraftHybrid&&<button type="button" className="wide-action" onClick={arrangeCurrentPatternsIn3D}><Box size={13}/>ARRANGE CURRENT 2D IN 3D</button>}
+              <span>2D outlines only · zero sewing · choose patterns to edit in the 2D viewport</span>
+            </div>}
+            {assetCategory==='Patterns'&&<PatternIntelligenceLibrary search={librarySearch}/>}
+            {(assetCategory === 'Garment' || assetCategory === 'Patterns') ? GARMENT_TEMPLATES.filter(template => libraryItemMatches(template.name)&&templateMatchesFolder(template,libraryFolder)).map((template) => (
+              <LibraryAssetHover key={`${assetCategory}-${template.id}`} category={assetCategory} id={template.id} title={template.name}
+                description={template.description || 'Garment construction template with editable 2D panels.'}
+                details={[["Asset type",assetCategory==='Patterns'?'2D production pattern':'Garment template'],['Action','Click to load template'],['Source','EXO local drafting geometry']]}
+                source={assetCategory==='Patterns'
+                  ? 'Flat 2D view of the editable, unsewn template cutlines. SVG/Illustrator outlines can be imported separately.'
+                  : 'Curved 3D visual study made from the EXO garment template\'s real pattern outlines and referenced seam edges. Curvature is illustrative, not a solved fabric simulation.'}
+                preview={assetCategory==='Patterns'
+                  ? <div className="exo-library-template-preview exo-library-template-preview--flat"><PatternFlatSheetPreview name={template.name} templateId={template.id}/></div>
+                  : <div className="exo-library-template-preview exo-library-template-preview--curved"><GarmentLibraryPreview name={template.name} templateId={template.id}/></div>}>
+              <button className="asset-template garment-tile" onClick={() => assetCategory==='Patterns'?openUnsewnPatternTemplate(template.id):applyGarmentTemplate(template.id)} title={`${template.name} · ${template.description}`}>
                 <span className="asset-template-icon">{assetCategory === 'Patterns' ? <PatternLibraryThumbnail templateId={template.id} name={template.name}/> : <GarmentSilhouette type={template.name}/>}</span><span className="asset-template-label">{template.name}</span>
               </button>
-            )) : assetCategory === 'Fabric' || assetCategory === 'Material' ? <>
-              <div className="clo-fabric-library-divider">PROJECT SWATCHES · CLICK TO APPLY TO SELECTED PATTERN</div>
-              {Object.entries(project.fabrics || {}).filter(([,item]) => libraryItemMatches(item.name)).map(([id, item]) => (
-                <button className="asset-template garment-tile" key={id} onClick={() => assignFabric(id)} title={`Apply ${item.name} to selected garment pattern`}><span className="asset-template-icon fabric-library-thumbnail" style={fabricSwatchStyle(item)}><span/></span><span className="asset-template-label">{item.name}</span></button>
-              ))}
-              <div className="clo-fabric-library-divider">TEXTILES · {FABRIC_SCAN_COVERAGE.total} PRESETS · ADD & APPLY</div>
-              <p className="panel-copy">{FABRIC_SCAN_COVERAGE.photographicReferences} presets inherit one of {FABRIC_SCAN_COVERAGE.uniqueLicensedScans} genuine CC0 photo scans. {FABRIC_SCAN_COVERAGE.proceduralFallbacks} use purpose-built procedural yarn appearances. Shared references are not 400 unique measured textiles. All mechanics require specimen calibration.</p>
-              {FABRIC_PRESET_GROUPS.map(([group,entries])=>{
-                const matching=entries.filter(([,item])=>libraryItemMatches(item.name))
-                if(!matching.length)return null
-                return <React.Fragment key={group}>
-                  <div className="clo-fabric-library-divider">{group.toUpperCase()} · {matching.length}</div>
-                  {matching.map(([id,item])=><button className="asset-template garment-tile" key={`preset-${id}`} onClick={() => addAndApplyFabricPreset(id)} title={`Create ${item.name} and apply to selected pattern · estimated physical values`}><span className="asset-template-icon fabric-library-thumbnail" style={fabricSwatchStyle(item)}><span/></span><span className="asset-template-label">+ {item.name}</span></button>)}
-                </React.Fragment>
-              })}
-            </> : assetCategory === 'Avatar' ? AVAILABLE_AVATARS.filter(({ name }) => libraryItemMatches(name)).map(({ name, model }) => (
-              <button className="asset-template garment-tile" key={name} disabled={avatarAvailability[model] !== true} onClick={() => { setActiveSection('Avatar'); setAvatarModel(model) }}><span className="asset-template-icon avatar-library-thumbnail">♙</span><span className="asset-template-label">{name}{avatarAvailability[model] === false ? ' · Not installed' : ''}</span></button>
+              </LibraryAssetHover>
+            )) : assetCategory === 'Fabric' || assetCategory === 'Material' ? <FabricCatalog key={assetCategory} groups={FABRIC_PRESET_GROUPS} folderFilter={libraryFolder} projectFabrics={project.fabrics} search={librarySearch} coverage={FABRIC_SCAN_COVERAGE} nativeMode={clothcraftHybrid} onAssignFabric={assignFabric} onApplyPreset={addAndApplyFabricPreset} onActivatePreset={activateFabricFromLibrary} onInspectDraft={id => { setCommandResult(`${FABRIC_PRESETS[id].name} is available in the EXO fabric library. Double-click to apply it to the selected native panel.`); setActiveSection('Fabric') }}/>: assetCategory === 'Avatar' ? AVAILABLE_AVATARS.filter(({ name,model }) => libraryItemMatches(name) && (libraryFolder==='all'||libraryFolder===model||(libraryFolder==='reference'&&model!=='makehuman-base')||(libraryFolder==='base'&&model==='makehuman-base'))).map(({ name, model }) => (
+              <LibraryAssetHover key={model} category="Avatar" id={model} title={name}
+                description="3D body reference for garment presentation and fitting, where the corresponding model is installed."
+                details={[["Asset",model],['Availability',clothcraftHybrid&&!['makehuman-base','clo-thomas'].includes(model)?'3D preview only; no native collision body':avatarAvailability[model]===true?'Installed locally':'Asset unavailable'],['Action','Click to set fitting avatar']]}
+                source="Preview is visual. Imported avatar geometry may not have calibrated physical collision."
+                preview={<Library3DAssetPreview kind="avatar" variant={model} height={230}/> }>
+                <button className="asset-template garment-tile" aria-disabled={avatarAvailability[model] !== true} onClick={() => { if(avatarAvailability[model]!==true) return;setActiveSection('Avatar'); setAvatarModel(model) }}><span className="asset-template-icon avatar-library-thumbnail">♙</span><span className="asset-template-label">{name}{clothcraftHybrid&&!['makehuman-base','clo-thomas'].includes(model)?' · Preview only':avatarAvailability[model] === false ? ' · Not installed' : ''}</span></button>
+              </LibraryAssetHover>
+            )) : assetCategory === 'Hanger' ? HANGER_LIBRARY.filter(item=>libraryItemMatches(`${item.name} ${item.finish} ${item.construction}`)&&(libraryFolder==='all'||libraryFolder===item.id)).map(item=>(
+              <LibraryAssetHover key={item.id} category="Hanger" id={item.id} title={item.name} description={item.construction}
+                details={[["Finish",item.finish],["Construction",item.construction],["3D asset",item.id === 'wood' ? 'Innerscene Shoulder Form · CC0 GLB' : item.id === 'trouser-clip' ? 'Innerscene Clip Rail · CC0 GLB' : 'Original EXO procedural 3D'],["Action","Click to display hanger"]]}
+                source={item.id === 'wood' ? 'Imported Innerscene Shoulder Form · CC0. Original EXO thumbnail is rendered from this model.' : item.id === 'trouser-clip' ? 'Imported Innerscene Clip Rail · CC0. Original EXO thumbnail is rendered from this model.' : 'Original EXO procedural Three.js geometry.'}
+                preview={<Library3DAssetPreview kind="hanger" variant={item.id} height={230}/> }>
+                <button className={`asset-template garment-tile ${(project.render?.hangerPreset||'none')===item.id?'selected':''}`}
+                  type="button" aria-pressed={(project.render?.hangerPreset||'none')===item.id}
+                  onClick={()=>{updateRenderSetting('hangerPreset',item.id);setActiveSection('Render');setCommandResult(`${item.name} selected for 3D garment presentation.`)}}>
+                  <span className="asset-template-icon exo-hanger-library-tile"><Library3DAssetPreview kind="hanger" variant={item.id} interactive={false} height={70}/></span>
+                  <span className="asset-template-label">{item.name}</span>
+                </button>
+              </LibraryAssetHover>
             )) : assetCategory === 'Hardware and Trims' ? (
               <>
-                <button className="asset-template garment-tile" disabled={!selectedPiece} onClick={() => { addButtonRow(selectedPiece.id, 5); setActiveSection('Sewing') }}><span className="asset-template-icon clo-hardware-preview"><CadToolIcon id="buttons" size={48}/></span><span className="asset-template-label">Five-button row</span></button>
-                <button className="asset-template garment-tile" disabled={!selectedPiece} onClick={() => { addButtonholeRow(selectedPiece.id, 5); setActiveSection('Sewing') }}><span className="asset-template-icon clo-hardware-preview"><CadToolIcon id="buttonholes" size={48}/></span><span className="asset-template-label">Five buttonholes</span></button>
-                <button className="asset-template garment-tile" disabled={!selectedPiece} onClick={() => { addZipper(selectedPiece.id, trimEdgeIndex); setActiveSection('Sewing') }}><span className="asset-template-icon clo-hardware-preview"><CadToolIcon id="trim" size={48}/></span><span className="asset-template-label">Edge zipper</span></button>
-                <button className="asset-template garment-tile" disabled={!selectedPiece} onClick={() => { addTopstitch(selectedPiece.id, trimEdgeIndex); setActiveSection('Sewing') }}><span className="asset-template-icon clo-hardware-preview"><CadToolIcon id="topstitch" size={48}/></span><span className="asset-template-label">Topstitch seam</span></button>
-                <button className="asset-template garment-tile" disabled={!selectedPiece} onClick={() => { addBinding(selectedPiece.id, trimEdgeIndex); setActiveSection('Sewing') }}><span className="asset-template-icon clo-hardware-preview"><CadToolIcon id="seam-weld" size={48}/></span><span className="asset-template-label">Edge binding</span></button>
-                <div className="clo-fabric-library-divider">HARDWARE REFERENCE PRESETS · {listHardwarePresets().length}</div>
-                {listHardwarePresets().filter(preset=>libraryItemMatches(`${preset.name} ${preset.kind} ${preset.material}`)).map(preset=>(
-                  <button className="asset-template garment-tile" key={preset.id}
-                    title={`${preset.material} · ${preset.finish}. ${preset.construction}`}
-                    onClick={()=>{
-                      if(['button','buttonhole','zipper'].includes(preset.kind))
-                        setHardwareChoice(current=>({...current,[preset.kind]:preset.id}))
-                      setActiveSection('Sewing')
-                      setCommandResult(['button','buttonhole','zipper'].includes(preset.kind)
-                        ? `${preset.name} selected. Add it to the garment using Edge construction.`
-                        : `${preset.name} is cataloged with dimensions and finish; placement and rigid contact are in development.`)
-                    }}>
-                    <span className="asset-template-icon clo-hardware-preview" style={{background:preset.pbr.baseColor}}>
-                      <CadToolIcon id={preset.kind==='button'?'buttons':preset.kind==='buttonhole'?'buttonholes':'trim'} size={36}/>
-                    </span>
-                    <span className="asset-template-label">{preset.name}</span>
+                {[
+                  {id:'button-row',name:'Five-button row',icon:'buttons',image:'/hardware-thumbnails/four-hole-shirt-button.png',description:'Five 3D buttons evenly spaced on the selected pattern.',action:()=>addButtonRow(selectedPiece.id,5)},
+                  {id:'buttonholes',name:'Five buttonholes',icon:'buttonholes',image:'/hardware-thumbnails/horizontal-buttonhole.png',description:'Five satin-stitched openings on the selected pattern.',action:()=>addButtonholeRow(selectedPiece.id,5)},
+                  {id:'edge-zipper',name:'Edge zipper',icon:'trim',image:'/hardware-thumbnails/coil-zipper-5.png',description:'Add a coil zipper to the selected edge.',action:()=>addZipper(selectedPiece.id,trimEdgeIndex)},
+                  {id:'topstitch',name:'Topstitch seam',icon:'topstitch',description:'Add a decorative seam stitching path along the selected edge.',action:()=>addTopstitch(selectedPiece.id,trimEdgeIndex)},
+                  {id:'binding',name:'Edge binding',icon:'seam-weld',description:'Add edge binding around the chosen garment segment.',action:()=>addBinding(selectedPiece.id,trimEdgeIndex)},
+                ].filter(item=>libraryFolder==='all'||
+                  (['fasteners','button'].includes(libraryFolder)&&item.id==='button-row')||
+                  (['fasteners','buttonhole'].includes(libraryFolder)&&item.id==='buttonholes')||
+                  (['zipper-parts','zipper'].includes(libraryFolder)&&item.id==='edge-zipper')||
+                  (['findings','trim'].includes(libraryFolder)&&['binding','topstitch'].includes(item.id))
+                ).map(item=><LibraryAssetHover category="Hardware and Trims" key={item.id} id={item.id} title={item.name}
+                  description={item.description} details={[["Selected pattern",selectedPiece?.name||'Select a pattern'],["Action","Click to construct"]]}
+                  source={item.image?'Render made from EXO procedural 3D hardware geometry.':'Sewing operation reference; preview is a tool symbol.'}
+                  preview={item.image?<img src={item.image} alt={`${item.name} rendered hardware`} loading="lazy"/>:<CadToolIcon id={item.icon} size={100}/>}>
+                  <button type="button" className="asset-template garment-tile" aria-disabled={!selectedPiece}
+                    onClick={()=>{if(!selectedPiece)return;item.action();setActiveSection('Sewing')}}>
+                    <span className="asset-template-icon clo-hardware-preview"><CadToolIcon id={item.icon} size={48}/></span>
+                    <span className="asset-template-label">{item.name}</span>
                   </button>
-                ))}
+                </LibraryAssetHover>)}
+                <HardwareLibrary search={librarySearch} folderFilter={libraryFolder} selectedPresetId={selectedObjectForProperties?.source==='library'?selectedObjectForProperties.id:null}
+                  onSelectImportedAsset={asset=>{
+                    setSelectedObjectForProperties({source:'imported-library',type:'imported-hardware',id:asset.original?.id||asset.id,name:asset.name,asset})
+                    setObjectTab('Trim');setActiveSection('Sewing');setShowObjectBrowser(true);setInspectorVisible(true)
+                    setCommandResult(`${asset.name} selected from the hardware library. Use Place to attach its original 3D mesh.`)
+                  }} onPlaceImportedAsset={placeImportedCloAsset} onSelectPreset={preset=>{
+                  if(['button','buttonhole','zipper'].includes(preset.kind))setHardwareChoice(current=>({...current,[preset.kind]:preset.id}))
+                  setObjectTab(preset.kind==='button'?'Button':preset.kind==='buttonhole'?'Buttonhole':preset.kind==='zipper'?'Zipper':'Trim')
+                  setSelectedObjectForProperties({source:'library',type:'hardware',id:preset.id,name:preset.name})
+                  setShowObjectBrowser(true)
+                  setInspectorVisible(true)
+                  setActiveSection('Sewing')
+                  if(window.innerWidth<600)requestAnimationFrame(()=>document.querySelector('.clo-inspector')?.scrollIntoView({behavior:'auto',block:'nearest',inline:'end'}))
+                  setCommandResult(`${preset.name} selected. Review its dimensions and material in the right Property Editor.`)
+                }}/>
               </>
             ) : assetCategory === 'Stage' ? (
-              <>
-                <div className="clo-fabric-library-divider">STUDIO ENVIRONMENTS · LIVE LIGHTING</div>
-                {[
-                  ['studio','Classic Studio'],
-                  ['softbox','Softbox'],
-                  ['neutral','Neutral White'],
-                  ['dramatic','Dramatic Contrast'],
-                ].filter(([,name]) => libraryItemMatches(name)).map(([id,name]) => <button key={id} className={`asset-template garment-tile clo-stage-option ${(project.render?.environmentPreset || 'studio') === id ? 'selected' : ''}`} onClick={() => { updateRenderSetting('environmentPreset', id); setActiveSection('Render') }} title={`Use ${name} lighting on the 3D garment`}><span className={`asset-template-icon clo-stage-preview stage-${id}`}><span className="clo-stage-floor"/><Shirt size={36}/></span><span className="asset-template-label">{name}</span></button>)}
-              </>
+              <StageCatalog folderFilter={libraryFolder} selectedStageId={normalizeStageId(project.render?.stageId)} search={librarySearch} onSelectStage={id => { updateRenderSetting('stageId', id); setActiveSection('Render') }} />
             ) : <div className="asset-placeholder"><FolderOpen size={26}/><strong>{assetCategory}</strong><span>The collection is reserved for future assets.</span></div>}
           </LibraryChrome>
           </>}
           <div className="clo-panel-resizer clo-left-resizer" role="separator" aria-orientation="vertical" aria-label="Resize Library width" title="Drag to resize Library" onPointerDown={(event) => beginPanelResize('library', event)} onPointerMove={movePanelResize} onPointerUp={endPanelResize} onLostPointerCapture={endPanelResize} onDoubleClick={() => setLibraryWidth(232)}/>
         </aside>
-        <aside className={`tool-rail ${compactTools ? 'compact' : ''}`} aria-label="3D and sewing toolbar">
-          <div className="clo-rail-section"><strong>3D TOOLS</strong></div>
-          <button type="button" className="clo-reference-mode-toggle"
-            aria-label={show3DToolMap?'Hide unavailable CLO 3D reference positions':'Show complete CLO 3D reference map'}
-            aria-pressed={show3DToolMap}
-            title={show3DToolMap?'Show working 3D tools only':'Show all CLO reference positions, including tools EXO does not support yet'}
-            onClick={()=>setShow3DToolMap(value=>!value)}>
-            {show3DToolMap?'HIDE MAP':'FULL MAP'}
-          </button>
-          <div className="clo-left-3d-double-bars" aria-label="CLO 7 reference 3D two-column toolbar">
-            <div className="clo-left-3d-column" aria-label="3D editing column A">
-              {(show3DToolMap?CLO7_3D_A:CLO7_3D_A.filter(enabledClo3D)).map(renderClo7ThreeDSlot)}
-            </div>
-            <div className="clo-left-3d-column" aria-label="3D garment column B">
-              {(show3DToolMap?CLO7_3D_B:CLO7_3D_B.filter(enabledClo3D)).map(renderClo7ThreeDSlot)}
-            </div>
-          </div>
-          <div className="clo-rail-section"><strong>EXO · 3D EXTRAS</strong></div>
-          <div className="clo-left-3d-double-bars" aria-label="EXO additional 3D controls not present in photographed reference positions">
-            <div className="clo-left-3d-column" aria-label="Additional 3D actions column A">
-              {!clothcraftHybrid && <button className={leftSimulationMenuOpen ? 'active' : ''} onClick={() => { setSimulationMenuOpen(false); setLeftSimulationMenuOpen(value => !value) }} title="EXO simulation quality modes" aria-expanded={leftSimulationMenuOpen}><CadToolIcon id="simulation-modes" size={20}/></button>}
-              <button className={viewportTool === 'hand' ? 'active' : ''} onClick={() => setViewportTool('hand')} title="EXO 3D fabric hand tool"><CadToolIcon id="hand" size={20}/></button>
-              <button className={viewportTool === 'move' ? 'active' : ''} onClick={() => setViewportTool('move')} title="EXO 3D move garment"><CadToolIcon id="move-3d" size={20}/></button>
-            </div>
-            <div className="clo-left-3d-column" aria-label="Additional 3D actions column B">
-              <button className={viewportTool === 'rotate' ? 'active' : ''} onClick={() => setViewportTool('rotate')} title="EXO 3D rotate selected fabric"><CadToolIcon id="rotate-3d" size={20}/></button>
-              <button className={wireframe ? 'active' : ''} title="EXO toggle garment mesh wireframe" onClick={() => setWireframe(value => !value)}><CadToolIcon id="wireframe" size={20}/></button>
-              {!clothcraftHybrid && <button className={analysisMode === 'strain' ? 'active' : ''} title="EXO strain map" onClick={() => setAnalysisMode(analysisMode === 'strain' ? 'surface' : 'strain')}><CadToolIcon id="surface" size={20}/></button>}
-            </div>
-          </div>
-          {leftSimulationMenuOpen && !clothcraftHybrid && <div className="clo-simulation-popover clo-simulation-left-popover">
-            <strong>SIMULATION · SOLVER MODES</strong>
-            <button onClick={() => { applySimulationQuality('draft'); setLeftSimulationMenuOpen(false) }}><Activity size={14}/> Fast · Draft</button>
-            <button onClick={() => { applySimulationQuality('balanced'); setLeftSimulationMenuOpen(false) }}><Check size={14}/> Normal · Balanced</button>
-            <button onClick={() => { applySimulationQuality('final'); setLeftSimulationMenuOpen(false) }}><SlidersHorizontal size={14}/> Fitting · Quality</button>
-            <button onClick={() => { requestNativeSolve(); setLeftSimulationMenuOpen(false) }} disabled={nativeServiceStatus !== 'ready'}><Cpu size={14}/> Native XPBD {nativeServiceStatus !== 'ready' ? '· OFFLINE' : ''}</button>
-            <button onClick={() => { resetSimulation(); setLeftSimulationMenuOpen(false) }}><RotateCcw size={14}/> Reset to flat pieces</button>
+        <aside className={`tool-rail ${compactTools ? 'compact' : ''}`} aria-label={viewportLayout==='2d'?'2D pattern design and grading toolbar':'3D and sewing toolbar'}>
+          <div id="exo-techpack-left-tools-host" className="exo-techpack-rail-host" hidden={!techPackWorkspaceOpen}/>
+          <div className="clo-rail-section exo-universal-tools-heading"><strong>{viewportLayout==='2d'?'2D / GRADE':'3D TOOLS'}</strong></div>
+          {viewportLayout!=='2d' && <Clo3DReferenceToolbar nativeClothcraft={clothcraftHybrid} enabledLegacy={enabledClo3D}
+            onCollapse3D={collapse3DForPatterns}
+            toolbarEditMode={studioCustomization.workspace.toolbarEditMode}
+            onActivate={activateCloTool} canDraft={slot=>Boolean(selectedPiece&&draftHardwareForCloSlot(`3d:${slot.id}`))}
+            running={visibleRunning} viewportTool={viewportTool} tool={tool} sewingGuides={showSewingGuides}
+            toolbarDock={studioCustomization.workspace.leftToolbarDock}
+            toolbarPosition={studioCustomization.workspace.leftToolbarPosition}
+            toolbarOrder={studioCustomization.workspace.leftToolbarIds}
+            onToolbarPositionChange={position=>setStudioCustomization(previous=>normalizeStudioCustomization({...previous,workspace:{...previous.workspace,leftToolbarPosition:position}}))}
+            onToolbarOrderChange={ids=>setStudioCustomization(previous=>normalizeStudioCustomization({...previous,workspace:{...previous.workspace,leftToolbarIds:ids}}))}
+            onToolbarDockChange={dock=>setStudioCustomization(previous=>normalizeStudioCustomization({...previous,workspace:{...previous.workspace,leftToolbarDock:dock}}))}/>}
+          {viewportLayout==='2d' && <div className="exo-grade-workbench-actions" aria-label="Industrial grading actions">
+            {clothcraftHybrid&&<button type="button" title="Open all 24 native pattern grading tools and grading table"
+              aria-label="Open all 24 native grading tools and grading table"
+              onClick={()=>window.dispatchEvent(new CustomEvent('exo-clothcraft-pattern-studio-command',
+                {detail:{command:'grade-manual'}}))}>
+              <Grid3X3 size={19}/><span style={{fontSize:9}}>24</span>
+            </button>}
+            {clothcraftHybrid&&<button type="button" title="Open compact movable Grading Table"
+              aria-label="Open compact movable Grading Table"
+              onClick={()=>window.dispatchEvent(new CustomEvent('exo-clothcraft-pattern-studio-command',
+                {detail:{command:'grade-table'}}))}><Table2 size={19}/></button>}
+            {clothcraftHybrid&&<button type="button" title="Open compact movable Compare Length"
+              aria-label="Open compact movable Compare Length"
+              onClick={()=>window.dispatchEvent(new CustomEvent('exo-clothcraft-pattern-studio-command',
+                {detail:{command:'grade-compare'}}))}><Ruler size={19}/></button>}
+            {[
+              ['rules','Point grade rules','grading',()=>{setTool('grading-edit');setObjectTab('Grading')}],
+              ['sizes','Size run manager','grading-auto',()=>setObjectTab('Grading')],
+              ['measure','Points of measure','measure',()=>setObjectTab('POM')],
+              ['quality','Manufacturing grading QA','points',()=>setObjectTab('Grading')],
+              ['markers','Marker layout and yield','polygon-tool',()=>setObjectTab('Grading')],
+            ].map(([id,label,icon,action])=><button type="button" key={id} aria-label={label} title={label} className={gradeWorkbenchSection===id?'active':''} aria-pressed={id==='nest'?showGradeNest:gradeWorkbenchSection===id} onClick={event=>{event.stopPropagation();setGradeWorkbenchSection(id);setActiveSection('Production');if(!clothcraftHybrid){setShowObjectBrowser(true);setInspectorVisible(true)}action()}}><CadToolIcon id={icon} size={19}/></button>)}
+            <button type="button" title="Export selected piece grade rules CSV" aria-label="Export selected piece grade rules CSV" disabled={!selectedPiece} onClick={exportPieceGradeRules}><Download size={19}/></button>
+            <button type="button" title="Import selected piece grade rules CSV" aria-label="Import selected piece grade rules CSV" disabled={!selectedPiece} onClick={()=>gradeRuleCsvInputRef.current?.click()}><Upload size={19}/></button>
+            <button type="button" title="Export selected size DXF" aria-label="Export selected size DXF" onClick={exportDxf}><FileDown size={19}/></button>
+            <button type="button" title="Export full size run JSON" aria-label="Export full size run JSON" onClick={exportSizeRun}><Layers3 size={19}/></button>
           </div>}
+          {!clothcraftHybrid && (rustThemeTokens ? rustThemeNestVisible({isTwoD:viewportLayout==='2d',fullWorkspace:patternFocusActive,nativeTwoD:false}) : viewportLayout==='2d'&&patternFocusActive) && <div className="exo-grade-nest-toggle" aria-label="Full 2D grading nest">
+            <button type="button" aria-label="Nest XS to XXL" aria-pressed={showGradeNest} onClick={()=>setShowGradeNest(value=>!value)}>NEST XS–XXL <span>{showGradeNest?'ON':'OFF'}</span></button>
+          </div>}
+          {(rustThemeTokens ? rustThemeNestVisible({isTwoD:viewportLayout==='2d',fullWorkspace:patternFocusActive,nativeTwoD:clothcraftHybrid}) : viewportLayout==='2d'&&(patternFocusActive||clothcraftHybrid)) && <div className="exo-2d-workspace-shortcuts" aria-label="2D grading and printing workspace">
+            {(project.grading?.sizes||[]).map(size=><button type="button" key={size} title={`Preview size ${size}`} aria-label={`Preview size ${size}`} className={gradePreviewSize===size?'active':''} aria-pressed={gradePreviewSize===size} onClick={()=>{setActiveSection('Production');setGradePreviewSize(size)}}><span className="exo-grade-size-label">{size}</span></button>)}
+          </div>}
+          {viewportLayout==='2d' && gradeWorkbenchSection==='quality' && <div className="exo-grade-left-qa" aria-label="Grading quality status" role="status">{industrialPatternAudit?`${industrialPatternAudit.blockers} pattern blockers · ${industrialCutlineAudit?.blockers??0} cutline blockers`:'Open Production QA'}</div>}
+          {viewportLayout==='2d' && <AccuMark2DLibrary
+            nativeMode={clothcraftHybrid}
+            disabled={Boolean(clothcraftLive?.busy||clothcraftLive?.running)}
+            selectedPiece={selectedPiece} project={project} grading={project.grading} previewSize={gradePreviewSize} showGradeNest={showGradeNest}
+            focusedGradePoint={focusedGradePoint}
+            onSelectSize={size=>{setGradePreviewSize(size);setActiveSection('Production')}}
+            onToggleNest={()=>setShowGradeNest(current=>!current)}
+            onSetRule={(pointIndex,rule)=>{if(!selectedPiece)return;mutateProject(next=>{const point=next.pieces.find(p=>p.id===selectedPiece.id)?.points?.[pointIndex];if(point)point.industrialGradeRule=structuredClone(rule)})}}
+            onClearRule={pointIndex=>{if(!selectedPiece)return;mutateProject(next=>{const point=next.pieces.find(p=>p.id===selectedPiece.id)?.points?.[pointIndex];if(point)delete point.industrialGradeRule})}}
+            onApplyGrade={(operation,spec)=>{
+              try{
+                const work={offset:offsetGradePoint,distribute:distributeGradePoint,smooth:smoothGradePoint,'redistribute-size-line':redistributeSizeLine}[operation]
+                if(!work)throw Error('Unknown industrial grading operation')
+                const updated=work(project,spec)
+                const sizes=updated.grading?.sizes||[]
+                for(const size of sizes)gradeProject(updated,size)
+                mutateProject(next=>{Object.assign(next,updated)})
+                setCommandResult(`Applied ${operation} to the selected piece; ${sizes.length} graded sizes evaluated. Production QA remains required.`)
+              }catch(error){setCommandResult(`Grading operation blocked: ${error.message}`);throw error}
+            }}
+            onApplyDraft={spec=>{
+              try{
+                const result=applyAccuMarkPatternOperation(project,spec)
+                mutateProject(next=>{Object.assign(next,result.project)})
+                setCommandResult(`Applied ${spec.kind} to ${spec.pieceId}; ${result.validation.gradedSizes.length} sizes evaluated. Physical QA remains required.`)
+              }catch(error){setCommandResult(`Pattern operation blocked: ${error.message}`);throw error}
+            }}
+            onApplyPointLine={spec=>{
+              try{
+                const result=applyAccuMarkPointLineOperation(project,spec)
+                if(result.project){
+                  mutateProject(next=>{Object.assign(next,result.project)})
+                  setCommandResult(`Applied ${spec.kind} to ${spec.pieceId}. Review grading and sewing QA.`)
+                }else setCommandResult(`Measured ${spec.pieceId} edge ${spec.edgeIndex+1}: ${result.measurement?.lengthCm?.toFixed(3)} cm`)
+                return result
+              }catch(error){setCommandResult(`Precise pattern tool blocked: ${error.message}`);throw error}
+            }}
+            onApplyGradeAxis={spec=>{
+              try{
+                const result=applyAccuMarkGradeAxisOperation(project,spec)
+                mutateProject(next=>{Object.assign(next,result.project)})
+                setCommandResult(`Applied ${spec.kind} ${spec.axis.toUpperCase()} to ${spec.target.pieceId} P${spec.target.pointIndex+1}; ${result.validation.sizes.length} graded sizes evaluated. Sewline QA is still required.`)
+                return result
+              }catch(error){setCommandResult(`Single-axis grade blocked: ${error.message}`);throw error}
+            }}
+            onEditGradeDelta={spec=>{
+              try{
+                const result=editAccuMarkGradeDelta(project,spec)
+                if(!result?.project||!result?.validation?.sizes?.length)throw Error('Grading engine returned no validated size run')
+                mutateProject(next=>{Object.assign(next,result.project)})
+                setGradePreviewSize(spec.size)
+                setShowGradeNest(true)
+                setCommandResult(`Grade delta edited at ${spec.pieceId} P${spec.pointIndex+1} for ${spec.size}; verified ${result.validation.sizes.length} sizes. Sewing QA remains required.`)
+                return result
+              }catch(error){setCommandResult(`Precise grade blocked: ${error.message}`);throw error}
+            }}
+            onApplyGradeBatch={spec=>{
+              try{
+                const result=applyAccuMarkGradeBatch(project,spec)
+                if(!result?.project||!result?.validation?.sizes?.length)throw Error('Batch grading engine returned no validated size run')
+                mutateProject(next=>{Object.assign(next,result.project)})
+                setShowGradeNest(true)
+                setCommandResult(`Copied ${spec.axis||'both'} grading to ${spec.targets.length} points; ${result.validation.sizes.length} sizes verified. Production QA remains required.`)
+                return result
+              }catch(error){setCommandResult(`Batch grading blocked: ${error.message}`);throw error}
+            }}
+            onApplyJoinedGrade={spec=>{
+              try{
+                const result=applyAccuMarkJoinedEndGradeRule(project,spec)
+                if(!result?.project||!result?.validation?.sizes?.length)throw Error('Joined-end grading did not verify all sizes')
+                mutateProject(next=>{Object.assign(next,result.project)})
+                setShowGradeNest(true)
+                setCommandResult(`Applied ${spec.policy} grading on ${spec.pieceId} P${spec.pointIndex+1}; ${result.validation.sizes.length} sizes checked. Check sewn corner continuity and final QA.`)
+                return result
+              }catch(error){setCommandResult(`Joined-end grading blocked: ${error.message}`);throw error}
+            }}
+            onApplyGradedNotch={spec=>{
+              try{
+                const result=applyAccuMarkGradedNotchDistance(project,spec)
+                if(!result?.project||!result?.validation?.sizes?.length)throw Error('Physical notch grade did not verify all sizes')
+                mutateProject(next=>{Object.assign(next,result.project)})
+                setShowGradeNest(true)
+                setCommandResult(`Graded notch ${spec.notchId} fixed to ${spec.distanceCm} cm from ${spec.from}; ${result.validation.sizes.length} physical size stations checked. Sewline QA remains required.`)
+                return result
+              }catch(error){setCommandResult(`Graded notch blocked: ${error.message}`);throw error}
+            }}
+            onApplyConstraint={spec=>{
+              try{
+                const updated=applyAccuMarkGradeConstraint(project,spec)
+                mutateProject(next=>{Object.assign(next,updated)})
+                setCommandResult(`Applied ${spec.kind} to ${spec.pieceId} point ${spec.pointIndex}; all graded sizes passed point constraint residuals.`)
+              }catch(error){setCommandResult(`Grading constraint blocked: ${error.message}`);throw error}
+            }}
+            onImportDigitized={result=>{
+              if(!result?.validation?.ok||!result.project||!result.piece)throw Error('Invalid digitized piece result')
+              mutateProject(next=>{Object.assign(next,result.project)})
+              setSelectedPieceId(result.piece.id)
+              setCommandResult(`Imported calibrated piece ${result.piece.name}. ${result.warnings?.length||0} annotations need separate mapping. Review seam and grading QA.`)
+            }}
+            onApplyProject={(nextProject,message)=>{
+              // Reapply is an exceptional, already-calculated persistent graph
+              // transaction. Verify it against the authoritative source here;
+              // ordinary source edits use the automatic guarded propagation.
+              let verifiedAllowanceReapply=null
+              if(project.industrialAllowanceGraph && nextProject?.industrialAllowanceGraph){
+                try {
+                  const checked=reapplyIndustrialAllowanceGraph(project,{expectedRevision:project.revision}).project
+                  if(JSON.stringify(checked)===JSON.stringify(nextProject))
+                    verifiedAllowanceReapply=checked
+                }catch { /* ordinary edit retains the strict reactive guard */ }
+              }
+              mutateProject(next=>{Object.assign(next,nextProject)},{verifiedAllowanceReapply})
+              setCommandResult(message||'Updated 2D pattern project; review grading and manufacturing QA.')
+            }}
+            onError={setCommandResult}
+            onExecute={command=>{
+              const route=command.route
+              if(!route||route.kind==='reference')return
+              if(route.kind==='slot'){activateCloTool({id:route.target,label:command.label},'2d');return}
+              if(route.kind==='tool'){
+                setTool(route.target);setActiveFinishingTool(null)
+                rustCommand(`mode:${['vector-pen','vector-pencil'].includes(route.target)?'pen':'edit'}`)
+                window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:route.target}}))
+                return
+              }
+              if(route.kind==='inspector'){
+                if(route.target==='workspace'){setStudioSettingsTab('workspace');setStudioSettingsOpen(true);return}
+                if(route.target==='models'){setFileLibraryOpen(true);return}
+                if(route.target==='commands'){setCommandPaletteOpen(true);return}
+                setActiveSection(route.target==='sewing'?'Sewing':route.target==='pattern'?'Pattern':'Production')
+                if(route.target==='grading'||route.target==='quality'||route.target==='markers'){
+                  setGradeWorkbenchSection(route.target==='quality'?'quality':route.target==='markers'?'markers':'rules')
+                  setObjectTab('Grading')
+                }else if(route.target==='pom')setObjectTab('POM')
+                if(!clothcraftHybrid||(viewportLayout!=='2d'&&!patternFocusActive)){
+                  setShowObjectBrowser(true);setInspectorVisible(true)
+                }
+                return
+              }
+              if(route.kind==='toggle-nest'){setShowGradeNest(current=>!current);return}
+              if(route.kind==='export-dxf'){exportDxf();return}
+              if(route.kind==='export-size-run'){exportSizeRun();return}
+              if(route.kind==='import-dxf'){factoryDxfReferenceInputRef.current?.click();return}
+              if(route.kind==='export-rules'){if(selectedPiece)exportPieceGradeRules();return}
+              if(route.kind==='import-rules'){if(selectedPiece)gradeRuleCsvInputRef.current?.click();return}
+              if(route.kind==='export-factory-package'){exportFactoryPackage();return}
+              setCommandResult(`This operation is indexed for engineering; no executable 2D command is mapped: ${command.label}`)
+            }}/>}
+          {clothcraftHybrid && viewportLayout==='2d' && <PatternDesignToolPanel activeTool={tool}
+            disabled={Boolean(clothcraftLive?.busy||clothcraftLive?.running)} onSlot={activateCloTool}
+            onTool={id=>{setTool(id);setActiveFinishingTool(null);rustCommand(`mode:${['vector-pen','vector-pencil'].includes(id)?'pen':'edit'}`);
+              window.dispatchEvent(new CustomEvent('exo-clothcraft-select-2d-tool',{detail:{tool:id}}));
+            }}/>}
           {!clothcraftHybrid && <>
           <span className="rail-divider" /><div className="clo-rail-section"><strong>2D PATTERN</strong></div>
           <div className="clo-left-3d-double-bars clo-left-secondary-bars" aria-label="Pattern shortcuts in two columns">
@@ -4579,7 +7669,7 @@ export default function App() {
           <button onClick={() => duplicateSelectedPiece(false)} disabled={!selectedPiece} title="Duplicate selected pattern"><CadToolIcon id="duplicate-piece" size={20}/></button>
           <button onClick={() => duplicateSelectedPiece(true)} disabled={!selectedPiece} title="Create mirrored pattern copy"><CadToolIcon id="mirror" size={20}/></button>
           <button onClick={() => setShowObjectBrowser(value => !value)} title="Show or hide object browser"><CadToolIcon id="panel" size={20}/></button>
-          <button onClick={() => setAssetCategory('Fabric')} title="Browse fabric assets"><CadToolIcon id="fabric-roll" size={20}/></button>
+          <button onClick={() => { setAssetCategory('Fabric');setLibraryFolder('all'); setLibrarySearch(''); setLibraryVisible(true); setSidebarView('library') }} title="Browse fabric assets"><CadToolIcon id="fabric-roll" size={20}/></button>
           <button onClick={() => { setObjectTab('Topstitch'); setActiveSection('Sewing') }} title="Open topstitch object browser"><CadToolIcon id="topstitch" size={20}/></button>
           <button onClick={() => { setObjectTab('Button'); setActiveSection('Sewing') }} title="Open button object browser"><CadToolIcon id="buttons" size={20}/></button>
           <button onClick={() => { setObjectTab('Trim'); setActiveSection('Sewing') }} title="Open trims and zipper browser"><CadToolIcon id="trim" size={20}/></button>
@@ -4589,8 +7679,29 @@ export default function App() {
           </>}
         </aside>
 
-        <section className={`workspaces workspace-layout-${viewportLayout} ${clothcraftHybrid ? 'cc-rust-embedded' : ''}`} aria-label="3D and 2D windows" data-viewport-layout={viewportLayout} style={{ '--viewport-left-percent': `${viewportSplit}%` }}>
-          {clothcraftHybrid ? <ClothCraftWorkspace embedded exoSection={activeSection} exoLayout={viewportLayout} exoSplit={viewportSplit} environmentPreset={project.render?.environmentPreset || 'studio'} /> : <>
+        <section className={`workspaces workspace-layout-${viewportLayout} ${clothcraftHybrid ? 'cc-rust-embedded' : ''}`} aria-label="3D and 2D windows" data-viewport-layout={viewportLayout} style={{ '--viewport-left-percent': `${viewportSplit}%`,position:'relative' }}>
+          <StudioWorkspaceWidgets value={studioCustomization} onAction={runCustomToolbarAction} onChange={updateStudioCustomization} onCustomize={()=>{setStudioSettingsTab('customWorkspace');setStudioSettingsOpen(true)}}/>
+          <StudioCustomToolbarCollection value={studioCustomization} gradeNestEnabled={clothcraftHybrid?nativeNestVisible:showGradeNest} onAction={runCustomToolbarAction} onChange={updateStudioCustomization} onCustomize={()=>{setStudioSettingsTab('customToolbar');setStudioSettingsOpen(true)}}/>
+          <StudioCustomToolbar value={studioCustomization} onAction={runCustomToolbarAction}
+            onChange={updateStudioCustomization} onCustomize={()=>setStudioSettingsOpen(true)}/>
+          {!clothcraftHybrid&&printLayoutActive&&<div className="exo-legacy-print-viewport" role="region" aria-label="Print Layout replacing 2D pattern window">
+            <PrintLayoutStudio source={project} revision={project.revision} onClose={exitFocusedWorkspace} embedded/>
+          </div>}
+          <CloFinishingToolWidgets openSewing={activeFinishingTool==='sewing'} openSteam={activeFinishingTool==='steam'}
+            active={activeFinishingTool} onActivate={setActiveFinishingTool} onClose={()=>{setActiveFinishingTool(null);setTool(current=>['steam-preview','seam-measure'].includes(current)?'select':current)}}
+            selection={clothcraftLive?.selection} seamRefs={clothcraftLive?.seamRefs||[]}
+            seamMeasurements={clothcraftLive?.seamMeasurements||[]}
+            onSelectSeam={seamId=>window.dispatchEvent(new CustomEvent('exo-clothcraft-select-seam',{detail:{seamId}}))}/>
+          {clothcraftHybrid ? <ClothCraftWorkspace embedded exoSection={activeSection} exoObjectTab={objectTab} exoLayout={viewportLayout} exoSplit={viewportSplit}
+            environmentPreset={project.render?.environmentPreset || 'studio'} stageId={normalizeStageId(project.render?.stageId)}
+            stageSettings={project.render?.stageSettings||{}}
+            onRemoveStage={()=>updateRenderSetting('stageId','none')}
+            onCollapse3D={collapse3DForPatterns} onTogglePatternStudio={viewportLayout==='2d'?restoreCollapsed3D:collapse3DForPatterns} patternStudioActive={viewportLayout==='2d'}
+            onToggle3DStudio={toggle3DStudio} studio3DActive={viewportLayout==='3d'}
+            animationWorkspaceActive={animationWorkspaceActive} printLayoutActive={printLayoutActive} onExitPrintLayout={exitFocusedWorkspace}
+            patternReferences={nativePatternReferences} onUpdatePatternReferences={updateNativePatternReferences}
+            cameraSettings={project.render?.camera||null} sceneLight={project.render?.light||null}
+            sceneLight2={project.render?.light2||null} exposure={project.render?.exposure??1.1} studioAppearance={studioCustomization.appearance} studioPreferences={rustUiPreferences} workspaceGrid={show2DGrid} workspaceSeams={showSewingGuides}/> : <>
           {zozoReference ? <div className="viewport-shell zozo-reference-shell" data-testid="zozo-reference-workspace">
             <div className="workspace-head viewport-head">
               <div><strong>ZOZO GITHUB DRESS · RUST/METAL REFERENCE</strong><span>14 original panels · 851 sewing constraints · read-only cached simulation</span></div>
@@ -4599,6 +7710,10 @@ export default function App() {
             <ZozoReferenceDressViewer reference={zozoReference} frame={zozoReferenceFrame} showBody={zozoReferenceBodyVisible}/>
           </div> : <GarmentViewport
             project={displayProject}
+            stageSettings={project.render?.stageSettings||{}}
+            onRemoveStage={()=>updateRenderSetting('stageId','none')}
+            studioAppearance={studioCustomization.appearance}
+            studioPreferences={studioCustomization.preferences}
             ppfPreview={ppfPreview}
             running={running}
             hasSimulated={hasSimulated}
@@ -4619,6 +7734,7 @@ export default function App() {
             selectedPieceId={selectedPieceId}
             onSelectPiece={selectIn3D}
             onChangeViewportTool={setViewportTool}
+            onCollapse3D={collapse3DForPatterns}
             onToggleWireframe={() => setWireframe(value => !value)}
             onToggleSewingGuides={() => setShowSewingGuides(value => !value)}
             onChangeAnalysisMode={setAnalysisMode}
@@ -4634,6 +7750,32 @@ export default function App() {
           />}
           <PatternEditor
             project={displayProject}
+            expanded2D={viewportLayout==='2d'||patternFocusActive}
+            full2D={patternFocusActive}
+            studioPreferences={rustUiPreferences}
+            gradeSourceProject={activeSection==='Production'||viewportLayout==='2d'?project:null}
+            gradePreviewSize={gradePreviewSize}
+            onGradePointSelected={setFocusedGradePoint}
+            gradeBusy={Boolean(clothcraftLive?.busy||clothcraftLive?.running)}
+            onGradePointDrag={spec=>{
+              try{
+                const result=buildAccuMarkGradePointDragProposal(project,spec)
+                if(!result?.project||!result?.validation?.sizes?.length)
+                  throw Error('No validated graded size run returned')
+                mutateProject(next=>{Object.assign(next,result.project)})
+                setFocusedGradePoint({pieceId:spec.pieceId,pointIndex:spec.pointIndex})
+                setGradePreviewSize(spec.size)
+                setShowGradeNest(true)
+                setCommandResult(`Moved ${spec.pieceId} point ${spec.pointIndex+1}, size ${spec.size}: X ${spec.dxCm.toFixed(3)} cm, Y ${spec.dyCm.toFixed(3)} cm; validated ${result.validation.sizes.length} sizes. Undo is available. Physical seam QA required.`)
+                return result
+              }catch(error){
+                setCommandResult(`Grade point edit blocked: ${error.message}`)
+                throw error
+              }
+            }}
+            showGradeNest={showGradeNest}
+            onToggleGradeNest={setShowGradeNest}
+            onSelectGradeSize={size=>{setGradePreviewSize(size);setActiveSection('Production')}}
             showGrid={show2DGrid}
             showSeamLinks={show2DSeams}
             layout2DSignal={layout2DSignal}
@@ -4647,6 +7789,7 @@ export default function App() {
             onSelectPiece={selectIn3D}
             onSelectedEdgeChange={onDraftEdgeSelection}
             onMovePiece={movePiece}
+            onMoveFoamPadding={(pieceId,padId,fields)=>updateFoamPadding(pieceId,padId,fields,{record:false})}
             onChangeTool={setTool}
             onMovePoint={movePoint}
             onSetPoint={setPointPrecision}
@@ -4657,6 +7800,7 @@ export default function App() {
             onSplitEdgePrecise={splitPatternEdgePrecise}
             onUnfoldEdge={unfoldPatternEdge}
             onDeletePoint={deletePatternPoint}
+            onDeletePiece={deletePieceById}
             onCreatePin={createPin}
             onRemovePin={removePin}
             onCreateInternalLine={createInternalLine}
@@ -4675,26 +7819,121 @@ export default function App() {
             if (event.key === 'End') { event.preventDefault(); setViewportSplit(80) }
           }}><span/></div>}
           </>}
+          {techPackWorkspaceOpen&&(!clothcraftHybrid||!nativeTechPackLoading)&&<TechPackWorkspace
+            project={project} nativeMode={clothcraftHybrid} nativeSnapshot={nativeTechPackSnapshot}
+            nativeGraphics={clothcraftLive?.graphicRefs||[]} value={clothcraftHybrid?nativeTechPackDraft:project.nativeTechPackWorkspace}
+            storageError={nativeTechPackSaveError}
+            onChange={nextState=>{
+              if(clothcraftHybrid){
+                setNativeTechPackDraft(nextState)
+                const key=String(clothcraftLive?.referenceKey||clothcraftLive?.name||'default')
+                void saveNativeTechPackWorkspace(key,nextState).then(()=>setNativeTechPackSaveError(''))
+                  .catch(error=>setNativeTechPackSaveError(`Tech pack could not be saved: ${error.message}`))
+              }else{setProject(current=>({...current,nativeTechPackWorkspace:nextState}));setSaveState('modified')}
+            }}
+            onClose={()=>setTechPackWorkspaceOpen(false)}/>}
         </section>
 
-        <CloToolActionPanel selected={selectedCloTool}
-          onClose={()=>setSelectedCloTool(null)}
-          onRun={()=>selectedCloTool&&activateCloTool(selectedCloTool.slot,selectedCloTool.dimension,true)}
-          onNavigate={section=>{setActiveSection(section);setShowObjectBrowser(true);setSelectedCloTool(null)}}/>
-        <aside className="inspector clo-inspector" hidden={!inspectorVisible}>
+        {!inspectorVisible&&<button type="button" className="exo-reopen-inspector-arrow" aria-label="Expand Object Browser and Property Editor panel" aria-expanded={false} onPointerDown={event=>event.stopPropagation()} onClick={event=>{event.preventDefault();event.stopPropagation();setInspectorVisible(true)}} title="Expand Object Browser and Property Editor"><ChevronLeft size={14}/></button>}
+        {/* The right 2D tools and the browser/editor use separate visibility
+            state despite sharing a parent. Only hide this parent if BOTH are
+            closed. Previously the inverted predicate hid it when the toolbar
+            was open and the browser closed. */}
+        <aside className="inspector clo-inspector" hidden={!inspectorVisible&&rightToolsCollapsed}>
+
           <div className="clo-panel-resizer clo-right-resizer" role="separator" aria-orientation="vertical" aria-label="Resize Inspector width" title="Drag to resize Object Browser and Property Editor" onPointerDown={(event) => beginPanelResize('inspector', event)} onPointerMove={movePanelResize} onPointerUp={endPanelResize} onLostPointerCapture={endPanelResize} onDoubleClick={() => setInspectorWidth(392)}/>
-          <RightToolPalette activeSection={activeSection} viewportTool={viewportTool} tool={tool} setViewportTool={value=>{setViewportTool(value);if(clothcraftHybrid){const modes={orbit:'edit',transform:'move3d',move:'move3d',rotate:'rotate3d',hand:'stretch3d'};if(modes[value])rustCommand(`mode:${modes[value]}`)}}} setTool={setTool} setActiveSection={setActiveSection} setObjectTab={setObjectTab} onRevealBrowser={() => setShowObjectBrowser(true)} showSewingGuides={showSewingGuides} setShowSewingGuides={setShowSewingGuides} wireframe={wireframe} setWireframe={setWireframe} analysisMode={analysisMode} setAnalysisMode={setAnalysisMode} toggleSimulation={simForVisibleEngine} resetSimulation={resetForVisibleEngine} exportProject={exportForVisibleEngine} onFitCamera={() => setFitCameraSignal(value => value + 1)} onMirrorSelected={() => duplicateSelectedPiece(true)} onCreatePolygon={addPolygonPiece} onCloTool={activateCloTool} nativeClothcraft={clothcraftHybrid} running={visibleRunning}/>
-          <div className="clo-inspector-content">
-          <div className="clo-inspector-topline"><button title={showObjectBrowser ? 'Hide Object Browser' : 'Show Object Browser'} onClick={() => setShowObjectBrowser(value => !value)}><PanelRight size={15}/></button><span>OBJECTS & PROPERTIES</span><button title="Choose Fabric" onClick={() => { setObjectTab('Fabric'); setActiveSection('Fabric');setSelectedObjectForProperties(null) }}><Shirt size={15}/></button></div>
-          {showObjectBrowser && <ObjectBrowser tab={objectTab} setTab={setObjectTab} project={project} setSelectedPieceId={selectIn3D} setSelectedFabricId={setSelectedFabricId}
-            nativeMode={clothcraftHybrid} nativePanelRefs={clothcraftLive?.panelRefs||[]} nativeFabricRefs={clothcraftLive?.fabricRefs||[]}
-            nativeSelectedObject={selectedObjectForProperties||((clothcraftHybrid&&clothcraftLive?.selection?.kind==='pattern')?{id:clothcraftLive.selection.panelId}:null)}
+          <div id="exo-techpack-right-tools-host" className="exo-techpack-right-tools-host" hidden={!techPackWorkspaceOpen}/>
+          {!rightToolsCollapsed && <RightToolPalette activeSection={activeSection} viewportTool={viewportTool} tool={tool} setViewportTool={value=>{setViewportTool(value);if(clothcraftHybrid){const modes={orbit:'edit',transform:'move3d',move:'move3d',rotate:'rotate3d',hand:'stretch3d'};if(modes[value])rustCommand(`mode:${modes[value]}`)}}} setTool={setTool} setActiveSection={clothcraftHybrid?()=>{}:setActiveSection} setObjectTab={clothcraftHybrid?()=>{}:setObjectTab} onRevealBrowser={clothcraftHybrid?()=>{}:()=>setShowObjectBrowser(true)} showSewingGuides={showSewingGuides} setShowSewingGuides={setShowSewingGuides} wireframe={wireframe} setWireframe={setWireframe} analysisMode={analysisMode} setAnalysisMode={setAnalysisMode} toggleSimulation={simForVisibleEngine} resetSimulation={resetForVisibleEngine} onReset2d={() => clothcraftHybrid ? rustCommand('reset-2d') : resetSimulation()} exportProject={exportForVisibleEngine} onFitCamera={() => clothcraftHybrid ? window.dispatchEvent(new Event('exo-clothcraft-fit-camera')) : setFitCameraSignal(value => value + 1)} onMirrorSelected={() => clothcraftHybrid ? rustCommand('mirror-selected') : duplicateSelectedPiece(true)} onCreatePolygon={addPolygonPiece} onCloTool={activateCloTool} activeFinishingTool={activeFinishingTool} onOtherToolSelect={()=>{setActiveFinishingTool(null);if(clothcraftHybrid)window.dispatchEvent(new CustomEvent('exo-clothcraft-toolbar-activated',{detail:{nativeAction:null}}))}} nativeClothcraft={clothcraftHybrid} full2D={viewportLayout==='2d'} running={visibleRunning} extraToolIds={studioCustomization.workspace.extraRightToolIds}
+            toolbarEditMode={studioCustomization.workspace.toolbarEditMode && !patternFocusActive}
+            toolbarDock={studioCustomization.workspace.rightToolbarDock}
+            toolbarPosition={studioCustomization.workspace.rightToolbarPosition}
+            toolbarOrder={patternFocusActive ? patternFocusToolbarIds(studioCustomization.workspace.rightToolbarIds) : studioCustomization.workspace.rightToolbarIds}
+            onToolbarPositionChange={position=>setStudioCustomization(previous=>normalizeStudioCustomization({...previous,workspace:{...previous.workspace,rightToolbarPosition:position}}))}
+            onToolbarOrderChange={ids=>{if(!patternFocusActive)setStudioCustomization(previous=>normalizeStudioCustomization({...previous,workspace:{...previous.workspace,rightToolbarIds:ids}}))}}
+            onToolbarDockChange={dock=>setStudioCustomization(previous=>normalizeStudioCustomization({...previous,workspace:{...previous.workspace,rightToolbarDock:dock}}))}/>}
+          <div className="clo-inspector-content" hidden={!inspectorVisible}>
+          <button type="button" className="exo-object-inspector-header-arrow" aria-label={inspectorVisible?'Collapse Object Browser and Property Editor panel':'Expand Object Browser and Property Editor panel'} aria-expanded={inspectorVisible} onClick={()=>setInspectorVisible(false)} title="Collapse Object Browser and Property Editor"><ChevronRight size={14}/></button>
+          <div id="exo-techpack-object-host" className="exo-techpack-object-host" hidden={!techPackWorkspaceOpen}/>
+
+          {printLayoutActive&&<div id="exo-print-layout-property-host" className="exo-print-layout-property-host" aria-label="Print Layout Property Editor"/>}
+          {!printLayoutActive&&showObjectBrowser && <ObjectBrowser tab={objectTab} setTab={setObjectTab} project={project} setSelectedPieceId={selectIn3D} setSelectedFabricId={setSelectedFabricId}
+            onEnvironmentSelect={selection=>{
+              setEnvironmentSelection(selection)
+              if(selection){setSelectedObjectForProperties(null);setSelectedDraftEdge(null)}
+            }}
+            nativeImportedHardware={clothcraftLive?.importedHardware||[]}
+            selectedObject={selectedObjectForProperties} selectedHardwarePreset={selectedObjectForProperties?.source==='library'?getHardwarePreset(selectedObjectForProperties.id):null}
+            nativeMode={clothcraftHybrid} nativePanelRefs={clothcraftLive?.panelRefs||[]} nativeFabricRefs={clothcraftLive?.fabricRefs||[]} nativeGraphicRefs={clothcraftLive?.graphicRefs||[]} nativeGraphicsDisabled={Boolean(clothcraftLive?.busy||clothcraftLive?.running)}
+            referenceProjectKey={referenceLoadedKey===referenceProjectKey?referenceProjectKey:null}
+            referenceItems={nativePatternReferences} onReferenceChange={updateNativePatternReferences}
+            selectedReferenceId={selectedNativeReferenceId} onReferenceSelect={setSelectedNativeReferenceId}
+            showGraphicMeasurements={graphicMeasurementsVisible}
+            onToggleGraphicMeasurements={visible=>{
+              setGraphicMeasurementsVisible(visible)
+              window.dispatchEvent(new CustomEvent('exo-clothcraft-set-graphic-measurements',{detail:{visible}}))
+            }}
+            nativeSelectedObject={clothcraftHybrid&&objectTab==='Graphic'?{id:clothcraftLive?.selectedGraphicId}:selectedObjectForProperties||((clothcraftHybrid&&clothcraftLive?.selection?.kind==='pattern')?{id:clothcraftLive.selection.panelId}:null)}
             onNativePanelSelect={id=>rustCommand('select:'+id)}
             onNativeFabricSelect={id=>window.dispatchEvent(new CustomEvent('exo-clothcraft-select-fabric',{detail:{id}}))}
-            onSelectedObjectChange={value=>{setSelectedObjectForProperties(value);if(value)setSelectedDraftEdge(null)}}
+            onNativeGraphicSelect={id=>window.dispatchEvent(new CustomEvent('exo-clothcraft-select-graphic',{detail:{id}}))}
+            onNativeGraphicVisibilityChange={(id,visible)=>window.dispatchEvent(new CustomEvent('exo-clothcraft-graphic-visibility',{detail:{id,visible}}))}
+            onNativeGraphicAdd={()=>window.dispatchEvent(new Event('exo-clothcraft-add-graphic'))}
+            onCopyObject={copyObjectBrowserRow}
+            onAssignObject={assignObjectBrowserRow}
+            onFabricTextureRepeat={id=>{
+              if(!clothcraftHybrid)setSelectedFabricId(id)
+              setActiveSection('Fabric')
+              setObjectTab('Fabric')
+              window.requestAnimationFrame(()=>document.querySelector('[data-fabric-texture-repeat]')?.scrollIntoView({block:'nearest',behavior:'smooth'}))
+            }}
+            onFabricAddPrint={()=>{
+              setObjectTab('Graphic')
+              setActiveSection('Fabric')
+              if(clothcraftHybrid)window.requestAnimationFrame(()=>window.dispatchEvent(new Event('exo-clothcraft-add-graphic')))
+              else graphicInputRef.current?.click()
+            }}
+            onSelectedObjectChange={value=>{setEnvironmentSelection(null);setSelectedObjectForProperties(value);if(value)setSelectedDraftEdge(null)}}
+            onCreateObject={createBrowserConstructionObject}
+            onRemoveObject={removeBrowserConstructionObject}
+            onObjectVisibilityChange={(selection,visible)=>{
+              if(selection?.source==='imported'){
+                if(clothcraftHybrid)nativeImportedHardwareCommand({action:'update',id:selection.itemId,field:'visible',value:visible}).then(result=>{if(!result.ok)setCommandResult(result.error)})
+                else mutateProject(next=>{const item=next.pieces.find(p=>p.id===selection.pieceId)?.importedHardwarePlacements?.find(x=>x.id===selection.itemId);if(item)item.visible=visible})
+              }else editCloObjectProperty(selection,'visible',visible)
+            }}
             onApplyFabric={assignFabric} setActiveSection={setActiveSection} selectedPieceId={selectedPieceId} selectedFabricId={selectedFabricId} onAddFabric={addFabricSwatch} onAddPattern={addPiece} onTogglePieceProperty={(pieceId, field) => mutateProject(next => { const piece = next.pieces.find(item => item.id === pieceId); if (piece && (field === 'visible3d' || field === 'locked')) piece[field] = field === 'visible3d' ? piece.visible3d === false : !piece.locked })}/>}
-          {showObjectBrowser && <div className="clo-browser-resizer" role="separator" aria-orientation="horizontal" aria-label="Resize Object Browser height" title="Drag to resize Object Browser and Property Editor" onPointerDown={(event) => beginPanelResize('objects', event)} onPointerMove={movePanelResize} onPointerUp={endPanelResize} onLostPointerCapture={endPanelResize} onDoubleClick={() => setObjectBrowserHeight(390)}><span/></div>}
-          <div className="clo-property-panel">
+          {!printLayoutActive&&showObjectBrowser && <div className="clo-browser-resizer" role="separator" aria-orientation="horizontal" aria-label="Resize Object Browser height" title="Drag to resize Object Browser and Property Editor" onPointerDown={(event) => beginPanelResize('objects', event)} onPointerMove={movePanelResize} onPointerUp={endPanelResize} onLostPointerCapture={endPanelResize} onDoubleClick={() => setObjectBrowserHeight(390)}><span/></div>}
+          <div className="clo-property-panel" hidden={printLayoutActive}>
+            <div id="exo-techpack-properties-host" className="exo-techpack-properties-host" hidden={!techPackWorkspaceOpen}/>
+            {environmentSelection&&<SceneEnvironmentPropertyEditor selection={environmentSelection}
+              settings={environmentSelection?.id==='light-2'
+                ?{...(project.render||{}),camera:{...initialSceneCamera,...(project.render?.camera||{})},light:project.render?.light2}
+                :{...(project.render||{}),camera:{...initialSceneCamera,...(project.render?.camera||{})}}}
+              onChange={editSceneEnvironmentProperties}/>}
+            <div hidden={Boolean(environmentSelection)}>
+            {importedSelection&&<ImportedHardwareInspector
+              asset={importedSelection.asset||importedPlacement}
+              placement={importedPlacement}
+              nativeMode={clothcraftHybrid}
+              canUndoHardware={Boolean(clothcraftLive?.canUndoHardware)} canRedoHardware={Boolean(clothcraftLive?.canRedoHardware)}
+              onUndoHardware={()=>nativeImportedHardwareCommand({action:'undo'}).then(result=>{if(!result.ok)setCommandResult(result.error||'Nothing to undo in imported hardware history')})}
+              onRedoHardware={()=>nativeImportedHardwareCommand({action:'redo'}).then(result=>{if(!result.ok)setCommandResult(result.error||'Nothing to redo in imported hardware history')})}
+              selectedPanelName={importedPanelName}
+              onPlace={placeImportedCloAsset}
+              onEdit={editImportedCloPlacement}
+              onRemove={removeImportedCloPlacement}
+              onDuplicate={duplicateImportedCloPlacement}/>}
+            <div hidden={Boolean(importedSelection)}>
+            {activeSection==='Render'&&normalizeStageId(project.render?.stageId)!=='none'&&
+              <StagePropertyPanel stageId={project.render?.stageId} stageSettings={project.render?.stageSettings||{}}
+                renderSettings={project.render||{}}
+                onStageSettingChange={updateStageSetting}
+                onRenderSettingChange={updateRenderSetting}
+                onRemoveStage={()=>updateRenderSetting('stageId','none')}/>}
+            {clothcraftHybrid&&foamPropertySelection&&<FoamMaterialPropertyEditor pad={foamPropertySelection}
+              onChange={material=>window.dispatchEvent(new CustomEvent('exo-clothcraft-foam-material-edit',{detail:{id:foamPropertySelection.id,material}}))}
+              onClose={()=>setFoamPropertySelection(null)}/>}
+            <div hidden={Boolean(clothcraftHybrid&&foamPropertySelection)}>
             <CloPropertyEditorAccordion activeSection={activeSection} selectedPiece={selectedPiece}
               project={project} fabric={fabric} selectedArea={selectedArea}
               clothcraftHybrid={clothcraftHybrid} clothcraftLive={clothcraftLive}
@@ -4711,9 +7950,34 @@ export default function App() {
                 }
               }}
               onPropertyEdit={editCloObjectProperty}
+              onFabricTextureRepeatChange={(field,value)=>updateFabricTexture(field,value)}
+              onFabricMapChoose={kind=>{
+                const input={color:fabricTextureInputRef,normal:fabricNormalInputRef,
+                  displacement:fabricDisplacementInputRef,opacity:fabricOpacityInputRef,
+                  roughness:fabricRoughnessInputRef,
+                  metalness:fabricMetalnessInputRef}[kind]
+                input?.current?.click()
+              }}
+              onFabricMapRemove={kind=>kind==='color'?removeFabricTexture():removeFabricPbrMap(kind)}
+              onHardwareStyleEdit={editHardwareLibraryStyle}
+              onPlaceHardwarePreset={placeHardwarePreset}
+              onPairZipperToSeam={pairZipperToSeam}
               onNativePropertyEdit={editNativeProperty}
+              onFabricPresetImport={importFabricPreset}
+              onFabricSelect={id=>{
+                if(clothcraftHybrid){
+                  window.dispatchEvent(new CustomEvent('exo-clothcraft-select-fabric',{detail:{id}}))
+                }else if(project.fabrics?.[id]){
+                  setSelectedFabricId(id)
+                  setSelectedObjectForProperties({source:'draft',type:'fabric',id,name:project.fabrics[id].name})
+                  setObjectTab('Fabric');setActiveSection('Fabric')
+                }
+              }}
               onSelectNativeSeam={seamId=>window.dispatchEvent(new CustomEvent('exo-clothcraft-select-seam',{detail:{seamId}}))}
               objectTab={objectTab}
+              referenceProjectKey={referenceLoadedKey===referenceProjectKey?referenceProjectKey:null}
+              referenceItems={nativePatternReferences} onReferenceChange={updateNativePatternReferences}
+              selectedReferenceId={selectedNativeReferenceId} onReferenceSelect={setSelectedNativeReferenceId}
               onSetLineTarget={(panel,edge,cm)=>window.dispatchEvent(new CustomEvent('exo-clothcraft-property-command',{detail:{type:'target-length',panel,edge,cm}}))}
               onSimulate={simForVisibleEngine} onReset={resetForVisibleEngine}>
           {selectedPiece && activeSection === 'Pattern' && <section className="clo-selected-summary" aria-label="Selected pattern properties">
@@ -4729,6 +7993,12 @@ export default function App() {
 
           {activeSection === 'Pattern' && (
             <>
+              {clothcraftHybrid && <div className="panel-section" aria-label="Native Foam Padding tool">
+                <div className="panel-title"><span>Foam Padding / Trapunto</span><strong>SVG → 3D</strong></div>
+                <p className="panel-copy">Import cut-out SVG padding shapes, place them on the native pattern, set raised foam thickness, and generate matching stitch-guide paths. Position drafts persist with this native template.</p>
+                <button type="button" className="wide-action" onClick={()=>window.dispatchEvent(new Event('exo-clothcraft-open-foam-padding'))}><Layers3 size={14}/>OPEN FOAM PADDING TOOL</button>
+                <p className="panel-copy">Raised previews follow the live garment; physical multilayer foam and automated Rust sewing constraints remain under development.</p>
+              </div>}
               <div className="panel-section" aria-label="Seamly2D measurement interoperability">
                 <div className="panel-title"><span>Seamly2D / SeamlyMe</span><strong>MEASUREMENT BRIDGE</strong></div>
                 <p className="panel-copy">Import real SeamlyMe individual (.smis) or multisize (.smms) measurements with centimeter conversion and original size increments retained. No proprietary pattern data is modified.</p>
@@ -4752,6 +8022,7 @@ export default function App() {
                 </div>}
                 <p className="panel-copy">The .sm2d tool graph is a different parametric model from a cut-and-sewn garment. Seamly2D is still required to execute construction formulas and resolve details until an equivalent tested graph evaluator exists.</p>
               </div>
+              <SeamlyNativeEngineStudio20261023 nativeMode={clothcraftHybrid} onReferenceImport={openSeamlyCalculatedDraft} onNativeImport={detail=>window.dispatchEvent(new CustomEvent('exo-seamly-native-cut-import-request',{detail}))}/>
               {project.templateId === 'tee' && <div className="panel-section" aria-label="Foundation Tee pattern correction">
                 <div className="panel-title"><span>T-shirt pattern engineering</span><strong>SIZE M · SAMPLE</strong></div>
                 <p className="panel-copy">The updated regular-fit T-shirt block uses recessed armscyes, independently cut short sleeves, true measured stitch-line dimensions and graded DXF seam allowances. The base pattern matches 14 seam relationships to within 0.11%. Saved garments are only updated by the button below, with Undo available.</p>
@@ -4917,6 +8188,11 @@ export default function App() {
                       ))}
                     </div>
                   </div>
+                  {!clothcraftHybrid && <FoamPaddingEditor piece={selectedPiece}
+                    disabled={clothcraftHybrid}
+                    onAdd={shape=>addFoamPadding(selectedPiece.id,shape)}
+                    onUpdate={(id,fields)=>updateFoamPadding(selectedPiece.id,id,fields)}
+                    onRemove={id=>removeFoamPadding(selectedPiece.id,id)}/>}
                   <div className="panel-section">
                     <div className="panel-title"><span>Internal geometry</span><strong>{selectedPiece.internalLines?.length || 0}</strong></div>
                     <p className="panel-copy">Use the internal-line tool and drag inside the pattern. Construction, fold, and dart lines stay attached to the pattern and export to production DXF.</p>
@@ -4985,13 +8261,14 @@ export default function App() {
                   </div>
                   <div className="panel-section">
                     <div className="panel-title"><span>3D arrangement</span><Box size={15} /></div>
-                    <label className="select-field"><span>Placement mode</span><select value={selectedPiece.arrangement3d?.wrap || 'flat'} onChange={(event) => updateSelectedArrangement('wrap', event.target.value === 'flat' ? undefined : event.target.value)}><option value="flat">Flat plane</option><option value="front">Wrap front torso</option><option value="back">Wrap back torso</option><option value="left-arm">Wrap left arm</option><option value="right-arm">Wrap right arm</option></select></label>
+                    <button className="wide-action compact-action" type="button" onClick={arrangeCurrentPatternsIn3D}><Box size={14}/>ARRANGE ALL PANELS AROUND AVATAR</button>
+                    <label className="select-field"><span>Placement mode</span><select value={selectedPiece.arrangement3d?.wrap || 'flat'} onChange={(event) => updateSelectedArrangement('wrap', event.target.value === 'flat' ? undefined : event.target.value)}><option value="flat">Flat plane</option><option value="front">Wrap front torso</option><option value="back">Wrap back torso</option><option value="lower-front">Lower body front / skirt</option><option value="lower-back">Lower body back / skirt</option><option value="left-leg-front">Left leg front</option><option value="left-leg-back">Left leg back</option><option value="right-leg-front">Right leg front</option><option value="right-leg-back">Right leg back</option><option value="left-arm">Wrap left arm</option><option value="right-arm">Wrap right arm</option><option value="hood-left">Left hood panel</option><option value="hood-right">Right hood panel</option><option value="waist-band">Waistband</option><option value="neck">Neckband / collar</option><option value="left-wrist">Left wrist cuff</option><option value="right-wrist">Right wrist cuff</option></select></label>
                     <div className="arrangement-grid">
                       <div><span>X</span><NumberField value={(selectedPiece.arrangement3d?.x || 0) * 100} min={-200} max={200} step={0.5} suffix="cm" onChange={(value) => updateSelectedArrangement('x', value / 100)} /></div>
                       <div><span>Y</span><NumberField value={(selectedPiece.arrangement3d?.y || 0) * 100} min={0} max={250} step={0.5} suffix="cm" onChange={(value) => updateSelectedArrangement('y', value / 100)} /></div>
                       <div><span>Z</span><NumberField value={(selectedPiece.arrangement3d?.z || 0) * 100} min={-150} max={150} step={0.5} suffix="cm" onChange={(value) => updateSelectedArrangement('z', value / 100)} /></div>
                     </div>
-                    <p className="panel-copy">Before simulation, the 3D Move tool drags an individual flat panel. These offsets are kept separate from its sewn fitting pose.</p>
+                    <p className="panel-copy">Each editable cut piece bends into a body-relative 3D sewing position. Move and rotate the unsewn panel here, then simulate once its seam edges are connected. The original 2D cutline stays unchanged.</p>
                     <div className="arrangement-grid">
                       <div><span>Flat X</span><NumberField value={(selectedPiece.arrangement3d?.stagingOffsetX || 0) * 100} min={-200} max={200} step={0.5} suffix="cm" onChange={(value) => updateSelectedArrangement('stagingOffsetX', value / 100)} /></div>
                       <div><span>Flat Y</span><NumberField value={(selectedPiece.arrangement3d?.stagingOffsetY || 0) * 100} min={-200} max={200} step={0.5} suffix="cm" onChange={(value) => updateSelectedArrangement('stagingOffsetY', value / 100)} /></div>
@@ -5015,7 +8292,8 @@ export default function App() {
               <div className="panel-section stage-overview">
                 <div className="panel-title"><span>Construction workflow</span><strong>{!hasSimulated ? 'PRE-SIMULATION' : running ? 'SIMULATING' : 'DRAPED / PAUSED'}</strong></div>
                 <div className="workflow-stages"><span className="active">1 · ARRANGE</span><span className={project.seams.length ? 'active' : ''}>2 · SEW EDGES</span><span className={hasSimulated ? 'active' : ''}>3 · SIMULATE</span></div>
-                <p className="panel-copy">Patterns remain flat in 3D until simulation. Assign stitches using the Sew tool in 2D; orange links show exactly which edges will join in the 3D view.</p>
+                <p className="panel-copy">Arrange the panels around the avatar, then connect their real edges using the Sew tool in the 2D window. Curved 3D preview sheets show construction placement; simulate to compute fabric drape and contact.</p>
+                <button className="wide-action compact-action" type="button" onClick={arrangeCurrentPatternsIn3D}><Box size={14}/>ARRANGE PANELS FOR SEWING</button>
                 <button className="wide-action" onClick={toggleSimulation}>{running ? 'PAUSE PHYSICAL SIMULATION' : 'SIMULATE SEWN GARMENT'}</button>
                 <button className="wide-action compact-action" onClick={resetSimulation}>RESET TO FLAT ARRANGEMENT</button>
               </div>
@@ -5093,6 +8371,12 @@ export default function App() {
                 <label className="select-field"><span>Exploded arrangement: {Math.round(arrangementSpread * 100)}%</span><input type="range" min="0" max="1" step="0.05" value={arrangementSpread} onChange={(event) => { setArrangementSpread(Number(event.target.value)); setShowSewingGuides(true); setRunning(false) }} /></label>
                 <button className="wide-action compact-action" onClick={() => setArrangementSpread(0)}>RETURN TO CURRENT ARRANGEMENT</button>
               </div>
+              <SewingAssemblyInspector20261024 project={project}
+                ppfJob={ppfSewing} nativeResult={nativeLastSolve}
+                nativeAssembly={stats.backendInitialAssembly}
+                onLoadMatchedTee={()=>void applyGarmentTemplate('tee')}
+                onSelectSeam={(seamId)=>{setSeamWalkId(seamId);setSeamWalkProgress(0.5)}}
+                onAddNotches={addSeamWalkNotches}/>
               <div className="panel-section grow-section">
                 <div className="panel-title"><span>Seam graph</span><strong>{project.seams.length}</strong></div>
                 <p className="panel-copy">Segment Sewing: click two edges. Free Sewing: Shift-click a start and end on each edge; this creates an exact, editable range that follows the source cutline rather than the nearest mesh vertex.</p>
@@ -5216,6 +8500,8 @@ export default function App() {
                   </label>)}
                   <p className="panel-copy">Hardware presets supply illustrative sizes, finishes and component references. Visual placement is approximate; supplier part specifications and rigid fastener physics require validation.</p>
                   <div className="trim-add-grid">
+                    <button onClick={() => editValidatedDraftHardware('button',selectedPiece.id,'create',null,{hardwarePresetId:hardwareChoice.button})}>+ BUTTON</button>
+                    <button onClick={() => editValidatedDraftHardware('buttonhole',selectedPiece.id,'create',null,{hardwarePresetId:hardwareChoice.buttonhole})}>+ BUTTONHOLE</button>
                     <button onClick={() => addTopstitch(selectedPiece.id, trimEdgeIndex)}>+ TOPSTITCH</button>
                     <button onClick={() => addBinding(selectedPiece.id, trimEdgeIndex)}>+ BINDING</button>
                     <button onClick={() => addZipper(selectedPiece.id, trimEdgeIndex)}>+ ZIPPER</button>
@@ -5227,33 +8513,33 @@ export default function App() {
                     {(selectedPiece.topstitches || []).map((stitch) => (
                       <div key={stitch.id} className="trim-editor-item">
                         <div><strong>Topstitch · E{stitch.edgeIndex + 1}</strong><small>{stitch.rows || 1} row · {stitch.stitchLengthMm || 3} mm stitch</small></div>
-                        <NumberField value={stitch.offsetCm ?? 0.7} min={0} max={5} step={0.1} suffix="cm" onChange={(value) => updatePieceTrim(selectedPiece.id, 'topstitches', stitch.id, 'offsetCm', clamp(value, 0, 5))} />
-                        <select value={stitch.rows || 1} onChange={(event) => updatePieceTrim(selectedPiece.id, 'topstitches', stitch.id, 'rows', Number(event.target.value))}><option value={1}>1 row</option><option value={2}>2 rows</option><option value={3}>3 rows</option></select>
-                        <button onClick={() => removePieceTrim(selectedPiece.id, 'topstitches', stitch.id)}><Trash2 size={12} /></button>
+                        <NumberField value={stitch.offsetCm ?? 0.7} min={0} max={5} step={0.1} suffix="cm" onChange={(value) => editValidatedDraftHardware('topstitch',selectedPiece.id,'update',stitch.id,{offsetCm:clamp(value,0,5)})} />
+                        <select value={stitch.rows || 1} onChange={(event) => editValidatedDraftHardware('topstitch',selectedPiece.id,'update',stitch.id,{rows:Number(event.target.value)})}><option value={1}>1 row</option><option value={2}>2 rows</option><option value={3}>3 rows</option></select>
+                        <button onClick={() => editValidatedDraftHardware('topstitch',selectedPiece.id,'remove',stitch.id)}><Trash2 size={12} /></button>
                       </div>
                     ))}
                     {(selectedPiece.bindings || []).map((binding) => (
                       <div key={binding.id} className="trim-editor-item">
                         <div><strong>Binding · E{binding.edgeIndex + 1}</strong><small>{Math.round((binding.ratio ?? 0.96) * 100)}% edge ratio</small></div>
-                        <NumberField value={(binding.ratio ?? 0.96) * 100} min={60} max={110} step={1} suffix="%" onChange={(value) => updatePieceTrim(selectedPiece.id, 'bindings', binding.id, 'ratio', clamp(value, 60, 110) / 100)} />
-                        <NumberField value={binding.widthCm ?? 1.8} min={0.5} max={8} step={0.1} suffix="cm" onChange={(value) => updatePieceTrim(selectedPiece.id, 'bindings', binding.id, 'widthCm', clamp(value, 0.5, 8))} />
-                        <button onClick={() => removePieceTrim(selectedPiece.id, 'bindings', binding.id)}><Trash2 size={12} /></button>
+                        <NumberField value={(binding.ratio ?? 0.96) * 100} min={60} max={110} step={1} suffix="%" onChange={(value) => editValidatedDraftHardware('binding',selectedPiece.id,'update',binding.id,{ratio:clamp(value,60,110)/100})} />
+                        <NumberField value={binding.widthCm ?? 1.8} min={0.5} max={8} step={0.1} suffix="cm" onChange={(value) => editValidatedDraftHardware('binding',selectedPiece.id,'update',binding.id,{widthCm:clamp(value,0.5,8)})} />
+                        <button onClick={() => editValidatedDraftHardware('binding',selectedPiece.id,'remove',binding.id)}><Trash2 size={12} /></button>
                       </div>
                     ))}
                     {(selectedPiece.zippers || []).map((zipper) => (
                       <div key={zipper.id} className="trim-editor-item">
                         <div><strong>{getHardwarePreset(zipper.hardwarePresetId)?.name || 'Zipper'} · E{zipper.edgeIndex + 1}</strong><small>{zipper.type || 'coil'} tape</small></div>
-                        <NumberField value={zipper.widthCm ?? 1.2} min={0.5} max={5} step={0.1} suffix="cm" onChange={(value) => updatePieceTrim(selectedPiece.id, 'zippers', zipper.id, 'widthCm', clamp(value, 0.5, 5))} />
+                        <NumberField value={zipper.widthCm ?? 1.2} min={0.5} max={5} step={0.1} suffix="cm" onChange={(value) => editValidatedDraftHardware('zipper',selectedPiece.id,'update',zipper.id,{widthCm:clamp(value,0.5,5)})} />
                         <span />
-                        <button onClick={() => removePieceTrim(selectedPiece.id, 'zippers', zipper.id)}><Trash2 size={12} /></button>
+                        <button onClick={() => editValidatedDraftHardware('zipper',selectedPiece.id,'remove',zipper.id)}><Trash2 size={12} /></button>
                       </div>
                     ))}
                     {(selectedPiece.buttonholes || []).map((buttonhole, index) => (
                       <div key={buttonhole.id} className="trim-editor-item buttonhole-editor-item">
                         <div><strong>{getHardwarePreset(buttonhole.hardwarePresetId)?.name || 'Buttonhole'} {index + 1}</strong><small>{buttonhole.lengthCm ?? 2.4} cm · {Math.round(buttonhole.orientationDeg || 0)}°</small></div>
-                        <NumberField value={buttonhole.lengthCm ?? 2.4} min={0.8} max={6} step={0.1} suffix="cm" onChange={(value) => updateButtonhole(selectedPiece.id, buttonhole.id, 'lengthCm', clamp(value, 0.8, 6))} />
-                        <NumberField value={buttonhole.orientationDeg ?? 0} min={-180} max={180} step={5} suffix="°" onChange={(value) => updateButtonhole(selectedPiece.id, buttonhole.id, 'orientationDeg', clamp(value, -180, 180))} />
-                        <button onClick={() => removeButtonhole(selectedPiece.id, buttonhole.id)}><Trash2 size={12} /></button>
+                        <NumberField value={buttonhole.lengthCm ?? 2.4} min={0.8} max={6} step={0.1} suffix="cm" onChange={(value) => editValidatedDraftHardware('buttonhole',selectedPiece.id,'update',buttonhole.id,{lengthCm:clamp(value,0.8,6)})} />
+                        <NumberField value={buttonhole.orientationDeg ?? 0} min={-180} max={180} step={5} suffix="°" onChange={(value) => editValidatedDraftHardware('buttonhole',selectedPiece.id,'update',buttonhole.id,{orientationDeg:clamp(value,-180,180)})} />
+                        <button onClick={() => editValidatedDraftHardware('buttonhole',selectedPiece.id,'remove',buttonhole.id)}><Trash2 size={12} /></button>
                       </div>
                     ))}
                     {(selectedPiece.buttons || []).length > 0 && (
@@ -5273,9 +8559,27 @@ export default function App() {
             </>
           )}
 
-          {activeSection === 'Fabric' && clothcraftHybrid && <div id="cc-native-fabric-inspector"/>}
           {activeSection === 'Fabric' && !clothcraftHybrid && (
             <>
+              <div className="panel-section" aria-label="Five scan backed fabric reference presets">
+                <div className="panel-title"><span>Fabric realism collection</span><strong>05 · CC0 PBR</strong></div>
+                <p className="panel-copy">Choose a reference to load its licensed color, normal and roughness maps onto the selected fabric. Those same maps and real-centimeter repeats render on assigned garment pieces. Physical stretch and drape are estimated starting points.</p>
+                <div className="exo-fabric-realism-collection">
+                  {FABRIC_REALISM_SHOWCASE.map(entry=>{
+                    const selected=fabric.catalogPresetId===entry.presetId||
+                      (fabric.name===entry.name && fabric.texture?.scanAssetId===entry.texture.scanAssetId)
+                    return <button type="button" key={entry.id} className={selected?'is-selected':''}
+                      aria-pressed={selected}
+                      title={entry.note}
+                      onClick={()=>applyFabricPreset(entry.presetId)}>
+                      <img src={entry.texture.mapUris.color} alt="" loading="lazy"/>
+                      <span><strong>{entry.use}</strong><small>{entry.construction}</small>
+                        <em>{entry.visualMatch==='proxy'?'Related textile scan':'Construction scan'} · estimated physics</em></span>
+                    </button>
+                  })}
+                </div>
+                <p className="panel-copy">All five reference scans are 1K. Rib, washed leather and nylon use related-family visual proxies until material-matched scans and measured textile specimens are available.</p>
+              </div>
               <div className="panel-section">
                 <div className="panel-title"><span>Fabric library</span><button onClick={addFabricSwatch}><Plus size={14} /></button></div>
                 <div className="fabric-library">
@@ -5333,7 +8637,7 @@ export default function App() {
               </div>
               <div className="panel-section">
                 <div className="panel-title"><span>Textile surface</span><strong>{fabric.texture?.src ? 'MAPPED' : 'COLOR'}</strong></div>
-                <FabricMaterialPreview fabric={fabric} />
+                <FabricMaterialPreview fabric={fabric} onOpticalChange={updateFabric} />
                 {fabric.texture?.scanAssetId ? <p className="panel-copy">
                   Photographic PBR reference: <a href={fabric.texture.originalSourceUrl} target="_blank" rel="noreferrer">{fabric.texture.scanSource} · {fabric.texture.scanAssetId}</a> · CC0 · {fabric.texture.scanMatch==='family-proxy'?'similar fabric family, NOT an exact specimen':'construction reference'}. Physical parameters are still estimated and must be measured for production.
                 </p> : <p className="panel-copy">Procedurally generated surface or user-uploaded image. Material mechanics have not been certified by a fabric laboratory.</p>}
@@ -5507,7 +8811,7 @@ export default function App() {
               <div className="panel-section">
                 <div className="panel-title"><span>Avatar</span><strong>{project.avatar.name}</strong></div>
                 <div className="avatar-card"><div className="avatar-silhouette"><i /><i /><i /></div><div><span>BODY PROFILE</span><strong>{project.avatar.heightCm} cm</strong><em>{project.avatar.model === 'theo' || project.avatar.model === 'nora' ? 'Rigged CC0 fitting body' : 'CC0 MakeHuman fitting body'}</em></div></div>
-                <label className="select-field"><span>Fitting avatar</span><select value={project.avatar.model || 'makehuman-base'} onChange={(event) => setAvatarModel(event.target.value)}>{AVAILABLE_AVATARS.map(({ name, model }) => <option key={model} value={model} disabled={avatarAvailability[model] !== true}>{name}{model === 'makehuman-base' ? ' · Neutral base' : model === 'clo-thomas' ? ' · CLO3D Export' : ' · Rigged fitting'}{avatarAvailability[model] === false ? ' · Not installed' : ''}</option>)}{project.avatar.model === 'custom-export' && <option value="custom-export">Imported OBJ / GLB mesh</option>}</select></label><button className="wide-action" onClick={() => avatarMeshInputRef.current?.click()}><Upload size={14}/>IMPORT AVATAR OBJ / GLB</button><p className="panel-copy">Imported meshes are visual until mesh-to-body collision fitting is implemented. Use assets you have permission to import.</p>
+                <label className="select-field"><span>Fitting avatar</span><select value={clothcraftHybrid ? (clothcraftLive?.avatarModel || 'makehuman-base') : (project.avatar.model || 'makehuman-base')} onChange={(event) => setAvatarModel(event.target.value)}>{AVAILABLE_AVATARS.map(({ name, model }) => <option key={model} value={model} disabled={avatarAvailability[model] !== true || (clothcraftHybrid && !['makehuman-base','clo-thomas'].includes(model))}>{name}{model === 'makehuman-base' ? ' · Neutral base' : model === 'clo-thomas' ? ' · CLO3D Export' : ' · Rigged fitting'}{avatarAvailability[model] === false ? ' · Not installed' : ''}</option>)}{project.avatar.model === 'custom-export' && <option value="custom-export">Imported OBJ / GLB mesh</option>}</select></label><button className="wide-action" onClick={() => avatarMeshInputRef.current?.click()}><Upload size={14}/>IMPORT AVATAR OBJ / GLB</button><p className="panel-copy">Imported meshes are visual until mesh-to-body collision fitting is implemented. Use assets you have permission to import.</p>
                 {(project.avatar.model === 'theo' || project.avatar.model === 'nora') && <p className="panel-copy">Rigged OpenSew/MPFB fitting body · CC0. Selecting it also moves the analytic collision arms to the matching 60° apparel fitting pose.</p>}
               </div>
               <div className="panel-section measure-list">
@@ -5665,6 +8969,11 @@ export default function App() {
           {activeSection === 'Production' && (
             <>
               <div className="panel-section">
+                <div className="panel-title"><span>Techpack Workspace</span><strong>EXO NATIVE</strong></div>
+                <p className="panel-copy">Manufacturing sheets are linked to the current garment and use the same EXO Library, Object Browser and Property Editor as the design workspace.</p>
+                <button className="wide-action" type="button" onClick={enterTechPackWorkspace}><FileDown size={15}/>OPEN EXO TECHPACK WORKSPACE</button>
+              </div>
+              <div className="panel-section">
                 <div className="panel-title"><span>Size grading</span><strong>BASE {project.grading?.baseSize || 'M'}</strong></div>
                 <div className="grade-size-row">
                   {(project.grading?.sizes || []).map((size) => (
@@ -5678,27 +8987,36 @@ export default function App() {
               </div>
               {selectedPiece && (
                 <div className="panel-section">
-                  <div className="panel-title"><span>Grade points · {selectedPiece.name}</span><strong>{selectedPiece.points.filter((point) => point.gradeRule?.enabled).length} CUSTOM</strong></div>
+                  <div className="panel-title"><span>Grade points · {selectedPiece.name}</span><strong>{selectedPiece.points.filter((point) => point.gradeRule?.enabled||point.industrialGradeRule).length} CUSTOM</strong></div>
                   <p className="panel-copy">AUTO points follow the garment-wide width/length rule. CUSTOM points move by their own X/Y centimeters for each size step away from the base size.</p>
+                  <p className="panel-copy">Copy any point's effective X/Y increments and paste them onto another point. Pasting creates an editable CUSTOM rule without changing the base pattern.</p>
+                  <div className="grade-bulk-actions"><button type="button" disabled={!gradeRuleClipboard} onClick={() => pastePointGradeRuleToAll(selectedPiece.id)}>Paste to all points</button><button type="button" disabled={!selectedPiece.points.some((point) => point.gradeRule?.enabled)} onClick={() => resetPieceGradeRules(selectedPiece.id)}>Reset piece to AUTO</button></div>
+                  <div className="grade-bulk-actions"><button type="button" onClick={exportPieceGradeRules}>Export grade CSV</button><button type="button" onClick={() => gradeRuleCsvInputRef.current?.click()}>Import grade CSV</button></div>
+                  <div className="grade-bulk-actions"><button type="button" onClick={exportPieceSizeBreaks}>Export size breaks CSV</button><button type="button" onClick={() => industrialGradeCsvInputRef.current?.click()}>Import size breaks CSV</button></div>
+                  <p className="panel-copy">Spreadsheet interchange validates the exact piece ID and point count before applying any changes. All values are centimeters per size step; importing is undoable.</p>
                   <div className="grade-point-table">
-                    <div className="grade-point-header"><span>Point</span><span>X / size</span><span>Y / size</span><span>Rule</span></div>
+                    <div className="grade-point-header"><span>Point</span><span>X / size</span><span>Y / size</span><span>Rule</span><span>Transfer</span></div>
                     {selectedPiece.points.map((point, pointIndex) => {
                       const automatic = automaticGradeDelta(selectedPiece, point)
-                      const custom = point.gradeRule?.enabled
+                      const custom = point.gradeRule?.enabled&&!point.industrialGradeRule
                       return (
                         <div className={`grade-point-row ${custom ? 'custom' : ''}`} key={`${selectedPiece.id}-grade-${pointIndex}`}>
                           <span>P{String(pointIndex + 1).padStart(2, '0')}</span>
                           {custom
-                            ? <NumberField value={point.gradeRule.dxPerSize ?? 0} min={-12} max={12} step={0.1} suffix="cm" onChange={(value) => updatePointGradeRule(selectedPiece.id, pointIndex, 'dxPerSize', clamp(value, -12, 12))} />
+                            ? <NumberField ariaLabel={`Point ${pointIndex + 1} X grade increment in centimeters per size`} value={point.gradeRule.dxPerSize ?? 0} min={-12} max={12} step={0.1} suffix="cm" onChange={(value) => updatePointGradeRule(selectedPiece.id, pointIndex, 'dxPerSize', clamp(value, -12, 12))} />
                             : <em>{automatic.dxPerSize >= 0 ? '+' : ''}{automatic.dxPerSize.toFixed(2)}</em>}
                           {custom
-                            ? <NumberField value={point.gradeRule.dyPerSize ?? 0} min={-12} max={12} step={0.1} suffix="cm" onChange={(value) => updatePointGradeRule(selectedPiece.id, pointIndex, 'dyPerSize', clamp(value, -12, 12))} />
+                            ? <NumberField ariaLabel={`Point ${pointIndex + 1} Y grade increment in centimeters per size`} value={point.gradeRule.dyPerSize ?? 0} min={-12} max={12} step={0.1} suffix="cm" onChange={(value) => updatePointGradeRule(selectedPiece.id, pointIndex, 'dyPerSize', clamp(value, -12, 12))} />
                             : <em>{automatic.dyPerSize >= 0 ? '+' : ''}{automatic.dyPerSize.toFixed(2)}</em>}
-                          <button className={custom ? 'active' : ''} onClick={() => setPointGradeRuleEnabled(selectedPiece.id, pointIndex, !custom)}>{custom ? 'CUSTOM' : 'AUTO'}</button>
+                          <button className={custom||point.industrialGradeRule ? 'active' : ''} onClick={() => setPointGradeRuleEnabled(selectedPiece.id, pointIndex, !custom)}>{point.industrialGradeRule?'BREAKS':custom ? 'CUSTOM' : 'AUTO'}</button>
+                          <span className="grade-rule-transfer"><button type="button" aria-label={`Copy grade rule for point ${pointIndex + 1}`} title="Copy X/Y grade increments" onClick={() => copyPointGradeRule(selectedPiece, pointIndex)}>Copy</button><button type="button" aria-label={`Paste grade rule onto point ${pointIndex + 1}`} title="Paste X/Y grade increments" disabled={!gradeRuleClipboard} onClick={() => pastePointGradeRule(selectedPiece.id, pointIndex)}>Paste</button></span>
                         </div>
                       )
                     })}
                   </div>
+                  <IndustrialGradeWorkbench piece={selectedPiece} grading={project.grading} onError={setCommandResult} onSetRule={(pointIndex,rule)=>{
+                    mutateProject(next=>{const point=next.pieces.find(item=>item.id===selectedPiece.id)?.points?.[pointIndex];if(point)point.industrialGradeRule=structuredClone(rule)})
+                  }} onClearRule={pointIndex=>mutateProject(next=>{const point=next.pieces.find(item=>item.id===selectedPiece.id)?.points?.[pointIndex];if(point)delete point.industrialGradeRule})}/>
                 </div>
               )}
               <div className="panel-section">
@@ -5752,7 +9070,30 @@ export default function App() {
                 <div className="panel-title"><span>Production data</span><strong>LIVE</strong></div>
                 <div className="production-list"><span><i />Pattern geometry</span><span><i />Seam graph</span><span><i />Fabric physicals</span><span><i />Avatar measurements</span><span><i />XS–XXL graded size run</span><span><i />Grain-safe configurable marker</span><span><i />POM measurement size run</span><span><i />DXF cut + allowance + notches</span><span><i />DXF grainlines + piece labels</span><span><i />GarmentCode / PyGarment JSON</span><span><i />3D OBJ garment mesh</span><span><i />Binary GLB / glTF garment</span><span><i />Structured tech-pack data</span></div>
                 <button className={`toggle-row ${exportSelectedPatternOnly ? 'active' : ''}`} onClick={() => setExportSelectedPatternOnly((value) => !value)}><span><Scissors size={15} />DXF export selected pattern only{exportSelectedPatternOnly ? ` · ${selectedPiece?.name || 'Select pattern'}` : ''}</span><i /></button>
-                <p className="panel-copy">Standard DXF uses millimeters and separate cut, seam allowance, notch, grain, and annotation layers. Industrial AAMA/ASTM imports still require validation in the target CAD system.</p>
+                <p className="panel-copy">The standalone DXF button preserves the legacy drafting profile: CUT is the stitchline and SA is the allowance contour. The Factory ZIP instead creates a manufacturing profile: CUT is the physical allowance outline, STITCH is the sewing line, and only deliberately authored notches are marked. Both are generic DXF, not verified AAMA/ASTM.</p>
+                <button className="wide-action" type="button" onClick={()=>factoryDxfReferenceInputRef.current?.click()}><Upload size={15}/>IMPORT FACTORY DXF · LOCKED CUT REFERENCE</button>
+                <p className="panel-copy">Factory DXFs cannot be safely imported as editable sewing patterns. The locked reference action imports one graded physical CUT outline per piece with zero new allowance, without attempting to recover grading or curves. For an editable project, import garment-source.json from the original ZIP.</p>
+                <button className="wide-action" type="button" onClick={()=>importInputRef.current?.click()}><Upload size={15}/>RESTORE FACTORY ZIP · VERIFIED EDITABLE SOURCE</button>
+                <p className="panel-copy">Choose the original factory ZIP to restore its editable source, including the exact authored curves and graded size run. Version 2 file digests, complete file inventory and regraded geometry must agree or nothing is replaced. Legacy version 1 packages require separate source JSON inspection.</p>
+              </div>
+              <div className="panel-section" data-testid="cad-import-export-availability-20261028" aria-label="CAD import and export format availability">
+                <div className="panel-title"><span>Industrial CAD import / export availability</span><strong>VERIFIED CAPABILITIES ONLY</strong></div>
+                <p className="panel-copy">EXO source remains editable, generic DXF provides outline editing only, and factory ZIP restores editable source only when verified. Proprietary Lectra files are not claimed compatible.</p>
+                <div className="field-grid two">{CAD_FORMAT_AVAILABILITY_20261028.map(row=><div key={row.extension} className="panel-copy" title={row.note}><strong>{row.extension} · {row.label}</strong><span> Import: {row.import.replaceAll('_',' ')} · Export: {row.export.replaceAll('_',' ')}</span></div>)}</div>
+                <button className="wide-action" type="button" onClick={()=>importInputRef.current?.click()}><Upload size={15}/>IMPORT CAD / EDITABLE EXO SOURCE</button>
+                <button className="wide-action" type="button" onClick={exportProject}><FileDown size={15}/>EXPORT EDITABLE EXO PROJECT · JSON</button>
+                <button className="wide-action" type="button" onClick={exportDxf}><FileDown size={15}/>EXPORT GENERIC DXF · CURRENT SIZE</button>
+                <p className="panel-copy">Native MDL, VET, IBA and RUL import/export cannot be enabled until their real file schemas and independent licensed Modaris acceptance have been demonstrated. Selecting one reports the limitation without replacing your garment.</p>
+              </div>
+              <div className="panel-section" data-testid="industrial-marker-cad-workflow-20261028" aria-label="Industrial marker cutting and CAD receiver engineering audit">
+                <div className="panel-title"><span>Industrial marker + CAD interchange · full grade run</span><strong>{deepProductionBusy?'CHECKING':deepProductionAudit?.error?'BLOCKED':deepProductionAudit?'AUDITED':'NOT RUN'}</strong></div>
+                <p className="panel-copy">Runs an independent multi-size DXF receiver-wire preflight, physical CUT-to-marker parity, grain-safe polygon nesting, fabric-width constraints and machine-neutral cutter inspection. Notches, drills, fold cutting and other unsupported operations are explicitly blocked—not omitted.</p>
+                <button type="button" className="wide-action" disabled={deepProductionBusy} onClick={()=>void runDeepProductionAudit()}>{deepProductionBusy?'CHECKING GRADED PRODUCTION GEOMETRY…':'AUDIT MARKER + CUTTER + DXF · ALL SIZES'}</button>
+                {deepProductionAudit?.error&&<p className="panel-copy" role="alert">Audit error: {deepProductionAudit.error}</p>}
+                {deepProductionAudit?.cad&&<div className="field-grid two"><label><span>Generic DXF size roundtrips</span><strong>{deepProductionAudit.cad.ok?'LOCAL PASS':'BLOCKED'} · {deepProductionAudit.cad.files.length} files</strong></label><label><span>Receiving CAD acceptance</span><strong>NOT VERIFIED</strong></label></div>}
+                {deepProductionAudit?.marker&&<div className="field-grid two"><label><span>Physical marker + cutter studies</span><strong>{deepProductionAudit.marker.ok?'LOCAL PASS':'BLOCKED'} · {deepProductionAudit.marker.rows.length} layouts</strong></label><label><span>Machine-ready cutter program</span><strong>NOT AUTHORIZED</strong></label></div>}
+                {(deepProductionAudit?.cad?.issues?.length||deepProductionAudit?.marker?.issues?.length)>0&&<div className="marker-overflow-warning" role="status">{[...(deepProductionAudit.cad?.issues||[]),...(deepProductionAudit.marker?.issues||[])].slice(0,8).map((item,index)=><span key={`${item.code}-${index}`}><strong>{item.code}</strong> · {item.size||'Project'}: {item.detail||item.reason||'Source requirement not verified'}</span>)}</div>}
+                <p className="panel-copy">These are local digital engineering checks. Graded physical notch stations can be inspected after marker rotation, but drill protocols and actual cutter notch execution remain unverified. Generic R12 DXF is not certified AAMA/ASTM; licensed external receiving CAD tests, physical markers, cutter qualification and signed factory approval remain required.</p>
               </div>
               <div className="panel-section">
                 <div className="panel-title"><span>Manufacturing preflight · all sizes</span><strong>{productionPreflight.status.replaceAll('_', ' ')}</strong></div>
@@ -5760,9 +9101,48 @@ export default function App() {
                 {productionPreflight.issues.length > 0 && <div className="marker-overflow-warning">{productionPreflight.issues.slice(0, 8).map((issue, index) => <span key={`${issue.code}-${issue.scope}-${index}`}><strong>{issue.severity.toUpperCase()} · {issue.scope}</strong> — {issue.message}</span>)}{productionPreflight.issues.length > 8 && <span>+{productionPreflight.issues.length - 8} additional issues. Export the factory ZIP for the complete report.</span>}</div>}
                 {!productionPreflight.issues.length && <p className="panel-copy">Structural and marker checks passed for the size run. Factory system import, print scaling, fit and sample approval remain to be verified.</p>}
               </div>
+              {industrialPatternAudit&&<div className="panel-section" aria-label="Independent multi-size manufacturing geometry QA" data-industrial-pattern-qa="true">
+                <div className="panel-title"><span>Independent pattern QA · full size run</span><strong>{industrialPatternAudit.status.toUpperCase()}</strong></div>
+                <p className="panel-copy">{industrialPatternAudit.sizes.join(', ')} · {industrialPatternAudit.blockers} contour, seam or POM blocker(s) · {industrialPatternAudit.seamReports.length} stitched-edge size checks.</p>
+                {industrialPatternAudit.issues.length>0&&<div className="marker-overflow-warning" role="status">{industrialPatternAudit.issues.slice(0,6).map((issue,index)=><span key={`${issue.code}-${issue.scope}-${index}`}><strong>{issue.code}</strong> · {issue.scope}: {issue.message}</span>)}{industrialPatternAudit.issues.length>6&&<span>+{industrialPatternAudit.issues.length-6} further issues. Export the factory ZIP to review industrial-pattern-qa.json.</span>}</div>}
+                <p className="panel-copy">Failing seams may require explicit construction ease or corrected geometry. A passing score does not replace independent CAD import, physical prints, a fit sample and factory acceptance.</p>
+              </div>}
+              {industrialCutlineAudit&&<div className="panel-section" aria-label="Physical cutting contour and seam allowance validation" data-industrial-cutline-qa="true">
+                <div className="panel-title"><span>Physical CUT vs STITCH · full size run</span><strong>{industrialCutlineAudit.status.toUpperCase()}</strong></div>
+                <p className="panel-copy">{industrialCutlineAudit.checks.length} graded pattern cutting contours checked · {industrialCutlineAudit.blockers} blocker(s). Validates allowance outline closure, intersections and cut area beyond the sewline.</p>
+                {industrialCutlineAudit.issues.length>0&&<div className="marker-overflow-warning" role="status">{industrialCutlineAudit.issues.slice(0,5).map((issue,index)=><span key={`${issue.code}-${issue.scope}-${index}`}>{issue.code} · {issue.scope}: {issue.message}</span>)}</div>}
+                <p className="panel-copy">Factory ZIP includes industrial-cutline-qa.json and industrial-cutline-areas.csv. Independent receiver CAD, printed scale, fabric/shrink and cutter acceptance remain pending.</p>
+              </div>}
+              {gradedGeometryAudit&&<div className="panel-section" aria-label="Graded topology and stitchline winding audit" data-graded-topology-qa="true">
+                <div className="panel-title"><span>Graded topology · all sizes</span><strong>{gradedGeometryAudit.pass?'PASS':'BLOCKED'}</strong></div>
+                <p className="panel-copy">{gradedGeometryAudit.inspectedPieces} graded pieces across {gradedGeometryAudit.inspectedSizes} sizes · {gradedGeometryAudit.issues.length} winding, collapsed-edge or area-collapse finding(s).</p>
+                {project.gradeProvenance?.status==='DEVELOPMENT_ONLY_FACTORY_APPROVAL_REQUIRED'&&<p className="panel-copy" role="status">Grading is development-only: {project.gradeProvenance.rationale||'This imported pattern contains provisional grade geometry.'} Source-locked trim contours are not a manufacturer-approved graded size specification.</p>}
+                {gradedGeometryAudit.issues.length>0&&<div className="marker-overflow-warning" role="status">{gradedGeometryAudit.issues.slice(0,5).map((issue,index)=><span key={`${issue.code}-${issue.size}-${issue.pieceId}-${index}`}>{issue.code} · {issue.size} · {issue.pieceId}{issue.edgeIndex!=null?` · edge ${issue.edgeIndex}`:''}</span>)}</div>}
+                <p className="panel-copy">Factory ZIP includes graded-geometry-qa.json and graded-geometry-issues.csv. Passing topology does not establish fabric behavior, pattern fit, seam construction approval or receiving-CAD compatibility.</p>
+              </div>}
+              {gradedJunctionAudit&&<div className="panel-section" aria-label="Graded matched sewing endpoint continuity" data-graded-seam-junction-qa="true">
+                <div className="panel-title"><span>Shared sewing junctions · all sizes</span><strong>{gradedJunctionAudit.status.toUpperCase()}</strong></div>
+                <p className="panel-copy">{gradedJunctionAudit.checks.length} explicit paired corner checks · {gradedJunctionAudit.blockers} endpoint drift blocker(s). A length-matched sewn edge can still have a misplaced corner.</p>
+                {gradedJunctionAudit.issues.length>0&&<div className="marker-overflow-warning" role="status">{gradedJunctionAudit.issues.slice(0,5).map((issue,index)=><span key={`${issue.code}-${issue.scope}-${index}`}>{issue.code} · {issue.scope}: {issue.message}</span>)}{gradedJunctionAudit.issues.length>5&&<span>+{gradedJunctionAudit.issues.length-5} further grade junction issues in factory ZIP.</span>}</div>}
+                <p className="panel-copy">See graded-seam-junction-qa.json in the factory ZIP. Shared yoke/seat corners require approved coordinated grading before production; this panel cannot certify a garment.</p>
+              </div>}
+              {project.id==='project-essential-shell'&&industrialPatternAudit?.issues.some(row=>row.code==='SEAM_LENGTH_MISMATCH')&&<div className="panel-section" aria-label="Legacy shell manufacturing correction">
+                <div className="panel-title"><span>Legacy Essential Shell · sleeve mismatches</span><strong>NOT A FACTORY TEE</strong></div>
+                <p className="panel-copy">The original Essential Shell is a separate unapproved construction. Its graded armholes do not match its sleeve caps. Our independently checked Foundation Tee development template uses a different sewing block and passes all 84 size-specific sewing checks and 24 paired-notch checks.</p>
+                <button className="wide-action" onClick={()=>void applyGarmentTemplate('tee')}>OPEN CORRECTED FOUNDATION TEE · UNDOABLE</button>
+                <p className="panel-copy">Opens a new four-piece sample draft without silently rewriting the current garment. This does not substitute for physical sampling, a completed neckband, or CAD recipient validation.</p>
+              </div>}
+              <div className="panel-section" aria-label="External factory sample approval requirements">
+                <div className="panel-title"><span>Factory sample acceptance · external</span><strong>PENDING</strong></div>
+                <p className="panel-copy">The factory ZIP includes one unapproved worksheet per size, with 100 mm print calibration, approved POM targets versus actual sewn measurements, recipient CAD/version, cut/grain/notch inspection, fit photographs and named operator approval. Nothing is automatically certified.</p>
+                <p className="panel-copy">Complete the worksheets only after real cutting, sewing and fit reviews. An actual Gerber/Lectra/AAMA/ASTM destination acceptance record must be attached before claiming manufacturer interoperability.</p>
+              </div>
               <button className="wide-action" onClick={exportDxf}><FileDown size={15} />EXPORT DXF · {gradePreviewSize}</button>
-              <button className="wide-action" onClick={() => exportMarker('pdf')}><FileDown size={15} />EXPORT TRUE-SCALE MARKER PDF · {gradePreviewSize}</button>
-              <button className="wide-action" onClick={() => exportMarker('svg')}><FileDown size={15} />EXPORT TRUE-SCALE MARKER SVG · {gradePreviewSize}</button>
+              <button className="wide-action" onClick={()=>void inspectVerifiedNativeProductionSource()}><FileDown size={15} />INSPECT VERIFIED NATIVE PRODUCTION SOURCE · NO CUT AUTHORIZATION</button>
+              <button className="wide-action" onClick={()=>void createVerifiedNativeProductionStudy()}><FileDown size={15} />VERIFY NATIVE SIX-SIZE CUT STUDY · ONE PER PANEL · NO CUT AUTHORIZATION</button>
+              <button className="wide-action" onClick={()=>void exportVerifiedNativeProductionStudy()}><FileDown size={15} />CREATE NATIVE VERIFIED DEVELOPMENT MARKER ARTIFACTS · NO CUT AUTHORIZATION</button>
+              <button className="wide-action" onClick={() => exportMarker('pdf')}><FileDown size={15} />DEVELOPMENT PREVIEW MARKER PDF · {gradePreviewSize}</button>
+              <button className="wide-action" onClick={() => exportMarker('svg')}><FileDown size={15} />DEVELOPMENT PREVIEW MARKER SVG · {gradePreviewSize}</button>
               <button className="wide-action" onClick={exportBomXml}><FileDown size={15} />EXPORT BOM · XML</button>
               <button className="wide-action" onClick={requestObjExport}><Box size={15} />EXPORT 3D OBJ · {gradePreviewSize}</button>
               <button className="wide-action" onClick={requestGlbExport}><Box size={15} />EXPORT GLB · {gradePreviewSize}</button>
@@ -5782,8 +9162,22 @@ export default function App() {
             </>
           )}
 
+          {activeSection === 'Animation' && (
+            <div className="panel-section" aria-label="Animation workspace settings">
+              <div className="panel-title"><span>Animation workspace</span><strong>WALK STUDIO</strong></div>
+              <p className="panel-copy">The animation canvas, reusable walking presets, and editing timeline are docked within the 3D viewer. This is a visual preview; physics fitting stays unchanged.</p>
+              <label className="select-field"><span>Runway stage</span><select aria-label="Animation runway stage" value={normalizeStageId(project.render?.stageId)} onChange={event=>updateRenderSetting('stageId',event.target.value)}><option value="none">Empty studio</option>{listStagePresets().map(preset=><option key={preset.id} value={preset.id}>{preset.name}</option>)}</select></label>
+              <button className="wide-action" type="button" onClick={exitAnimationWorkspace}>RETURN TO GARMENT WORKSPACE</button>
+            </div>
+          )}
           {activeSection === 'Render' && (
             <>
+              <div className="panel-section">
+                <div className="panel-title"><span>Scene stage</span><strong>{normalizeStageId(project.render?.stageId)==='none' ? 'EMPTY' : normalizeStageId(project.render?.stageId)}</strong></div>
+                <label className="select-field"><span>Stage preset</span><select value={normalizeStageId(project.render?.stageId)} onChange={event => updateRenderSetting('stageId', event.target.value)}><option value="none">Empty studio</option>{FEATURED_STAGE_IDS.map(id=>listStagePresets().find(item=>item.id===id)).filter(Boolean).map(preset=><option key={preset.id} value={preset.id}>{preset.id} · {preset.name}</option>)}</select></label>
+                <label className="select-field"><span>3D hanger</span><select value={project.render?.hangerPreset || 'none'} onChange={event=>updateRenderSetting('hangerPreset',event.target.value)}><option value="none">No hanger</option>{HANGER_LIBRARY.map(item=><option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
+                <StageCatalog compact selectedStageId={normalizeStageId(project.render?.stageId)} onSelectStage={id => updateRenderSetting('stageId', id)} />
+              </div>
               <div className="panel-section">
                 <div className="panel-title"><span>Viewport</span><Eye size={15} /></div>
                 <button className={`toggle-row ${wireframe ? 'active' : ''}`} onClick={() => setWireframe((value) => !value)}><span><Box size={15} />Wireframe topology</span><i /></button>
@@ -5826,6 +9220,9 @@ export default function App() {
             <Cpu size={14} /><span>{commandResult}</span>
           </div>
           </CloPropertyEditorAccordion>
+            </div>
+            </div>
+          </div>
           </div>
           </div>
         </aside>
@@ -5833,12 +9230,23 @@ export default function App() {
 
       <footer className="simulation-bar">
         <div className="sim-left">
-          <button className={`sim-play ${visibleRunning ? 'active' : ''}`} onClick={simForVisibleEngine}>{visibleRunning ? <Pause size={16} /> : <Play size={16} />}{visibleRunning ? 'PAUSE' : 'SIMULATE'}</button>
-          <button className="sim-reset" onClick={resetForVisibleEngine}><RotateCcw size={15} />RESET</button>
-          <span className="sim-copy">{clothcraftHybrid ? 'CLOTHCRAFT RUST VBD + OGC · NOT CERTIFIED FIT' : !hasSimulated ? 'ARRANGE → SEW → SIMULATE' : running ? 'Draping on avatar…' : 'Paused · Press SIMULATE to resume'}</span>
+          <div className="sim-footer-mode-switch">
+            <button className={`sim-play ${techPackWorkspaceOpen?'active':animationWorkspaceActive ? animationPlaying ? 'active' : '' : visibleRunning ? 'active' : ''}`} disabled={printLayoutActive||techPackWorkspaceOpen} onClick={animationWorkspaceActive ? () => window.dispatchEvent(new Event('exo-clothcraft-animation-toggle')) : simForVisibleEngine}>{techPackWorkspaceOpen?<FileDown size={16}/>:animationWorkspaceActive && animationPlaying || !animationWorkspaceActive && visibleRunning ? <Pause size={16} /> : <Play size={16} />}{techPackWorkspaceOpen?'TECHPACK':printLayoutActive?'PRINT LAYOUT':animationWorkspaceActive ? animationPlaying ? 'PAUSE' : 'ANIMATE' : visibleRunning ? 'PAUSE' : 'SIMULATE'}</button>
+            <button type="button" className="sim-mode-arrow" aria-label="Simulation, animation, print layout and Techpack modes" title="Switch between simulation, animation, print layout and Techpack workspaces" aria-haspopup="menu" aria-controls="exo-simulate-footer-dropdown" aria-expanded={leftSimulationMenuOpen} onClick={() => {setSimulationMenuOpen(false);setLeftSimulationMenuOpen(value => !value)}}><ChevronDown size={14}/></button>
+            {leftSimulationMenuOpen && <div id="exo-simulate-footer-dropdown" className="sim-footer-mode-menu exo-simulate-clear-glass" role="menu" aria-label="Simulation animation and print layout workspace modes" data-simulate-glass="clear" onKeyDown={event=>{if(event.key==='Escape'){event.stopPropagation();setLeftSimulationMenuOpen(false)}}}>
+              <button type="button" role="menuitem" onClick={()=>{if(animationWorkspaceActive||printLayoutActive)exitFocusedWorkspace();setTechPackWorkspaceOpen(false);setLeftSimulationMenuOpen(false)}}><Check size={13} style={{opacity:animationWorkspaceActive||printLayoutActive||techPackWorkspaceOpen?0:1}}/> Simulation · Fit & sew</button>
+              <button type="button" role="menuitem" onClick={enterAnimationWorkspace}><Check size={13} style={{opacity:animationWorkspaceActive?1:0}}/> Animation Workspace · Walk presets</button>
+              <button type="button" role="menuitem" onClick={enterPrintLayoutWorkspace}><Check size={13} style={{opacity:printLayoutActive?1:0}}/> Print Layout · Fabric rolls</button>
+              <button type="button" role="menuitem" onClick={enterTechPackWorkspace}><Check size={13} style={{opacity:techPackWorkspaceOpen?1:0}}/> Techpack Workspace · Specification pages</button>
+              <button type="button" role="menuitem" onClick={()=>{setSimulationMenuOpen(false);setLeftSimulationMenuOpen(false);setFileLibraryStartSave(false);void openFileLibrary()}}><FolderOpen size={13}/> File Library · Saved garments</button>
+              {(animationWorkspaceActive||printLayoutActive) && <button type="button" role="menuitem" onClick={exitFocusedWorkspace}>Return to previous workspace</button>}
+            </div>}
+          </div>
+          {!techPackWorkspaceOpen&&<button className="sim-reset" onClick={printLayoutActive ? exitFocusedWorkspace : animationWorkspaceActive ? () => window.dispatchEvent(new Event('exo-clothcraft-animation-reset')) : resetForVisibleEngine}><RotateCcw size={15} />{printLayoutActive?'EXIT':'RESET'}</button>}
+          <span className="sim-copy">{techPackWorkspaceOpen?'TECHPACK · USE WORKSPACE DROPDOWN TO SWITCH MODES':printLayoutActive ? 'PRINT LAYOUT · FABRIC MARKER PLANNING' : animationWorkspaceActive ? 'ANIMATION STUDIO · VISUAL WALK PREVIEW' : clothcraftHybrid ? 'CLOTHCRAFT RUST VBD + OGC · NOT CERTIFIED FIT' : !hasSimulated ? 'ARRANGE → SEW → SIMULATE' : running ? 'Draping on avatar…' : 'Paused · Press SIMULATE to resume'}</span>
         </div>
         <div className="sim-stats"><span><Activity size={13} />{clothcraftHybrid ? (clothcraftLive?.vertices ?? 0).toLocaleString() : stats.vertices.toLocaleString()} vertices</span><span>{clothcraftHybrid ? 'RUST SIMULATION' : `${stats.constraints.toLocaleString()} constraints`}</span><span>{clothcraftHybrid ? (clothcraftLive?.seams ?? 0).toLocaleString() : stats.seams.toLocaleString()} seam links</span><span>{clothcraftHybrid ? `${(clothcraftLive?.time ?? 0).toFixed(2)} s` : `${stats.anchors.toLocaleString()} fit tacks`}</span></div>
-        <div className="engine-badge"><i className={visibleRunning ? 'active' : ''} /><span>{clothcraftHybrid ? 'RUST VBD + OGC' : 'XPBD CLOTH'}</span><strong>{clothcraftHybrid ? 'GPU VBD / CPU CONTACT' : 'GPU UI / CPU SOLVER'}</strong></div>
+        <div className="engine-badge"><i className={visibleRunning ? 'active' : ''} /><span>{clothcraftHybrid ? 'RUST VBD + OGC' : 'XPBD CLOTH'}</span><strong>{clothcraftHybrid ? nativeSolverBadge20261028(clothcraftLive) : 'GPU UI / CPU SOLVER'}</strong></div>
       </footer>
       <WorkspaceCommandPalette open={commandPaletteOpen} commands={STUDIO_COMMANDS} onExecute={executeStudioAction} onClose={() => setCommandPaletteOpen(false)} />
       {clothCraftMeshPreview && (

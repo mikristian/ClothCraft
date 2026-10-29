@@ -68,7 +68,11 @@ for(const piece of samples){
   {pointIndex:0,point:{x:-1,y:3}},
   {pointIndex:999,point:{x:2,y:3}},
   {pointIndex:1.5,point:{x:2,y:3}},
+  {pointIndex:'1',point:{x:2,y:3}},
+  {point:{x:2,y:3}},
   {edgeIndex:0,curve:{cx:1,cy:-4}},
+  {edgeIndex:'0',curve:{cx:1,cy:-4}},
+  {curve:{cx:1,cy:-4}},
   {edgeIndex:0,curve:null},
   {edgeIndex:1,curve:null},
   {edgeIndex:0},
@@ -110,5 +114,5 @@ for(const foldEdgeIndex of [-1,4,1.5,'0',null,true]){
  try{js={ok:true,result:unfoldDraftPiece(half,foldEdgeIndex)}}catch(e){js={ok:false,error:e.message}}
  compare(js,native('unfold',half,{foldEdgeIndex}),'invalid fold index '+JSON.stringify(foldEdgeIndex));checks++
 }
-assert.equal(checks,15*samples.length+4+1+4*halfVariants.length+6,'Expected topology, edit and unfold parity coverage')
+assert.equal(checks,19*samples.length+4+1+4*halfVariants.length+6,'Expected topology, edit and unfold parity coverage')
 console.log('Topology and unfold C++ parity passed: '+checks+' cases')

@@ -2,6 +2,9 @@
 node_modules/
 dist/
 .npm-cache/
+.exo-build-scratch/
+build/
+rust/**/target/
 
 # Local QA captures and generated exports
 qa-*.png
@@ -9,6 +12,10 @@ qa-*.jpg
 qa-*.jpeg
 qa-*.json
 qa-*.svg
+docs/qa/
+research/clo-2d-analysis/audit-20261019/extreme-visual-loop/
+research/clo-2d-analysis/audit-20261019/jarvis-loop/
+research/clo-2d-analysis/audit-20261019/visual-parity-qa/
 replica/screens/
 replica/clone-screens/
 replica/diffs/
@@ -102,6 +109,10 @@ public/avatars/guides/theo*
 public/avatars/guides/nora*
 blender_bridge/probe_thomas*
 blender_bridge/*thomas*
+
+# Converted licensed CLO hardware and YKK trim meshes: strictly local/private.
+# Rebuild from the owner's installed CLO resources; never publish in source control.
+public/clo-hardware-converted/
 
 # Generated media and machine-specific data, regardless of output directory.
 *.mp4

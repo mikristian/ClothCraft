@@ -1,0 +1,41 @@
+import assert from 'node:assert/strict'
+import {chromium} from 'playwright-core'
+
+const origin=process.env.EXO_TECHPACK_QA_ORIGIN||'http://127.0.0.1:5174'
+const browser=await chromium.launch({headless:true,executablePath:process.env.EXO_CHROME_PATH||'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',args:['--no-sandbox','--disable-gpu']})
+const context=await browser.newContext({viewport:{width:1600,height:980}})
+const page=await context.newPage()
+page.setDefaultTimeout(10000)
+const errors=[]
+page.on('pageerror',error=>errors.push(error.message))
+try{
+  await page.goto(`${origin}/?engine=clothcraft&techpackWorkspace=1`,{waitUntil:'domcontentloaded',timeout:30000})
+  await page.locator('[data-techpack-sheet="overview"]').waitFor({timeout:30000})
+  await page.getByRole('button',{name:'Layout edit mode'}).first().click()
+  const front=page.locator('[data-board-page="overview"][data-board-object="render-front"]')
+  const back=page.locator('[data-board-page="overview"][data-board-object="render-back"]')
+  await front.waitFor()
+  await front.locator('.tpws-object-transform-cover').click({force:true})
+  await back.locator('.tpws-object-transform-cover').click({force:true,modifiers:['Shift']})
+  const group=page.getByRole('button',{name:'Group layers',exact:true})
+  await group.waitFor()
+  assert.equal(await group.isEnabled(),true)
+  await group.click()
+  await page.reload({waitUntil:'domcontentloaded'})
+  await page.locator('[data-techpack-sheet="overview"]').waitFor({timeout:30000})
+  await page.getByRole('button',{name:'Layout edit mode'}).first().click()
+  await front.locator('.tpws-object-transform-cover').click({force:true})
+  assert.equal(await front.locator('.tpws-object-bounding-box').count(),1)
+  assert.equal(await back.locator('.tpws-object-bounding-box').count(),1,'clicking one grouped render must select both')
+  const initial=await back.getAttribute('style')
+  await page.getByRole('button',{name:'Bring forward'}).click()
+  assert.notEqual(await back.getAttribute('style'),initial,'layer operation affects group members')
+  await page.getByRole('button',{name:'Ungroup layers'}).click()
+  await page.getByRole('button',{name:'Clear selection'}).click()
+  await page.waitForTimeout(550)
+  await front.locator('.tpws-object-transform-cover').click({force:true})
+  assert.equal(await front.locator('.tpws-object-bounding-box').count(),1)
+  assert.equal(await back.locator('.tpws-object-bounding-box').count(),0,'ungroup restores independent selection')
+  assert.deepEqual(errors,[])
+  console.log('PASS saved group survives reload, grouped selection and layering, ungroup; no browser errors')
+}finally{await browser.close()}

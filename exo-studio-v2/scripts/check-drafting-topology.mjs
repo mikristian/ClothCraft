@@ -23,6 +23,14 @@ assert.equal(isDraftEditValid(square,{pointIndex:1,point:{x:10,y:1}}),true)
 assert.equal(isDraftEditValid(square,{pointIndex:1,point:{x:0,y:10}}),false,'Reject vertex edit that folds contour')
 assert.equal(isDraftEditValid(square,{edgeIndex:0,curve:{cx:5,cy:-2}}),true)
 assert.equal(isDraftEditValid(square,{edgeIndex:0,curve:null}),true)
+assert.equal(isDraftEditValid(square,{pointIndex:1.5,point:{x:3,y:3}}),false,
+  'A fractional vertex index must not validate the unchanged contour')
+assert.equal(isDraftEditValid(square,{edgeIndex:'0',curve:{cx:3,cy:4}}),false,
+  'A string edge index must not validate the unchanged contour')
+assert.equal(isDraftEditValid(square,{point:{x:1,y:1}}),false,
+  'A vertex payload without an index must be rejected')
+assert.equal(isDraftEditValid(square,{curve:{cx:2,cy:2}}),false,
+  'A curve payload without an edge index must be rejected')
 const actual=createDefaultProject()
 const checks=(actual.pieces||[]).map(piece=>({id:piece.id,result:inspectDraftTopology(piece)}))
 assert.ok(checks.every(item=>item.result.valid),
